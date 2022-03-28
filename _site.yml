@@ -1,7 +1,7 @@
-name: "meds-distill-template"
-title: "EDS 123"
+name: "ESM 232 and EDS 230"
+title: "ESM 232 and EDS 230"
 description: |
-  MEDS Courses distill template
+  Environnmental Modelling using R
 output_dir: "docs"
 navbar:
   right:
@@ -9,8 +9,8 @@ navbar:
       href: index.html
     - text: "Topics"
       menu:
-        - text: "Topic 1: Add a new site page"
-          href: topic_1.html
+        - text: "Intro"
+          href: lectures/intro_lecture.html
         - text: "Topic 2: Update site title & subtitle"
           href: topic_2.html
         - text: "Topic 3: Add images"
@@ -37,8 +37,8 @@ navbar:
       href: https://github.com/allisonhorst/meds-distill-template
 output:
   distill::distill_article:
-    toc: true
-    toc_float: true
+    toc: false
+    toc_float: false
 theme: theme.css
 
 # To remove table of contents on each page, set toc: and toc_float: lines to false

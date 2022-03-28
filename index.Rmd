@@ -1,6 +1,6 @@
 ---
-title: "ESM 232 / EDS 230 – Spring 2022"
-description: "Environmental Modelling"
+title: "Environmental Modelling"
+description: ESM 232 / EDS 230  Spring 2022
 site: distill::distill_website
 ---
 
