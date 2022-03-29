@@ -1,7 +1,7 @@
 name: "ESM 232 and EDS 230"
 title: "ESM 232 and EDS 230"
 description: |
-  Environnmental Modelling using R
+  Environnmental Modelling 
 output_dir: "docs"
 navbar:
   right:
