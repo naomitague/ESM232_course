@@ -1,0 +1,358 @@
+---
+title: ' Framing a modelling application for Environmental Problem Solving '
+output:
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+  pdf_document: default
+  ioslides_presentation:
+    highlight: pygments
+  beamer_presentation:
+    highlight: pygments
+
+---
+
+# What is a model
+
+
+* understanding
+
+* prediction
+
+* communication
+
+You are doing this all the time - there are many reasons to make this process explicit (computer aided modeling)
+
+#  STEPS: Modeling for Problem Solving in ES 
+
+Clearly define your goal (a question you want to answer, hypothesis you want to test, prediction you want to make) - as precisely as possible
+
+* Design or Select your model
+
+* Implement the model
+
+* Evaluate the model and quantify uncertainty
+
+* Apply the model to the goal
+
+* Communicate model results
+
+---
+
+#  Designing/Selecting Models 
+
+* What are your inputs-outputs?
+
+* What’s in the box (the model itself) that gives you a relationship between outputs and inputs? 
+
+
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.jpeg")
+```
+---
+
+#  Basic components of models 
+
+
+Inputs: Varying; think x of a x vs y regression
+
+Parameters: single values that influence relationships in the model
+
+Transfer Function (model): Equations that transfer inputs to outputs given parameters
+
+Outputs: what you want to estimate
+
+
+---
+
+# What's in the box
+
+  * What are the processes/relationships that you think are important to translate inputs to output
+
+  * Transfer function (mathematical representation)
+
+  * Parameters, values that influences how the model relationships work
+
+  * There are often multiple "boxes" internal to a model
+  
+---
+
+
+#  Simple model 
+
+
+Input: Change in unemployment rate
+
+Output: Change in GDP
+
+Parameters: Slope and intercept of the line
+The US "changes in unemployment – GDP growth" regression with the 95% confidence bands.
+
+Transfer function: regression equations
+
+![](lecture2.conceptual.simple/assets/img/image5.png)
+
+---
+
+#  What’s in the box 
+
+Often more complicated than a simple regression…
+
+So we need to think through what the relationships are; the processes are that we want to take in to account
+
+Conceptual models are a good place to start
+
+---
+
+#  Complex model 
+
+
+How will coral reefs change in the next decade given increased CO2 
+
+Input: Solar energy and atmospheric CO2, land DIC,
+
+Output: Reef Dissolution, DOC/DIC export
+
+Parameters: Many parameters that would be part of equations that estimate photosynthesis, calcification etc
+
+
+
+Modeling changes both the changes in seawater chemistry in coral reef waters, as well as the responses of reef organisms.
+
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/coral.jpeg")
+```
+
+[Source UCAR](http://www.nar.ucar.edu/2008/RAL/images/1.2_ocean_08_lg.jpg)
+
+---
+
+#  Conceptual models of the hydrologic cycle 
+
+Precipitation = Evapotranspiration + Change in Storage
+
+P = ET + ΔS
+
+(at global scales ΔS includes streamflow since that water is still “stored” in the earth
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/image6.png")
+```
+
+---
+
+# Model Complex Hydrology model
+
+Goal - estimate streamflow fromm multiple source (surface and subsurface)
+
+
+
+```{r, out.width = "25%",out.height="25%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/image7.png")
+```
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/image8.png")
+```
+
+---
+
+#  SERI-Fire 
+
+* More complex model couple sub-models
+
+* How do ecological and human factors interact to influence fire regimes 
+
+
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/image9.png")
+```
+
+---
+
+#  Conceptual model as a flow chart (with example values) 
+
+
+![](lecture2.conceptual.simple/assets/img/image10.png)
+
+[source](https://www.boundless.com/biology/textbooks/boundless-biology-textbook/ecosystems-46/energy-flow-through-ecosystems-257/productivity-within-trophic-levels-952-12212/](https://www.boundless.com/biology/textbooks/boundless-biology-textbook/ecosystems-46/energy-flow-through-ecosystems-257/productivity-within-trophic-levels-952-12212/)
+
+
+
+---
+
+#  Conceptual models can be of a processes (decision, assessment) 
+
+Serrano-Cinca C, Gutiérrez-Nieto B, Reyes NM, A Social and Environmental
+Approach to Microfinance Credit Scoring, Journal of Cleaner Production (2015), doi: 10.101
+
+[Available from] (https://www.researchgate.net/publication/282855291_A_Social_and_Environmental_Approach_to_Microfinance_Credit_Scoring).
+
+Figure 1. Flowchart of the social and environmental microcredit scoring decision process. The model includes financial assessment and social impact assessment.
+
+![](lecture2.conceptual.simple/assets/img/image11.png)
+
+
+---
+
+#  Conceptual models can be of a decision making processes 
+
+
+![](lecture2.conceptual.simple/assets/img/image12.png)
+
+[source](http://energy.sandia.gov/energy/renewable-energy/wind-power/offshore-wind/offshore-wind-rdd-sediment-transport/)
+
+---
+
+# Model can also be about classification
+
+Fig. 2. Flow-chart illustrating the working steps of glacial lake detection based on the normalized difference water index (NDWI), lake-outburst probability assessment and lake classi fi cation in the Indian Himalayas.
+
+Rouce et al., Hydrol. Earth Syst. Sci., 20, 3455–3475, 2016 www.hydrol-earth-syst-sci.net/20/3455/2016/ doi:10.5194/hess-20-3455-2016
+
+![](lecture2.conceptual.simple/assets/img/glacierlakeclass.jpg)
+
+
+---
+
+# Types of Model
+
+There are many different ways to classify models
+
+A *useful* classification looks at how models deal with space, time, and process 
+
+Useful because the *type* of model will have implications for how you *build* and *use/run* the model
+
+---
+
+#  Stochastic - Deterministic 
+
+Stochastic:  Model output is the probability of flood events of a magnitude greater than 500 m3/sec given rainfall probability distribution (artificial or generated from data) for a 100km2 watershed
+Deterministic: Model output is the depth of flood given a rainfall event of 10cm over a 100km2 watershed
+
+[source](http://www.vertex42.com/ExcelArticles/mc/MonteCarloSimulation.html)
+
+![](lecture2.conceptual.simple/assets/img/image1.gif)
+
+---
+
+#  Lumped …Spatially distributed 
+
+Lumped - single point in space, or space doesn’t matter
+
+Spatially distributed - model is applied to different “patches” in space
+spatial units are independent
+
+spatial units interact with each other
+
+[source](http://eo.ucar.edu/staff/rrussell/climate/modeling/climate_model_resolution.html)
+
+![](lecture2.conceptual.simple/assets/img/image3.jpeg)
+
+---
+
+#  Static- Dynamic Time Varying 
+
+Static - Processes or Variables modeled do not evolve with time
+
+Dynamic - model elements evolve through time - and variables/results at one time step typically depends on previous time step
+
+[source](http://www.econometricsbysimulation.com/2013/05/sir-model-flue-season-dynamic.html)
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/image13.png")
+```
+
+
+---
+
+#  Abstract - Physically/Process based 
+
+Abstract - relationship between inputs and output depends on parameters that don’t necessarily have a physical meaning
+
+Physically based - parameters do have a physical meaning (could be measured) - relationships derived from first principles (theory) of how things work
+
+---
+
+#  Abstract - Physically/Process based 
+
+serc.carlton.edu
+Abstract
+
+Physically based
+
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/image4.jpeg")
+```
+
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/image2.jpeg")
+```
+
+
+[Abstract](http://serc.carlton.edu)
+[Physically based](http://ks.water.usgs.gov/pubs/reports/paclim99.html)
+[http://ks.water.usgs.gov/pubs/reports/paclim99.html](http://serc.carlton.edu)
+
+---
+
+#  Conceptual models: Composing 
+
+Pictorial representation of how you think about your system, and what needs to be included in 
+the model to answer your questions (or achieve your modelling goal)
+
+There are many software tools available for generating conceptual models, I like
+
+
+[Diagrams.net]{https://www.diagrams.net/}
+
+---
+
+# Conceptual model design
+
+Some model designers uses standard symbols for the different model components 
+
+
+Building Models
+![](lecture2.conceptual.simple/assets/img/image14.png)
+
+---
+
+#  • PhD of Norman Crawford under supervision of Ray K Linsley at Stanford University in 1962 
+
+Conceptual Models
+![](lecture2.conceptual.simple/assets/img/image15.png)
+
+---
+
+![](lecture2.conceptual.simple/assets/img/image16.png)
+
+---
+
+#  Assignment 1 
+
+For assignment one you will create a conceptual model to be presented in class. You will work in groups of 3-4.
+
+Identify an environmental problem that would benefit from a model. Summarize the goal of the model in a few sentence. Draw a conceptual model, consider -  inputs, outputs, important processes/mechanisms/interactions, reservoirs/stores, other intermediate variables or steps, relationships between variables. Put your conceptual model on a single slide and be prepared to present the key inputs and outputs of the model, and the purpose of the model in class
+
+Also add the slide on Gauchospace
+
+Conceptual model that will be built upon:
+
+This will be a conceptual model of almond yield anomaly. Review the Lobell et al. 2006 paper; specifically look at the equation for almonds in table 2. Draw a conceptual model to represent this equation. Be sure to include all that apply: inputs, outputs. Identify the output (as precisely as you can) on the conceptual model.  Be sure to understand what anomaly means! We will go over this together in class. Submit this model as a figure.
+
+Submit the following to gauchospace
+
+1. the one paragraph description of your model
+
+2. the slide with your conceptual model for your selected model
+
+3. slide/figure of the almond conceptual model
+
+Submit as a group
+
