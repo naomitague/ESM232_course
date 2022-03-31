@@ -1,7 +1,7 @@
 name: "ESM 232 and EDS 230"
 title: "ESM 232 and EDS 230"
 description: |
-  Environnmental Modelling 
+  Environnmental Modelling
 output_dir: "docs"
 navbar:
   right:
@@ -11,8 +11,8 @@ navbar:
       menu:
         - text: "Intro"
           href: lectures/intro_lecture.html
-#        - text: "Topic 2: Update site title & subtitle"
-#          href: topic_2.html
+        - text: "Conceptual Models"
+          href: lectures/lecture2.conceptual.simple.html
 #        - text: "Topic 3: Add images"
 #          href: topic_3.html
 #        - text: "Topic 4: Change the theme"
@@ -30,7 +30,9 @@ navbar:
 #        - text: "Topic 10: Add a table"
 #          href: topic_10.html
     - text: "Assignments"
-      href: assignments.html
+      menu:
+        - text: "Assign1: Conceptual Models"
+          href: assignments/assign1.html
     - text: "Resources"
       href: resources.html
 #    - icon: fab fa-github

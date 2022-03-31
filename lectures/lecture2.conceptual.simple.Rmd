@@ -63,6 +63,7 @@ Transfer Function (model): Equations that transfer inputs to outputs given param
 
 Outputs: what you want to estimate
 
+![](lecture2.conceptual.simple/assets/img/image5.png)
 
 ---
 
@@ -79,22 +80,6 @@ Outputs: what you want to estimate
 ---
 
 
-#  Simple model 
-
-
-Input: Change in unemployment rate
-
-Output: Change in GDP
-
-Parameters: Slope and intercept of the line
-The US "changes in unemployment – GDP growth" regression with the 95% confidence bands.
-
-Transfer function: regression equations
-
-![](lecture2.conceptual.simple/assets/img/image5.png)
-
----
-
 #  What’s in the box 
 
 Often more complicated than a simple regression…
@@ -102,30 +87,6 @@ Often more complicated than a simple regression…
 So we need to think through what the relationships are; the processes are that we want to take in to account
 
 Conceptual models are a good place to start
-
----
-
-#  Complex model 
-
-
-How will coral reefs change in the next decade given increased CO2 
-
-Input: Solar energy and atmospheric CO2, land DIC,
-
-Output: Reef Dissolution, DOC/DIC export
-
-Parameters: Many parameters that would be part of equations that estimate photosynthesis, calcification etc
-
-
-
-Modeling changes both the changes in seawater chemistry in coral reef waters, as well as the responses of reef organisms.
-
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/coral.jpeg")
-```
-
-[Source UCAR](http://www.nar.ucar.edu/2008/RAL/images/1.2_ocean_08_lg.jpg)
 
 ---
 
@@ -143,7 +104,7 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/image6.png")
 
 ---
 
-# Model Complex Hydrology model
+# Conceptual Hydrology Model - more complex, multiple boxes 
 
 Goal - estimate streamflow fromm multiple source (surface and subsurface)
 
@@ -338,21 +299,13 @@ Conceptual Models
 
 For assignment one you will create a conceptual model to be presented in class. You will work in groups of 3-4.
 
-Identify an environmental problem that would benefit from a model. Summarize the goal of the model in a few sentence. Draw a conceptual model, consider -  inputs, outputs, important processes/mechanisms/interactions, reservoirs/stores, other intermediate variables or steps, relationships between variables. Put your conceptual model on a single slide and be prepared to present the key inputs and outputs of the model, and the purpose of the model in class
+1. Identify an environmental problem that would benefit from a model. 
 
-Also add the slide on Gauchospace
+2. Summarize the goal of the model in a few sentences. 
 
-Conceptual model that will be built upon:
+3. Design a conceptual model, consider -  inputs, outputs, important processes/mechanisms/interactions, reservoirs/stores, other intermediate variables or steps, relationships between variables. Put your conceptual model on a single slide and be prepared to present the key inputs and outputs of the model, and the purpose of the model in class
 
-This will be a conceptual model of almond yield anomaly. Review the Lobell et al. 2006 paper; specifically look at the equation for almonds in table 2. Draw a conceptual model to represent this equation. Be sure to include all that apply: inputs, outputs. Identify the output (as precisely as you can) on the conceptual model.  Be sure to understand what anomaly means! We will go over this together in class. Submit this model as a figure.
+Also add the slide and paragraph on Gauchospace - as Group Assignment
+You will need to complete the Group Select task first
 
-Submit the following to gauchospace
-
-1. the one paragraph description of your model
-
-2. the slide with your conceptual model for your selected model
-
-3. slide/figure of the almond conceptual model
-
-Submit as a group
-
+Due end of the day on Monday

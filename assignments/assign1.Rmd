@@ -1,0 +1,36 @@
+---
+title: "Assignment 1 - Group Assignment"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Conceptual Model
+
+
+For assignment one you will create a conceptual model to be presented in class. You will work in groups of 3-4.
+
+
+
+1. Identify an environmental problem that would benefit from a model. 
+
+
+
+2. Summarize the goal of the model in a few sentences. 
+
+
+
+3. Design a conceptual model, consider -  inputs, outputs, important processes/mechanisms/interactions, reservoirs/stores, other intermediate variables or steps, relationships between variables. Put your conceptual model on a single slide and be prepared to present the key inputs and outputs of the model, and the purpose of the model in class
+
+
+
+Also add the slide and paragraph on Gauchospace - as Group Assignment
+
+You will need to complete the Group Select task first
+
+
+
+Due end of the day on Monday
+
