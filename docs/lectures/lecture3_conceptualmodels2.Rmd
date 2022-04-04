@@ -13,6 +13,15 @@ output:
 # Conceptual models Feedback
 
 ---
+#  From conceptual model to flow chart/workflow 
+
+Impact of smoke from fires on health of agricultural workers
+What is ‘smoke”
+What is “health”
+What is an “agricultural worker”. …leads to your conceptual model
+
+---
+---
 #  Design/Selecting Models 
 
 ```{r, out.width = "75%",out.height="75%", echo=FALSE}
@@ -123,14 +132,16 @@ If we modified the model to estimate the probability distribution of power produ
 
 #  Assignment 2
 
-Work in group of 2-3 to develop a conceptual model of tree crop yield  - the goal will be able to predict how crop yields might change if seasonal precipitation or air temperature patterns change in California
+Your goal is to develop a conceptual model of almond yield  - the goal will be able to predict how almond yields might change if seasonal precipitation or air temperature patterns change in California
 
-The Lobell et al. 2006 paper will be the source for your model; specifically look at the equation in table 2.
+The Lobell et al. 2006 paper will be the source for your model; specifically look at the equations in table 2.
 
 * List what the inputs and outputs will be - think carefully about time scale and units for inputs and output
 
 * Draw a conceptual model to represent your model that will translate inputs to output, on your diagram list what your inputs and outputs are with units
 
-Submit on Gauchospace as a Group
+* For a challenge - think about how you might change your conceptual model so that it would work for all tree yields considered by the Lobell paper
+
+We will build on this on Thursday's class so make sure you've completed before then
 
 

@@ -13,6 +13,8 @@ navbar:
           href: lectures/intro_lecture.html
         - text: "Conceptual Models"
           href: lectures/lecture2.conceptual.simple.html
+        - text: "Conceptual Models - Part 2"
+          href: lectures/lecture3_conceptualmodels2.html
 #        - text: "Topic 3: Add images"
 #          href: topic_3.html
 #        - text: "Topic 4: Change the theme"
@@ -33,8 +35,7 @@ navbar:
       menu:
         - text: "Assign1: Conceptual Models"
           href: assignments/assign1.html
-    - text: "Resources"
-      href: resources.html
+
 #    - icon: fab fa-github
 #      href: https://github.com/allisonhorst/meds-distill-template
 output:
