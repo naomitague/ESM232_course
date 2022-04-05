@@ -288,6 +288,15 @@ power_gen = function(height, flow, rho=1000, g=9.8, Keff=0.8) {
 }
 ```
 
+# Sharing Example R, Data and Rmarkdowns
+
+[esm232_examples github site]{https://github.com/naomitague/ESM232_Examples.git} 
+
+You can clone this repository and then pull before class to get example code and data
+
+Just remember that git does not like having nest repositories - so
+keep working respoistories in separate directories
+
 #  Documentation! 
 
 Makes it easier for you to fix issues, refine and easier for others to use

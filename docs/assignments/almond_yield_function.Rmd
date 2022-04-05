@@ -27,7 +27,10 @@ The first example is where the climate variables are separately input into the f
 1) code your function in R; save it as a separate file called  “the name of your function”.R; Make sure you include documentation
 Store your R function in a git repository - you will need it again for future assignment
 
-2) in an Rmarkdown document, write code to read in the “clim.txt”, (attached here) do any subsetting required for input to your function, run the function and save results
+2) in an Rmarkdown document, write code to read in the “clim.txt”, (which you can find on 
+[esm232_examples github site]{https://github.com/naomitague/ESM232_Examples.git} 
+
+do any subsetting required for input to your function, run the function and save results
 
 
 3) Summarize the results as follows
