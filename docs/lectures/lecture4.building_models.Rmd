@@ -13,15 +13,15 @@ output:
 
 #  Best practices for model (software) development 
 
-Common problems
+## Common problems
 
-Unreadable code (hard to understand, easy to forget how it works, hard to find errors, hard to expand)
+* Unreadable code (hard to understand, easy to forget how it works, hard to find errors, hard to expand)
 
-Overly complex, disorganized code (hard to find errors; hard to modify-expand)
+* Overly complex, disorganized code (hard to find errors; hard to modify-expand)
 
-Insufficient testing (both during development and after)
+* Insufficient testing (both during development and after)
 
-Not tracking code changes (multiple versions, which is correct?)
+* Not tracking code changes (multiple versions, which is correct?)
 
 ---
 
@@ -39,7 +39,8 @@ clear, readable code
 * documentation to explain functionality 
 
 * modularity (organized “independent” building blocks)
-testing as you go and after
+
+*  testing frequently as you develop each module and after
 
 * code evolution is documented (version control)
 
@@ -48,20 +49,19 @@ testing as you go and after
 #  Best practices for model (software) development 
 
 
-Automated Documentation with *Oxygen*
+**Automated Documentation with *Oxygen* **
 
-[Oxygen in XML - Original](https://www.oxygenxml.com/)
+* [Oxygen in XML - Original](https://www.oxygenxml.com/)
+* [ROxygen - works with R](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html)
 
-[ROxygen - works with R](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html)
-
-Automated Testing
+**Automated Testing**
 [ Testing in R](https://r-pkgs.org/tests.html)
 
-Version Control - Github
+**Version Control** - Github
 
 ---
 
-#  Modularity - Discrete Tasks -  
+#  Modularity - Discrete Tasks  
 
 Hierarchical in level of details
 
@@ -114,33 +114,41 @@ More complex models - made up of multiple functions; and nested functions (and m
 
 ---
 
+
 #  Functions 
 
-Write down:
+Decide on 
 
+ * Inputs and parameters
 
-all inputs and parameters
+  * Outputs
 
-all outputs
+Data types, units (time and space aggregation), names should be (use descriptive names)
 
-Decide what there data types, units, names should be
-
-use descriptive names
-
-use data types that will allow you to apply your function in many different cases
 
 ---
 
 #  Functions 
 
-Write down what the function will do - given different inputs and parameters
+## Simple
 
-simple
-input (temperature); output (growth rate)
+* input (mean growing season temperature - growT); 
 
-more complex
-inputs (temperature, organism type)
-output (if animal, respiration; if plant, growth)
+* parameter (senT - sensitivity to temperature
+
+* output (growth )
+
+(all float)
+
+## More complex
+
+* inputs (temperature (growT), Plant type)
+
+* parameters 
+     * sensT (array of temperature sensitivities for different plant types), 
+    * growingmonths (array of growing season months for differnt plant types)
+
+* output ( growth)
 
 ---
 
@@ -148,15 +156,18 @@ output (if animal, respiration; if plant, growth)
 
 Format for a basic function in R
 
- #’ documentation that describes inputs, outputs and what thefunction does
-FUNCTION NAME = function(inputs, parameters) {
-body of the function (manipulation of inputs)
-return
-}
+<span style="color: orange;"> #' documentation that describes inputs, outputs and what the function does
+
+<span style="color: orange;"> FUNCTION NAME = function(inputs, parameters) {
+
+<span style="color: orange;">body of the function (manipulation of inputs)
+
+<span style="color: orange;">return }</span>
 
 In R, inputs and parameters are treated the same; but it is useful to think about them separately in designing the model - collectively they are sometimes referred to as arguments
 
 **IMPORTANT**
+
 Place each function in its own file (x.R), and put all functions for a given project in *R* subdirectory
 ---
 
@@ -167,6 +178,7 @@ knitr::include_graphics("lecture3_conceptualmodels2/assets/img/reservoir_cm.001.
 ```
 
 * Input: Reservoir height (height) and flow rate (flow)
+
 * Output: Instantaneous power generation (W/s)
 
 * Parameters: K Efficiency , ρ (density of water), g (acceleration due to gravity)
@@ -303,13 +315,13 @@ Makes it easier for you to fix issues, refine and easier for others to use
 
 For functions (model) you should always include the following in your code
 
-The goal of the model
+* The goal of the model
 
-Model inputs (description, name and units)
+ * Model inputs (description, name and units)
 
-Model output (description, name and units)
+* Model output (description, name and units)
 
-Where the transfer function comes from (source papers)
+* Where the model (or submodel) comes from (source papers)
 
 In line explanation for key steps
 
