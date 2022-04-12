@@ -17,6 +17,8 @@ navbar:
           href: lectures/lecture3_conceptualmodels2.html
         - text: "Building Models"
           href: lectures/lecture4.building_models.html
+        - text: "Models and Data"
+          href: lectures/lecture5_working_with_functions.html
 #        - text: "Topic 3: Add images"
 #          href: topic_3.html
 #        - text: "Topic 4: Change the theme"
