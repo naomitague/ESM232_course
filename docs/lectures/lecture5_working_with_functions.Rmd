@@ -208,4 +208,11 @@ ggplot(site2_mean, aes(eff, mean))+geom_point()+
 
 * Challenge - how would you do an informal sensitivity analysis where you varied both efficiency and threshold 
 
+THURSDAY - CLASS IS ON ZOOM 
 
+Naomi Tague is inviting you to a scheduled Zoom meeting.
+
+Join Zoom Meeting
+https://ucsb.zoom.us/j/82292927380
+
+Meeting ID: 822 9292 7380
