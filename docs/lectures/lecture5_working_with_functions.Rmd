@@ -1,9 +1,9 @@
 ---
 title: "Functions/Models with Data"
 output:
-  html_document: default
   slidy_presentation:
     highlight: pygments
+  html_document: default
   pdf_document: default
   ioslides_presentation:
     highlight: pygments
@@ -21,14 +21,22 @@ library(ggpubr)
 
 ```
 
-#
-# Lists (Short Review) - For returning more than one item from your function
 
-*Lists are the most “informal” data structures in R
-*List are really useful for keeping track of and organizing groups of things that are not all the same
-*A list could be a table where number of rows is different for each column
-*A list can have numeric, character, factors all mixed together
-* List are often used for returning more complex information from function (e.g. lm)
+# Lists (Short Review) - 
+
+For returning more than one item from your function
+
+* Lists are the most “informal” data structures in R
+
+* List are really useful for keeping track of and organizing groups of things that are not all the same
+
+* A list could be a table where number of rows is different for each column
+
+* A list can have numeric, character, factors all mixed together
+
+*  List are often used for returning more complex information from function (e.g. lm)
+
+# Examples 
 
 Here are some examples of how to create and manipulate lists
 
@@ -45,6 +53,8 @@ sale[4]
 # Lists and Functions
 
 Lists are used to return multiple values from functions
+
+
 <center>
 **return(list(....))**
 </center>
@@ -55,7 +65,7 @@ Lists are used to return multiple values from functions
  
  * take a look at the *compute_diversity* function (in *R* subdirectory) - any questions about what it does?
  
- * run with some sample data
+# Sample data for Biodiversity Function
 ```{r}
 
 # get the function
@@ -91,10 +101,13 @@ Built in R functions do this alot - they allow users to specify methods (**glm**
 Design -  function that estimates solar pv power given inputs of radiation
 
 Model inputs: solar radiation (daily direct and diffuse)
+
 Model outputs: power generated each year and average power over time
+
 Parameters: panel efficiency, system performance, units, type of array (uses diffuse or not), plot Y/N
 
 Some of these options such as whether to plot determine outputs from the function
+
 AND the type of array to determine whether it uses diffuse radiation, 
 these parameters change how the function/model works
 
@@ -141,6 +154,7 @@ If you need it a good source to review working with *purrr* to extract items fro
 
 [Useful Purrr Resource](https://www.rebeccabarter.com/blog/2019-08-19_purrr/)
 
+# Rmarkdown code for informal sensitivity
 ```{r sen1, eval=T}
 
 # lets try informal sensitivity analysis again, this time by varying efficiency if we don't know efficiency exactly , lets try 20 samples
@@ -186,7 +200,7 @@ ggplot(site2_mean, aes(eff, mean))+geom_point()+
 ```
 
 
-On your own, try the following
+# On your own, try the following
 
 * Repeat an informal sensitivity analysis where instead of efficiency you vary the threshold solar radiation for power generation (note that the default value is 10000)
 
