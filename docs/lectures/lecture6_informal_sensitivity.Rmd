@@ -286,11 +286,11 @@ reservoir_model_res$flow = runif(min=0.1, max=1, n=number_years)
 
 # Step 3 - generate uncertainty due to reservoir efficiency, lets assume that 
 # we know its somewhere between 0.4 and 0.7
-Keff = runif(min=0.4, max=0.7, n=20)
+par1 = runif(min=0.4, max=0.7, n=20)
 
 # Step 3 - apply model to get power for each height, flow rate (each year), across
 # uncertainty in efficiency
-reservoir = Keff %>% map_dfc(~power_gen(
+reservoir = par1 %>% map_dfc(~power_gen(
   height=reservoir_model_res$height, 
   flow=reservoir_model_res$flow, Keff=.x) )
 

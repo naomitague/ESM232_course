@@ -1,0 +1,33 @@
+---
+title: "Run_tree_crop"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+# from almond
+
+clim = read.csv("../Data/clim.txt")
+#' @param  Tmincoeff1 default=-0.015
+#' @param  Tmaxcoeff2 default=-0.0046
+#' @param  Pcoeff1 default=-0.07
+#' @param  Pcoeff2 default=0.0043
+Tmin_month_coeff = rep(0, times=12)
+Tmax_month_coeff = rep(0, times=12)
+Tmin_month_coeff2 = rep(0, times=12)
+Tmax_month_coeff2 = rep(0, times=12)
+Precip_month_coeff = rep(0, times=12)
+Precip_month_coeff2 = rep(0, times=12)
+Tmin_month_coeff[2] = -0.015
+Tmin_month_coeff2[2] = -0.0046
+Precip_month_coeff2[1]= -0.07
+Precip_month_coeff2[1]= -0.0043
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

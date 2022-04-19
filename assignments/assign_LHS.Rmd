@@ -1,0 +1,76 @@
+---
+title: "Assignment with LHS"
+output:
+  html_document: default
+  pdf_document: default
+date: '2022-04-19'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+With a new group: Sensitivity Analysis
+
+Often when we are estimating vegetation or crop water use we need to know the atmospheric conductance - which is essentially how easily water diffuses into the air and depends largely on windspeed (you get more evaporation in windier conditions) Atmospheric conductance is also influenced by the vegetation itself and the turbulence it creates
+
+1. Code a function to compute atmospheric conductance $C_{at}$ (how easily vapor diffuses from vegetation surfaces)
+
+
+You can estimate
+$$
+C_{at} = \frac{v_m}{6.25*{ln(\frac{z_m-z_d}{z_0})}^2}
+$$
+$$
+z_d = k_d*h
+$$
+$$
+z_0 = k_0*h
+$$
+
+
+$z_m$ is the height at which windspeed is measured - must be higher than the vegetation (cm), it is usually measured 200 cm  above the vegetation
+
+$h$ is vegetation height (cm)
+
+$v$ is windspeed (cm/s)
+
+Typical values if $k_d$ and $k_o$ are 0.7 and 0.1 respectively (so use those as defaults)
+
+2.  Run your model
+
+You are estimating the atmospheric conductance for a forest that is 10 m high (the accuracy of that measurement is +/- 0.5 m )
+Windspeeds  $v$ in this region are normally distributed with a mean of  250 cm/s with a standard deviation of 30 cm/s
+
+Come up with a single  estimate of atmospheric conductance for this forest
+
+3. Now do a sensitivity analysis as follows
+
+ Consider the sensitivity of your estimate to uncertainty in the following parameters and inputs
+  
+  * $h$ 
+  
+  * $k_d$
+  
+  * $k_0$
+  
+  * $v$
+  
+Windspeeds $v$ are normally distributed with a mean of  250 cm/s with a standard deviation of 30 cm/s
+
+For vegetation height assume that height is somewhere between 9.5 and 10.5 m (but any value in that range is equally likely)
+
+For the $k_d$ and $k_0$ parameters you can assume that they are normally distributed with standard deviation of 1% of their default values
+
+a) use LHS to generate parameter values for the 4 parameters
+b) run you atmospheric conductance model for these parameters and return aerodynamic conductances 
+
+c) Plot conductance estimates in a way that accounts for parameter uncertainty
+
+d)  Plot conductance estimates against each of your parameters
+
+e) Estimate the Partial Rank Correlation Coefficients
+
+f) Discuss what your results tell you about how aerodynamic conductance? What does it suggest about what you should focus on if you want to reduce uncertainty in aerodymaic conductance estimates? Does this tell you anything about the sensitivity of plant water use to climate change? 
+

@@ -21,6 +21,8 @@ navbar:
           href: lectures/lecture5_working_with_functions.html
         - text: "Informal Sensitivity Analysis"
           href: lectures/lecture6_informal_sensitivity.html
+        - text: "LHS Sensitivity Analysis"
+          href: lectures/lecture7_sensitivity.html
 #        - text: "Topic 3: Add images"
 #          href: topic_3.html
 #        - text: "Topic 4: Change the theme"
@@ -47,6 +49,9 @@ navbar:
           href: assignments/almond_yield_function.html
         - text: "Assign3: Almond Profit Sensitivity"
           href: assignments/assign3_informal_sen.html
+        - text: "Assign4: LHS Sensitivity"
+          href: assignments/assign_LHS.html
+
 
 #    - icon: fab fa-github
 #      href: https://github.com/allisonhorst/meds-distill-template
