@@ -23,6 +23,8 @@ navbar:
           href: lectures/lecture6_informal_sensitivity.html
         - text: "LHS Sensitivity Analysis"
           href: lectures/lecture7_sensitivity.html
+        - text: "Sobol Sensitivity Analysis"
+          href: lectures/lecture8_sensitivity_sobol.html
 #        - text: "Topic 3: Add images"
 #          href: topic_3.html
 #        - text: "Topic 4: Change the theme"
