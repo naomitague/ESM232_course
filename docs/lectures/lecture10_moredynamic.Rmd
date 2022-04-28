@@ -1,0 +1,339 @@
+---
+title: "Dynamicmodel2logistic"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(deSolve)
+
+```
+
+# Integration
+
+What if we wanted to look at population in 20 years given an initial condition
+
+Two options
+
+* explicit solution to differential equation is known; e.g. you can integrate both sides of the equation! Not always possible but lets look at a case where it is possible
+
+* must be solved by iteration; this is what we do when we can't integrate both sides 
+
+# Explicit Solution is available
+
+```{r explicit}
+source("../R/exppop.R")
+
+# gives population after any time given an initial population
+
+# 20 rabbits, growth rate of 0.01 how many in 30 years
+exppop(T=30, P0=20, r=0.01, K=1000)
+
+# if we want to see how population evolves over time - generate a time series by running our model for each point in time
+
+initialrabbits = 20
+years = seq(from=1, to=100, by=2)
+Ptime = years %>% map_dbl(~exppop( P0=initialrabbits, r=0.01, K=1000, T=.x))
+
+# keep track of what times we ran
+Ptime = data.frame(P=Ptime, years=years)
+
+ggplot(Ptime, aes(years,P))+geom_point()+labs(x="years",y="Rabbit Population")
+
+# try generating results for maximum and minimum possible r values to compare (guess at what you think)
+
+
+max_r = 0.1
+min_r = 0.01
+K = 1000
+
+tmp = years  %>% map_dbl(~exppop(r=max_r, P0=initialrabbits, K=K, T=.x))
+Ptime$Pmaxr = tmp
+tmp = years %>% map_dbl(~exppop(r=min_r, P0=initialrabbits, K=K, T=.x))
+Ptime$Pminr = tmp
+
+head(Ptime)
+Ptimep = Ptime %>% gather(key="r",value="P",-years)
+ggplot(Ptimep, aes(years,P, col=r))+geom_point()+labs(x="years",y="Rabbit Population")
+
+# notice how populatin becomes unstable for high growth rates! 
+
+
+```
+
+Using a solver....when you can't do the integration by hand :)
+
+For example, if you added a carrying capacity!
+
+We can still do the integration by iteration - approximates it
+Implement the differential equation as a function that
+
+*returns the derivative (as a list)
+
+*inputs time, the variable(s) and a parameter list
+
+(it needs time even though you don’t use it)
+
+I name them starting with *d* to remind myself that they
+are computing a derivative
+
+
+R has a solver called *ODE* for solving ordinary differential equations
+frome package **desolve**
+
+*ODE* requires
+
+* initial conditions
+* values of independent where we want values of dependent variable (e.g times where we want population)
+* the derivative as a function
+* a list that contains alll  parameter values (or if you have only one parameter then you can use a single value)
+
+```{r usingode}
+
+
+source("../R/dexppop.R")
+library(deSolve)
+initialrabbits = 20
+years = seq(from=1, to=100, by=2)
+
+# run the solver
+Ptime = ode(y=initialrabbits, times=years, func=dexppop,parms=c(0.01))
+head(Ptime)
+colnames(Ptime)=c("year","P")
+
+# notice that there are additional pieces of information year, including the method used for integration
+attributes(Ptime)
+
+# this also means you need to extract just the data frame for plotting
+ggplot(as.data.frame(Ptime), aes(year,P))+geom_point()+labs(y="Population", "years")
+
+# this also works (of course function can be by order)
+Ptime=ode(initialrabbits, years, dexppop,0.03)
+colnames(Ptime)=c("year","P")
+ggplot(as.data.frame(Ptime), aes(year,P))+geom_point()+labs(y="Population", "years")
+
+# how would we add carrying capacity here
+
+```
+
+
+You can play a bit with changing your function to something that you can't integrate "by hand"
+
+BUT we might want more parameters
+
+to work with ODE,
+parmeters must all be input as a single list; similar to how we return multiple outputs from a function
+
+see example below..lets add a carrying capacity
+
+
+```{r}
+
+
+
+source("../R/dexppop_play.R")
+
+# create parameter list
+initalrabbits=2
+newparms = list(r=0.03, carry_capacity=300)
+
+#apply solver
+results=ode(initialrabbits, years, dexppop_play,newparms)
+head(results)
+
+# add more meaningful names
+colnames(results)=c("year","P")
+
+# plot
+ggplot(as.data.frame(results), aes(year,P))+geom_point()+labs(y="Population", "years")
+
+
+# try again with different parameters
+alternativeparms = list(r=0.04, carry_capacity=500)
+results2=ode(initialrabbits, years, dexppop_play,alternativeparms)
+
+
+# look at results
+head(results2)
+colnames(results2)=c("year","P_parm2")
+
+# plot
+ggplot(as.data.frame(results2), aes(year,P_parm2))+geom_point()+labs(y="Population", "years")
+
+# compare by combining into a single data frame
+both = inner_join(as.data.frame(results), as.data.frame(results2))
+
+both_p = both %>% gather(key="model", value="P", -year)
+ggplot(both_p, aes(year,P, col=model))+geom_point()+labs(y="Population", "years")
+
+# try playing on your own - modiffy the function in some way
+```
+
+
+## Difference Equations
+
+Population models can be discrete (rather than continuous)
+So we could implement them as difference equations and iterate
+like we did with diffusion
+
+```{r iteratie}
+source("../R/discrete_logistic_pop.R")
+# notice how a for loop is used to iterate
+
+# how many rabbits after 50 years given a growth of 0.1
+# starting with 1 rabbit - but a carrying capcity of 500
+
+
+
+discrete_logistic_pop(P0=1, r=0.05, K=200, T=50)
+
+# save results
+discrete_result = discrete_logistic_pop(P0=1, r=0.05, K=200, T=50)
+
+# lets also keep the parameters for use later
+P0=1
+r=0.05
+K=200
+T=50
+
+```
+
+## Differential Equation comparison
+
+Remember we have 3 ways now to calculate population
+
+analytical solution - based on integration (exppop.R) BEST
+
+using an ode solver for numerical approximation (exppop_play.R)
+
+numerical integration using in discrete steps (discrete_logistic_pop.R)
+```{r closed}
+
+source("../R/exppop.R")
+
+exppop(P0=P0, r=r, K=K, T=T)
+analytic_result = exppop(P0=P0, r=r, K=K, T=T)
+
+analytic_result
+discrete_result
+
+# why are they different
+# look at trajectories
+
+growth_result = data.frame(time=seq(from=1,to=100))
+
+growth_result$Panalytic = growth_result$time %>% map_dbl(~exppop( P0=1,r=0.05, K=200,T=.x ))
+
+growth_result$Pdiscrete = growth_result$time %>% map_dbl(~discrete_logistic_pop( P0=1,r=0.05, K=200,T=.x ))
+
+tmp = growth_result %>% gather(key="Ptype",value="P",-time)
+ggplot(tmp, aes(time,P, col=Ptype))+geom_point()
+
+# try running them for longer time periods to see what happens 
+# change the value of r, K , P0 - see how it effects the results
+```
+
+Finally look at continuous derivative using ODE solve
+Needs
+*initial condtions
+*differential equation
+*parameters
+
+```{r}
+
+source("../R/dexppop_play.R")
+
+# set up using the same parameters
+pcompare = list(r=r,K=K)
+
+
+# now run our ODE solver
+result = ode(P0, growth_result$time, dexppop_play, pcompare)
+head(result)
+
+# we already have time - so just extract population
+growth_result$Pdifferential = result[,2]
+
+# comapre all 3 approaches
+tmp = growth_result %>% gather(key="Ptype",value="P",-time)
+ggplot(tmp, aes(time,P, col=Ptype))+geom_point()
+
+# notice Pderiv is closer to Pa
+```
+
+All differential and difference equations are approximations
+The analytical solution is exact
+
+Notice that differential equations is a bit more accurate!
+
+## Diffusion
+
+Diffusion can be implemented as a partial differential equation 
+Complicated to solve - but there are tool in R for specific types of partial differential equations
+![Reactive Transport Example](https://cran.r-project.org/web/packages/ReacTran/index.html)
+
+More info on differential equations in R
+![online book differential equation in R](http://www-labs.iro.umontreal.ca/~mignotte/IFT2425/Documents/Solving_Differential_Equations_In_R_Soetaert_K.pdf)
+
+But we can appoximate this with a difference equation - and iterative to get an estimate of how diffusion works (see class lecture pdf)
+
+
+Now for partial derivatives - time and space! it gets much more tricky ...beyond this course 
+
+Example of Diffusion - difference equation implementation to see what some issues can be
+
+
+```{r}
+
+source("../R/diffusion.R")
+
+# run our diffusion model (iterative difference equation) with initial concentration of 10, for 8 timestep (size 1m), and 10 space steps (size 1s)
+# using diffusion parameters 0.5 s/m2, 10 m2
+result = diff1(initialC=10, nx=10, dx=1, nt=8, dt=1, D=0.5, area=10)
+
+# a list is returned with our 3 data frames for concentration (conc), qin and qout
+result
+
+# used filled contour to plot results
+head(result$conc)
+filled.contour(result$conc, xlab="Time", ylab="Distance")
+
+# or if you prefer this orientation (Distance on x axis)
+filled.contour(t(result$conc), ylab="Time", xlab="Distance")
+
+# changes diffusivity and other parameters particularly
+# diffusivity, dx and dt
+res=diff1(initialC=10,nx=10,dx=1,nt=10,dt=30,D=0.006,area=1)
+
+filled.contour(res$conc, xlab="Time", ylab="Distance")
+
+
+# we can also see how much material moved from place to place each time step
+filled.contour(res$qin, xlab="Time", ylab="Distance")
+
+# what if we increase diffusivity
+resfast=diff1(initialC=10,nx=10,dx=0.5,nt=10,dt=10,D=0.08,area=1)
+filled.contour(resfast$conc, xlab="Time", ylab="Distance")
+
+
+# play with time step, space step and parameters
+
+
+```
+
+```{r}
+
+# Discretization Issue Example
+resunstable=diff1(initialC=10,nx=10,dx=1,nt=10,dt=10,D=0.8,area=1)
+filled.contour(resunstable$conc, xlab="Time (fraction of hour)",ylab="Distance Along Path (m)", main="Pollutant Diffusion")
+
+# this illustrates the problem with difference equations (and the challenges that methods for numerical integration try to overcome)
+# if things are changing quickly we need to use much smaller time, space steps to avoid overshoot and instability
+
+# so lets cut our step size by 10 (dt) (but then add 10 more steps (nx) to cover the same distance)
+resunstable=diff1(initialC=10,nx=100,dx=1,nt=10,dt=1,D=0.8,area=1)
+filled.contour(resunstable$conc, xlab="time",ylab="Distance Along Path")
+
+```
+
