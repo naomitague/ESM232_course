@@ -175,7 +175,7 @@ ggplot(both_p, aes(year,P, col=model))+geom_point()+labs(y="Population", "years"
 
 Population models can be discrete (rather than continuous)
 So we could implement them as difference equations and iterate
-like we did with diffusion
+
 
 ```{r iteratie}
 source("../R/discrete_logistic_pop.R")
@@ -184,7 +184,7 @@ source("../R/discrete_logistic_pop.R")
 # how many rabbits after 50 years given a growth of 0.1
 # starting with 1 rabbit - but a carrying capcity of 500
 
-
+discrete_logistic_pop
 
 discrete_logistic_pop(P0=1, r=0.05, K=200, T=50)
 
@@ -244,8 +244,9 @@ Needs
 
 source("../R/dexppop_play.R")
 
+dexppop_play
 # set up using the same parameters
-pcompare = list(r=r,K=K)
+pcompare = list(r=r,carry_capacity=K)
 
 
 # now run our ODE solver
@@ -259,7 +260,7 @@ growth_result$Pdifferential = result[,2]
 tmp = growth_result %>% gather(key="Ptype",value="P",-time)
 ggplot(tmp, aes(time,P, col=Ptype))+geom_point()
 
-# notice Pderiv is closer to Pa
+# notice Pdifferential is closer to Pa
 ```
 
 All differential and difference equations are approximations
