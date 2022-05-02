@@ -27,6 +27,8 @@ navbar:
           href: lectures/lecture8_sensitivity_sobol.html
         - text: "Simple Dynamic Models"
           href: lectures/lecture9_simpledynamic.html
+        - text: "More on Dynamic Models"
+          href: lectures/lecture10_moredynamic.html
 #        - text: "Topic 3: Add images"
 #          href: topic_3.html
 #        - text: "Topic 4: Change the theme"
