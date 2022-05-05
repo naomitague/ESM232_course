@@ -139,7 +139,7 @@ see example below..lets add a carrying capacity
 
 source("../R/dexppop_play.R")
 
-dexppop
+dexppop_play
 
 # create parameter list
 initalrabbits=2
@@ -294,10 +294,10 @@ Complicated to solve - but there are tool in R for specific types of partial dif
 More info on differential equations in R
 ![online book differential equation in R](http://www-labs.iro.umontreal.ca/~mignotte/IFT2425/Documents/Solving_Differential_Equations_In_R_Soetaert_K.pdf)
 
-But we can appoximate this with a difference equation - and iterative to get an estimate of how diffusion works (see class lecture pdf)
 
+Diffusionn would require partial derivatives - time and space! it gets much more tricky ...beyond this course 
 
-Now for partial derivatives - time and space! it gets much more tricky ...beyond this course 
+But we can appoximate diffusion with a difference equation - and iterative to get an estimate of how diffusion works 
 
 Example of Diffusion - difference equation implementation to see what some issues can be
 
@@ -357,6 +357,12 @@ filled.contour(res$qin, xlab="Time", ylab="Distance")
 
 ```
 
+
+# Assignment - 
+
+Try running the diffusion model with different time steps, space steps and parameters
+
+Save two examples of diffusion filled contour plot and load to Gauchospace and come to class prepared to discuss why the two plots are different
 
 # Some examples with different parameters and space/time steps
 
