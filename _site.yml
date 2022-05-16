@@ -35,6 +35,8 @@ navbar:
           href: lectures/lecture12_growth.html
         - text: "Stability"
           href: lectures/lecture13_stability.html
+        - text: "ODE with 2 variables"
+          href: lectures/lecture14_predprey.html
 #        - text: "Topic 3: Add images"
 #          href: topic_3.html
 #        - text: "Topic 4: Change the theme"
