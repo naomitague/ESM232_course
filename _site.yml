@@ -39,6 +39,10 @@ navbar:
           href: lectures/lecture14_predprey.html
         - text: "Modeling Example - thinning"
           href: lectures/lecture15_thinexample/index.html
+        - text: "Choosing Models"
+          href: lectures/lecture16_choosingmodels.html
+        - text: "Choosing Models - additional lecture slides"
+          href: lectures/lecture16_choosingmodels/choosingmodels.pdf
 #        - text: "Topic 3: Add images"
 #          href: topic_3.html
 #        - text: "Topic 4: Change the theme"
