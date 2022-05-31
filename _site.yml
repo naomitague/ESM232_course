@@ -43,6 +43,8 @@ navbar:
           href: lectures/lecture16_choosingmodels.html
         - text: "Choosing Models - additional lecture slides"
           href: lectures/lecture16_choosingmodels/choosingmodels.pdf
+        - text: "Calibration"
+          href: lectures/lecture18_calibration.html
 #        - text: "Topic 3: Add images"
 #          href: topic_3.html
 #        - text: "Topic 4: Change the theme"
