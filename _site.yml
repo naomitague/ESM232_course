@@ -47,6 +47,8 @@ navbar:
           href: lectures/lecture17_matrix/agestructure.pdf
         - text: "Age Structured Population "
           href: lectures/lecture17_agestructure.html
+        - text: "Calibration"
+          href: lectures/lecture18_calibration.html
 #        - text: "Topic 3: Add images"
 #          href: topic_3.html
 #        - text: "Topic 4: Change the theme"
