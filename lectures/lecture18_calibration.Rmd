@@ -109,7 +109,7 @@ head(res)
 # use apply to compute for all the data
 source("../R/compute_lowflowmetrics_all.R")
 res = msage %>% select(-date, -month, -day, -year, -wy ) %>% map_df(compute_lowflowmetrics_all, o=sager$obs, month=msage$month, day=msage$day, year=msage$year, wy=msage$wy)
-
+res = as.data.frame(res)
 
 # interesting to look at range of metrics - could use this to decide on
 # acceptable values
@@ -128,6 +128,7 @@ head(msage)
 colnames(msage)=c(res$run, "date","month","year","day","wy")
 
 # best one
+
 best = res[which.max(res$combined),]
 msagel  =  msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="run", values_to="flow")
 ggplot(subset(msagel, run == best$run), aes(date, flow)) + geom_line()

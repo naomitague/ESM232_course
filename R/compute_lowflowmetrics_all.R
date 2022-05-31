@@ -16,10 +16,11 @@
 compute_lowflowmetrics_all = function(m,o, month, day, year,wy, low_flow_months=8,
                                       max_err_annual_min=NULL, max_err_low_month=NULL, wts=c(0.25,0.25,0.25,0.25)) {
 
+
   flow = cbind.data.frame(m,o, month, day, year,wy)
   # first lets get minimum yearly values
 
-  tmp = flow %>% group_by(wy) %>% summarize(mino=min(o), minm=min(m))
+  tmp = flow %>% group_by(wy) %>% dplyr::summarize(mino=min(o), minm=min(m))
 
   annual_min_err = mean(tmp$minm-tmp$mino)
 
@@ -29,7 +30,7 @@ compute_lowflowmetrics_all = function(m,o, month, day, year,wy, low_flow_months=
   { max_err_annual_min = 0.5*mean(tmp$mino)}
 
   # now lets get monthly values
-  tmp = flow %>% group_by(month, year) %>% summarize(model=sum(m), obs=sum(o))
+  tmp = flow %>% group_by(month, year) %>% dplyr::summarize(model=sum(m), obs=sum(o))
   # now extract august
   low = subset(tmp, month %in% low_flow_months)
   low_month_err = mean(low$model-low$obs)
