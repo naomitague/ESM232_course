@@ -12,7 +12,6 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 
 library(sensitivity)
 library(deSolve)
@@ -111,21 +110,19 @@ source("../R/compute_lowflowmetrics_all.R")
 res = msage %>% select(-date, -month, -day, -year, -wy ) %>% map_df(compute_lowflowmetrics_all, o=sager$obs, month=msage$month, day=msage$day, year=msage$year, wy=msage$wy)
 res = as.data.frame(res)
 
+# create a link to the column names of simulation runs so we can later
+# link simulation runs to performance measures
+res$run = msage %>% select(-date, -month, -day, -year, -wy ) %>% colnames()
+
 # interesting to look at range of metrics - could use this to decide on
 # acceptable values
 summary(res)
 
 
 # graph range of performance measures
-resl = res %>% pivot_longer(cols=everything(), names_to="metric", values_to="value")
+resl = res %>% pivot_longer(cols=c(-run), names_to="metric", values_to="value")
 ggplot(resl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="free")
 
-# try this
-# assign an identifier to each row, use the same identify for columns of original streamflow data
-# we can then use that to pick data
-res$run = seq(from=1,to=nrow(res))
-head(msage)
-colnames(msage)=c(res$run, "date","month","year","day","wy")
 
 # best one
 
@@ -169,7 +166,7 @@ We can use the combined accuacy measure to define behavioural (acceptible) param
 
 (we go with the latter but code could be commented to go with threshold approach)
 
-```{r behavioral, echo=FALSE}
+```{r behavioral}
 
 
 summary(res$combined)
@@ -200,7 +197,7 @@ We want the sum of the weights to equal 1
 
 
 
-```{r weighting, echo=FALSE}
+```{r weighting}
 
 # create a weight for each parameter set based on its relative accuracy - we do this so all weights sum to 1
 max_acc=max(res_acc$combined)
@@ -224,15 +221,14 @@ One way to use weights is to define a maximum likelihood estimate by averaging (
 
 
 
-```{r mle, echo=FALSE}
+```{r mle}
 
 # generate a streamflow as weighted average of all  acceptable parameter sets
 
 # recall that msagel is the flow data for all runs so we 
 # can link with weights from res_acc by run id
 
-# make sure its numeric
-msagel$run = as.numeric(msagel$run)
+
 # subset only acceptible runs
 msagel_acc = subset(msagel, run %in% res_acc$run)
 # join with weights from res_acc, left_join will repeat weights for each day in streamflow trajectory
@@ -253,25 +249,34 @@ aver_flow$wy = msage$wy
 ggplot(subset(aver_flow, wy == 1980), aes(x=date, y=meanstr))+geom_line(col="red")+labs(y="Streamflow mm/day")
 
 ```
+
 We could also compute quantiles rather than just mean
 
-We can use the *wtd_quantile* function in the *Hmisc* package to do this - it computes quantiles accounting for different weights on each observation
 
-```{r plotting, echo=TRUE}
+```{r plotting}
 
-
-# compute quantiles using weighted quantile
+# first assume that all streamflow estimates are equally probable
 aver_flow = msagel_acc %>% group_by(date) %>% dplyr::summarize(
-median = wtd.quantile(flow, probs=c(0.5), weights=wt_acc), 
-flow25 = wtd.quantile(flow,probs=c(0.25), weights=wt_acc), flow75=wtd.quantile(flow, probs=c(0.75), weights=wt_acc))
-
+median = quantile(x=flow, prob=0.5), 
+flow25 = quantile(x=flow,prob=0.25), flow75=quantile(x=flow, prob=0.75))
 # format for plotting
 aver_flowl = aver_flow %>% pivot_longer(col=c(-date), values_to="flow", names_to="quantile")
+# plot a single year in log scale so we can really see
 
-ggplot(subset(aver_flowl, wy=1980), aes(date, flow, col=quantile))+geom_line()+scale_y_continuous(trans="log")
 
-# to see low flows, transform y-axis
-ggplot(subset(aver_flowl, wy=1980), aes(date, flow, col=quantile))+geom_line()+scale_y_continuous(trans="log")
+ggplot(subset(aver_flowl, format(date,"%Y")==1980), aes(date, flow, col=quantile))+geom_line()
+# use log to really see low flow differences
+ggplot(subset(aver_flowl, format(date,"%Y")==1980), aes(date, flow, col=quantile))+geom_line()+scale_y_continuous(trans="log")
+
+# wtd quantile can use the unnormalized weights - it does the normalization for you
+aver_flow = msagel_acc %>% group_by(date) %>% dplyr::summarize(
+median = wtd.quantile(x=flow, prob=0.5, weights=w_acc), 
+flow25 = wtd.quantile(x=flow,prob=0.25, weights=w_acc), flow75=wtd.quantile(x=flow, prob=0.75, weights=w_acc))
+# format for plotting
+aver_flowl = aver_flow %>% pivot_longer(col=c(-date), values_to="flow", names_to="quantile")
+ggplot(subset(aver_flowl, format(date,"%Y")==1980), aes(date, flow, col=quantile))+geom_line()
+# use log to really see low flow differences
+ggplot(subset(aver_flowl, format(date,"%Y")==1980), aes(date, flow, col=quantile))+geom_line()+scale_y_continuous(trans="log")
 
 
 ```
