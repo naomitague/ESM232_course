@@ -52,7 +52,7 @@ navbar:
         - text: "Calibration"
           href: lectures/lecture18_calibration.html
         - text: "Optimization"
-          href: lectures/lecture19_optimize.html
+          href: lectures/lecture_19_optimize.html
     - text: "Wrap up"
       menu:
         - text: "A few final notes on spatial modeling and.."
