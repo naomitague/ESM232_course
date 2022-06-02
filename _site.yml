@@ -51,6 +51,12 @@ navbar:
           href: lectures/lecture17_agestructure.html
         - text: "Calibration"
           href: lectures/lecture18_calibration.html
+        - text: "Optimization"
+          href: lectures/lecture19_optimize.html
+    - text: "Wrap up"
+      menu:
+        - text: "A few final notes on spatial modeling and.."
+          href: lectures/wrapup.pdf
     - text: "Assignments"
       menu:
         - text: "Assign1: Conceptual Models"
