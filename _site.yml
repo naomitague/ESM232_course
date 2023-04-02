@@ -9,68 +9,68 @@ navbar:
       href: index.html
     - text: "Topics-First Half"
       menu:
-        - text: "Intro"
-          href: lectures/intro_lecture.html
-        - text: "Conceptual Models"
-          href: lectures/lecture2.conceptual.simple.html
-        - text: "Conceptual Models - Part 2"
-          href: lectures/lecture3_conceptualmodels2.html
-        - text: "Building Models"
-          href: lectures/lecture4.building_models.html
-        - text: "Models and Data"
-          href: lectures/lecture5_working_with_functions.html
-        - text: "Informal Sensitivity Analysis"
-          href: lectures/lecture6_informal_sensitivity.html
-        - text: "LHS Sensitivity Analysis"
-          href: lectures/lecture7_sensitivity.html
-        - text: "Sobol Sensitivity Analysis"
-          href: lectures/lecture8_sensitivity_sobol.html
-        - text: "Simple Dynamic Models"
-          href: lectures/lecture9_simpledynamic.html
-        - text: "More on Dynamic Models"
-          href: lectures/lecture10_moredynamic.html
-    - text: "Topics-Second Half"
-      menu:
-        - text: "Sobel with ODEs"
-          href: lectures/lecture11_sensitivity_withODE.html
-        - text: "ODEs with Disturbance"
-          href: lectures/lecture12_growth.html
-        - text: "Stability"
-          href: lectures/lecture13_stability.html
-        - text: "ODE with 2 variables"
-          href: lectures/lecture14_predprey.html
-        - text: "Modeling Example - thinning"
-          href: lectures/lecture15_thinexample/index.html
-        - text: "Choosing Models"
-          href: lectures/lecture16_choosingmodels.html
-        - text: "Choosing Models - additional lecture slides"
-          href: lectures/lecture16_choosingmodels/choosingmodels.pdf
-        - text: "Age Structured Population - introduction lecture slides"
-          href: lectures/lecture17_matrix/agestructure.pdf
-        - text: "Age Structured Population "
-          href: lectures/lecture17_agestructure.html
-        - text: "Calibration"
-          href: lectures/lecture18_calibration.html
-        - text: "Optimization"
-          href: lectures/lecture19_optimize.html
-    - text: "Wrap up"
-      menu:
-        - text: "A few final notes on spatial modeling and.."
-          href: lectures/wrapup.pdf
-    - text: "Assignments"
-      menu:
-        - text: "Assign1: Conceptual Models"
-          href: assignments/assign1.html
-        - text: "Lobell Paper"
-          href: assignments/lobell.2006.pdf
-        - text: "Assign2: Almond Yield Function"
-          href: assignments/almond_yield_function.html
-        - text: "Assign3: Almond Profit Sensitivity"
-          href: assignments/assign3_informal_sen.html
-        - text: "Assign4: LHS Sensitivity"
-          href: assignments/assign_LHS.html
-        - text: "Paper: Example Model"
-          href: assignments/thinning_model_example.html
+ #       - text: "Intro"
+#          href: lectures/intro_lecture.html
+#        - text: "Conceptual Models"
+#          href: lectures/lecture2.conceptual.simple.html
+#        - text: "Conceptual Models - Part 2"
+#          href: lectures/lecture3_conceptualmodels2.html
+#        - text: "Building Models"
+#          href: lectures/lecture4.building_models.html
+#        - text: "Models and Data"
+#          href: lectures/lecture5_working_with_functions.html
+#        - text: "Informal Sensitivity Analysis"
+#          href: lectures/lecture6_informal_sensitivity.html
+#        - text: "LHS Sensitivity Analysis"
+#          href: lectures/lecture7_sensitivity.html
+#        - text: "Sobol Sensitivity Analysis"
+#          href: lectures/lecture8_sensitivity_sobol.html
+#        - text: "Simple Dynamic Models"
+#          href: lectures/lecture9_simpledynamic.html
+#        - text: "More on Dynamic Models"
+#          href: lectures/lecture10_moredynamic.html
+#    - text: "Topics-Second Half"
+#      menu:
+#        - text: "Sobel with ODEs"
+#          href: lectures/lecture11_sensitivity_withODE.html
+#        - text: "ODEs with Disturbance"
+#          href: lectures/lecture12_growth.html
+#        - text: "Stability"
+#          href: lectures/lecture13_stability.html
+#        - text: "ODE with 2 variables"
+#          href: lectures/lecture14_predprey.html
+#        - text: "Modeling Example - thinning"
+#          href: lectures/lecture15_thinexample/index.html
+#        - text: "Choosing Models"
+#          href: lectures/lecture16_choosingmodels.html
+#        - text: "Choosing Models - additional lecture slides"
+#          href: lectures/lecture16_choosingmodels/choosingmodels.pdf
+#        - text: "Age Structured Population - introduction lecture slides"
+#          href: lectures/lecture17_matrix/agestructure.pdf
+#        - text: "Age Structured Population "
+#          href: lectures/lecture17_agestructure.html
+#        - text: "Calibration"
+#          href: lectures/lecture18_calibration.html
+#        - text: "Optimization"
+#          href: lectures/lecture_19_optimize.html
+#    - text: "Wrap up"
+#      menu:
+#        - text: "A few final notes on spatial modeling and.."
+#          href: lectures/wrapup.pdf
+#    - text: "Assignments"
+#      menu:
+#        - text: "Assign1: Conceptual Models"
+ #         href: assignments/assign1.html
+#        - text: "Lobell Paper"
+#          href: assignments/lobell.2006.pdf
+#        - text: "Assign2: Almond Yield Function"
+#          href: assignments/almond_yield_function.html
+#        - text: "Assign3: Almond Profit Sensitivity"
+#          href: assignments/assign3_informal_sen.html
+#        - text: "Assign4: LHS Sensitivity"
+#          href: assignments/assign_LHS.html
+#        - text: "Paper: Example Model"
+#          href: assignments/thinning_model_example.html
 
 
 #    - icon: fab fa-github
