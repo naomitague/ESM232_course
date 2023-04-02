@@ -143,19 +143,6 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/image9.png")
 
 
 
----
-
-#  Conceptual models can be of a processes (decision, assessment) 
-
-Serrano-Cinca C, Gutiérrez-Nieto B, Reyes NM, A Social and Environmental
-Approach to Microfinance Credit Scoring, Journal of Cleaner Production (2015), doi: 10.101
-
-[Available from] (https://www.researchgate.net/publication/282855291_A_Social_and_Environmental_Approach_to_Microfinance_Credit_Scoring).
-
-Figure 1. Flowchart of the social and environmental microcredit scoring decision process. The model includes financial assessment and social impact assessment.
-
-![](lecture2.conceptual.simple/assets/img/image11.png)
-
 
 ---
 
