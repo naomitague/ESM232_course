@@ -23,28 +23,6 @@ output:
 
 You are doing this all the time - there are many reasons to make this process explicit (computer aided modeling)
 
-#  STEPS: Modeling for Problem Solving in ES 
-
-Clearly define your goal (a question you want to answer, hypothesis you want to test, prediction you want to make) - as precisely as possible
-
-* Design or Select your model
-
-* Implement the model
-
-* Evaluate the model and quantify uncertainty
-
-* Apply the model to the goal
-
-* Communicate model results
-
----
-
-#  Designing/Selecting Models 
-
-* What are your inputs-outputs?
-
-* What’s in the box (the model itself) that gives you a relationship between outputs and inputs? 
-
 
 
 ```{r, out.width = "75%",out.height="75%", echo=FALSE}
@@ -134,37 +112,6 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/image9.png")
 
 ---
 
-#  Conceptual model as a flow chart (with example values) 
-
-
-![](lecture2.conceptual.simple/assets/img/image10.png)
-
-[source](https://www.boundless.com/biology/textbooks/boundless-biology-textbook/ecosystems-46/energy-flow-through-ecosystems-257/productivity-within-trophic-levels-952-12212/](https://www.boundless.com/biology/textbooks/boundless-biology-textbook/ecosystems-46/energy-flow-through-ecosystems-257/productivity-within-trophic-levels-952-12212/)
-
-
-
-
----
-
-#  Conceptual models can be of a decision making processes 
-
-
-![](lecture2.conceptual.simple/assets/img/image12.png)
-
-[source](http://energy.sandia.gov/energy/renewable-energy/wind-power/offshore-wind/offshore-wind-rdd-sediment-transport/)
-
----
-
-# Model can also be about classification
-
-Fig. 2. Flow-chart illustrating the working steps of glacial lake detection based on the normalized difference water index (NDWI), lake-outburst probability assessment and lake classi fi cation in the Indian Himalayas.
-
-Rouce et al., Hydrol. Earth Syst. Sci., 20, 3455–3475, 2016 www.hydrol-earth-syst-sci.net/20/3455/2016/ doi:10.5194/hess-20-3455-2016
-
-![](lecture2.conceptual.simple/assets/img/glacierlakeclass.jpg)
-
-
----
 
 # Types of Model
 
@@ -282,17 +229,136 @@ Conceptual Models
 
 ---
 
-#  Assignment 1 
+---
+#  From conceptual model to flow chart/workflow 
 
-For assignment one you will create a conceptual model to be presented in class. You will work in groups of 3-4.
+Impact of smoke from fires on health of agricultural workers
+What is ‘smoke”
+What is “health”
+What is an “agricultural worker”. …leads to your conceptual model
 
-1. Identify an environmental problem that would benefit from a model. 
+---
+---
+#  Design/Selecting Models 
 
-2. Summarize the goal of the model in a few sentences. 
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.jpeg")
+```
 
-3. Design a conceptual model, consider -  inputs, outputs, important processes/mechanisms/interactions, reservoirs/stores, other intermediate variables or steps, relationships between variables. Put your conceptual model on a single slide and be prepared to present the key inputs and outputs of the model, and the purpose of the model in class
+* What are your inputs-outputs
 
-Also add the slide and paragraph on Gauchospace - as Group Assignment
-You will need to complete the Group Select task first
+* What’s in the box (the model itself) that gives you a relationship between outputs and inputs
 
-Due end of the day on Monday
+* Transfer function
+
+* Parameters, values that influences how the model relationships work
+
+---
+#  Types of Models
+
+Conceptual.............Mathematical
+
+Stochastic.............Deterministic
+
+Lumped.............Spatially Distributed: *SPACE*
+
+Static.............Dynamic  : *TIME*
+
+Abstract.............Physically/Process Based
+
+but biggest differences may often be the degree specific processes/parameters are accounted for
+
+---
+
+#  Types of models: Example 
+
+* Input: Reservoir height (height) and flow rate (flow)
+* Output: Instantaneous power generation (W/s)
+
+* Parameter: Reservoir Efficiency (K)
+
+Conceptual model
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture3_conceptualmodels2/assets/img/reservoir_cm.001.jpeg")
+```
+
+---
+
+#  Types of models: Example 
+
+* **Input**: Reservoir height and flow rate
+
+* **Output**: Instantaneous power generation (W/s)
+
+* **Parameters**: K Efficiency , ρ (density of water), g (acceleration due to gravity)
+
+P = ρ * h * r * g * K Efficiency;
+
+P is Power in watts, ρ is the density of water (~1000 kg/m3), h is height in meters, r is flow rate in cubic meters per second, g is acceleration due to gravity of 9.8 m/s2, K Efficiency is a coefficient of efficiency ranging from 0 to 1.
+
+This is a static (one point in time), deterministic, lumped (one place) model; its more or less physically based
+
+---
+#  Types of models: Example 
+
+If we expand the model to compute power production over a year, where inputs were streamflow into the reservoir - *Dynamic Model*
+
+If we expand to model power production from all the reservoirs in California, accounting for spatial patterns of snowmelt inputs and upstream-downstream relationships - *Spatially Distributed Model*
+
+If we modified the model to estimate the probability distribution of power production, given a probability distribution of reservoir levels  - *Stochastic Model*
+
+---
+#  STEPS: Modeling for Problem Solving in  ES 
+
+* Clearly define your goal (question you want to answer, hypothesis you want to test, prediction you want to make) - as precisely as possible
+
+* Develop a conceptual model - draw it!
+
+* <span style="color: red;">Design</span> or Select your model
+
+* <span style="color: red;">Implement the model</span>
+
+* Evaluate the model and quantify uncertainty
+
+* Apply the model to the goal
+
+* Communicate model results
+
+---
+#  Steps for Design and Implement your model 
+
+* Design conceptual model
+
+* Translate conceptual model into a mathematical representation
+
+* Choose programming language
+
+* Define inputs (data type, units)
+
+* Define output (data type, units)
+
+* Define model structure
+
+* Write model
+
+* Document the model  (meta data)
+
+* Test model
+
+
+#  Assignment 2
+
+Your goal is to develop a conceptual model of almond yield  - the goal will be able to predict how almond yields might change if seasonal precipitation or air temperature patterns change in California
+
+The Lobell et al. 2006 paper will be the source for your model; specifically look at the equations in table 2.
+
+* List what the inputs and outputs will be - think carefully about time scale and units for inputs and output
+
+* Draw a conceptual model to represent your model that will translate inputs to output, on your diagram list what your inputs and outputs are with units
+
+* For a challenge - think about how you might change your conceptual model so that it would work for all tree yields considered by the Lobell paper
+
+We will build on this on Thursday's class so make sure you've completed before then
+
+

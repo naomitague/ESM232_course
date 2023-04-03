@@ -22,65 +22,7 @@ library(ggpubr)
 ```
 
 
-# Lists (Short Review) - 
 
-For returning more than one item from your function
-
-* Lists are the most “informal” data structures in R
-
-* List are really useful for keeping track of and organizing groups of things that are not all the same
-
-* A list could be a table where number of rows is different for each column
-
-* A list can have numeric, character, factors all mixed together
-
-*  List are often used for returning more complex information from function (e.g. lm)
-
-# Examples 
-
-Here are some examples of how to create and manipulate lists
-
-```{r lists}
-# simple list
-sale =  list(number=c(2,4,9), quality="high", what="apple", cost=4)
-sale
-sale$cost
-sale$number
-sale[4]
-
-```
-
-# Lists and Functions
-
-Lists are used to return multiple values from functions
-
-
-<center>
-**return(list(....))**
-</center>
-
-# Example - Biodiversity function
-
- * clone [ESM232_examples](https://github.com/naomitague/ESM232_Examples.git)
- 
- * take a look at the *compute_diversity* function (in *R* subdirectory) - any questions about what it does?
- 
-# Sample data for Biodiversity Function
-```{r}
-
-# get the function
-source("../R/compute_diversity.R")
-
-# sampling categorical data
-# create possible values
-flower_types = c("iris","daisy","poppy","rose","dandelion","weed","violet")
-# sample (with replacement)
-garden = sample(flower_types, size=20, replace=T)
-compute_diversity(garden)
-```
- 
- * modify to also return the *rarest* species
- 
 # Parameters - User controls on what your function does
 
 Parameters in the function definition can be used to give users options that determine what calculations or actions are done in the function
@@ -210,11 +152,4 @@ ggplot(site2_mean, aes(eff, mean))+geom_point()+
 
 * Challenge - how would you do an informal sensitivity analysis where you varied both efficiency and threshold 
 
-THURSDAY - CLASS IS ON ZOOM 
 
-Naomi Tague is inviting you to a scheduled Zoom meeting.
-
-Join Zoom Meeting
-https://ucsb.zoom.us/j/82292927380
-
-Meeting ID: 822 9292 7380
