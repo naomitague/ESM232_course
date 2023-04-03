@@ -14,7 +14,6 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-options(knitr.table.format = "latex")
 ```
 ---
 
@@ -32,7 +31,7 @@ options(knitr.table.format = "latex")
 
     * Think about what an inverse inference problem might be in the context of the environment
 
-3. Listen to this podcast on climate models - Pay particular to how Gavin Schmidt talks about the design, goal and **skill** of models
+3. Listen to this podcast on climate models - Pay particular attention to how Gavin Schmidt talks about the design, goal and **skill** of models
 
     * [The emergent pattersn of climate change](https://www.ted.com/talks/gavin_schmidt_the_emergent_patterns_of_climate_change?language=en)
 
@@ -76,7 +75,7 @@ options(knitr.table.format = "latex")
 * Tues 4/11 10:45am - 11:30am 
 * Thurs 4/13 10:45am - 11:30am 
 
-### To summarize, submit the following by April 17th
+### To summarize, submit the following by April 17th:
 
 1. Fill out 'get to know you' survey on Canvas  
 2. your conceptual model figure 
