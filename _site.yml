@@ -9,8 +9,8 @@ navbar:
       href: index.html
     - text: "Topics-First Half"
       menu:
- #       - text: "Intro"
-#          href: lectures/intro_lecture.html
+         - text: "Intro"
+           href: lectures/intro_lecture.html
 #        - text: "Conceptual Models"
 #          href: lectures/lecture2.conceptual.simple.html
 #        - text: "Conceptual Models - Part 2"
@@ -29,8 +29,8 @@ navbar:
 #          href: lectures/lecture9_simpledynamic.html
 #        - text: "More on Dynamic Models"
 #          href: lectures/lecture10_moredynamic.html
-#    - text: "Topics-Second Half"
-#      menu:
+#   - text: "Topics-Second Half"
+#     menu:
 #        - text: "Sobel with ODEs"
 #          href: lectures/lecture11_sensitivity_withODE.html
 #        - text: "ODEs with Disturbance"
@@ -57,10 +57,10 @@ navbar:
 #      menu:
 #        - text: "A few final notes on spatial modeling and.."
 #          href: lectures/wrapup.pdf
-#    - text: "Assignments"
-#      menu:
-#        - text: "Assign1: Conceptual Models"
- #         href: assignments/assign1.html
+    - text: "Assignments"
+      menu:
+        - text: "Assign1: Conceptual Models"
+          href: assignments/Assignment1_preclass.html
 #        - text: "Lobell Paper"
 #          href: assignments/lobell.2006.pdf
 #        - text: "Assign2: Almond Yield Function"

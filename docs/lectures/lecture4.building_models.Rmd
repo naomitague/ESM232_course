@@ -11,55 +11,27 @@ output:
     highlight: pygments
 ---
 
-#  Best practices for model (software) development 
-
-## Common problems
-
-* Unreadable code (hard to understand, easy to forget how it works, hard to find errors, hard to expand)
-
-* Overly complex, disorganized code (hard to find errors; hard to modify-expand)
-
-* Insufficient testing (both during development and after)
-
-* Not tracking code changes (multiple versions, which is correct?)
-
 ---
+#  Steps for Design and Implement your model 
 
-#  Best practices for model (software) development 
+* Design conceptual model
 
-Basic Solution
+* Translate conceptual model into a mathematical representation
 
-Structured practices that ensures
-clear, readable code 
+* Choose programming language
 
-* meaningful variables names 
+* Define inputs (data type, units)
 
-* comments to explain the workflow
+* Define output (data type, units)
 
-* documentation to explain functionality 
+* Define model structure
 
-* modularity (organized “independent” building blocks)
+* Write model
 
-*  testing frequently as you develop each module and after
+* Document the model  (meta data)
 
-* code evolution is documented (version control)
+* Test model
 
----
-
-#  Best practices for model (software) development 
-
-
-**Automated Documentation with *Oxygen* **
-
-* [Oxygen in XML - Original](https://www.oxygenxml.com/)
-* [ROxygen - works with R](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html)
-
-**Automated Testing**
-[ Testing in R](https://r-pkgs.org/tests.html)
-
-**Version Control** - Github
-
----
 
 #  Modularity - Discrete Tasks  
 
@@ -152,19 +124,7 @@ Data types, units (time and space aggregation), names should be (use descriptive
 
 ---
 
-#  Implementing Functions in R 
 
-Format for a basic function in R
-
-<span style="color: orange;"> #' documentation that describes inputs, outputs and what the function does
-
-<span style="color: orange;"> FUNCTION NAME = function(inputs, parameters) {
-
-<span style="color: orange;">body of the function (manipulation of inputs)
-
-<span style="color: orange;">return }</span>
-
-In R, inputs and parameters are treated the same; but it is useful to think about them separately in designing the model - collectively they are sometimes referred to as arguments
 
 **IMPORTANT**
 
@@ -222,56 +182,7 @@ power_estimate = cbind.data.frame(height=measured_height, estimate=power_gen(hei
 ggplot(power_estimate,aes(height, estimate) )+geom_point()+labs(y="power in W/x", x="height (m)")
 ```
 
----
 
-#   Building Models 
-
-Another example: Okuns Law (conceptual, abstract model) - try implementing this as a function
-
-Graph of US quarterly data (not annualized) from 1947 through 2002 estimates a form of the difference version of 
-
-Okun's law:
-
-**%Change GNP = 0.856 - 1.827(Change Unemployment Rate)** 
-
-R\^2 of .504. 
-
-Differences from other results are partly due to the use of quarterly data
-http://en.wikipedia.org/wiki/Okun%27s_law
-
-Write the function in R!
-
-what is change in GDP for unemployment rate change of 3%
-
-what would the change in GDP be for 3% change in unemployment rate if the slope was 10% higher
-
-
-
-
-
----
-
-```{r}
-
-okum = function(deltaEmp, slope=1.827, intercept=0.856) {
-  deltaGDP = slope*deltaEmp + intercept
-  return(deltaGDP)
-}
-
-okum(3)
-okum(3, slope=1.827*(1.1))
-```
-
-
-#  Best practices for model (software) development 
-
-" *Let us change our traditional attitude to the construction of programs: Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to humans what we want the computer to do. -- Donald E. Knuth, Literate Programming, 1984* "
-
-Developing readable (by PEOPLE) code and documenting what you are doing is essential
-
-*“When was the last time you spent a pleasant evening in a comfortable chair, reading a good program?”— Bentley (1986)*
-
----
 
 ```{r eval=TRUE, echo=TRUE}
 #' Power Generation
@@ -309,35 +220,6 @@ You can clone this repository and then pull before class to get example code and
 Just remember that git does not like having nest repositories - so
 keep working respoistories in separate directories
 
-#  Documentation! 
-
-Makes it easier for you to fix issues, refine and easier for others to use
-
-For functions (model) you should always include the following in your code
-
-* The goal of the model
-
- * Model inputs (description, name and units)
-
-* Model output (description, name and units)
-
-* Where the model (or submodel) comes from (source papers)
-
-In line explanation for key steps
-
-Always use meaningful names for functions, variables, inputs and outputs
-
-Always put your function in its own file - with just the documentation
-
----
-
-#  Building Models:Documentation 
-
-There is also a standard format for documentation that can be read by automatic programs (roxygen2) - an R package that generate “standard” R documentation - manual or help pages
-
-These automated approaches for building documentation (like roxygen2) and meta data (descriptions of data sets) are increasingly common - so you should get into the practice of being structured in your approach to documentation
-
-We will use the conventions that work with roxygen2 - and then use this program to generate formal R documentation. Roxygen is similar to Doxygen which is used for C code…so its a widely used format
 
 # Assignment
 

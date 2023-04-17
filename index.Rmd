@@ -2,6 +2,10 @@
 title: "Environmental Modelling"
 description: ESM 232 / EDS 230  Spring 2022
 site: distill::distill_website
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -44,31 +48,28 @@ Class will include a mix of lectures and in class hands-on examples, using stude
 
 **Teaching assistant:** Rachel Torres 
 
--   **Office:** 
--   **Office hours:** 
+-   **Office:** Bren Hall 1005
+-   **Office hours:**  T, TH 10:45-12
 -   **Email:** ratorres@bren.ucsb.edu
 
 
 ## Where we will be
 
--   **Lectures:** MW 9:30am - 10:45 am (**MSB 1302**)  EXCEPT
-
-    -  April 21, April 26, May 17 - we will be in **BH 1424**
-    -  April 14, April 19 we will be on zoom
-    
-    here's the zoom link **Just for April 14, 19**
-    
-    https://ucsb.zoom.us/j/82292927380
-    
-
+-   **Lectures:** Tues, Thur 9:30am - 10:45 am (**BH 1414**)  
+-   **Make-up Class**  May 9 5-8pm; May 10 5-8pm  (**BH 1414**)
+      - note you only need to attend one of these - see sign up 
+      [here](https://docs.google.com/spreadsheets/d/1e1_Gfblja_Rye9xVoe7LMmqUrrUDKtG4oZUNPgn2_U8/edit?usp=sharing)
+      
 ## Learning objectives
 
  - Gain familiarity with different types of models and the situations where you might use them
+ 
  - Understand how to choose the 'right model' for the job
  - Know how to build simple models including
       - input-output models
       - basic dynamic models 
       - matrix models
+      
   - Gain some basic skills that are useful in applying models including
       - parameter sensitivity analysis
       - uncertainty analysis
@@ -76,15 +77,11 @@ Class will include a mix of lectures and in class hands-on examples, using stude
       
 
 
-## Course requirements
-
-### Computing
+## Computing
 
 -   I will assume that everyone has some basic R skills (from ESM 203, ESM 232, MEDS program courses or other courses), including how to use ggplot, and Rmarkdown and build simple functions, as well as a basic understanding if *git* and *Github*
 
 -   Many classes will be working classes so bring these to class
-
--   Assignments will usually be submitted as *GitHub* links so make sure you have a *GitHub* account 
 
 
 
@@ -95,19 +92,40 @@ Class will include a mix of lectures and in class hands-on examples, using stude
 
 | Week | Lecture topics | 
 |------|----------------|
-| 1    | Into and Conceptual Models         | 
-| 2    | Constructing Simple Models in R         | 
-| 3    | Multi-Component Models       | 
-| 4    | Sensitivity Analysis     | 
-| 5    | Dynamic Models        | 
-| 6    | Stability and Sensitivity with Dynamic Models         |    
-| 7    | Matrix Population Models         | 
-| 8    | Choosing and Evaluating Models        | 
-| 9    | Calibration and Optimization        | 
-| 10   | Spatial Models        | 
+|April 17    | Into and Conceptual Models         | 
+|April 24   | Constructing Simple Models in R         | 
+|May 1    | Sensitivity Analysis      | 
+| May 8    |Choosing and Evaluating Models    | 
+| Special Class    |  Model Calibration       | 
+| May 15    | Dynamic Models |          |    
+| May 22    | Stability and Sensitivity with Dynamic Models |
+| May 29    |   Matrix Population (Discrete Dynamic)     | 
+| June 4    |  Optimization and Wrap Up    | 
 
 ## Assignments
 
-There are 10 assignments. Most (but not all) assignments will be done in groups. Assignments will vary in length but most will be short coding assignments with a 1- paragraph write up. Assignments will be submitted as a link to your *GitHub* repository that has assignment files  - the link will be submitted on *Canvas* - that way we can keep track of grading for each assignment
+
+There are 8 assignments. Some assignments will be done in groups. Assignments will vary in length but most will be short coding assignments with a 1- paragraph write up. Assignments can be submitted as a link to your *GitHub* repository that has assignment files  - the link will be submitted on *Canvas* - that way we can keep track of grading for each assignment. If you find *GitHub* too challenging then you can also submit files directly (if you do this, please make sure you zip multiple files together)
+
+# Protocols and Guidance 
+
+*  Learning to program is hard and I may not always explain in a way that is accessible to you - So if you don't understand something *ASK* 
+    * ideally ask in class - you will help me to learn how to explain (or find an answer if I don't know it) and you will help others 
+    * if you don't feel comfortable asking , reach out to me or Rachel
+
+* Environmental modeling and the coding involved gets better with practice and play - Don't just read the Rmarkdown - try the code, try variations on the ideas presented, make up stuff to try, get your feet wet 
+
+* Programming means making mistakes, expect it, stay calm and try again - if you get frustrated step away and come back; be creative
+
+
+* **Respect and Support each other** 
+  * when working in groups, pay attention to your partner, if they are not at your skill level, help them learn - recognize that we all have different backgrounds
+  * listen - different perspectives contribute to modeling - ask questions; figure out how different people *see* the world (what is there conceptual model)
+  * you learn by helping others - do that!
+  
+  
+
+* If you are really struggling, reach out to Rachel or myself, we can help
+(or if you just want to chat about something ) 
 
 
