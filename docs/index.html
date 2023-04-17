@@ -50,16 +50,17 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  { color: #00769e; background-color: #f1f3f5; }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span { color: #00769e; } /* Normal */
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { } /* Attribute */
+code span.at { color: #657422; } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
-code span.cf { color: #007ba5; } /* ControlFlow */
+code span.cf { color: #00769e; } /* ControlFlow */
 code span.ch { color: #20794d; } /* Char */
 code span.cn { color: #8f5902; } /* Constant */
 code span.co { color: #5e5e5e; } /* Comment */
@@ -73,9 +74,9 @@ code span.fl { color: #ad0000; } /* Float */
 code span.fu { color: #4758ab; } /* Function */
 code span.im { } /* Import */
 code span.in { color: #5e5e5e; } /* Information */
-code span.kw { color: #007ba5; } /* Keyword */
+code span.kw { color: #00769e; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
-code span.ot { color: #007ba5; } /* Other */
+code span.ot { color: #00769e; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
 code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
@@ -787,6 +788,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -1028,10 +1030,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     position: relative;
     margin-bottom: 2.5em;
     margin-top: 1.5em;
-  }
-
-  .figure img {
-    width: 100%;
   }
 
   .figure .caption {
@@ -1863,9 +1861,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
+          $(this).html(fn.shadowRoot.querySelector("sup"))
+          $(this).id = fn.id
+          fn.remove()
+        }
         var refs = $(this).attr('data-cites').split(" ");
         var refHtml = refs.map(function(ref) {
-          return "<p>" + $('#ref-' + ref).html() + "</p>";
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
         }).join("\n");
         window.tippy(this, {
           allowHTML: true,
@@ -1877,6 +1887,31 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           placement: 'bottom-start'
         });
       });
+
+      // fix footnotes in tables (#411)
+      // replacing broken distill.pub feature
+      $('table d-footnote').each(function() {
+        // we replace internal showAtNode methode which is triggered when hovering a footnote
+        this.hoverBox.showAtNode = function(node) {
+          // ported from https://github.com/distillpub/template/pull/105/files
+          calcOffset = function(elem) {
+              let x = elem.offsetLeft;
+              let y = elem.offsetTop;
+              // Traverse upwards until an `absolute` element is found or `elem`
+              // becomes null.
+              while (elem = elem.offsetParent && elem.style.position != 'absolute') {
+                  x += elem.offsetLeft;
+                  y += elem.offsetTop;
+              }
+
+              return { left: x, top: y };
+          }
+          // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetTop
+          const bbox = node.getBoundingClientRect();
+          const offset = calcOffset(node);
+          this.show([offset.left + bbox.width, offset.top + bbox.height]);
+        }
+      })
 
       // clear polling timer
       clearInterval(tid);
@@ -1976,6 +2011,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // mark non-body figures created by knitr chunks as 100% width
     $('.layout-chunk').each(function(i, val) {
       var figures = $(this).find('img, .html-widget');
+      // ignore leaflet img layers (#106)
+      figures = figures.filter(':not(img[class*="leaflet"])')
       if ($(this).attr('data-layout') !== "l-body") {
         figures.css('width', '100%');
       } else {
@@ -1998,7 +2035,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // get rid of index.html references in header
     if (window.location.protocol !== "file:") {
       $('.distill-site-header a[href]').each(function(i,val) {
-        $(this).attr('href', $(this).attr('href').replace("index.html", "./"));
+        $(this).attr('href', $(this).attr('href').replace(/^index[.]html/, "./"));
       });
     }
 
@@ -2446,7 +2483,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2478,70 +2515,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <div class="nav-right">
 <a href="index.html">Home</a>
-<div class="nav-dropdown">
-<button class="nav-dropbtn">
-Topics-First Half
- 
-<span class="down-arrow">&#x25BE;</span>
-</button>
-<div class="nav-dropdown-content">
-<a href="lectures/intro_lecture.html">Intro</a>
-<a href="lectures/lecture2.conceptual.simple.html">Conceptual Models</a>
-<a href="lectures/lecture3_conceptualmodels2.html">Conceptual Models - Part 2</a>
-<a href="lectures/lecture4.building_models.html">Building Models</a>
-<a href="lectures/lecture5_working_with_functions.html">Models and Data</a>
-<a href="lectures/lecture6_informal_sensitivity.html">Informal Sensitivity Analysis</a>
-<a href="lectures/lecture7_sensitivity.html">LHS Sensitivity Analysis</a>
-<a href="lectures/lecture8_sensitivity_sobol.html">Sobol Sensitivity Analysis</a>
-<a href="lectures/lecture9_simpledynamic.html">Simple Dynamic Models</a>
-<a href="lectures/lecture10_moredynamic.html">More on Dynamic Models</a>
-</div>
-</div>
-<div class="nav-dropdown">
-<button class="nav-dropbtn">
-Topics-Second Half
- 
-<span class="down-arrow">&#x25BE;</span>
-</button>
-<div class="nav-dropdown-content">
-<a href="lectures/lecture11_sensitivity_withODE.html">Sobel with ODEs</a>
-<a href="lectures/lecture12_growth.html">ODEs with Disturbance</a>
-<a href="lectures/lecture13_stability.html">Stability</a>
-<a href="lectures/lecture14_predprey.html">ODE with 2 variables</a>
-<a href="lectures/lecture15_thinexample/index.html">Modeling Example - thinning</a>
-<a href="lectures/lecture16_choosingmodels.html">Choosing Models</a>
-<a href="lectures/lecture16_choosingmodels/choosingmodels.pdf">Choosing Models - additional lecture slides</a>
-<a href="lectures/lecture17_matrix/agestructure.pdf">Age Structured Population - introduction lecture slides</a>
-<a href="lectures/lecture17_agestructure.html">Age Structured Population </a>
-<a href="lectures/lecture18_calibration.html">Calibration</a>
-<a href="lectures/lecture_19_optimize.html">Optimization</a>
-</div>
-</div>
-<div class="nav-dropdown">
-<button class="nav-dropbtn">
-Wrap up
- 
-<span class="down-arrow">&#x25BE;</span>
-</button>
-<div class="nav-dropdown-content">
-<a href="lectures/wrapup.pdf">A few final notes on spatial modeling and..</a>
-</div>
-</div>
-<div class="nav-dropdown">
-<button class="nav-dropbtn">
-Assignments
- 
-<span class="down-arrow">&#x25BE;</span>
-</button>
-<div class="nav-dropdown-content">
-<a href="assignments/assign1.html">Assign1: Conceptual Models</a>
-<a href="assignments/lobell.2006.pdf">Lobell Paper</a>
-<a href="assignments/almond_yield_function.html">Assign2: Almond Yield Function</a>
-<a href="assignments/assign3_informal_sen.html">Assign3: Almond Profit Sensitivity</a>
-<a href="assignments/assign_LHS.html">Assign4: LHS Sensitivity</a>
-<a href="assignments/thinning_model_example.html">Paper: Example Model</a>
-</div>
-</div>
+<span class="nav-dropdown-header">Topics-First Half</span>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
 </nav>
@@ -2575,7 +2549,8 @@ Figure 1: Image: A hillside a bloom - a place where I run my ecohydrologic model
 <p>Computer-based modeling and simulation are widely used tools in both practical environmental problem solving and in environmental research. Models give us a way to look at the world through a mixture of data and theory. A good model can help us to understand how the world works and how decisions that we make might change the world in ways that are important to us. There are many different types of models, from simple to complex, and models are often tailored to answer a specific questions. This course will give you skills that help you to choose which model, or modeling technique, is right for you - given the task at hand. The course will cover designing a new model and evaluating existing models. We will emphasize best practices, such as sensitivity and uncertainty analysis, that help to design and use models to reliably support environmental problem solving. This is a skills based course and we will use R (a data analysis and programming environment) as our basic platform.</p>
 <p>Class will include a mix of lectures and in class hands-on examples, using students’ own computers. I will often provide an R-markdown document for you to go through prior to class so you can learn at your own pace and we will then use class time for the hands-on examples and assignments.</p>
 <h2 id="teaching-team">Teaching team</h2>
-<p><strong>Instructor:</strong> Naomi Tague (<a href="https://tagueteamlab.org/" class="uri">https://tagueteamlab.org/</a>)</p>
+<p><strong>Instructor:</strong> Naomi Tague
+(<a href="https://tagueteamlab.org/" class="uri">https://tagueteamlab.org/</a>)</p>
 <ul>
 <li><strong>Office:</strong> Bren Hall 4516</li>
 <li><strong>Office hours:</strong> email to set a time</li>
@@ -2622,6 +2597,7 @@ Figure 1: Image: A hillside a bloom - a place where I run my ecohydrologic model
 <li><p>Assignments will usually be submitted as <em>GitHub</em> links so make sure you have a <em>GitHub</em> account</p></li>
 </ul>
 <h2 id="tentative-topics">Tentative topics</h2>
+<p><img src="img/goalswc.png" /></p>
 <table>
 <thead>
 <tr class="header">
@@ -2673,7 +2649,7 @@ Figure 1: Image: A hillside a bloom - a place where I run my ecohydrologic model
 </tbody>
 </table>
 <h2 id="assignments">Assignments</h2>
-<p>There are 10 assignments. Most (but not all) assignments will be done in groups. Assignments will vary in length but most will be short coding assignments with a 1- paragraph write up. Assignments will be submitted as a link to your <em>GitHub</em> repository that has assignment files - the link will be submitted on <em>Gauchospace</em> - that way we can keep track of grading for each assignment</p>
+<p>There are 10 assignments. Most (but not all) assignments will be done in groups. Assignments will vary in length but most will be short coding assignments with a 1- paragraph write up. Assignments will be submitted as a link to your <em>GitHub</em> repository that has assignment files - the link will be submitted on <em>Canvas</em> - that way we can keep track of grading for each assignment</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

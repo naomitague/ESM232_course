@@ -87,7 +87,11 @@ Class will include a mix of lectures and in class hands-on examples, using stude
 -   Assignments will usually be submitted as *GitHub* links so make sure you have a *GitHub* account 
 
 
+
+
 ## Tentative topics
+
+![](img/goalswc.png)
 
 | Week | Lecture topics | 
 |------|----------------|
@@ -104,6 +108,6 @@ Class will include a mix of lectures and in class hands-on examples, using stude
 
 ## Assignments
 
-There are 10 assignments. Most (but not all) assignments will be done in groups. Assignments will vary in length but most will be short coding assignments with a 1- paragraph write up. Assignments will be submitted as a link to your *GitHub* repository that has assignment files  - the link will be submitted on *Gauchospace* - that way we can keep track of grading for each assignment
+There are 10 assignments. Most (but not all) assignments will be done in groups. Assignments will vary in length but most will be short coding assignments with a 1- paragraph write up. Assignments will be submitted as a link to your *GitHub* repository that has assignment files  - the link will be submitted on *Canvas* - that way we can keep track of grading for each assignment
 
 
