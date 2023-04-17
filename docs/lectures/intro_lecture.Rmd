@@ -3,10 +3,10 @@ title: "What is a model?"
 output:
   slidy_presentation:
     highlight: pygments
-  html_document: default
-  pdf_document: default
   ioslides_presentation:
     highlight: pygments
+  pdf_document: default
+  html_document: default
   beamer_presentation:
     highlight: pygments
 ---
@@ -15,6 +15,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 ---
 
 ![](intro_lecture/assets/img/image2.png)
@@ -31,12 +32,31 @@ Water balance can tell you a lot
 
 ![](intro_lecture/assets/img/image2.png)
 
+---
+
+#  Model Goals 
+
+Because models are only approximations of reality - the most important part of the modelling process is knowing **why** you want to build a model
+
+Some broad types of goals
+
+*Understanding* (how does something work, what are key drivers of responses, how do different drivers interact)
+
+*Estimation/Scenario* (what might be the consequences of decisions we make about the environment, what might the environment look like if something changes)
+
+*Communication* - contribute to education and broader understanding
+
+Actual goal(s) needs to be more precisely defined
+
+
 
 ---
 
 #  Models for understanding(big #’s, little #’s as controls on phenomena) 
 
-Questions
+The is often the role of *inverse inference* models - for example using a GCM to assess whether CO2 emissions can explain trends in warming temperature
+
+This application of models is often in the form of a question
 
 In a particular place (Baltimore Harbor), would temperature often be a limiting factor in eutrophication?
 At what times of year, would N-export matter more or less?
@@ -176,6 +196,18 @@ Outputs
 carbon sequestration for different fire frequencies
 
 ---
+# Pair and Share
+
+Share your conceptual model with a partner...Ask each other
+
+* how would this model help "understand" why an observed pattern occurs; is there something you could have done to make this inverse inference more clear
+
+* what are some applications of this model - what would be the goal in that application
+
+* what are the core assumptions in the model
+
+* are there changes you would suggest to your partner's model
+
 
 # Exercise 
 
@@ -190,25 +222,3 @@ a model for understanding
 For each one -
 Briefly describe a goal for the model - be as specific as you can
 
-Add your description to the gauchospace forum 
-*Examples of Models for Estimation, Communication or Understanding*
-
-
-# Prepare for Wednesday Lecture
-
-* Fill out *Help us get to know you* survey on Gauchospace
-
-* Listen to *only* timestap 26:27 to 31:22  (basically 5 minutes) of the following 
-blog by Lisa Felman Barrett - a highly cited psychologist
-
-* [blog  26:27 to 31:22](https://www.youtube.com/watch?v=NbdRIVCBqNI)
-
-[More about Lisa Felman Barrett](https://www.affective-science.org/lisa-feldman-barrett.shtml)
-
-After listening, think of a model that you are internally using to solve the inverse inference problem. 
-
-Pick a model  related in some way to your interest in the environment?
-
-Describe this in 2-3 sentences and add to Gauchospace under the following forum
-
-*Examples of Internal models to solve the inverse inference problem*

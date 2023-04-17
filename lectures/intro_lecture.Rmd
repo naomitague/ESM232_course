@@ -1,12 +1,12 @@
 ---
 title: "What is a model?"
 output:
-  html_document: default
+  slidy_presentation:
+    highlight: pygments
   ioslides_presentation:
     highlight: pygments
   pdf_document: default
-  slidy_presentation:
-    highlight: pygments
+  html_document: default
   beamer_presentation:
     highlight: pygments
 ---
@@ -15,7 +15,9 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 ---
+
 ![](intro_lecture/assets/img/image2.png)
 
 #  Mathematical Representation of this model 
@@ -198,7 +200,9 @@ carbon sequestration for different fire frequencies
 
 Share your conceptual model with a partner...Ask each other
 
-* how would this model help "understand" why an observed pattern occurs
+* how would this model help "understand" why an observed pattern occurs; is there something you could have done to make this inverse inference more clear
+
+* what are some applications of this model - what would be the goal in that application
 
 * what are the core assumptions in the model
 
