@@ -131,6 +131,34 @@ Goal: Help public understand why, even if temperature warms - glaciers might gro
 *Communication* - contribute to education and broader understanding
 
 ---
+# Conceptual Models
+
+* models are **always** simplifications of reality - they help us to make sense of reality by focusing on specific aspects that are most relevant to your goal
+
+* always start a modeling project by diagramming your conceptual model - how to you see the system; 
+    * from here you design or choose your 'actual' model
+
+* in a project, dialogue it is critical to dialogue to agree on the conceptual model
+
+* "all models are wrong but some are useful" - British Statistician George Box
+
+---
+# Pair and Share
+
+Share your conceptual model with a partner...Ask each other
+
+* how would this model help "understand" why an observed pattern occurs; is there something you could have done to make this inverse inference more clear
+
+* are the mechanisms that translate inputs to outputs clear; are there multiple mechanisms involved
+
+* what are some applications of this model - what would be the goal in that application
+
+* what are the core assumptions in the model
+
+* are there changes you would suggest to your partner's model
+
+
+---
 
 #  Basic components of models 
 
@@ -197,29 +225,3 @@ Outputs
 carbon sequestration for different fire frequencies
 
 ---
-# Pair and Share
-
-Share your conceptual model with a partner...Ask each other
-
-* how would this model help "understand" why an observed pattern occurs; is there something you could have done to make this inverse inference more clear
-
-* what are some applications of this model - what would be the goal in that application
-
-* what are the core assumptions in the model
-
-* are there changes you would suggest to your partner's model
-
-
-# Exercise 
-
-In groups, brainstorm about models that you are familiar with (or could imagine!); provide an example of
-
-a model for estimation
-
-a model for communication
-
-a model for understanding
-
-For each one -
-Briefly describe a goal for the model - be as specific as you can
-

@@ -307,6 +307,14 @@ If we expand the model to compute power production over a year, where inputs wer
 If we expand to model power production from all the reservoirs in California, accounting for spatial patterns of snowmelt inputs and upstream-downstream relationships - *Spatially Distributed Model*
 
 If we modified the model to estimate the probability distribution of power production, given a probability distribution of reservoir levels  - *Stochastic Model*
+---
+
+# Pair and Share
+
+With your conceptual model from Tuesday's class - 
+
+* discuss what type of model you have 
+* consider that for some conceptual models you might translate/expand the basic conceptual models into different types of models - discuss that this might look like for your models
 
 ---
 #  STEPS: Modeling for Problem Solving in  ES 
@@ -349,16 +357,31 @@ If we modified the model to estimate the probability distribution of power produ
 
 #  Assignment 2
 
+For this assignment you will work in pairs
+
 Your goal is to develop a conceptual model of almond yield  - the goal will be able to predict how almond yields might change if seasonal precipitation or air temperature patterns change in California
 
 The Lobell et al. 2006 paper will be the source for your model; specifically look at the equations in table 2.
 
-* List what the inputs and outputs will be - think carefully about time scale and units for inputs and output
+* Draw a conceptual model to represent your model that will translate inputs to output, with parameters that shape the relationship between inputs an outputs - on your diagram list what your inputs, parameters and outputs are with units
 
-* Draw a conceptual model to represent your model that will translate inputs to output, on your diagram list what your inputs and outputs are with units
+* Write a simple R function that implements your conceptual model
 
-* For a challenge - think about how you might change your conceptual model so that it would work for all tree yields considered by the Lobell paper
+* For a challenge - think about how you might change your  model so that it would work for all tree yields considered by the Lobell paper
 
-We will build on this on Thursday's class so make sure you've completed before then
+We will build on this on Tuesday's class 
 
+
+Grading Rubric
+
+Conceptual model (30 pts)
+
+  * correct inputs and output and parameters shown on the diagram (10 pts)
+  * clear diagram (10 pts)
+  
+R Implementation (30 pts)
+
+  * 
+  
+Extra Credit - a diagram that that works for all tree yields (20 pts)
 
