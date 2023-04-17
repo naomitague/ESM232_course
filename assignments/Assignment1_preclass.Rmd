@@ -75,7 +75,7 @@ knitr::opts_chunk$set(echo = TRUE)
 * Tues 4/11 10:45am - 11:30am 
 * Thurs 4/13 10:45am - 11:30am 
 
-### To summarize, submit the following by April 17th:
+### To summarize, submit the following by April 14th:
 
 1. Fill out 'get to know you' survey on Canvas  
 2. your conceptual model figure 
