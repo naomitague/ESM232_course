@@ -1,0 +1,143 @@
+---
+title: "Syllabus "
+output:
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+  pdf_document: default
+  ioslides_presentation:
+    highlight: pygments
+  beamer_presentation:
+    highlight: pygments
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# Course description
+
+<p style="color: #ba5e00"><b> Environmental Modelling: An overview.</p></b>
+
+Models give us a way to look at the world through a mixture of data and theory. A good model can help us to understand how the world works and how decisions that we make might change the world in ways that are important to us. 
+
+
+# Style
+
+Class will include a mix of lectures and in class hands-on examples, using students’ own computers.
+
+I will often provide an R-markdown document for you to go through prior to class so you can learn at your own pace and we will then use class time for the hands-on examples and assignments.
+
+
+# Teaching team
+
+**Instructor:** Naomi Tague 
+(https://tagueteamlab.org/)
+
+-   **Office:** Bren Hall 4516
+-   **Office hours:** email to set a time
+-   **Email:** tague@ucsb.edu
+
+**Teaching assistant:** Rachel Torres 
+
+-   **Office:** Bren Hall 1005
+-   **Office hours:**  T, TH 10:45-12
+-   **Email:** ratorres@bren.ucsb.edu
+
+
+# Where we will be
+
+-   **Lectures:** Tues, Thur 9:30am - 10:45 am (**BH 1414**)  
+-   **Make-up Class**  May 9 5-8pm; May 10 5-8pm  (**BH 1414**)
+      - note you only need to attend one of these - see sign up 
+      [here](https://docs.google.com/spreadsheets/d/1e1_Gfblja_Rye9xVoe7LMmqUrrUDKtG4oZUNPgn2_U8/edit?usp=sharing)
+
+
+# Goals
+```{r, echo=FALSE  }
+knitr::include_graphics("../img/goalswc.png")
+```
+
+
+# Learning objectives
+
+ - Gain familiarity with different types of models and the situations where you might use them
+ 
+ - Understand how to choose the 'right model' for the job
+ 
+ - Know how to build simple models including
+      - input-output models
+      - basic dynamic models 
+      - matrix models
+      
+  - Gain some basic skills that are useful in applying models including
+      - parameter sensitivity analysis
+      - uncertainty analysis
+      - model calibration and evaluation
+      
+
+
+# Computing
+
+-   I will assume that everyone has some basic R skills (from ESM 203, ESM 232, MEDS program courses or other courses), including how to use ggplot, and Rmarkdown and build simple functions, as well as a basic understanding if *git* and *Github*
+
+-   Many classes will be working classes so bring these to class
+
+
+
+# Tentative topics
+
+
+| Week | Lecture topics | 
+|------|----------------|
+|April 17    | Into and Conceptual Models         | 
+|April 24   | Constructing Simple Models in R         | 
+|May 1    | Sensitivity Analysis      | 
+| May 8    | Dynamic Model  | 
+| Special Class    |  Model Selection/Validation/Calibration     | 
+| May 15    | Model Selection/Validation/Calibration |          |    
+| May 22    | Stability and Sensitivity with Dynamic Models |
+| May 29    |   Matrix Population (Discrete Dynamic)     | 
+| June 4    |  Optimization and Wrap Up    | 
+
+
+
+# Assignments
+
+
+* There are 8 assignments. 
+
+* Some assignments will be done in groups. Assignments will vary in length but most will be short coding assignments with a 1- paragraph write up. 
+
+* Assignments can be submitted as a link to your *GitHub* repository that has assignment files  - the link will be submitted on *Canvas* - that way we can keep track of grading for each assignment. If you find *GitHub* too challenging then you can also submit files directly (if you do this, please make sure you zip multiple files together)
+
+* I will provide a grading rubric for each assignment - but you will get an "A" if you complete the work
+
+# Protocols and Guidance 
+
+*  Learning to program is hard and I may not always explain in a way that is accessible to you - So if you don't understand something *ASK* 
+
+    * ideally ask in class - you will help me to learn how to explain (or find an answer if I don't know it) and you will help others 
+    * if you don't feel comfortable asking , reach out to me or Rachel
+
+* Environmental modeling and the coding involved gets better with practice and play - Don't just read the Rmarkdown - try the code, try variations on the ideas presented, make up stuff to try, get your feet wet 
+
+* Programming means making mistakes, expect it, stay calm and try again - if you get frustrated step away and come back; be creative
+
+
+# **Respect and Support each other** 
+
+  * when working in groups, pay attention to your partner, if they are not at your skill level, help them learn - recognize that we all have different backgrounds
+  
+  * listen - different perspectives contribute to modeling - ask questions; figure out how different people *see* the world (what is there conceptual model) - I'll try to do this too
+  
+  * you learn by helping others - do that!
+  
+  
+
+* If you are really struggling, reach out to Rachel or myself, we can help
+(or if you just want to chat about something ) 
+
+

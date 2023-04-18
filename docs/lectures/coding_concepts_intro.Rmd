@@ -33,7 +33,7 @@ In R, inputs and parameters are treated the same; but it is useful to think abou
 
 * Not tracking code changes (multiple versions, which is correct?)
 
----
+
 
 #  Best practices for model (software) development 
 
@@ -54,7 +54,7 @@ clear, readable code
 
 * code evolution is documented (version control)
 
----
+
 
 
 #  Best practices for model (software) development 
@@ -65,7 +65,7 @@ Developing readable (by PEOPLE) code and documenting what you are doing is essen
 
 *“When was the last time you spent a pleasant evening in a comfortable chair, reading a good program?”— Bentley (1986)*
 
----
+
 
 #  Documentation! 
 
@@ -87,7 +87,7 @@ Always use meaningful names for functions, variables, inputs and outputs
 
 Always put your function in its own file - with just the documentation
 
----
+
 
 
 
@@ -202,5 +202,7 @@ garden = sample(flower_types, size=20, replace=T)
 compute_diversity(garden)
 ```
  
+ 
+ Try it
  * modify to also return the *rarest* species
  

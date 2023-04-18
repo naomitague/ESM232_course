@@ -11,31 +11,28 @@ output:
     highlight: pygments
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
----
+------------------------------------------------------------------------
 
 ![](intro_lecture/assets/img/image2.png)
 
-#  Mathematical Representation of this model 
+# Mathematical Representation of this model
 
 Precipitation = Evapotranspiration + Change in Storage
 
 P = ET + ΔS
 
-(at global scales ΔS includes streamflow since that water is still “stored” in the earth)
+(at global scales ΔS includes streamflow since that water is still "stored" in the earth)
 
 Water balance can tell you a lot
 
 ![](intro_lecture/assets/img/image2.png)
 
----
 
-#  Model Goals 
+# Model Goals
 
 Because models are only approximations of reality - the most important part of the modelling process is knowing **why** you want to build a model
 
@@ -49,80 +46,60 @@ Some broad types of goals
 
 Actual goal(s) needs to be more precisely defined
 
-
-
----
-
-#  Models for understanding(big #’s, little #’s as controls on phenomena) 
+# Models for understanding(big \#'s, little \#'s as controls on phenomena)
 
 The is often the role of *inverse inference* models - for example using a GCM to assess whether CO2 emissions can explain trends in warming temperature
 
 This application of models is often in the form of a question
 
-In a particular place (Baltimore Harbor), would temperature often be a limiting factor in eutrophication?
-At what times of year, would N-export matter more or less?
-
+In a particular place (Baltimore Harbor), would temperature often be a limiting factor in eutrophication? At what times of year, would N-export matter more or less?
 
 ![](intro_lecture/assets/img/image3.png)
 
-
 [US EPA Source](http://www.newworldencyclopedia.org/entry/File:Eutrophication.jpg)
 
----
 
-#  Models for estimation and what if scenarios 
+# Models for estimation and what if scenarios
 
-[IPCCProjections](http://narccap.ucar.edu/about/figures/IPCCProjections.jpg)
+[IPCCC Projections](http://narccap.ucar.edu/about/figures/IPCCProjections.jpg)
 
 Estimate of global temperatures over the next 100 years
 
 ![](intro_lecture/assets/img/image4.png)
 
-
----
-
-#  Models for estimation 
+# Models for estimation
 
 ![](intro_lecture/assets/img/image5.png)
 
-
 [Estimate of energy savings from LED adoption](http://www.lightnowblog.com/2014/10/forecasted-energy-savings-from-led-lighting/)
 
----
+# Modeling for Problem Solving in Environmental Science
+
+-   There is something you need to know in order to solve the problem
+
+    -   Answer to a question
+
+        -   What if?
+        -   How Much?
+        -   Which Alternative?
+        -   Why is this happening?
+
+    -   Test a Hypothesis
 
 # Modeling for Problem Solving in Environmental Science
 
-* There is something you need to know in order to solve the problem
+-   Always start by clearly defining your goal as a questions (or hypothesis to be tested)
 
-  * Answer to a question
-  
-      * What if?
-      * How Much?
-      * Which Alternative?
-      * Why is this happening?
-      
-  * Test a Hypothesis
-  
----  
+-   Examples?
 
-# Modeling for Problem Solving in Environmental Science
-
-* Always start by clearly defining your goal as a questions (or hypothesis to be tested)
-
-* Examples?
-
----
-
-#  Models can also be for communication Example:Glaciers 
+# Models can also be for communication <Example:Glaciers>
 
 Goal: Help public understand why, even if temperature warms - glaciers might grow (due to increasing snowfall) - but a threshold temperature might be reached where glacier will shrink
 
 [Glacier model](https://phet.colorado.edu/sims/cheerpj/glaciers/latest/glaciers.html?simulation=glaciers)
 
 
----
-
-#  Model Goals 
+# Model Goals
 
 *Understanding* (how does something work, what are key drivers of responses, how do different drivers interact)
 
@@ -130,7 +107,7 @@ Goal: Help public understand why, even if temperature warms - glaciers might gro
 
 *Communication* - contribute to education and broader understanding
 
----
+
 # Conceptual Models
 
 * models are **always** simplifications of reality - they help us to make sense of reality by focusing on specific aspects that are most relevant to your goal
@@ -142,25 +119,23 @@ Goal: Help public understand why, even if temperature warms - glaciers might gro
 
 * "all models are wrong but some are useful" - British Statistician George Box
 
----
+
 # Pair and Share
 
 Share your conceptual model with a partner...Ask each other
 
-* how would this model help "understand" why an observed pattern occurs; is there something you could have done to make this inverse inference more clear
+-   how would this model help "understand" why an observed pattern occurs; is there something you could have done to make this inverse inference more clear
 
-* are the mechanisms that translate inputs to outputs clear; are there multiple mechanisms involved
+-   are the mechanisms that translate inputs to outputs clear; are there multiple mechanisms involved
 
-* what are some applications of this model - what would be the goal in that application
+-   what are some applications of this model - what would be the goal in that application
 
-* what are the core assumptions in the model
+-   what are the core assumptions in the model
 
-* are there changes you would suggest to your partner's model
+-   are there changes you would suggest to your partner's model
 
 
----
-
-#  Basic components of models 
+# Basic components of models
 
 **Inputs** : Varying; think *x* of a *x* vs. *y* regression
 
@@ -168,9 +143,8 @@ Share your conceptual model with a partner...Ask each other
 
 **Outputs** : what you want to estimate
 
----
 
-#  Simple model 
+# Simple model
 
 **Input** : Change in unemployment rate
 
@@ -178,42 +152,36 @@ Share your conceptual model with a partner...Ask each other
 
 **Parameters** : Slope and intercept of the line
 
-The US "changes in unemployment – GDP growth" regression with the 95% confidence bands.
-![](intro_lecture/assets/img/image7.png)
+The US "changes in unemployment -- GDP growth" regression with the 95% confidence bands. ![](intro_lecture/assets/img/image7.png)
 
----
 
-#  STEPS: Modeling for Problem Solving in  ES 
+# STEPS: Modeling for Problem Solving in ES
 
 Clearly define your goal (a question you want to answer, hypothesis you want to test, prediction you want to make) - as precisely as possible
 
-* Design or Select your model
+-   Design or Select your model
 
-* Implement the model
+-   Implement the model
 
-* Evaluate the model and quantify uncertainty
+-   Evaluate the model and quantify uncertainty
 
-* Apply the model to the goal
+-   Apply the model to the goal
 
-* Communicate model results
+-   Communicate model results
 
----
 
-#  Goals 
+# Goals
 
 The goal will help you to define the core pieces of a model
 
 Often helpful to start at the end: Outputs
 
-
 Problem: which piece of land should be purchased to maximize biodiversity?
 
-Outputs:
-monetary costs and benefits of different options in 2015 dollars, including “non-market” benefits
+Outputs: monetary costs and benefits of different options in 2015 dollars, including "non-market" benefits
 
----
 
-# Goals 
+# Goals
 
 The goal will help you to define the core pieces of a model
 
@@ -221,7 +189,5 @@ Often helpful to start at the end: Outputs
 
 Problem: how will forest carbon sequestration change if fire frequency increases with warming
 
-Outputs
-carbon sequestration for different fire frequencies
+Outputs carbon sequestration for different fire frequencies
 
----
