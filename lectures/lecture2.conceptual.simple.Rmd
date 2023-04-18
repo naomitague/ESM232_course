@@ -12,6 +12,14 @@ output:
 
 ---
 
+# Coding Concepts
+
+* Any questions?
+
+Learn by example
+
+* Pay attention to the *documentation* and *syntax* of **compute_diversity.R**
+
 # What is a model
 
 
@@ -28,7 +36,7 @@ You are doing this all the time - there are many reasons to make this process ex
 ```{r, out.width = "75%",out.height="75%", echo=FALSE}
 knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.jpeg")
 ```
----
+
 
 #  Basic components of models 
 
@@ -43,7 +51,7 @@ Outputs: what you want to estimate
 
 ![](lecture2.conceptual.simple/assets/img/image5.png)
 
----
+
 
 # What's in the box
 
@@ -55,7 +63,6 @@ Outputs: what you want to estimate
 
   * There are often multiple "boxes" internal to a model
   
----
 
 
 #  What’s in the box 
@@ -66,7 +73,7 @@ So we need to think through what the relationships are; the processes are that w
 
 Conceptual models are a good place to start
 
----
+
 
 #  Conceptual models of the hydrologic cycle 
 
@@ -80,7 +87,7 @@ P = ET + ΔS
 knitr::include_graphics("lecture2.conceptual.simple/assets/img/image6.png")
 ```
 
----
+
 
 # Conceptual Hydrology Model - more complex, multiple boxes 
 
@@ -96,7 +103,7 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/image7.png")
 knitr::include_graphics("lecture2.conceptual.simple/assets/img/image8.png")
 ```
 
----
+
 
 #  SERI-Fire 
 
@@ -110,7 +117,7 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/image8.png")
 knitr::include_graphics("lecture2.conceptual.simple/assets/img/image9.png")
 ```
 
----
+
 
 
 # Types of Model
@@ -121,18 +128,18 @@ A *useful* classification looks at how models deal with space, time, and process
 
 Useful because the *type* of model will have implications for how you *build* and *use/run* the model
 
----
+
 
 #  Stochastic - Deterministic 
 
 Stochastic:  Model output is the probability of flood events of a magnitude greater than 500 m3/sec given rainfall probability distribution (artificial or generated from data) for a 100km2 watershed
+
 Deterministic: Model output is the depth of flood given a rainfall event of 10cm over a 100km2 watershed
 
 [source](http://www.vertex42.com/ExcelArticles/mc/MonteCarloSimulation.html)
 
 ![](lecture2.conceptual.simple/assets/img/image1.gif)
 
----
 
 #  Lumped …Spatially distributed 
 
@@ -147,7 +154,7 @@ spatial units interact with each other
 
 ![](lecture2.conceptual.simple/assets/img/image3.jpeg)
 
----
+
 
 #  Static- Dynamic Time Varying 
 
@@ -162,27 +169,14 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/image13.png")
 ```
 
 
----
+
 
 #  Abstract - Physically/Process based 
 
-Abstract - relationship between inputs and output depends on parameters that don’t necessarily have a physical meaning
+Abstract - relationship between inputs and output depends on parameters that don’t necessarily have a physical meaning - machine learning models are good examples 
 
 Physically based - parameters do have a physical meaning (could be measured) - relationships derived from first principles (theory) of how things work
 
----
-
-#  Abstract - Physically/Process based 
-
-serc.carlton.edu
-Abstract
-
-Physically based
-
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/image4.jpeg")
-```
 
 
 ```{r, out.width = "75%",out.height="75%", echo=FALSE}
@@ -190,11 +184,6 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/image2.jpeg")
 ```
 
 
-[Abstract](http://serc.carlton.edu)
-[Physically based](http://ks.water.usgs.gov/pubs/reports/paclim99.html)
-[http://ks.water.usgs.gov/pubs/reports/paclim99.html](http://serc.carlton.edu)
-
----
 
 #  Conceptual models: Composing 
 
@@ -206,7 +195,7 @@ There are many software tools available for generating conceptual models, I like
 
 [Diagrams.net]{https://www.diagrams.net/}
 
----
+
 
 # Conceptual model design
 
@@ -216,7 +205,7 @@ Some model designers uses standard symbols for the different model components
 Building Models
 ![](lecture2.conceptual.simple/assets/img/image14.png)
 
----
+
 
 #  • PhD of Norman Crawford under supervision of Ray K Linsley at Stanford University in 1962 
 
@@ -227,9 +216,6 @@ Conceptual Models
 
 ![](lecture2.conceptual.simple/assets/img/image16.png)
 
----
-
----
 #  From conceptual model to flow chart/workflow 
 
 Impact of smoke from fires on health of agricultural workers
@@ -237,8 +223,7 @@ What is ‘smoke”
 What is “health”
 What is an “agricultural worker”. …leads to your conceptual model
 
----
----
+
 #  Design/Selecting Models 
 
 ```{r, out.width = "75%",out.height="75%", echo=FALSE}
@@ -253,7 +238,7 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.j
 
 * Parameters, values that influences how the model relationships work
 
----
+
 #  Types of Models
 
 Conceptual.............Mathematical
@@ -268,7 +253,7 @@ Abstract.............Physically/Process Based
 
 but biggest differences may often be the degree specific processes/parameters are accounted for
 
----
+
 
 #  Types of models: Example 
 
@@ -283,7 +268,7 @@ Conceptual model
 knitr::include_graphics("lecture3_conceptualmodels2/assets/img/reservoir_cm.001.jpeg")
 ```
 
----
+
 
 #  Types of models: Example 
 
@@ -299,7 +284,7 @@ P is Power in watts, ρ is the density of water (~1000 kg/m3), h is height in me
 
 This is a static (one point in time), deterministic, lumped (one place) model; its more or less physically based
 
----
+
 #  Types of models: Example 
 
 If we expand the model to compute power production over a year, where inputs were streamflow into the reservoir - *Dynamic Model*
@@ -307,7 +292,7 @@ If we expand the model to compute power production over a year, where inputs wer
 If we expand to model power production from all the reservoirs in California, accounting for spatial patterns of snowmelt inputs and upstream-downstream relationships - *Spatially Distributed Model*
 
 If we modified the model to estimate the probability distribution of power production, given a probability distribution of reservoir levels  - *Stochastic Model*
----
+
 
 # Pair and Share
 
@@ -316,7 +301,7 @@ With your conceptual model from Tuesday's class -
 * discuss what type of model you have 
 * consider that for some conceptual models you might translate/expand the basic conceptual models into different types of models - discuss that this might look like for your models
 
----
+
 #  STEPS: Modeling for Problem Solving in  ES 
 
 * Clearly define your goal (question you want to answer, hypothesis you want to test, prediction you want to make) - as precisely as possible
@@ -333,7 +318,7 @@ With your conceptual model from Tuesday's class -
 
 * Communicate model results
 
----
+
 #  Steps for Design and Implement your model 
 
 * Design conceptual model
@@ -359,29 +344,57 @@ With your conceptual model from Tuesday's class -
 
 For this assignment you will work in pairs
 
-Your goal is to develop a conceptual model of almond yield  - the goal will be able to predict how almond yields might change if seasonal precipitation or air temperature patterns change in California
+Your goal is to develop a  model of almond yield  - the goal will be to explore how almond yields  might vary with climate   (precipitation and air temperature) in California. Climate variation might be variation due to different locations or potentially for future climate estimates. We would like a model that would estimate mean, minimum and average yield anomolies (departures from average yields in California from the Lobell study) when we have climate information, specifically daily minimum and maximum temperature and precipitation - Note I've already given you a precise definition of the model goal here
 
-The Lobell et al. 2006 paper will be the source for your model; specifically look at the equations in table 2.
+The Lobell et al. 2006 paper will be the source for the transfer function that you will use in your model; specifically look at the equations in table 2.
 
-* Draw a conceptual model to represent your model that will translate inputs to output, with parameters that shape the relationship between inputs an outputs - on your diagram list what your inputs, parameters and outputs are with units
+* Draw a conceptual model to represent your model - how it will translate inputs to outputs, with parameters that shape the relationship between inputs an outputs - on your diagram list what your inputs, parameters and outputs are with units
 
-* Write a simple R function that implements your conceptual model
+* Write a R function that implements your conceptual model
 
-* For a challenge - think about how you might change your  model so that it would work for all tree yields considered by the Lobell paper
+Here are some ideas to think though. The climate data is going to need to be subsetted (e.g note that the model uses climate data from a particular month - you have ALL of the climate data).  Here are two possible model outlines to follow
+
+●      Almond_model <- function(clim_var1, clim_var2, parameters){……}
+
+●      Almond_model <- function(clim, parameters){……}
+
+
+The first example is where the climate variables are separately input into the function, and the second is where a data frame is the input in the function and you extract the useful data from it. The first demands that the data is subset beforehand, the second subsets the data as part of the function, but demands the dataframe be structured in a specific way. There are advantages to both – the first is simpler model to ‘code’ ; but requires more ‘beforehand’ work by the user. You can pick which option you prefer (or try both)
+
+ 
+
+* Run your model for the **clim.txt** data that is posted on Canvas, 
+
+**clim.txt** has the following columns - day, month, year and wy (water year) that tell you when climate observations were made and then maximum (tmax_c), minimum (tmin_c) daily temperature on that day - and the amount of precipitation (precip) on that day in mm
+
+to check your work I will tell you that
+  * the maximum almond yield anomoly should be approximately 1920 ton/acre
+  * the lowest almond yield anomoly should be approximately -0.027 ton/acre
+  * the mean almond yield anomoly should be approximately 182 ton/acre
+
 
 We will build on this on Tuesday's class 
+NOTE: there are always multiple ways to code something in R; of course focus on getting the correct answer first, but also remember that we want to strive for our code being as simple and streamline as possible. Style counts. Make sure you choose meaningful variable names and add comments. Include comments at the top of the function to tell the user what the inputs/outputs are and their units and format.
 
+What to hand in on Canvas - 2 separate files (or a link to a repository with these files)
+
+
+1. a R file that has your function definition
+2. an Rmarkdown file that includes your conceptual model (embed as picture) and
+shows how you applied the function to the test climate data (*clim.txt*)
 
 Grading Rubric
 
-Conceptual model (30 pts)
+Conceptual model (20 pts)
 
-  * correct inputs and output and parameters shown on the diagram (10 pts)
-  * clear diagram (10 pts)
+ 
+  * a clear diagram (10 pts)
+  * inputs and output and parameters shown on the diagram (10 pts)
   
 R Implementation (30 pts)
 
-  * 
+  * correct function implementation (*.R file)  (10 pts)
+  * application of the function to **clim.txt** (in Rmarkdown file) (10 pts)
+  * coding practices (clear documentation, informative variables names)  (10 pts)
   
-Extra Credit - a diagram that that works for all tree yields (20 pts)
 
