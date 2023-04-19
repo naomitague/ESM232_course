@@ -1,5 +1,5 @@
 ---
-title: ' Framing a modelling application for Environmental Problem Solving '
+title: '  Environmental Problem Solving - Getting Started '
 output:
   slidy_presentation:
     highlight: pygments
@@ -12,15 +12,7 @@ output:
 
 ---
 
-# Coding Concepts
-
-* Any questions?
-
-Learn by example
-
-* Pay attention to the *documentation* and *syntax* of **compute_diversity.R**
-
-# What is a model
+# Model Goals
 
 
 * understanding
@@ -30,94 +22,6 @@ Learn by example
 * communication
 
 You are doing this all the time - there are many reasons to make this process explicit (computer aided modeling)
-
-
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.jpeg")
-```
-
-
-#  Basic components of models 
-
-
-Inputs: Varying; think x of a x vs y regression
-
-Parameters: single values that influence relationships in the model
-
-Transfer Function (model): Equations that transfer inputs to outputs given parameters
-
-Outputs: what you want to estimate
-
-![](lecture2.conceptual.simple/assets/img/image5.png)
-
-
-
-# What's in the box
-
-  * What are the processes/relationships that you think are important to translate inputs to output
-
-  * Transfer function (mathematical representation)
-
-  * Parameters, values that influences how the model relationships work
-
-  * There are often multiple "boxes" internal to a model
-  
-
-
-#  What’s in the box 
-
-Often more complicated than a simple regression…
-
-So we need to think through what the relationships are; the processes are that we want to take in to account
-
-Conceptual models are a good place to start
-
-
-
-#  Conceptual models of the hydrologic cycle 
-
-Precipitation = Evapotranspiration + Change in Storage
-
-P = ET + ΔS
-
-(at global scales ΔS includes streamflow since that water is still “stored” in the earth
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/image6.png")
-```
-
-
-
-# Conceptual Hydrology Model - more complex, multiple boxes 
-
-Goal - estimate streamflow fromm multiple source (surface and subsurface)
-
-
-
-```{r, out.width = "25%",out.height="25%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/image7.png")
-```
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/image8.png")
-```
-
-
-
-#  SERI-Fire 
-
-* More complex model couple sub-models
-
-* How do ecological and human factors interact to influence fire regimes 
-
-
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/image9.png")
-```
-
-
 
 
 # Types of Model
@@ -146,14 +50,24 @@ Deterministic: Model output is the depth of flood given a rainfall event of 10cm
 Lumped - single point in space, or space doesn’t matter
 
 Spatially distributed - model is applied to different “patches” in space
-spatial units are independent
 
-spatial units interact with each other
+* spatial units are independent
+
+* spatial units interact with each other
+
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/spatial.001.png")
+```
+
+
+# climate models are good examples
 
 [source](http://eo.ucar.edu/staff/rrussell/climate/modeling/climate_model_resolution.html)
 
 ![](lecture2.conceptual.simple/assets/img/image3.jpeg)
 
+Resolution matters for spatial models
 
 
 #  Static- Dynamic Time Varying 
@@ -161,6 +75,15 @@ spatial units interact with each other
 Static - Processes or Variables modeled do not evolve with time
 
 Dynamic - model elements evolve through time - and variables/results at one time step typically depends on previous time step
+
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/temporal.001.png")
+```
+
+# Example of a time varying (dynamic) model
+
+Modeling disease through time 
 
 [source](http://www.econometricsbysimulation.com/2013/05/sir-model-flue-season-dynamic.html)
 
@@ -177,58 +100,30 @@ Abstract - relationship between inputs and output depends on parameters that don
 
 Physically based - parameters do have a physical meaning (could be measured) - relationships derived from first principles (theory) of how things work
 
-
-
+Think...simple bucket model
 ```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/image2.jpeg")
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/image4.jpeg")
 ```
 
 
 
-#  Conceptual models: Composing 
+# Pair and Share
 
-Pictorial representation of how you think about your system, and what needs to be included in 
-the model to answer your questions (or achieve your modelling goal)
+With your conceptual model from Tuesday's class - 
 
-There are many software tools available for generating conceptual models, I like
-
-
-[Diagrams.net]{https://www.diagrams.net/}
+* discuss what type of model you have 
+* how might you translate/expand the basic conceptual models into different types of models - discuss that this might look like for your models
 
 
 
-# Conceptual model design
+#  Basic components of models 
 
-Some model designers uses standard symbols for the different model components 
-
-
-Building Models
-![](lecture2.conceptual.simple/assets/img/image14.png)
-
-
-
-#  • PhD of Norman Crawford under supervision of Ray K Linsley at Stanford University in 1962 
-
-Conceptual Models
-![](lecture2.conceptual.simple/assets/img/image15.png)
-
----
-
-![](lecture2.conceptual.simple/assets/img/image16.png)
-
-#  From conceptual model to flow chart/workflow 
-
-Impact of smoke from fires on health of agricultural workers
-What is ‘smoke”
-What is “health”
-What is an “agricultural worker”. …leads to your conceptual model
-
-
-#  Design/Selecting Models 
 
 ```{r, out.width = "75%",out.height="75%", echo=FALSE}
 knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.jpeg")
 ```
+
+# How to start
 
 * What are your inputs-outputs
 
@@ -280,33 +175,31 @@ knitr::include_graphics("lecture3_conceptualmodels2/assets/img/reservoir_cm.001.
 
 P = ρ * h * r * g * K Efficiency;
 
-P is Power in watts, ρ is the density of water (~1000 kg/m3), h is height in meters, r is flow rate in cubic meters per second, g is acceleration due to gravity of 9.8 m/s2, K Efficiency is a coefficient of efficiency ranging from 0 to 1.
+* P is Power in watts,
+* ρ is the density of water (~1000 kg/m3)
+* h is height in meters, 
+* r is flow rate in cubic meters per second,
+* g is acceleration due to gravity of 9.8 m/s2, 
+* K Efficiency is a coefficient of efficiency ranging from 0 to 1.
 
 This is a static (one point in time), deterministic, lumped (one place) model; its more or less physically based
 
 
 #  Types of models: Example 
 
-If we expand the model to compute power production over a year, where inputs were streamflow into the reservoir - *Dynamic Model*
+If we expand the model to output power production over a year, where inputs were streamflow for each day into the reservoir - *Dynamic Model*
 
 If we expand to model power production from all the reservoirs in California, accounting for spatial patterns of snowmelt inputs and upstream-downstream relationships - *Spatially Distributed Model*
 
 If we modified the model to estimate the probability distribution of power production, given a probability distribution of reservoir levels  - *Stochastic Model*
 
 
-# Pair and Share
-
-With your conceptual model from Tuesday's class - 
-
-* discuss what type of model you have 
-* consider that for some conceptual models you might translate/expand the basic conceptual models into different types of models - discuss that this might look like for your models
-
 
 #  STEPS: Modeling for Problem Solving in  ES 
 
 * Clearly define your goal (question you want to answer, hypothesis you want to test, prediction you want to make) - as precisely as possible
 
-* Develop a conceptual model - draw it!
+* Develop a conceptual model - draw it, think about what type of model it is!
 
 * <span style="color: red;">Design</span> or Select your model
 
@@ -319,19 +212,19 @@ With your conceptual model from Tuesday's class -
 * Communicate model results
 
 
-#  Steps for Design and Implement your model 
+#  <span style="color: red;">Design and Implement</span> Step 
 
-* Design conceptual model
 
-* Translate conceptual model into a mathematical representation
-
-* Choose programming language
+* Translate conceptual model into functions (a single box or set of connected boxes) 
+  * useful to diagram this (flow chart)
 
 * Define inputs (data type, units)
 
 * Define output (data type, units)
 
-* Define model structure
+* Define model structure (mathematical representation of transfer functions)
+
+* Choose programming language
 
 * Write model
 
@@ -339,56 +232,117 @@ With your conceptual model from Tuesday's class -
 
 * Test model
 
+#  Coding Concepts
 
-#  Assignment 2
+* Any questions?
 
-For this assignment you will work in pairs
+Learn by example
 
-Your goal is to develop a  model of almond yield  - the goal will be to explore how almond yields  might vary with climate   (precipitation and air temperature) in California. Climate variation might be variation due to different locations or potentially for future climate estimates. We would like a model that would estimate mean, minimum and average yield anomolies (departures from average yields in California from the Lobell study) when we have climate information, specifically daily minimum and maximum temperature and precipitation - Note I've already given you a precise definition of the model goal here
+* Pay attention to the *documentation* and *syntax* of **compute_diversity.R**
+
+
+
+#  Almond Yields
+
+
+Lobell et al., 2006 used data to build models of tree crop yield for California that captured how
+climate variation (place and time) might influence yield
+
+* Yield anomaly
+
+* Climate variables
+
+Assumptions...as you work think about what these are...
+
+
+# Assignment
+
+
+ For this assignment you will work in pairs
+
+Your goal is to implement a simple model of almond yield anomaly response to climate
+
+* Inputs: daily times series of minimum, maximum daily temperatures and precipitation
+
+* Outputs: maximum, minimum and mean yield anomoly for a input time series
+
 
 The Lobell et al. 2006 paper will be the source for the transfer function that you will use in your model; specifically look at the equations in table 2.
 
-* Draw a conceptual model to represent your model - how it will translate inputs to outputs, with parameters that shape the relationship between inputs an outputs - on your diagram list what your inputs, parameters and outputs are with units
+# What you will do - Model Set Up
 
-* Write a R function that implements your conceptual model
+1. Draw diagram to represent your model - how it will translate inputs to outputs, with parameters that shape the relationship between inputs an outputs - on your diagram list what your inputs, parameters and outputs are with units
 
-Here are some ideas to think though. The climate data is going to need to be subsetted (e.g note that the model uses climate data from a particular month - you have ALL of the climate data).  Here are two possible model outlines to follow
+2.  Implement your diagram as an R function
+
+Here are some ideas to think though. The climate data is going to need to be processed (e.g note that the model uses climate data from a particular month - you have ALL of the climate as daily data).  Here are two possible model outlines to follow
 
 ●      Almond_model <- function(clim_var1, clim_var2, parameters){……}
 
 ●      Almond_model <- function(clim, parameters){……}
 
 
-The first example is where the climate variables are separately input into the function, and the second is where a data frame is the input in the function and you extract the useful data from it. The first demands that the data is subset beforehand, the second subsets the data as part of the function, but demands the dataframe be structured in a specific way. There are advantages to both – the first is simpler model to ‘code’ ; but requires more ‘beforehand’ work by the user. You can pick which option you prefer (or try both)
+The first example is where the climate variables are separately input into the function - climate data is processed beforehand as part of model set up
 
- 
+The second is where a climate data frame is the input in the function and you extract the useful data from it as part of the model. 
 
-* Run your model for the **clim.txt** data that is posted on Canvas, 
 
-**clim.txt** has the following columns - day, month, year and wy (water year) that tell you when climate observations were made and then maximum (tmax_c), minimum (tmin_c) daily temperature on that day - and the amount of precipitation (precip) on that day in mm
+You can pick which option you prefer (or try both)
 
-to check your work I will tell you that
-  * the maximum almond yield anomoly should be approximately 1920 ton/acre
-  * the lowest almond yield anomoly should be approximately -0.027 ton/acre
-  * the mean almond yield anomoly should be approximately 182 ton/acre
+# Run the model
 
+3.  Run your model for the **clim.txt** data that is posted on Canvas, 
+
+**clim.txt** has the following columns 
+
+these 4 columns tell you when climate observations were made 
+
+* *day*
+* *month*
+* *year* 
+* *wy* (water year) 
+
+
+the next 3 columns are the climate observations
+
+* maximum (*tmax_c*) daily temperature 
+* minimum (*tmin_c*) daily temperature 
+* precipitation (*precip*) on that day in mm
+
+# check your work 
+
+I will tell you that
+
+* the maximum almond yield anomaly should be approximately 1920 ton/acre
+* the lowest almond yield anomaly should be approximately -0.027 ton/acre
+* the mean almond yield anomaly should be approximately 182 ton/acre
+
+
+#  Notes
 
 We will build on this on Tuesday's class 
-NOTE: there are always multiple ways to code something in R; of course focus on getting the correct answer first, but also remember that we want to strive for our code being as simple and streamline as possible. Style counts. Make sure you choose meaningful variable names and add comments. Include comments at the top of the function to tell the user what the inputs/outputs are and their units and format.
 
-What to hand in on Canvas - 2 separate files (or a link to a repository with these files)
+* There are always multiple ways to code something in R;
 
+* Remember that we want to strive for our code being as simple and streamline as possible. 
+
+* Style counts. 
+  * Make sure you choose meaningful variable names and add comments. 
+  * Include comments at the top of the function to tell the user what the inputs/outputs are and their units and format.
+
+# What to hand in on Canvas 
+
+Two separate files (or a link to a repository with these files)
 
 1. a R file that has your function definition
-2. an Rmarkdown file that includes your conceptual model (embed as picture) and
+2. a Rmarkdown file that includes your conceptual model (embed as picture) and
 shows how you applied the function to the test climate data (*clim.txt*)
 
-Grading Rubric
+# Grading Rubric
 
 Conceptual model (20 pts)
 
- 
-  * a clear diagram (10 pts)
+  * a clear diagram that corresponds with your R function (10 pts)
   * inputs and output and parameters shown on the diagram (10 pts)
   
 R Implementation (30 pts)
