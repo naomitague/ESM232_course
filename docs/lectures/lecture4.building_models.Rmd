@@ -9,9 +9,10 @@ output:
     highlight: pygments
   beamer_presentation:
     highlight: pygments
+    
 ---
 
----
+
 #  Steps for Design and Implement your model 
 
 * Design conceptual model
@@ -43,6 +44,64 @@ Note ‘tasks’ that need to be repeated
 
 All tasks should have inputs and outputs
 
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.jpeg")
+```
+
+
+#  What’s in the box 
+
+Often more complicated than a simple regression…
+
+So we need to think through what the relationships are; the processes are that we want to take in to account
+
+Conceptual models are a good place to start
+
+
+
+
+# Conceptual model design
+
+Some model designers uses standard symbols for the different model components 
+
+
+Building Models
+![](lecture2.conceptual.simple/assets/img/image14.png)
+
+
+#  • PhD of Norman Crawford under supervision of Ray K Linsley at Stanford University in 1962 
+
+Conceptual Models
+![](lecture2.conceptual.simple/assets/img/image15.png)
+
+
+
+
+#  Conceptual models: Composing 
+
+Pictorial representation of how you think about your system, and what needs to be included in 
+the model to answer your questions (or achieve your modelling goal)
+
+There are many software tools available for generating conceptual models, I like
+
+
+[Diagrams.net]{https://www.diagrams.net/}
+
+
+#  SERI-Fire 
+
+* More complex model couple sub-models
+
+* How do ecological and human factors interact to influence fire regimes 
+
+
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/image9.png")
+```
+
+
+
 
 #  From conceptual model to flow chart/workflow 
 
@@ -52,25 +111,25 @@ What is almond productivity?
 
 What is climate?
 
----
+
 
 ```{r, out.width = "75%",out.height="75%", echo=FALSE}
 knitr::include_graphics("lecture4_building_models/assets/img/simiple_conceptual_model.png")
 ```
 
----
+
 
 ```{r, out.width = "75%",out.height="75%", echo=FALSE}
 knitr::include_graphics("lecture4_building_models/assets/img/fuller_almond_CM.jpeg")
 ```
  
---- 
+ 
 
 ```{r, out.width = "75%",out.height="75%", echo=FALSE}
 knitr::include_graphics("lecture4_building_models/assets/img/more_general_almond_CM.jpeg")
 ```
 
----
+
 
 #  Building Models 
 
@@ -84,7 +143,7 @@ Functions are the “boxes” of the model - the transfer function that takes in
 
 More complex models - made up of multiple functions; and nested functions (and main functions that call/user other functions and control the flow - the arrows between boxes)
 
----
+
 
 
 #  Functions 
@@ -98,7 +157,7 @@ Decide on
 Data types, units (time and space aggregation), names should be (use descriptive names)
 
 
----
+
 
 #  Functions 
 
@@ -122,14 +181,14 @@ Data types, units (time and space aggregation), names should be (use descriptive
 
 * output ( growth)
 
----
+
 
 
 
 **IMPORTANT**
 
 Place each function in its own file (x.R), and put all functions for a given project in *R* subdirectory
----
+
 
 #   Example 
 
@@ -149,7 +208,7 @@ P is Power in watts, ρ is the density of water (~1000 kg/m3), h is height in me
 
 This is a static (one point in time), deterministic, lumped (one place) model; its more or less physically based
 
----
+
 
 #  Building Models 
 

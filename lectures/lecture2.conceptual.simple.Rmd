@@ -9,8 +9,8 @@ output:
     highlight: pygments
   beamer_presentation:
     highlight: pygments
-
 ---
+
 
 # Model Goals
 

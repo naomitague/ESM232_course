@@ -91,7 +91,7 @@ shows how you applied the function to the test climate data (*clim.txt*)
 
 # Grading Rubric
 
-Conceptual model (20 pts)
+Diagram (20 pts)
 
   * a clear diagram that corresponds with your R function (10 pts)
   * inputs and output and parameters shown on the diagram (10 pts)

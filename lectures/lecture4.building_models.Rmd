@@ -9,6 +9,7 @@ output:
     highlight: pygments
   beamer_presentation:
     highlight: pygments
+    
 ---
 
 
@@ -180,14 +181,14 @@ Data types, units (time and space aggregation), names should be (use descriptive
 
 * output ( growth)
 
----
+
 
 
 
 **IMPORTANT**
 
 Place each function in its own file (x.R), and put all functions for a given project in *R* subdirectory
----
+
 
 #   Example 
 
@@ -207,7 +208,7 @@ P is Power in watts, ρ is the density of water (~1000 kg/m3), h is height in me
 
 This is a static (one point in time), deterministic, lumped (one place) model; its more or less physically based
 
----
+
 
 #  Building Models 
 
