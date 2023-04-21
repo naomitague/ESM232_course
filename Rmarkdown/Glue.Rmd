@@ -1,0 +1,225 @@
+---
+title: "Glue"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(Hmisc)
+library(tidyverse)
+```
+
+How to work with multiple output - compute performance and then
+choose acceptible parameter sets
+
+```{r multipel}
+
+source("../R/nse.R")
+# original data set - a single streamflow and observed data
+sager = read.table("../Data/sager.txt", header=T)
+head(sager)
+
+# add date
+sager = sager %>% mutate(date = paste(day,month,year, sep="/"))
+sager$date = as.Date(sager$date,"%d/%m/%Y")
+
+# multiple results - lets say we've run the model for multiple years, each column
+# is streamflow for a different parameter set
+msage = read.table("../Data/sagerm.txt", header=T)
+
+# lets say we know the start date from our earlier output
+msage$date = sager$date
+head(msage)
+msage$month = sager$month
+msage$year = sager$year
+msage$day = sager$day
+msage$wy = sager$wy
+
+# and we still have observed data from above
+
+
+# how can we plot all results - lets plot water year 1970 otherwise its hard to see
+msagel = msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="run", values_to="flow")
+
+p1=ggplot(subset(msagel, wy == 1970), aes(as.Date(date), flow, col=run))+geom_line()+theme(legend.position = "none")
+p1
+# lets add observed streamflow
+p1+geom_line(data=subset(sager, wy == 1970), aes(as.Date(date), obs), size=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
+
+
+# compute performance measures for all output
+res = msage %>% select(!c("date","month","year","day","wy")) %>%
+      map_dbl(nse, o=sager$obs )
+
+head(res)
+
+# another example using our low flow statistics
+# use apply to compute for all the data
+source("../R/compute_lowflowmetrics_all.R")
+res = msage %>% select(-date, -month, -day, -year, -wy ) %>% map_df(compute_lowflowmetrics_all, o=sager$obs, month=msage$month, day=msage$day, year=msage$year, wy=msage$wy)
+
+
+# interesting to look at range of metrics - could use this to decide on
+# acceptable values
+summary(res)
+
+
+# graph range of performance measures
+resl = res %>% pivot_longer(cols=everything(), names_to="metric", values_to="value")
+ggplot(resl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="free")
+
+# try this
+# assign an identifier to each row, use the same identify for columns of original streamflow data
+# we can then use that to pick data
+res$run = seq(from=1,to=nrow(res))
+head(msage)
+colnames(msage)=c(res$run, "date","month","year","day","wy")
+
+# best one
+best = res[which.max(res$combined),]
+msagel  =  msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="run", values_to="flow")
+ggplot(subset(msagel, run == best$run), aes(date, flow)) + geom_line()
+
+
+# or show with all runs
+# label runs for legends
+# all just show 1970 so easy to see
+msagel = msagel %>% mutate(best = ifelse(run==best$run, TRUE, FALSE))
+ggplot(subset(msagel, wy==1970), aes(date, flow, col=best))+geom_line()
+
+```
+
+# Glue - generalized uncertainty analysis
+
+What if we wanted to keep all of the 'good' parameters
+
+* we could just keep them all as equally likely
+* we could weight them by performance
+
+Either way we can graph and come up with 'best' prediction accounting for uncertainty
+
+Create a single measure of accuracy - above we used *compute_lowlowmetrics_all* to compute an accuracy measure based on
+
+* relative error in annual minimum flow estimate
+* relative error in monthly flow during low flow period
+* correlation between observed and modelled annual minimum flow
+* correlation between observed and modelled flow during the low flow period
+
+We weighted all 4 the same
+
+# Use the accuracy measure 
+
+We can use the combined accuacy measure to define behavioural (acceptible) parameter set (**res_acc**) - two options
+
+* define a threshold (we will use 30%)
+* take top 50 performing parameter sets
+
+(we go with the latter but code could be commented to go with threshold approach)
+
+```{r behavioral, echo=FALSE}
+
+
+summary(res$combined)
+
+# 1) selecting behaviorial or acceptable parameters sets
+
+threshold = 0.3
+res_acc = subset(res, combined > threshold)
+head(res_acc)
+
+# as an alternative  what if you want the top N parameter sets
+topN = 50
+tmp = res[order(res$combined,decreasing=T),]  
+res_acc=tmp[1:topN,]
+head(res_acc)
+```
+
+# Defining weights (likelihood) for parameter sets
+
+Now define "weights" (likelihood) based on parameter performance for the acceptable or behaviorial parameters
+
+We want the sum of the weights to equal 1
+
+* accuracy measure defined above will define weight
+* we normalize by the range of accuracy for the behavioural parameters  
+* this **relative accuracy ** becomes the weight
+* note we now only work with behavioural parameter sets (in ** res_acc ** versus ** res **)
+
+
+
+```{r weighting, echo=FALSE}
+
+# create a weight for each parameter set based on its relative accuracy - we do this so all weights sum to 1
+max_acc=max(res_acc$combined)
+min_acc=min(res_acc$combined)
+res_acc$w_acc=(res_acc$combined-min_acc)/(max_acc-min_acc)
+sum_acc=sum(res_acc$combined)
+res_acc$wt_acc=res_acc$combined/sum_acc
+
+# look at values
+summary(res_acc$wt_acc)
+# check to see that they sum to one
+sum(res_acc$wt_acc)
+
+Nacc = nrow(res_acc)
+Nacc
+```
+
+# Using weights
+
+One way to use weights is to define a maximum likelihood estimate by averaging (weighted by accuracy) streamflow from all behavioural simulations 
+
+
+
+```{r mle, echo=FALSE}
+
+# generate a streamflow as weighted average of all  acceptable parameter sets
+
+# recall that msagel is the flow data for all runs so we 
+# can link with weights from res_acc by run id
+
+# make sure its numeric
+msagel$run = as.numeric(msagel$run)
+# subset only acceptible runs
+msagel_acc = subset(msagel, run %in% res_acc$run)
+# join with weights from res_acc, left_join will repeat weights for each day in streamflow trajectory
+msagel_acc = left_join(msagel_acc, res_acc, by="run")
+head(msagel_acc)
+# finally multiply flow by weight
+msagel_acc = msagel_acc %>% mutate(flow_wt = flow*wt_acc)
+
+# now we can average streamflow for each day from all the runs # using the weights
+aver_flow = msagel_acc %>% group_by(date) %>% dplyr::summarize(meanstr = sum(flow_wt))
+
+# add some date information or simply add to simQ
+
+ggplot(aver_flow, aes(x=date, y=meanstr))+geom_line(col="red")+labs(y="Streamflow mm/day")
+
+# add some of the other date info and plot a subset
+aver_flow$wy = msage$wy
+ggplot(subset(aver_flow, wy == 1980), aes(x=date, y=meanstr))+geom_line(col="red")+labs(y="Streamflow mm/day")
+
+```
+We could also compute quantiles rather than just mean
+
+We can use the *wtd_quantile* function in the *Hmisc* package to do this - it computes quantiles accounting for different weights on each observation
+
+```{r plotting, echo=TRUE}
+
+
+# compute quantiles using weighted quantile
+aver_flow = msagel_acc %>% group_by(date) %>% dplyr::summarize(
+median = wtd.quantile(flow, probs=c(0.5), weights=wt_acc), 
+flow25 = wtd.quantile(flow,probs=c(0.25), weights=wt_acc), flow75=wtd.quantile(flow, probs=c(0.75), weights=wt_acc))
+
+# format for plotting
+aver_flowl = aver_flow %>% pivot_longer(col=c(-date), values_to="flow", names_to="quantile")
+
+ggplot(subset(aver_flowl, wy=1980), aes(date, flow, col=quantile))+geom_line()+scale_y_continuous(trans="log")
+
+# to see low flows, transform y-axis
+ggplot(subset(aver_flowl, wy=1980), aes(date, flow, col=quantile))+geom_line()+scale_y_continuous(trans="log")
+
+
+```

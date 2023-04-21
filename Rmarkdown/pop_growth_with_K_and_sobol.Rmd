@@ -1,0 +1,102 @@
+---
+title: "pop_growth_withK_sobol"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(sensitivity)
+library(tidyverse)
+library(deSolve)
+```
+# Example with our population ODE
+
+To have growth slow as carrying capcity is reached we can 
+implement a logistic growth model
+
+and then do some sensitivity analysis on both growth rate and carrying capacity (K)
+
+```{r sen, error=TRUE}
+source("../R/dexppopK.R")
+
+dexppopK
+
+
+
+
+# want to learn about sensitivity to growth rate (r) and carrying capacity 
+# set the number of parameters
+np=100
+K = rnorm(mean=300, sd=50, n=np)
+r = rnorm(mean=0.01, sd=0.005, n=np)
+X1 = cbind.data.frame(r=r, K=K)
+
+# repeat to get our second set of samples
+K = rnorm(mean=300, sd=50, n=np)
+r = rnorm(mean=0.01, sd=0.005, n=np)
+X2 = cbind.data.frame(r=r, K=K)
+
+sens_P = sobolSalt(model = NULL,X1, X2, nboot = 300)
+
+# our parameter sets are
+head(sens_P$X)
+
+# lets add names 
+colnames(sens_P$X) = c("r","K")
+
+# I may re-use this function so I saved it as a file 
+# maxyear doesn't make sense for a growth that slows gradually - so I'll use year when population doubles
+source("../R/compute_pop_metrics.R")
+
+Pinitial = 100
+
+# I continually update the wrapper to I'll keep in inline
+# you could make it a separate file as well 
+simtimes=seq(from=1, to=500, by=5)
+
+p_wrapper = function(r,K, Pinitial, simtimes, func, metrics_func) {
+    parms = list(r=r, K=K)
+    result = ode(y=Pinitial, times=simtimes, func=func, parms=parms) 
+    colnames(result)=c("time","P")
+  # get metrics
+    metrics=as.data.frame(result) %>% metrics_func()
+  return(metrics)
+}
+
+allresults = as.data.frame(sens_P$X) %>% pmap(p_wrapper, Pinitial=Pinitial, simtimes=simtimes, func=dexppopK, metrics_func=compute_pop_metrics)
+
+# extract out results from pmap into a data frame
+allres = allresults %>% map_dfr(`[`,c("maxpop","dyear"))
+
+
+# create boxplots
+tmp = allres %>% gather(key="metric", value="value")
+ggplot(tmp, aes(metric, value, col=metric))+geom_boxplot()
+
+# compute sobol indicies (separately for the two different outputs)
+sens_P_maxpop = sensitivity::tell(sens_P,allres$maxpop)
+
+# first-order indices (main effect without co-variance)
+sens_P_maxpop$S
+
+# total sensitivity index -note that this partitions the output variance - so values sum to 1
+sens_P_maxpop$T
+
+
+
+# create another one for max year
+sens_P_dyear = sensitivity::tell(sens_P,allres$dyear)
+# first-order indices (main effect without co-variance)
+
+#notice that this fails because of NAs - scenarios where population does not double
+summary(allres$dyear)
+
+# clean up option - not ideal but will work - set double year to max simtimes
+allres$dyear_clean = ifelse(is.na(allres$dyear), max(simtimes), allres$dyear)
+sens_P_dyear = sensitivity::tell(sens_P,allres$dyear_clean)
+sens_P_dyear$S
+
+# total sensitivity index -note that this partitions the output variance - so values sum to 1
+sens_P_dyear$T
+```

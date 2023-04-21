@@ -1,0 +1,146 @@
+---
+title: "harvest"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(sensitivity)
+library(tidyverse)
+library(deSolve)
+```
+
+Generate and run a model of harvest
+
+```{r harvest}
+
+# fixed amount per year
+source("../R/dharvest.R")
+dharvest
+
+# try it out
+tm = seq(from=1, to=500)
+Pinitial = 1
+gps = list(harv=0.18, K=100, r=0.2)
+res = ode(Pinitial,tm, dharvest, gps)
+colnames(res)=c("time","carbon")
+
+ggplot(as.data.frame(res), aes(time, carbon))+geom_point()
+
+# what if we harvest a a much greater rates
+
+# lets vary the harvest rates from 0.0 to 0.4
+harvestr = seq(from=0.0, to=0.4, by=0.025)
+
+# save all of the trajectories
+
+
+# use a wrapper function to just return the carbon trajectories
+getcarbon = function(Pinitial, tm, harv, K, r, hfunc) {
+  gps = list(harv=harv, K=K, r=r)
+  res = ode(Pinitial,tm, hfunc, gps)
+  colnames(res)=c("time","carbon")
+  res=as.data.frame(res)
+  return(carbon=res$carbon)
+}
+
+# apply this function to all harvest values
+res = harvestr %>% map_dfc(~getcarbon( Pinitial=Pinitial, tm=tm, K=100, r=0.2, hfun=dharvest, harv=.x))
+# rows are time, columns are carbon for each harvest scenario
+colnames(res)=harvestr
+res=as.data.frame(res)
+res$time=tm
+# put in to a form where we can plot
+resl = gather(res, key="harvestr",value="carbon", -time)
+ggplot(resl,aes(time, carbon, col=harvestr))+geom_line()
+
+
+# notice that stable forest value changes with harvest rates
+
+# notes that some forests are not stable - (or stablity is zero)
+
+# see this at the beginning - plot the first 10 years
+ggplot(subset(resl, time < 10),aes(time, carbon, col=harvestr))+geom_line()
+
+```
+
+Try different harvest rates...notice how carbon growth changes...what does stability mean - can you find parameter sets that lead to a stable non-zero forest
+
+We could do some sensitivity analysis to see how harvest rate, and growth rate interact to control where the forest ends up after 10 years and 50 years (short and long planning horizons)
+
+We will use our compute metrics and wrapper to make this easy
+
+```{r harvestsend}
+
+# fixed amount per year
+source("../R/dharvest.R")
+
+
+# lets assume a uniform distribution of harvest rates
+# and of normal growth rates
+np=200
+
+r = rnorm(mean=0.3, sd=0.05, n=np)
+harv = runif(min=0.0, max=0.4, n=np)
+K = 
+X1 = cbind.data.frame(r=r, harv=harv)
+
+# repeat to get our second set of samples
+r = rnorm(mean=0.3, sd=0.05, n=np)
+harv = runif(min=0.0, max=0.4, n=np)
+X2 = cbind.data.frame(r=r, harv=harv)
+
+# create our sobel object and get sets ofparameters for running the model
+
+sens_forest = sobolSalt(model = NULL,X1, X2, nboot = 300)
+colnames(sens_forest$X)= c("r","harv")
+# do a quick test
+# try it out
+tm = seq(from=1, to=50)
+Pinitial = 1
+parms = list(r=sens_forest$X[1,1], harv=sens_forest$X[1,2], K=100)
+res = ode(y=Pinitial,times=tm, func=dharvest, parms=parms)
+res=as.data.frame(res)
+colnames(res)=c("time","C")
+
+# compute our two metrics of interest - harvest after 10 and 50 years
+compute_metrics = function(res) {
+ C50 = res[50]
+ C10 = res[10]
+return(list(C50=C50, C10=C10))}
+
+# use a wrapper function to just return the carbon trajectories
+p_wrapper = function(r,harv, K, Pinitial, simtimes, func) {
+    parms = list(r=r, K=K, harv=harv)
+    result = ode(y=Pinitial, times=simtimes, func=func, parms=parms) 
+    result=as.data.frame(result)
+   colnames(result)=c("time","C")
+  # get metrics
+  metrics=compute_metrics(result$C)
+  return(metrics)
+}
+
+# notice how we added in K, a parameter that we are NOT varying
+
+# try it out
+tm = seq(from=1, to=50)
+Pinitial = 1
+
+
+allresults = as.data.frame(sens_forest$X) %>% pmap(p_wrapper, K=100, Pinitial=Pinitial, simtimes=tm, func=dharvest)
+
+# extract out results from pmap into a data frame
+allres = allresults %>% map_dfr(`[`,c("C10","C50"))
+
+tmp = allres %>% gather(key="metric", value="value")
+ggplot(tmp, aes(metric, value, col=metric))+geom_boxplot()
+
+# link with parameters to see how parameters together
+# impact something we care aboue C50
+
+allresp = cbind.data.frame(sens_forest$X, allres)
+ggplot(allresp, aes(harv, C50, col=r))+geom_point()
+
+# notice how we can see the impact of harvesting - and how growth rates reduce the sustainable harvest
+```
