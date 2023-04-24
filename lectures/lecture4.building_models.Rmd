@@ -33,6 +33,14 @@ output:
 
 * Test model
 
+#  What’s in the box 
+
+Often more complicated than a simple regression…
+
+So we need to think through steps are - what is connected with what
+
+Diagrams are a good place to start
+
 
 #  Modularity - Discrete Tasks  
 
@@ -49,18 +57,11 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.j
 ```
 
 
-#  What’s in the box 
-
-Often more complicated than a simple regression…
-
-So we need to think through what the relationships are; the processes are that we want to take in to account
-
-Conceptual models are a good place to start
 
 
 
 
-# Conceptual model design
+# Model design flowcharts
 
 Some model designers uses standard symbols for the different model components 
 
@@ -77,7 +78,7 @@ Conceptual Models
 
 
 
-#  Conceptual models: Composing 
+#   Composing Diagrams
 
 Pictorial representation of how you think about your system, and what needs to be included in 
 the model to answer your questions (or achieve your modelling goal)
@@ -280,6 +281,6 @@ Just remember that git does not like having nest repositories - so
 keep working respoistories in separate directories
 
 
-# Assignment
+
 
 
