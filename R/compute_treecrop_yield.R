@@ -3,21 +3,24 @@
 #' computes almond yield anomolies
 #' @param  clim climate data frame
 #' as daily (day, month, year, tmin_C, tmax_C, precip )
-#' @param  Tmax_month_coeff vector of 12 values default = 0 for all months
-#' @param  Tmin_month_coeff vector of 12 values default = 0 for all months
-#' @param  Precip_month_coeff vector of 12 values default = 0 for all months
+#' @param  Tmax_month_coeff data frame of 12 values default = 0 for all months
+#' @param  Tmin_month_coeff data frame of 12 values default = 0 for all months
+#' @param  Precip_month_coeff data frame of 12 values default = 0 for all months
 #' @param Intercept
 #' @author Naomi Tague
 #' @references D.B. Lobell et al. Agricultural and Forest Meteorology 141 (2006) 208–218.
 #' @return
 #' yield (anomoly from California mean in ton/acre, mean, maximum and mininum yields
 #'
-#'
-compute_treecrop_yield = function(clim,Tmin_month_coeff, Tmax_month_coeff, Precip_month_coeff, Precip_month_coeff2, Intercept) {
+# UNDER DEVELOPMENT
+
+compute_treecrop_yield = function(clim,Tmin_month_coeff, Tmax_month_coeff, Precip_month_coeff, Precip_month_coeff2, Intercept, crop="Almond") {
 
   # extracted required climate variables
 
-  clim_month_allyears = clim %>% group_by(month, year) %>% dplyr::summarize(tmin_c=mean(tmin_c), tmax_c=mean(tmax_c),
+  crop_index = case_when(crop)
+
+  clim_month_allyears = clim %>% group_by(month, year) %>% dplyr::summarize(tmin_c=min(tmin_c), tmax_c=max(tmax_c),
                                                             precip = sum(precip), .groups="drop")
 
   #compute yield

@@ -1,5 +1,5 @@
 ---
-title: "Informal Sensitivity Analysis"
+title: "Informal Sensitivity Analysis Part 2"
 output:
   slidy_presentation:
     highlight: pygments
@@ -234,6 +234,79 @@ head(profit_solar)
 ggplot(profit_solar, aes(as.factor(year), netpre, group=year))+geom_boxplot()+
   labs(y="Profit in current $", x="Year")
 
+```
+# Recall we also have a function that computes hydropower
+
+ 
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture3_conceptualmodels2/assets/img/reservoir_cm.001.jpeg")
+```
+
+* Input: Reservoir height (height) and flow rate (flow)
+
+* Output: Instantaneous power generation (W/s)
+
+* Parameters: K Efficiency , ρ (density of water), g (acceleration due to gravity)
+
+P = ρ * h * r * g * K Efficiency;
+
+P is Power in watts, ρ is the density of water (~1000 kg/m3), h is height in meters, r is flow rate in cubic meters per second, g is acceleration due to gravity of 9.8 m/s2, K Efficiency is a coefficient of efficiency ranging from 0 to 1.
+
+This is a static (one point in time), deterministic, lumped (one place) model; its more or less physically based
+
+
+
+```{r eval=TRUE, echo=TRUE}
+#' Power Generation
+#'
+#' This function computes instantaneous power generation
+#’ from a reservoir given its height and flow rate into turbines
+#' @param rho Density of water (kg/m3) Default is 1000
+#' @param g Acceleration due to gravity (m/sec2) Default is 9.8
+#' @param Kefficiency Turbine Efficiency (0-1) Default is 0.8
+#' @param height height of water in reservoir (m)
+#' @param flow flow rate (m3/sec)
+#' @author Naomi
+#' @examples power_gen(20, 1)
+#' @return Power generation (W/s)
+
+
+power_gen = function(height, flow, rho=1000, g=9.8, Keff=0.8) {
+
+ 
+
+  # calculate power
+    result = rho * height * (flow) * g * Keff
+
+
+  return(result)
+}
+```
+
+
+see how function works
+
+```{r eval=TRUE}
+library(tidyverse)
+power_gen = function(height, flow, rho=1000, g=9.8, Keff=0.8) {
+
+result = rho * height * flow * g * Keff
+return(result)
+}
+
+power_gen(height=10, flow=2)
+power_gen(10,2)
+power_gen(10,2, g=4.2)
+
+# generate some test data
+measured_height=runif(min=1, max=100, n=20)
+
+# create a data frame to store results of model run
+power_estimate = cbind.data.frame(height=measured_height, estimate=power_gen(height=measured_height, flow=2))
+
+# graph
+ggplot(power_estimate,aes(height, estimate) )+geom_point()+labs(y="power in W/x", x="height (m)")
 ```
 
 # Putting it all together

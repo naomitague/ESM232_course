@@ -13,8 +13,8 @@ navbar:
            href: lectures/intro_lecture.html
          - text: "Getting Started w Models"
            href: lectures/lecture2.conceptual.simple.html
-#        - text: "Conceptual Models - Part 2"
-#          href: lectures/lecture3_conceptualmodels2.html
+         - text: "Building Models"
+           href: lectures/lecture3.building_models.html
 #        - text: "Building Models"
 #          href: lectures/lecture4.building_models.html
 #        - text: "Models and Data"

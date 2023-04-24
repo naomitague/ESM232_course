@@ -1,0 +1,86 @@
+---
+title: "stability"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(sensitivity)
+library(tidyverse)
+library(deSolve)
+```
+
+Example of exploring stability with our proportional harvest model
+
+```{r stability2}
+
+source("../R/dharvest.R")
+dharvest
+
+# given some forest characteristics - lets look at derivatives under different harvest rates
+lowHrate = 0.015
+gps = list(harv=lowHrate, K=100, r=0.05)
+
+# look at the derivative over a range of forest sizes
+
+findstable = data.frame(Ccurr=seq(from=1, to=100, by=5))
+# notice use of Time=NULL, and map to compute derivative
+# for different values of forest biomass
+findstable$dervHlow= unlist(findstable$Ccurr %>% map(~dharvest(parms=gps, Time=NULL, P=.x) ))
+                                                  
+ggplot(findstable, aes(Ccurr, dervHlow))+geom_point()+geom_hline(yintercept = 0, col="red")+
+  labs(y="Derivative\n (Rate of change of forest carbon) (kg/C/year)", x="Current Forest Carbon Stock (kgC)")
+
+# Populations will be stable when derivative is zero!
+
+# look at a different harvest rate
+midHrate=0.02
+gps = list(harv=midHrate, K=100, r=0.05)
+findstable$dervHmid= unlist(findstable$Ccurr %>% map(~dharvest(parms=gps, Time=NULL, P=.x) ))
+ 
+# try high rate
+highHrate=0.05
+gps = list(harv=highHrate, K=100, r=0.05)
+findstable$dervHhigh= unlist(findstable$Ccurr %>% map(~dharvest(parms=gps, Time=NULL, P=.x) ))
+ 
+
+# plot them all together
+tmp = gather(findstable, key="HarvestRate", value="value", -Ccurr)
+ggplot(tmp, aes(Ccurr, value, color=HarvestRate))+geom_point()+geom_hline(yintercept = 0, col="black")+
+  labs(x="Forest Biomass (kgC)", y="Forest Growth Rate (kgC/year)")
+
+# notice how with higher harvest rates the stable population will be lower
+
+
+
+
+```
+
+Look at the above graphs to determine what stable forest carbon is likely to be given different harvest rates
+
+Try it to find out if you are right
+```{r  check}
+
+tm = seq(from=1, to=500)
+gps = list(harv=lowHrate, K=100, r=0.05)
+Pinitial=50
+res = ode(Pinitial,tm, dharvest, gps)
+colnames(res)=c("time","carbon")
+ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
+  labs(y="Forest Biomass (kgC)", x="Year", title="low harvest rate")
+  
+
+
+
+gps = list(harv=highHrate, K=100, r=0.05)
+Pinitial=50
+res = ode(Pinitial,tm, dharvest, gps)
+colnames(res)=c("time","carbon")
+ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
+ labs(y="Forest Biomass (kgC)", x="Year", title="High Harvest Rate")
+
+
+
+
+```

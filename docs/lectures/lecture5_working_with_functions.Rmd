@@ -32,7 +32,7 @@ This allows functions to be more flexible
 
 *  model of ecosystem production that changes calculations if vegetation is grass versus a tree
 
-* crop  model where user choses which function to run by specifying tree type
+* crop  model where user chooses which function to run by specifying tree type
 
 
 
