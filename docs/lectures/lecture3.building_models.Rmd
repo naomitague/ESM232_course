@@ -344,7 +344,11 @@ Try doing some informal  sensitivity analysis with your almond yield function
   * using **map** from **purrr*
   * are there other ways **for loops**...
   
-  
-  
+ 
+Before Thursday's class Review Rmarkdowns 
+
+* InformalSensitivity.Rmd
+* InformalSensitivity2.Rmd
+
 
 

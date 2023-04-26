@@ -1,6 +1,8 @@
 ---
 title: "Almond Profit Model - Informal Sensitivity Analysis "
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -10,13 +12,14 @@ knitr::opts_chunk$set(echo = TRUE)
 # Assignment 3
 In your same groups - 
 
-+ Develop a profit model for your almond yield (you can make this up - think about what the parameters would be)
++ Develop a profit model for your almond yield (you can make this up - think about what the parameters would be) 
+  * you might assume a baseline profit and then adjust according to the anomaly
+
+  * there are many ways to combine the almond yield and profit functions; you can have the profit function "call"/use the almond yield function; or create a wrapper function that calls them in sequence (first the almond yield and then the profit function)
 
 + Do a simple informal sensitivity analysis of almond yield profit using at least 2 parameters
 
 + Create a single graph of the results - you can decide what is the most meaningful graph 
 
-+ Output the graph as a stand alone image (pdf, tiff, jpeg)
 
-
-Submit as a group: an Rmarkdown document, your R files for almond yield and profit model, and Graph on Gauchospace - 
+Submit as a group: an Rmarkdown document, your R files for almond yield and profit model, and Graph on Canvas- 
