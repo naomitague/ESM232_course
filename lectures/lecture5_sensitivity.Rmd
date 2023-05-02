@@ -1,0 +1,494 @@
+---
+title: "Sensitivity Analysis"
+output:
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+  pdf_document: default
+  ioslides_presentation:
+    highlight: pygments
+  beamer_presentation:
+    highlight: pygments
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library(sensitivity)
+library(tidyverse)
+library(lhs)
+library(purrr)
+```
+
+#  Sensitivity Analysis 
+
+Many approaches (entire text books)
+
+Two main classes
+  
+* global simultaneous: vary all parameters over possible ranges
+
+* local parameter specific: hold all other parameters content and then vary
+    
+Challenge is sampling parameter uncertainty space and balancing this against computational limits
+
+Optimization - special type of sensitivity analysis
+
+---
+
+#  Single Parameter Sensitivity
+
+Vary one parameter but hold the others constant
+
+Useful for focused analysis but..
+
+* sensitivity to a parameter may change as a function of other parameters
+
+Consider the sensitivity of a seasonal snow accumulation and melt model to both temperature and radiation
+
+* for high temperatures, radiation may not impact rates substantially since there is less snow
+
+* for lower temperature, radiation may matter much more - so temperatures related to radiation absorption (e.g albedo) will have a greater impact on output
+
+---
+
+#  Steps in Sensitivity Analysis 
+
+Define the range (pdf) of input parameters
+
+Define the outputs to be considered (e.g if you had streamflow are you looking at daily, max, min, annual)
+
+Sample the pdf of input parameters and use this sample to run the model - repeat many times
+
+Graph the results
+
+Quantify sensitivity
+
+---
+
+#  Sensitivity Analysis: What ranges should I vary my parameters over!
+
+* range (min, max, middle values)
+
+* pdf  (probability density function)
+
+* If parameters are physically based this can come from literature (e.g range of snow albedo’s, range of hydraulic conductivity in a soil )
+
+* If parameter’s are estimated (e.g a regression slope, coefficients from another model) then statistics such as confidence bounds can help  you to define the ranges
+
+---
+
+#  Approaches to sampling parameter space 
+
+Random - Monte Carlo
+
+Latin Hypercube
+
+Sobel
+
+Difference is in how you sample parameter space - tradeoffs with efficiency, likelihood of capturing responses from rarer parameters
+
+---
+
+#  Latin Hyper Cube 
+
+generating random samples from equally probability intervals
+![](lecture7_sensitivity/assets/img/image3.png)
+
+---
+
+#  Tools in R 
+
+lhs (Parameter Space Exploration with Latin Hypercubes)
+Library for Latin Hypercube Sampling and Sensitivity Analysis
+
+*Install lhs library*
+
+
+# What we need to use the LHS function
+
+
+* number of parameters that you want to perform sensitivity analysis on
+
+* number of samples
+
+* distributions of the parameters
+
+“qnorm”,”qunif”, “qlnorm”,”qgamma” many others]
+
+[More Distributions and Parameters](http://www.stat.umn.edu/geyer/old/5101/rlook.html)
+
+
+# Steps for Latin HyperCube Sampling
+
+* create a matrix with random samples for the number of parameters that you have
+  * we will use this to choose quantiles that will fully sample parameter space
+
+* use these quantiles to sample expected parameter distributions
+
+
+
+
+# Example of using Latin Hypercube sampling for sensitivity analysis
+
+Lets look at our almond yield example
+
+```{r LHS}
+# for formal sensitivity analysis it is useful to describe output in
+# several summary statistics - how about mean, max and min yield
+source("../R/compute_almond_yield.R")
+
+
+# set a random seed to make things 'random'
+set.seed(1)
+
+# which parameters
+pnames = c("Tmincoeff1", "Tmincoeff2", "Pcoeff1", "Pcoeff2", "intercep")
+
+# how many parameters
+npar =  length(pnames)
+# how many samples
+nsample = 100
+
+parm_quant = randomLHS(nsample, npar)
+colnames(parm_quant)=pnames
+# choose distributions for parameters - this would come from
+# what you know about the likely range of variation
+# then use our random samples to pick the quantiles
+
+parm = as.data.frame(matrix(nrow=nrow(parm_quant), ncol=ncol(parm_quant)))
+colnames(parm) = pnames
+# for each parameter pick samples 
+# I'm using several examples normal distribution (with 10% standard deviation) and uniform with +- 10%
+# in reality I should pick distribution from knowledge about uncertainty in parameters
+
+# to make it easy to change i'm setting standard deviation / range variation to a variable
+pvar = 10
+
+parm[,"Tmincoeff1"] = qnorm(parm_quant[,"Tmincoeff1"], mean=-0.015, sd=0.015/pvar)
+parm[,"Tmincoeff2"] = qnorm(parm_quant[,"Tmincoeff2"], mean=-0.0046, sd=0.0046/pvar)
+
+# for uniform I'm using +- 10%
+parm[,"Pcoeff1"] = qunif(parm_quant[,"Pcoeff1"], min=-0.07-0.07/pvar, max=-0.07+0.07/pvar)
+parm[,"Pcoeff2"] = qunif(parm_quant[,"Pcoeff2"], min=-0.0043-0.0043/pvar, max=-0.0043+0.0043/pvar)
+
+parm[,"intercep"] = qnorm(parm_quant[,"intercep"], mean=0.28, sd=0.28/pvar)
+# note I could also index by column number by names keep things more clear, fewer mistakes
+#parm[,5] = qnorm(parm_quant[,5], mean=0.28, sd=0.28/pvar)
+
+head(parm)
+```
+
+# Run model for parameter sets
+
+* We will do this in R
+
+* We can use **pmap** to efficiently run our model for all of our parameter sets
+
+but first
+
+# Examining Output
+
+Sensitivity of What?
+
+If your model is estimating a single value, you are done
+
+* long term mean almond yield anomoly
+*  mean profit from solar
+
+But models are often estimating multiple values
+
+* streamflow
+* almond yield anomoly for multiple years
+  
+In that case to quantify sensitivity you need summary metrics
+
+* mean
+* max
+* min
+* variance
+
+Which one depends on what you care about
+
+
+```{r almondsens}
+
+
+# read in the input data
+SB=read.table("../data/clim.txt", header=T)
+clim= SB
+
+
+
+# lets now run our model for all of the parameters generated by LHS
+# pmap is useful here - it is a map function that uses the actual names of input parameters
+
+yields = parm %>% pmap(compute_almond_yield,clim=clim)
+
+# notice that what pmap returns is a list 
+head(yields)
+
+# turn results in to a dataframe for easy display/analysis
+yieldsd = yields %>% map_dfr(`[`,c("maxyield","minyield","meanyield"))
+
+
+```
+
+
+#  Plotting 
+
+Plot relationship between parameter and output
+to understand how uncertainty in parameter impacts the output to determine over what ranges of the parameter uncertainty is most important (biggest effect)
+
+
+* Use a box plot (of output)
+to graphically show the impact of uncertainty on output of interest
+
+* To see more of the distribution - graph the cumulative distribution
+  * high slope, many values in that range
+  * low slope, few values in that range
+  * constant slope, even distribution
+  
+* Scatterplots against parameter values
+
+---
+
+```{r senplot}
+
+
+
+# add uncertainty bounds on our estimates
+tmp = yieldsd %>% gather(value="value", key="yield")
+ggplot(tmp, aes(yield, value, col=yield))+geom_boxplot()+
+  labs(y="Yield (as anomoly)")
+
+# note that you don't see the ranges because of the scale (min yield anomoly much smaller than max) - here's a more informative way to graph
+ggplot(tmp, aes(yield, value, col=yield))+
+  geom_boxplot()+labs(y="Yield (as anomoly)")+
+  facet_wrap(~yield, scales="free" )
+
+
+# cumulative distribution
+ggplot(yieldsd, aes(maxyield))+stat_ecdf()
+
+
+# plot parameter sensitivity
+# a bit tricky but nice way to make it easy to plot all parameters against all values
+tmp = cbind.data.frame(yieldsd, parm)
+tmp2 = tmp %>% gather(maxyield, minyield, meanyield, value="yvalue",key="yieldtype")
+tmp3 = tmp2 %>% gather(-yvalue, -yieldtype, key="parm", value="parmvalue")
+ggplot(tmp3, aes(parmvalue, yvalue, col=yieldtype))+geom_point()+facet_wrap(~yieldtype*parm, scales="free", ncol=5)
+
+```
+
+#  Quantifying Sensitivity 
+
+If relationships between output and input are close to linear,
+
+* Correlation coefficient between output and each input (separately)
+
+* Partial correlation coefficient (PCC) for multiple parameters; 
+
+      * Correlation after effects of other parameters accounted for
+      
+      * Correlation of X and Y given Z
+      
+      * Computed as the correlation of the *residuals* from linear regression of
+      
+          * X with Z
+          
+          * Y with Z
+
+We can essentially fit a regression relationship between input and output - and  slope is a measure of sensitivity (standardized regression coefficients)
+\begin{align*}
+   y = \beta * x + \alpha  \\
+  {\beta}_{std} = \beta * \frac{s_x}{s_y} 
+\end{align*}
+
+where $s_x$ and $s_y$ are standard deviations of x and y
+
+#  Quantifying Sensitivity 
+
+
+* Correlation Coefficient - linear monotonic
+
+Non-linear relationship, but monotonic between x and y - you can rank transform x and y to developed 
+
+* Partial Rank Correlation Coefficient - non-linear but monotonic
+
+R function *pcc* in *sensitivity* package can compute these for you AND makes it easy
+to graph the results
+
+It can be used for both partial correlation coefficients and partial rank correlation coefficients
+
+# Pcc
+```{r quantifying}
+# combine parameter sets with output
+
+
+
+senresult = pcc(parm, yieldsd$maxyield)
+
+# see coefficients
+senresult
+# efficiently plot them
+plot(senresult)
+
+# try again using rank coefficients
+
+senresult_rank = pcc(parm, yieldsd$maxyield, rank=TRUE )
+senresult_rank
+plot(senresult_rank)
+
+# R sometimes returns complex lists - to see what you have
+str(senresult)
+
+senresult$PCC
+
+# what parameters is the result most sensitive to, 
+# does this match your scatter plot
+
+# try for other outputs
+
+
+# plot parameter sensitivity
+# a bit tricky but nice way to make it easy to plot all parameters against all values
+tmp = cbind.data.frame(yieldsd, parm)
+tmp2 = tmp %>% gather(maxyield, minyield, meanyield, value="yvalue",key="yieldtype")
+tmp3 = tmp2 %>% gather(-yvalue, -yieldtype, key="parm", value="parmvalue")
+ggplot(tmp3, aes(parmvalue, yvalue, col=yieldtype))+geom_point()+facet_wrap(~yieldtype*parm, scales="free", ncol=5)
+```
+
+---
+
+#  Other Formal Sensitivity Approaches
+
+
+Sobol method
+
+Fourier Amplitude Sensitivity Test
+
+* more efficient parameter space sampling
+* estimates of parameter contributions that can be more informative 
+
+---
+
+# Larger Complex Models
+
+Only do sensitivity on some inputs/parameters
+
+
+Use Latin Hypercube to generate samples
+
+Run model for samples
+
+Generate Summary Statistics and graph
+
+
+---
+
+# More Information on Sensitivity Analysis
+
+[Applying Sensitivity Analysis in Biology] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2570191/)
+
+Nice paper on sensitivity analysis for environmental modeling
+<a href="../img/Saltelli.2010.pdf" download>Click to Download</a>
+
+Saltelli, Andrea, and Paola Annoni. "How to avoid a perfunctory sensitivity analysis." Environmental Modelling & Software 25, no. 12 (2010): 1508-1517
+
+
+---
+
+#  Steps in Sensitivity Analysis 
+
+Define the distribution of input parameters (e.g normal with its mean and standard deviation)
+
+Define the outputs to be considered (e.g if your output is time series are you looking at daily, max, min, annual ?)
+
+Sample from pdf of input parameters - we use *randomLHS* for this
+
+Run the model for each sample
+
+Graph the results
+
+Quantify sensitivity
+  * we used *pcc*
+
+
+---
+
+# Assignment
+
+With a new group: Sensitivity Analysis
+
+Often when we are estimating vegetation or crop water use we need to know the atmospheric conductance - which is essentially how easily water diffuses into the air and depends largely on windspeed (you get more evaporation in windier conditions) Atmospheric conductance is also influenced by the vegetation itself and the turbulence it creates
+
+I've provided a function to compute atmospheric conductance $C_{at}$ (how easily vapor diffuses from vegetation surfaces)
+
+**The function *Catm.R* is provided**
+
+
+So that you know what it does - here's some background on the function
+$$
+C_{at} = \frac{v_m}{6.25*{ln(\frac{z_m-z_d}{z_0})}^2}
+$$
+$$
+z_d = k_d*h
+$$
+$$
+z_0 = k_0*h
+$$
+
+
+$z_m$ is the height at which windspeed is measured - must be higher than the vegetation (cm), it is usually measured 200 cm  above the vegetation
+
+$h$ is vegetation height (cm)
+
+$v$ is windspeed (cm/s)
+
+Typical values if $k_d$ and $k_o$ are 0.7 and 0.1 respectively (so use those as defaults)
+
+**Your task**
+
+For a given forest, you will perform a sensitivity analysis of model predictions of conductance
+Consider the sensitivity of your estimate to uncertainty in the following parameters and inputs
+  
+  * $height$ 
+  
+  * $k_d$
+  
+  * $k_0$
+  
+  * $v$
+  
+Windspeeds $v$ are normally distributed with a mean of  250 cm/s with a standard deviation of 30 cm/s
+
+For vegetation height assume that height is somewhere between 9.5 and 10.5 m (but any value in that range is equally likely)
+
+For the $k_d$ and $k_0$ parameters you can assume that they are normally distributed with standard deviation of 1% of their default values
+
+a) Use the Latin hypercube approach to generate parameter values for the 4 parameters
+b) Run the atmospheric conductance model for these parameters 
+c) Plot conductance estimates in a way that accounts for parameter uncertainty
+d) Plot conductance estimates against each of your parameters
+e) Estimate the Partial Rank Correlation Coefficients
+f) Discuss what your results tell you about how aerodynamic conductance? What does it suggest about what you should focus on if you want to reduce uncertainty in aerodymaic conductance estimates? Does this tell you anything about the sensitivity of plant water use to climate change? 
+
+Submit the Rmarkdown (or link to git repo) as usual
+
+**Grading Rubric**
+
+* Generation of parameter values using latin hypercube sampling (10pts)
+* Running model for the parameters (10pts)
+* Graph of conductance uncertainty 
+  * meaningful graph (5pts)
+  * graphing style (axis labels, legibility) (5 pts)
+* Graph of conductance against parameter values 
+  * meaningful graph (5pts)
+  * graphing style (axis labels, legibility) (5 pts)
+* Correct Rank Correlation Coefficients (10 pts)
+* Discussion (10pts)
+  * suggestion for how to reduce uncertainty that follows from your analysis (5pts)
+  * idea about how uncertainty might impact estimate of plant water use under climate change (5pts)
+
