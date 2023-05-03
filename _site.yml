@@ -19,12 +19,13 @@ navbar:
            href: lectures/lecture4_informal_sensitivity.html
          - text: "Sensitivity Analysis"
            href: lectures/lecture5_sensitivity.html
+         - text: "Sobol Sensitivity Analysis"
+           href: lectures/lecture6_sensitivity_sobol.html
 #        - text: "Informal Sensitivity Analysis"
 #          href: lectures/lecture6_informal_sensitivity.html
 #        - text: "LHS Sensitivity Analysis"
 #          href: lectures/lecture7_sensitivity.html
-#        - text: "Sobol Sensitivity Analysis"
-#          href: lectures/lecture8_sensitivity_sobol.html
+
 #        - text: "Simple Dynamic Models"
 #          href: lectures/lecture9_simpledynamic.html
 #        - text: "More on Dynamic Models"

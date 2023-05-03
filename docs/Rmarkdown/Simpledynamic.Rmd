@@ -13,7 +13,7 @@ library(purrr)
 
 # Implementing Dynamic Models in R
 
-Dynammic models always involves derivatives (equations that express how things change from time step to time step or place to place )
+Dynamic models always involves derivatives (equations that express how things change from time step to time step or place to place )
 
 
 Implement population **growth** as a derivative - a model of population change

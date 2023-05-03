@@ -1,0 +1,218 @@
+---
+title: "Sensitivity using Sobol"
+output:
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+  pdf_document: default
+  ioslides_presentation:
+    highlight: pygments
+  beamer_presentation:
+    highlight: pygments
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library(sensitivity)
+library(tidyverse)
+library(lhs)
+library(purrr)
+```
+
+# Sobol
+
+Sobol sensitivity analysis is similar to LHS approach as a way to efficiently sample parameter space 
+
+Sobol is more general - it can use measured parameter samples (we will approximate sampling here by using known distributions but you could use actual samples!)
+
+Sobol is a *variance-based* method
+
+Sobol quantifies sensitivity by 
+breaking the variance of output into 
+
+# Sobol Indices - Quantifying Sensitivity
+
+Indices are computed using parameter-output variance relationships; they are estimates so the indices themselves
+have uncertainty bounds
+
+Several Indices
+
+<span style="color: green;">First order sensitivity or Main Effect</span>
+
+* variance associated directly with parameter alone 
+* fraction associated with each parameter, sum to 1 (although because it is estimated can be slightly more or less)
+
+<span style="color: green;">Total Effect</span>
+
+* variance associated with parameter and interaction with other parameters 
+* sum can be more than 1 if parameters interact
+
+<span style="color: green;">Second Order Indices</span>
+
+* less used but quantify how parameter pair-wise parameter interactions contribute to output variation
+
+
+
+
+# Sobol in R
+
+* *Sensitivity* package
+
+* Sobol Indices require estimation - and there are different methods to do that
+
+* The *Sensitivity* package has several of those
+
+* today we will use *sobolSalt* - which uses a method by Saltelli (who has written extensively on Sensitivity analysis)
+
+* R help pages for *Sensitivity* provide many good references
+
+* This is a nice overview paper
+
+[Variance Based Methods](https://www.sciencedirect.com/science/article/pii/S0010465509003087?casa_token=xG4MJV4hwJgAAAAA:Tq_CLHTqtM1wDvhzviZFgm6sVBdOoYzQdFfOGplEi5OUxLSWxaKITce-CzxLxfS6993rNnbK1Q)
+
+# Sobol - how to
+
+
+* run Sobol to get parameter sets in a sensitivity analysis object
+* run model with those parameter sets
+* *tell* the senstivity object about results associated with each parameter set
+* look at sensitivity analysis indices from Sobol
+
+Generation of parameter sets slightly different
+
+  * generate **two** samples of parameter sets by 
+  samplng from apriori (expected) distributions
+  * these would be the "hypothetical" distributions based on assumptions about the data
+  * ideally these would be distributions that you actually sampled
+
+#  Example 
+Atmospheric Conductance as a function of windspeed, vegetation height and parameters
+
+First lets get the parameters
+
+```{r}
+source("../R/Catm.R")
+
+# generate two examples of random number from parameter distributions
+
+np=1000
+k_o = rnorm(mean=0.1,sd=0.1*0.1, n=np)
+k_d = rnorm(mean=0.7, sd=0.7*0.1, n=np)
+v = rnorm(mean=200, sd=10, n=np)
+height = runif(min=5, max=15, n=np)
+
+
+X1 = cbind.data.frame(k_o, k_d, v, height=height)
+
+# repeat sampling
+k_o = rnorm(mean=0.1,sd=0.1*0.1, n=np)
+k_d = rnorm(mean=0.7, sd=0.7*0.1, n=np)
+v = rnorm(mean=200, sd=10, n=np)
+height = runif(min=5, max=15, n=np)
+
+X2 = cbind.data.frame(k_o, k_d, v, height=height)
+
+# there are different versions of sobol functions that have different approaches for estimating parameters and indices, we use an approach implemented by jansen 
+
+sens_Catm_Sobol = sobolSalt(model = NULL, X1, X2, nboot = 100)
+
+
+# Take a look at the Sobol generated sensitivity object
+# your parameters sets for sensitivity analysis are in X
+```
+
+# Sobol Indices
+
+now run model for Sobol generated parameter sets and compute indices
+
+* pay attention to values of the indices and confidence intervals
+  * if 0 is within the confidence interval, parameter uncertainty is not influencing output
+  
+* substantial differences between total effect and first order indices suggest parameter interactions
+
+TIP: a useful plotting strategy is to plot model output against parameter with the highest total effect
+and then use the parameter with second highest total effect for color
+
+```{r sobolrun}
+# run model for all parameter sets
+# make sure you give the parameters names
+
+parms = as.data.frame(sens_Catm_Sobol$X)
+colnames(parms)= colnames(X1)
+res = pmap_dbl(parms, Catm)
+
+
+sens_Catm_Sobol = sensitivity::tell(sens_Catm_Sobol,res, res.names="ga")
+
+# main effect:  partitions variance (main effect without co-variance) - sums approximately to one
+sens_Catm_Sobol$S
+# useful to add names
+row.names(sens_Catm_Sobol$S) = colnames(parms)
+sens_Catm_Sobol$S
+
+# total effect - accounts for parameter interactions
+row.names(sens_Catm_Sobol$T) = colnames(parms)
+sens_Catm_Sobol$T
+
+# Both the main effect and total effect can tell us something about how the parameter influences results
+
+
+print(sens_Catm_Sobol)
+
+ 
+# graph two most sensitive parameters
+both = cbind.data.frame(parms, gs=sens_Catm_Sobol$y)
+
+# look at response of conductance to the two most important variables
+ggplot(both, aes(v,gs, col=height))+geom_point()+labs(y="Conductance (mm/s)", x="Windspeed")
+
+```
+
+# Some example articles
+```{r}
+
+```
+
+ [Snow modeling](Snow_sobol.pdf)
+ 
+ [Building Cooling Energy Mdoel](building_energy_sobol.pdf)
+ 
+ [Uranium in Groundwater Model](Uranium_water_sobol.pdf)
+ 
+ 
+
+# Second order indices
+
+Optional for this course
+
+If you want to also compute a second order indices you need to use a different variation. (scheme=B)
+
+There are multiple implementation of Sobol in the *senstivity* package, they can be more or less stable
+I find *sobolSalt* works well
+
+```{r, alternative}
+
+sens_Catm_Sobol2 = sobolSalt(model = NULL, X1, X2, nboot = 100, scheme="B" )
+
+parms = as.data.frame(sens_Catm_Sobol2$X)
+colnames(parms)= colnames(X1)
+res = pmap_dbl(parms, Catm)
+
+
+sens_Catm_Sobol2 = sensitivity::tell(sens_Catm_Sobol2,res, res.names="ga")
+
+# main effect:  partitions variance (main effect without co-variance) - sums approximately to one
+row.names(sens_Catm_Sobol2$S) = colnames(parms)
+sens_Catm_Sobol2$S
+
+# total effect - accounts for parameter interactions
+row.names(sens_Catm_Sobol2$T) = colnames(parms)
+sens_Catm_Sobol2$T
+
+# second order parameters interaction in controlling sensitivity
+# parameters are in order, interactiosn are small here
+sens_Catm_Sobol2$S2
+
+```
