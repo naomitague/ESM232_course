@@ -90,6 +90,8 @@ Performance also depends on the 'what' you are evaluating
   
   * selection of particular periods of time
   
+
+  
 ```{r}
 # try a different time step
 sager_wy = sager %>% group_by(wy) %>% summarize(model=sum(model), obs=sum(obs))
@@ -105,6 +107,21 @@ tmp = sager %>% group_by(month, year) %>% summarize(model=sum(model), obs=sum(ob
 sager_aug = subset(tmp, month==8)
 cor(sager_aug$model, sager_aug$obs)
 
+
+```
+
+# In Class Exercise
+
+* Read in the *sager.txt* data
+
+* Think of a new metric that might be interesting from a particular environmental context
+
+* Code that metric as a function - and then apply it
+
+# Using multiple metrics
+
+```{r}
+
 # turn your evaluation metric into a function
 source("../R/compute_lowflowmetrics.R")
 compute_lowflowmetrics
@@ -113,11 +130,8 @@ compute_lowflowmetrics(m=sager$model,o=sager$obs, month=sager$month, day=sager$d
 # use different low flow months
 compute_lowflowmetrics(m=sager$model,o=sager$obs, month=sager$month, day=sager$day, year=sager$year, wy=sager$wy, low_flow_months = c(7:9))
 
-
 ```
   
-
-# try another metric
 
 # create a combined metric
 ```{r}
@@ -156,6 +170,8 @@ perf
 
 
 ```
+# Come up with a combined metric that you think is interesting 
+
 
 
 # Calibration
@@ -178,6 +194,10 @@ is a different model run for Sagehen Creek
 # is streamflow for a different parameter set
 msage = read.table("../Data/sagerm.txt", header=T)
 
+# keep track of number of simulations and use as a column names
+nsim = ncol(msage)
+snames = sprintf("S%d",seq(from=1, to=nsim))
+colnames(msage)=snames
 # lets say we know the start date from our earlier output
 msage$date = sager$date
 head(msage)
@@ -185,6 +205,11 @@ msage$month = sager$month
 msage$year = sager$year
 msage$day = sager$day
 msage$wy = sager$wy
+
+
+
+# lets add observed
+msage = left_join(msage, sager[,c("obs","date")], by=c("date"))
 
 # and we still have observed data from above
 
@@ -197,46 +222,57 @@ p1
 # lets add observed streamflow
 p1+geom_line(data=subset(sager, wy == 1970), aes(as.Date(date), obs), size=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
 
+# subset for calibration
+
+short_msage = subset(msage, wy < 1975)
 
 # compute performance measures for all output
-res = msage %>% select(!c("date","month","year","day","wy")) %>%
-      map_dbl(nse, o=sager$obs )
+res = short_msage %>% select(!c("date","month","year","day","wy","obs")) %>%
+      map_dbl(nse, short_msage$obs )
 
 head(res)
+
+
 
 # another example using our low flow statistics
 # use apply to compute for all the data
 source("../R/compute_lowflowmetrics_all.R")
-res = msage %>% select(-date, -month, -day, -year, -wy ) %>% map_df(compute_lowflowmetrics_all, o=sager$obs, month=msage$month, day=msage$day, year=msage$year, wy=msage$wy)
+res = short_msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% map_df(compute_lowflowmetrics_all, o=short_msage$obs, month=short_msage$month, day=short_msage$day, year=short_msage$year, wy=short_msage$wy)
 
 
 # interesting to look at range of metrics - could use this to decide on
 # acceptable values
 summary(res)
-
+# we can add a row that links with simulations
+res$sim = snames
 
 # graph range of performance measures
-resl = res %>% pivot_longer(cols=everything(), names_to="metric", values_to="value")
+resl = res %>% pivot_longer(-sim, names_to="metric", values_to="value")
 ggplot(resl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="free")
 
-# try this
-# assign an identifier to each row, use the same identify for columns of original streamflow data
-# we can then use that to pick data
-res$run = seq(from=1,to=nrow(res))
-head(msage)
-colnames(msage)=c(res$run, "date","month","year","day","wy")
 
 # best one
+
 best = res[which.max(res$combined),]
-msagel  =  msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="run", values_to="flow")
-ggplot(subset(msagel, run == best$run), aes(date, flow)) + geom_line()
+msagel  =  msage %>% pivot_longer(cols=!c(date, month, year, day,wy, obs), names_to="sim", values_to="flow")
+ 
+# first assume we have data for calibration, and then we are running the model forward
+# so we can look at the full time series
+ ggplot(msage, aes(date, msage[,best$sim])) + geom_line()+geom_line(aes(date, obs), col="red") 
+ bestrun = msagel[,best$sim]
+ worst = res[which.min(res$combined),]
+ worstrun = msagel[,worst$sim]
+ 
+ compruns = msage %>% select(best$sim, worst$sim, date, obs, month, day, year, wy)
+ compruns = subset(compruns, wy > 1970)
+ compruns_mwy = compruns %>% select(-c(day,date, year)) %>% group_by(month, wy) %>% summarize(across(everything(), mean))
+ 
+ compruns_mwyl = compruns_mwy %>% pivot_longer(cols=!c(month,wy), names_to="sim", values_to="flow")
+ compruns_mwyl %>% subset(month==8) %>% ggplot(aes(sim,flow ))+geom_boxplot()
+ 
 
 
-# or show with all runs
-# label runs for legends
-# all just show 1970 so easy to see
-msagel = msagel %>% mutate(best = ifelse(run==best$run, TRUE, FALSE))
-ggplot(subset(msagel, wy==1970), aes(date, flow, col=best))+geom_line()
+
 
 ```
 

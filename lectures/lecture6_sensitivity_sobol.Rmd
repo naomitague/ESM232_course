@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(sensitivity)
 library(tidyverse)
-library(lhs)
+#library(lhs)
 library(purrr)
 ```
 

@@ -14,7 +14,6 @@ output:
 ```{r setup, include=FALSE}
 
 library(sensitivity)
-library(deSolve)
 library(lhs)
 library(purrr)
 library(ggpubr)
@@ -95,7 +94,7 @@ msagel = msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="ru
 p1=ggplot(subset(msagel, wy == 1970), aes(as.Date(date), flow, col=run))+geom_line()+theme(legend.position = "none")
 p1
 # lets add observed streamflow
-p1+geom_line(data=subset(sager, wy == 1970), aes(as.Date(date), obs), size=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
+p1+geom_line(data=subset(sager, wy == 1970), aes(as.Date(date), obs), linewidth=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
 
 
 # compute performance measures for all output
@@ -128,14 +127,24 @@ ggplot(resl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="free
 
 best = res[which.max(res$combined),]
 msagel  =  msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="run", values_to="flow")
-ggplot(subset(msagel, run == best$run), aes(date, flow)) + geom_line()
+ggplot(subset(msagel, run == best$run), aes(date, flow)) + geom_line() +
+  geom_line(data=sager, aes(date,obs ), col="red", linetype="dotted")
+
+# show low flow more clearly
+ggplot(subset(msagel, run == best$run), aes(date, flow)) + geom_line() +
+  geom_line(data=sager, aes(date,obs ), col="red", linetype="dotted") +
+  scale_y_continuous(trans="log2")
+
 
 
 # or show with all runs
 # label runs for legends
 # all just show 1970 so easy to see
 msagel = msagel %>% mutate(best = ifelse(run==best$run, TRUE, FALSE))
-ggplot(subset(msagel, wy==1970), aes(date, flow, col=best))+geom_line()
+# for faster processing - I'm not sure why I subset first
+tmp = subset(msagel, wy==1970)
+ggplot(tmp, aes(date, flow, col=best))+geom_line()
+
 
 ```
 

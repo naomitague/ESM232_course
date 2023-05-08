@@ -204,7 +204,7 @@ ggplot(tmp, aes(as.factor(year), value))+
 Functions can always embed other functions - and in models the output of one model may be the input to another
 
 * loosely coupled models - output from one becomes input the other - but not necessarily automatic
-* fully coupled - models exchange input sna outputs (feedback systems)
+* fully coupled - models exchange input and outputs (feedback systems)
 
 Develop a flow diagram
 

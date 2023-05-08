@@ -218,11 +218,6 @@ msagel  =  msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="
 ggplot(subset(msagel, run == best$run), aes(date, flow)) + geom_line()
 
 
-# or show with all runs
-# label runs for legends
-# all just show 1970 so easy to see
-msagel = msagel %>% mutate(best = ifelse(run==best$run, TRUE, FALSE))
-ggplot(subset(msagel, wy==1970), aes(date, flow, col=best))+geom_line()
 
 ```
 
