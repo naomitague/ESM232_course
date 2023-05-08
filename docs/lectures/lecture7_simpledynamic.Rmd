@@ -175,7 +175,7 @@ head(Ptime)
 Ptimep = Ptime %>% gather(key="r",value="P",-years)
 ggplot(Ptimep, aes(years,P, col=r))+geom_point()+labs(x="years",y="Rabbit Population")
 
-# notice how populatin becomes unstable for high growth rates! 
+# notice how population becomes unstable for high growth rates! 
 
 
 ```

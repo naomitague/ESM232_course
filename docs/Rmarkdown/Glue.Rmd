@@ -3,93 +3,6 @@ title: "Glue"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-library(Hmisc)
-library(tidyverse)
-```
-
-How to work with multiple output - compute performance and then
-choose acceptible parameter sets
-
-```{r multipel}
-
-source("../R/nse.R")
-# original data set - a single streamflow and observed data
-sager = read.table("../Data/sager.txt", header=T)
-head(sager)
-
-# add date
-sager = sager %>% mutate(date = paste(day,month,year, sep="/"))
-sager$date = as.Date(sager$date,"%d/%m/%Y")
-
-# multiple results - lets say we've run the model for multiple years, each column
-# is streamflow for a different parameter set
-msage = read.table("../Data/sagerm.txt", header=T)
-
-# lets say we know the start date from our earlier output
-msage$date = sager$date
-head(msage)
-msage$month = sager$month
-msage$year = sager$year
-msage$day = sager$day
-msage$wy = sager$wy
-
-# and we still have observed data from above
-
-
-# how can we plot all results - lets plot water year 1970 otherwise its hard to see
-msagel = msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="run", values_to="flow")
-
-p1=ggplot(subset(msagel, wy == 1970), aes(as.Date(date), flow, col=run))+geom_line()+theme(legend.position = "none")
-p1
-# lets add observed streamflow
-p1+geom_line(data=subset(sager, wy == 1970), aes(as.Date(date), obs), size=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
-
-
-# compute performance measures for all output
-res = msage %>% select(!c("date","month","year","day","wy")) %>%
-      map_dbl(nse, o=sager$obs )
-
-head(res)
-
-# another example using our low flow statistics
-# use apply to compute for all the data
-source("../R/compute_lowflowmetrics_all.R")
-res = msage %>% select(-date, -month, -day, -year, -wy ) %>% map_df(compute_lowflowmetrics_all, o=sager$obs, month=msage$month, day=msage$day, year=msage$year, wy=msage$wy)
-
-
-# interesting to look at range of metrics - could use this to decide on
-# acceptable values
-summary(res)
-
-
-# graph range of performance measures
-resl = res %>% pivot_longer(cols=everything(), names_to="metric", values_to="value")
-ggplot(resl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="free")
-
-# try this
-# assign an identifier to each row, use the same identify for columns of original streamflow data
-# we can then use that to pick data
-res$run = seq(from=1,to=nrow(res))
-head(msage)
-colnames(msage)=c(res$run, "date","month","year","day","wy")
-
-# best one
-best = res[which.max(res$combined),]
-msagel  =  msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="run", values_to="flow")
-ggplot(subset(msagel, run == best$run), aes(date, flow)) + geom_line()
-
-
-# or show with all runs
-# label runs for legends
-# all just show 1970 so easy to see
-msagel = msagel %>% mutate(best = ifelse(run==best$run, TRUE, FALSE))
-ggplot(subset(msagel, wy==1970), aes(date, flow, col=best))+geom_line()
-
-```
-
 # Glue - generalized uncertainty analysis
 
 What if we wanted to keep all of the 'good' parameters
@@ -178,13 +91,13 @@ One way to use weights is to define a maximum likelihood estimate by averaging (
 
 # recall that msagel is the flow data for all runs so we 
 # can link with weights from res_acc by run id
+msagel  =  msage %>% pivot_longer(cols=!c(date, month, year, day,wy, obs), names_to="sim", values_to="flow")
 
-# make sure its numeric
-msagel$run = as.numeric(msagel$run)
-# subset only acceptible runs
-msagel_acc = subset(msagel, run %in% res_acc$run)
+
+# subset only acceptable runs
+msagel_acc = subset(msagel, sim %in% res_acc$sim)
 # join with weights from res_acc, left_join will repeat weights for each day in streamflow trajectory
-msagel_acc = left_join(msagel_acc, res_acc, by="run")
+msagel_acc = left_join(msagel_acc, res_acc, by="sim")
 head(msagel_acc)
 # finally multiply flow by weight
 msagel_acc = msagel_acc %>% mutate(flow_wt = flow*wt_acc)
@@ -198,7 +111,8 @@ ggplot(aver_flow, aes(x=date, y=meanstr))+geom_line(col="red")+labs(y="Streamflo
 
 # add some of the other date info and plot a subset
 aver_flow$wy = msage$wy
-ggplot(subset(aver_flow, wy == 1980), aes(x=date, y=meanstr))+geom_line(col="red")+labs(y="Streamflow mm/day")
+wycheck=1985
+ggplot(subset(aver_flow, wy == wycheck), aes(x=date, y=meanstr))+geom_line(col="blue")+labs(y="Streamflow mm/day")+geom_line(data=subset(msage, wy==wycheck), aes(date, obs), col="red")
 
 ```
 We could also compute quantiles rather than just mean
@@ -209,17 +123,34 @@ We can use the *wtd_quantile* function in the *Hmisc* package to do this - it co
 
 
 # compute quantiles using weighted quantile
+
+qn = function(flow, wt) {
+ qnr = wtd.quantile(flow, probs=c(0.1,0.5,0.9), weights=wt)
+  return(qnr)}
+ 
+# doesnt' work 
 aver_flow = msagel_acc %>% group_by(date) %>% dplyr::summarize(
-median = wtd.quantile(flow, probs=c(0.5), weights=wt_acc), 
-flow25 = wtd.quantile(flow,probs=c(0.25), weights=wt_acc), flow75=wtd.quantile(flow, probs=c(0.75), weights=wt_acc))
+flow10=Quantile(x=flow, weight=wt_acc, probs=c(0.1,0.5,0.9))[1],
+flow50=Quantile(x=flow, weight=wt_acc, probs=c(0.1,0.5,0.9))[2],
+flow90=Quantile(x=flow, weight=wt_acc, probs=c(0.1,0.5,0.9))[3]
+)
+
+, 
+flow10 = wtd.quantile(flow,probs=c(0.1), weights=wt_acc), flow90=wtd.quantile(flow, probs=c(0.90), weights=wt_acc))
 
 # format for plotting
 aver_flowl = aver_flow %>% pivot_longer(col=c(-date), values_to="flow", names_to="quantile")
 
-ggplot(subset(aver_flowl, wy=1980), aes(date, flow, col=quantile))+geom_line()+scale_y_continuous(trans="log")
+# we lost the dates
+aver_flowl$year = as.integer(year(aver_flowl$date))
+aver_flowl$monthn = as.character(month(aver_flowl$date))
+aver_flowl$month = as.integer(month(aver_flowl$date))
+aver_flowl$day = as.integer(day(aver_flowl$date))
+aver_flowl$wy = ifelse(aver_flowl$month >= 10, aver_flowl$year+1, aver_flowl$year)
+ggplot(subset(aver_flowl, wy==1980), aes(date, flow, col=quantile))+geom_line()
 
 # to see low flows, transform y-axis
-ggplot(subset(aver_flowl, wy=1980), aes(date, flow, col=quantile))+geom_line()+scale_y_continuous(trans="log")
+ggplot(subset(aver_flowl, wy==1980), aes(date, flow, col=quantile))+geom_line()+scale_y_continuous(trans="log")
 
 
 ```
