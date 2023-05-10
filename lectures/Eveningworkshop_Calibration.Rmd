@@ -511,8 +511,11 @@ To hand in - an Rmarkdown and R function. Please knit and turn in either an html
   * Part 2 from above: 
     1. Apply your performance function to a subset of the Sagehen data set (with multiple simulations) that you want to use for calibration 
     2. Summarize the performance over the calibration period in 1-2 graphs; you can decide what is useful 
+    3. Record your 'best' and 'worst' parameter set in this [spreadsheet](https://docs.google.com/spreadsheets/d/1444ILTaP6pcqvudQopZZVP2WDDJ1NNgXX6sdPdwdbXE/edit#gid=0) and in your Rmd
   
-  * Part 3  
+<br/>
+
+  * Part 3: **Extra Credit!** We did not get to this in class, but there is example code at the end of  [Eveningworkshop_calibration.Rmd](https://github.com/naomitague/ESM232_Examples/blob/main/Rmarkdown/Eveningworkshop_Calibration.Rmd)
     3. Use the performance measure to select "acceptable" outcomes from parameter sets (see #15 in contents)
     4. Compute the range of the performance measure using only the "acceptable" outcomes over the post-calibration period (part that you didn't use for calibration in step 1)
     5. Graph the range of outcomes for acceptable parameters (e.g post-calibration parameter uncertainty); you can choose what output is most interesting for you 
@@ -520,16 +523,15 @@ To hand in - an Rmarkdown and R function. Please knit and turn in either an html
   
   * Part 4: A short paragraph discussing why you choose the output and performance measures that you did and some thoughts (1-2 sentences) on what your calibration and post-calibration uncertainty analysis tells you
   
-# Rubric 60 pts 
+# Rubric 50 pts 
 
 * R function (10pts) 
   * combines at least 2 performance metrics (5)
   * function is applied to part of Sagehen data set (5)
-  
-* Calibration (20pts)
-  * your metrics are used to select 'acceptable' parameter set outcomes (5)
-  * metrics are computed for post-calibration data of accepted parameter set outcomes (5)
-  * maximum likelihood estimate is computed for post-calibration data (10)
+
+* Calibration (10pts)
+  * your function is applied to the `msage` dataset across all parameter sets (5)
+  * your metrics are used to select the best and worst parameter set (5)
   
 * Graphs (20pts)
   * 1-2 plots of summary of performance over calibration period (5) 
@@ -541,5 +543,10 @@ To hand in - an Rmarkdown and R function. Please knit and turn in either an html
   * short explanation on metrics used (5) 
   * 1-2 sentences on calibration and post-calibration uncertainty analysis 
 
+<br/>
 
+* Extra Credit! up to 15pts
+  * your metrics are used to select 'acceptable' parameter set outcomes (5)
+  * metrics are computed for post-calibration data of accepted parameter set outcomes (5)
+  * maximum likelihood estimate is computed for post-calibration data (5)
 
