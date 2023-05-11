@@ -32,11 +32,11 @@ z_0 = k_0*h
 $$
 
 
-$z_m$ is the height at which windspeed is measured - must be higher than the vegetation (cm), it is usually measured 200 cm  above the vegetation
+$z_m$ is the height at which windspeed is measured - must be higher than the vegetation (m), it is usually measured 2 m  above the vegetation
 
-$h$ is vegetation height (cm)
+$h$ is vegetation height (m)
 
-$v$ is windspeed (cm/s)
+$v$ is windspeed (m/s)
 
 Typical values if $k_d$ and $k_o$ are 0.7 and 0.1 respectively (so use those as defaults)
 
@@ -53,7 +53,7 @@ Consider the sensitivity of your estimate to uncertainty in the following parame
   
   * $v$
   
-Windspeeds $v$ are normally distributed with a mean of  250 cm/s with a standard deviation of 30 cm/s
+Windspeeds $v$ are normally distributed with a mean of  2.5 m/s with a standard deviation of 0.3 m/s
 
 For vegetation height assume that height is somewhere between 9.5 and 10.5 m (but any value in that range is equally likely)
 
