@@ -56,6 +56,65 @@ ggplot(Ptime, aes(years,P))+geom_point()+labs(x="years",y="Rabbit Population")
 
 ```
 
+## Difference Equations
+
+Population models can be discrete (rather than continuous)
+
+So we could implement them as difference equations and iterate
+
+
+```{r iteratie}
+source("../R/discrete_logistic_pop.R")
+# notice how a for loop is used to iterate
+
+# how many rabbits after 50 years given a growth of 0.1
+# starting with 1 rabbit - but a carrying capcity of 500
+
+discrete_logistic_pop
+
+discrete_logistic_pop(P0=1, r=0.05, K=200, T=50)
+
+# save results
+discrete_result = discrete_logistic_pop(P0=1, r=0.05, K=200, T=50)
+
+# lets also keep the parameters for use later
+P0=1
+r=0.05
+K=200
+T=50
+
+```
+
+# Compare discrete and analytic results
+
+
+```{r closed}
+
+source("../R/exppop.R")
+
+exppop(P0=P0, r=r, K=K, T=T)
+analytic_result = exppop(P0=P0, r=r, K=K, T=T)
+
+analytic_result
+discrete_result
+
+# why are they different
+# look at trajectories
+
+growth_result = data.frame(time=seq(from=1,to=100))
+
+growth_result$Panalytic = growth_result$time %>% map_dbl(~exppop( P0=1,r=0.05, K=200,T=.x ))
+
+growth_result$Pdiscrete = growth_result$time %>% map_dbl(~discrete_logistic_pop( P0=1,r=0.05, K=200,T=.x ))
+
+tmp = growth_result %>% gather(key="Ptype",value="P",-time)
+ggplot(tmp, aes(time,P, col=Ptype))+geom_point()
+
+# try running them for longer time periods to see what happens 
+# change the value of r, K , P0 - see how it effects the results
+```
+
+
 # Solving using numeric integration 
 
 Using a solver....when you can't do the integration by hand :)
@@ -89,7 +148,7 @@ R has a solver called *ODE* for solving ordinary differential equations from pac
 * initial conditions
 * values of independent where we want values of dependent variable (e.g times where we want population)
 * the derivative as a function
-* a list that contains alll  parameter values (or if you have only one parameter then you can use a single value)
+* a list that contains all  parameter values (or if you have only one parameter then you can use a single value)
 
 ```{r usingode}
 
@@ -177,39 +236,6 @@ ggplot(both_p, aes(year,P, col=model))+geom_point()+labs(y="Population", "years"
 # try playing on your own - modify the function in some way
 ```
 
-# Difference Equations 
-
-What is ODE doing? (iterating in 'smart ways')
-
-Similar to "difference equations"
-
-## Difference Equations
-
-Population models can be discrete (rather than continuous)
-So we could implement them as difference equations and iterate
-
-
-```{r iteratie}
-source("../R/discrete_logistic_pop.R")
-# notice how a for loop is used to iterate
-
-# how many rabbits after 50 years given a growth of 0.1
-# starting with 1 rabbit - but a carrying capcity of 500
-
-discrete_logistic_pop
-
-discrete_logistic_pop(P0=1, r=0.05, K=200, T=50)
-
-# save results
-discrete_result = discrete_logistic_pop(P0=1, r=0.05, K=200, T=50)
-
-# lets also keep the parameters for use later
-P0=1
-r=0.05
-K=200
-T=50
-
-```
 
 # Differential Equation, Difference (Iteration by hand) comparison
 
@@ -220,37 +246,12 @@ analytical solution - based on integration (exppop.R) BEST
 using an ode solver for numerical approximation (exppop_play.R)
 
 numerical integration using in discrete steps (discrete_logistic_pop.R)
-```{r closed}
-
-source("../R/exppop.R")
-
-exppop(P0=P0, r=r, K=K, T=T)
-analytic_result = exppop(P0=P0, r=r, K=K, T=T)
-
-analytic_result
-discrete_result
-
-# why are they different
-# look at trajectories
-
-growth_result = data.frame(time=seq(from=1,to=100))
-
-growth_result$Panalytic = growth_result$time %>% map_dbl(~exppop( P0=1,r=0.05, K=200,T=.x ))
-
-growth_result$Pdiscrete = growth_result$time %>% map_dbl(~discrete_logistic_pop( P0=1,r=0.05, K=200,T=.x ))
-
-tmp = growth_result %>% gather(key="Ptype",value="P",-time)
-ggplot(tmp, aes(time,P, col=Ptype))+geom_point()
-
-# try running them for longer time periods to see what happens 
-# change the value of r, K , P0 - see how it effects the results
-```
 
 # Compare analytical, difference and ODE
 
 Finally look at continuous derivative using ODE solve
 Needs
-*initial condtions
+*initial conditions
 *differential equation
 *parameters
 
@@ -270,8 +271,8 @@ head(result)
 # we already have time - so just extract population
 growth_result$Pdifferential = result[,2]
 
-# comapre all 3 approaches
-tmp = growth_result %>% gather(key="Ptype",value="P",-time)
+# compare all 3 approaches
+tmp = growth_result %>% pivot_longer(cols=-time,names_to="Ptype",values_to="P")
 ggplot(tmp, aes(time,P, col=Ptype))+geom_point()
 
 # notice Pdifferential is closer to Panalytic than Pdiscrete
@@ -288,6 +289,7 @@ Notice that differential equations is a bit more accurate!
 # Diffusion
 
 Diffusion can be implemented as a partial differential equation 
+
 Complicated to solve - but there are tool in R for specific types of partial differential equations
 ![Reactive Transport Example](https://cran.r-project.org/web/packages/ReacTran/index.html)
 
@@ -358,11 +360,10 @@ filled.contour(res$qin, xlab="Time", ylab="Distance")
 ```
 
 
-# Assignment - 
+# Play 
 
 Try running the diffusion model with different time steps, space steps and parameters
 
-Save two examples of diffusion filled contour plot and load to Gauchospace and come to class prepared to discuss why the two plots are different
 
 # Some examples with different parameters and space/time steps
 
@@ -385,4 +386,5 @@ resunstable=diff1(initialC=10,nx=100,dx=1,nt=10,dt=1,D=0.8,area=1)
 filled.contour(resunstable$conc, xlab="time",ylab="Distance Along Path")
 
 ```
+
 

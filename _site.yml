@@ -23,15 +23,16 @@ navbar:
            href: lectures/lecture6_sensitivity_sobol.html
          - text: "Dynamic Modeling part I"
            href: lectures/lecture7_simpledynamic.html
-#        - text: "LHS Sensitivity Analysis"
-#          href: lectures/lecture7_sensitivity.html
+         - text: "Calibration"
+           href: lectures/lEveningworkshop_Calibration.html
 
 #        - text: "Simple Dynamic Models"
 #          href: lectures/lecture9_simpledynamic.html
-#        - text: "More on Dynamic Models"
-#          href: lectures/lecture10_moredynamic.html
-#   - text: "Topics-Second Half"
-#     menu:
+
+    - text: "Topics-Second Half"
+      menu:
+         - text: "More on Dynamic Models"
+           href: lectures/lecture8_moredynamic.html
 #        - text: "Sobel with ODEs"
 #          href: lectures/lecture11_sensitivity_withODE.html
 #        - text: "ODEs with Disturbance"
