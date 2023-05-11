@@ -524,13 +524,11 @@ To hand in - an Rmarkdown and R function. Please knit and turn in either an html
     2. Summarize the performance over the calibration period in 1-2 graphs; you can decide what is useful 
     3. Record your 'best' and 'worst' parameter set in this [spreadsheet](https://docs.google.com/spreadsheets/d/1444ILTaP6pcqvudQopZZVP2WDDJ1NNgXX6sdPdwdbXE/edit#gid=0) and in your Rmd
   
-<<<<<<< HEAD
   * Part 3  (OPTIONAL)
-=======
-<br/>
+
 
   * Part 3: **Extra Credit!** We did not get to this in class, but there is example code at the end of  [Eveningworkshop_calibration.Rmd](https://github.com/naomitague/ESM232_Examples/blob/main/Rmarkdown/Eveningworkshop_Calibration.Rmd)
->>>>>>> 80830d919ad42d6be89a7d8b249ded25e2c66251
+
     3. Use the performance measure to select "acceptable" outcomes from parameter sets (see #15 in contents)
     4. Compute the range of the performance measure using only the "acceptable" outcomes over the post-calibration period (part that you didn't use for calibration in step 1)
     5. Graph the range of outcomes for acceptable parameters (e.g post-calibration parameter uncertainty); you can choose what output is most interesting for you 
