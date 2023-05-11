@@ -119,6 +119,17 @@ cor(sager_aug$model, sager_aug$obs)
 
 * Code that metric as a function - and then apply it
 
+* To help us use this metric later for multiple model outputs structure your function so that model and observed inputs are separate
+
+*For example*
+
+mymetric = function(model, obs, ...other inputs) {...
+
+NOT
+
+mymetric = function(combinedataframe) {...
+
+
 # Using multiple metrics. 
 
 * depends on what you want the model to get right
@@ -512,7 +523,7 @@ To hand in - an Rmarkdown and R function. Please knit and turn in either an html
     1. Apply your performance function to a subset of the Sagehen data set (with multiple simulations) that you want to use for calibration 
     2. Summarize the performance over the calibration period in 1-2 graphs; you can decide what is useful 
   
-  * Part 3  
+  * Part 3  (OPTIONAL)
     3. Use the performance measure to select "acceptable" outcomes from parameter sets (see #15 in contents)
     4. Compute the range of the performance measure using only the "acceptable" outcomes over the post-calibration period (part that you didn't use for calibration in step 1)
     5. Graph the range of outcomes for acceptable parameters (e.g post-calibration parameter uncertainty); you can choose what output is most interesting for you 
