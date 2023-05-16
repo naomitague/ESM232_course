@@ -1,0 +1,399 @@
+---
+title: "Sensitivity with ODEs"
+output:
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+  pdf_document: default
+  ioslides_presentation:
+    highlight: pygments
+  beamer_presentation:
+    highlight: pygments
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(deSolve)
+library(sensitivity)
+```
+
+# Dynamics Models
+
+* Diffusion example illustrates the challenge of numerical integration
+
+* We see evidence of "overshoot" 
+
+* Correct by reducing the time step (but then we have to increase the number of time steps to cover the same period)
+  * recall total time is number of time steps (nt) multiplied by time interval (dt)
+  
+
+# Diffusion Example
+
+```{r}
+source("../R/diffusion.R")
+
+
+# Change parameters (diffusivity D, and space and time steps (dx, dt))
+
+res=diff1(initialC=100,nx=10,dx=1,nt=10,dt=30,D=0.001,area=1)
+filled.contour(res$conc, xlab="Time", ylab="Distance", main = "Concentration through time and space")
+
+
+# we can also see how much material is moving in to each cell at each time step
+filled.contour(res$qin, xlab="Time", ylab="Distance", main="Qin - material coming in ")
+
+# we can also see net amount of material moved from place to place each time step
+filled.contour(res$qin-res$qout, xlab="Time", ylab="Distance", main="Qin-Qout NET ")
+
+# what if we increase diffusivity
+resfast=diff1(initialC=100,nx=10,dx=0.5,nt=10,dt=10,D=0.08,area=1)
+filled.contour(resfast$conc, xlab="Time", ylab="Distance", main="Concentration through time and space")
+filled.contour(resfast$qin, xlab="Time", ylab="Distance", main="Qin")
+
+
+# this illustrates the problem with difference equations (and the challenges that methods for numerical integration try to overcome)
+# if things are changing quickly we need to use much smaller time, space steps to avoid overshoot and instability
+
+# so lets cut our step size by 10 (dt) (but then  multiply number of steps (nx) to cover the same distance)
+resfast_fixtime=diff1(initialC=100,nx=10,dx=0.5,nt=100,dt=1,D=0.08,area=1)
+filled.contour(resfast_fixtime$conc, xlab="time",ylab="Distance Along Path", main="Concentration through time and space")
+
+filled.contour(resfast_fixtime$qin, xlab="Time", ylab="Distance", main="Qin")
+filled.contour(resfast_fixtime$qin-resfast_fixtime$qout, xlab="Time", ylab="Distance", main="Net Transport")
+
+
+```
+
+# Extracting meaning from time series output
+
+Useful to brainstorm about what is important
+
+
+For example 
+
+* time it takes to evenly diffuse?
+
+How would we implement that?
+
+# Extracting information from space-time results
+
+* pictures can be hard to interpret
+
+* summarizing over one of the dimensions (either space or time) can help
+
+* looking at a single trajectory through time
+
+* looking at spatial variation for one point in time
+
+* looking at spatial variation for multiple points in time
+
+# Try it
+
+
+```{r one option}
+#View(resfast_fixtime$conc)
+
+
+# graph a single point in space through time
+# single column (time)
+plot(resfast_fixtime$conc[,3], ylab="Concentration for a location 2 spatial units from origin (1+2")
+
+# plot all trajectories
+# add a time column to concentration data frame and transform for plotting
+resl = as.data.frame(resfast_fixtime$conc) %>% mutate(time=seq(from=1, to=100)) %>% pivot_longer(-time, names_to="distance", values_to="conc")
+ggplot(resl, aes(time, conc, col=distance))+geom_line()
+
+# plot all places at each point in time
+ggplot(resl, aes(time, conc, group=time))+geom_boxplot()
+
+# use apply to calculate the spatial variation for each row (e.g for each time point) 
+cvar = resfast_fixtime$conc %>% apply(1,var)
+cmean = resfast_fixtime$conc %>% apply(1, mean)
+
+spatial_aver = cbind.data.frame(cvar, cmean, time=seq(from=1,to=100))
+length(cvar)
+# notice its the same as the number of time units (nt) used above
+
+# plot spatial variation through time
+ggplot(spatial_aver, aes(time, cvar))+geom_line()+labs(y="Spatial Variation")
+
+# plot coefficient of variation (so standard deviation divided by the mean)
+ggplot(spatial_aver, aes(time, 100*sqrt(cvar)/cmean))+geom_line()+labs(y="COV (as percent")
+
+
+```
+
+
+# Sensitivity Analysis of a differential equation 
+
+We can apply sensitivity analysis to a differential equation
+
+A key issue where is sensitivity of what?
+
+Dynamic models often give you many many outputs - time series (streamflow every day for a year, population for 30 years) - or output over space (spatially averaged concentration after 10 days?)
+
+So if we are asking 'sensitivity of what' we need to summarize results in some way (reduce their dimensionality )
+
+
+Ideas?
+
+
+# Some options for reducing output dimensionality (summarizing output)
+
+Depends on what is important for your model application
+
+* max
+
+* mean
+
+* min
+
+* total
+
+* variation
+
+* time it takes for something to happen
+
+So a key step in sensitivity analysis with a dynamics model is summarizing results into a few key measures
+
+Its useful to turn that summarizing workflow into a function
+
+
+## Workflow
+
+* obtain parameter sets (from sobel of LHS)
+
+* build a function that will extract the information (metrics) you want from your dynamic model (output of the ode)
+
+* create a data structure to store the metrics for each parameter set - lets call it metrics (but could be anything)
+
+* run ODE for each parameter sets to fill in this metrics data structure
+
+* send the metrics data structure back to the sensitivity analysis object (from sobel or LHS)
+
+* plot and analyze results
+
+# Example with our population ODE
+
+```{r sen}
+source("../R/dpopgrowth.R")
+
+dpopgrowth
+
+# lets start with sobel 
+library(sensitivity)
+
+# come up with first set of sample parameters
+# we will assume that we know the initial population,
+
+Pinitial=10
+
+# want to learn about sensitivity to growth rate (r) and carrying capacity 
+# set the number of parameters
+np=2000
+K = rnorm(mean=200, sd=50, n=np)
+r = rnorm(mean=0.05, sd=0.01, n=np)
+X1 = cbind.data.frame(r=r, K=K)
+
+# repeat to get our second set of samples
+K = rnorm(mean=200, sd=50, n=np)
+r = rnorm(mean=0.05, sd=0.01, n=np)
+X2 = cbind.data.frame(r=r, K=K)
+
+# fix any negative values and they are not meaningful
+X1 = X1 %>% map_df(pmax, 0.0)
+X2 = X2 %>% map_df(pmax, 0.0)
+
+# create our sobel object and get sets ofparameters for running the model
+
+sens_P = sobolSalt(model = NULL,X1, X2, nboot = 300)
+
+# our parameter sets are
+head(sens_P$X)
+
+# lets add names 
+colnames(sens_P$X) = c("r","K")
+
+# run our differential equation and keep the output
+# BUT
+# what output do we want  to keep
+# how about maximum population if we run the model for 200 years, and how many years to get to the carrying capacity
+
+# for illustration lets look at running just one parameter sets and summarizing results
+sens_P$X[1,]
+# recall ODE needs ALL of our parameters in a single list 
+# initial population and times for which we want output 
+Pinitial
+
+# gets results for 200 years (evaluating every year)
+simtimes = seq(from=1, to=200)
+parms = list(r=sens_P$X[1,"r"], K=sens_P$X[1,"K"])
+
+# or
+parms = list(r=as.data.frame(sens_P$X)$r[1], K=as.data.frame(sens_P$X)$K[1])
+
+result = ode(y=Pinitial, times=simtimes, func=dpopgrowth, parms=parms)
+
+head(result)
+colnames(result)=c("time","P")
+# turn it into a data frame
+result = as.data.frame(result)
+ggplot(result, aes(time, P))+geom_point()
+
+# extra our metrics of interest  from this
+# maximum population it gets to
+maxpop = max(result$P)
+maxpop
+
+# years required to get to a threshold population (150)
+# which will tell when this occurs - we will take the first one
+thresh = 150
+idx = which(result$P > thresh)[1]
+
+# if it never gets there
+idx = ifelse(is.na(idx), length(result$P), idx)
+# turn this index into a year (might be the same if time step in 1 but just in case it isn't)
+threshyear = result$time[idx]
+threshyear
+
+# or how about threshold of 50% of carrying capacity
+thresh = 0.5*sens_P$X[1,"K"]
+idx = which(result$P > thresh)[1]
+
+# if it never gets there
+idx = ifelse(is.na(idx), length(result$P), idx)
+# turn this index into a year (might be the same if time step in 1 but just in case it isn't)
+threshyear = result$time[idx]
+threshyear
+
+```
+
+# Try it running ODE for different parameters
+
+
+# Compute our metric for all the parameter sets
+
+What if we want to run for all parameters
+
+Lets create two additional functions that will help us
+
+* a function that computes the metrics we want
+
+* a function that runs our ode solver and computes the metrics (I call it a wrapper function as it is really just a workflow/wrapper to call ode solver and then compute metrics)
+
+
+```{r sen2, echo=FALSE}
+# turn computing our metrics into a function
+
+compute_metrics = function(result, thresh) {
+  maxpop = max(result$P)
+idx = which(result$P > thresh)[1]
+idx = ifelse(is.na(idx), length(result$P), idx)
+threshyear = result$time[idx]
+return(list(maxpop=maxpop, threshyear=threshyear))}
+
+# try it on our first parameter set, and look at when it gets to 100
+compute_metrics(result, 100)
+
+# great but we need to apply the ode and this function for all of our parameters
+
+
+
+# define a wrapper function to do everything we need - run solver and compute metrics - and send back results for each parameter
+
+# lets make the threshold 90% of carrying capacity
+
+p_wrapper = function(r,K, Pinitial, simtimes, func) {
+    parms = list(r=r, K=K)
+    result = ode(y=Pinitial, times=simtimes, func=func, parms=parms) 
+    colnames(result)=c("time","P")
+  # get metrics
+  metrics=compute_metrics(as.data.frame(result), thresh=100)
+  return(metrics)
+}
+
+# now use pmap as we did before
+
+allresults = as.data.frame(sens_P$X) %>% pmap(p_wrapper, Pinitial=Pinitial, simtimes=simtimes, func=dpopgrowth)
+
+# extract out results from pmap into a data frame
+allres = allresults %>% map_dfr(`[`,c("maxpop","threshyear"))
+
+
+# create boxplots
+tmp = allres %>% gather(key="metric", value="value")
+ggplot(tmp, aes(metric, value, col=metric))+geom_boxplot()
+```
+
+# Compute the sobol indicies for each metric
+
+```{r sen3}
+# sobol can only handle one output at a time  - so we will need to do them separately
+
+sens_P_maxpop = sensitivity::tell(sens_P,allres$maxpop)
+
+# first-order indices (main effect without co-variance)
+sens_P_maxpop$S
+
+# total sensitivity index -note that this partitions the output variance 
+sens_P_maxpop$T
+
+
+
+
+# create another one for max year
+sens_P_threshyear = sensitivity::tell(sens_P,allres$threshyear)
+# first-order indices (main effect without co-variance)
+sens_P_threshyear$S
+
+# total sensitivity index -note that this partitions the output variance - so values sum to 1
+sens_P_threshyear$T
+
+```
+
+# Negative sobol first order indices
+
+if confidence interval includes zero - not a problem
+
+if it doesn't there are numerical issues - try running more samples
+
+# Error messages from ODE
+
+*In lsoda(y, times, func, parms, ...) :
+  an excessive amount of work (> maxsteps ) was done, but integration was not successful - increase maxsteps*
+  
+Suggest that the solver (numerical integration) had issues
+
+  * increasing maxsteps can help
+  
+        *result = ode(y=Pinitial, times=simtimes, func=func, parms=parms, maxsteps=100000) *
+        
+  * trying different methods
+  
+        *result = ode(y=Pinitial, times=simtimes, func=func, parms=parms, method="daspk")*
+        
+  * "stiff" problems are harder for numerical integration to solve - (small changes have big impacts);
+    our threshold carrying capacity does that - change to make is a more smooth transition
+    
+      thoughts on how to do this?
+    
+  
+  
+# For next class (not to hand in - just practice on your own)
+
+Go through in-class examples; 
+
+  * try varying parameter ranges, 
+  
+  * try changing the population growth function to smooth the transition to no growth when a carrying capacity is approached ; 
+  
+  * try developing a different metric
+  
+We will go over this in class on Thursday
+
+
+Want to go further?....
+
+Try using Sobol for the diffusion model - what would be your metric?
+
