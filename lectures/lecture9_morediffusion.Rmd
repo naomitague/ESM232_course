@@ -1,0 +1,126 @@
+---
+title: "More on Diffusion"
+output:
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+  pdf_document: default
+  ioslides_presentation:
+    highlight: pygments
+  beamer_presentation:
+    highlight: pygments
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(deSolve)
+library(sensitivity)
+```
+
+# Dynamics Models
+
+* Diffusion example illustrates the challenge of numerical integration
+
+* We see evidence of "overshoot" 
+
+* Correct by reducing the time step (but then we have to increase the number of time steps to cover the same period)
+  * recall total time is number of time steps (nt) multiplied by time interval (dt)
+  
+
+# Diffusion Example
+
+```{r}
+source("../R/diffusion.R")
+
+
+# Change parameters (diffusivity D, and space and time steps (dx, dt))
+
+res=diff1(initialC=100,nx=10,dx=1,nt=10,dt=30,D=0.001,area=1)
+filled.contour(res$conc, xlab="Time", ylab="Distance", main = "Concentration through time and space")
+
+
+# we can also see how much material is moving in to each cell at each time step
+filled.contour(res$qin, xlab="Time", ylab="Distance", main="Qin - material coming in ")
+
+# we can also see net amount of material moved from place to place each time step
+filled.contour(res$qin-res$qout, xlab="Time", ylab="Distance", main="Qin-Qout NET ")
+
+# what if we increase diffusivity
+resfast=diff1(initialC=100,nx=10,dx=0.5,nt=10,dt=10,D=0.08,area=1)
+filled.contour(resfast$conc, xlab="Time", ylab="Distance", main="Concentration through time and space")
+filled.contour(resfast$qin, xlab="Time", ylab="Distance", main="Qin")
+
+
+# this illustrates the problem with difference equations (and the challenges that methods for numerical integration try to overcome)
+# if things are changing quickly we need to use much smaller time, space steps to avoid overshoot and instability
+
+# so lets cut our step size by 10 (dt) (but then  multiply number of steps (nx) to cover the same distance)
+resfast_fixtime=diff1(initialC=100,nx=10,dx=0.5,nt=100,dt=1,D=0.08,area=1)
+filled.contour(resfast_fixtime$conc, xlab="time",ylab="Distance Along Path", main="Concentration through time and space")
+
+filled.contour(resfast_fixtime$qin, xlab="Time", ylab="Distance", main="Qin")
+filled.contour(resfast_fixtime$qin-resfast_fixtime$qout, xlab="Time", ylab="Distance", main="Net Transport")
+
+
+```
+
+# Extracting meaning from time series output
+
+Useful to brainstorm about what is important
+
+
+For example 
+
+* time it takes to evenly diffuse?
+
+How would we implement that?
+
+# Extracting information from space-time results
+
+* pictures can be hard to interpret
+
+* summarizing over one of the dimensions (either space or time) can help
+
+* looking at a single trajectory through time
+
+* looking at spatial variation for one point in time
+
+* looking at spatial variation for multiple points in time
+
+# Try it
+
+
+```{r one option}
+#View(resfast_fixtime$conc)
+
+
+# graph a single point in space through time
+# single column (time)
+plot(resfast_fixtime$conc[,3], ylab="Concentration for a location 2 spatial units from origin (1+2")
+
+# plot all trajectories
+# add a time column to concentration data frame and transform for plotting
+resl = as.data.frame(resfast_fixtime$conc) %>% mutate(time=seq(from=1, to=100)) %>% pivot_longer(-time, names_to="distance", values_to="conc")
+ggplot(resl, aes(time, conc, col=distance))+geom_line()
+
+# plot all places at each point in time
+ggplot(resl, aes(time, conc, group=time))+geom_boxplot()
+
+# use apply to calculate the spatial variation for each row (e.g for each time point) 
+cvar = resfast_fixtime$conc %>% apply(1,var)
+cmean = resfast_fixtime$conc %>% apply(1, mean)
+
+spatial_aver = cbind.data.frame(cvar, cmean, time=seq(from=1,to=100))
+length(cvar)
+# notice its the same as the number of time units (nt) used above
+
+# plot spatial variation through time
+ggplot(spatial_aver, aes(time, cvar))+geom_line()+labs(y="Spatial Variation")
+
+# plot coefficient of variation (so standard deviation divided by the mean)
+ggplot(spatial_aver, aes(time, 100*sqrt(cvar)/cmean))+geom_line()+labs(y="COV (as percent")
+
+
+```
+

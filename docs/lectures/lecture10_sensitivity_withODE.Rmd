@@ -1,0 +1,303 @@
+---
+title: "Sensitivity with ODEs"
+output:
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+  pdf_document: default
+  ioslides_presentation:
+    highlight: pygments
+  beamer_presentation:
+    highlight: pygments
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(deSolve)
+library(sensitivity)
+```
+
+# Dynamic models
+
+* models that have feedbacks (conditions evolve through time)
+
+* numerical integration - usually done with a solver 
+  
+  * only one independent variable ordinary differential equation (e.g just time)
+  * we can use the ODE solver
+  
+  * derivative is first order (e.g $dy/dt$ = ;  not $d^2y/dt$+dy/dy  = f(y,t)) 
+  
+  * there are ways to solve high order and partial differential equations
+  
+
+# Sensitivity Analysis of a Differential Equation 
+
+We can apply sensitivity analysis to a differential equation
+
+A key issue where is sensitivity of what?
+
+Dynamic models often give you many many outputs - time series (streamflow every day for a year, population for 30 years) - or output over space (spatially averaged concentration after 10 days?)
+
+So if we are asking 'sensitivity of what' we need to summarize results in some way (reduce their dimensionality )
+
+
+Ideas?
+
+
+# Some options for reducing output dimensionality (summarizing output)
+
+Depends on what is important for your model application
+
+* max
+
+* mean
+
+* min
+
+* total
+
+* variation
+
+* time it takes for something to happen
+
+So a key step in sensitivity analysis with a dynamics model is summarizing results into a few key measures
+
+Its useful to turn that summarizing workflow into a function
+
+
+# Workflow
+
+* implement (or identify pre-existing) dynamic model
+
+* obtain parameter sets (from sobel or LHS)
+
+* build a function that will extract the information (metrics) you want from your dynamic model (output of the ode)
+
+* create a data structure to store the metrics for each parameter set - in my example I call it metrics (but could be anything)
+
+* decide on initial conditions and time period over which you will run the model
+
+* run ODE for each parameter sets to fill in this metrics data structure 
+  * its usually helpful to create a wrapper function 
+        * runs ODE
+        * extracts metrics
+   * run wrapper function for each parameter sets
+
+* send the metrics data structure back to the sensitivity analysis object (from sobel or LHS)
+
+* plot and analyze results
+
+# Example with our population ODE
+
+```{r sen}
+source("../R/dpopgrowth.R")
+
+dpopgrowth
+
+# lets start with sobel 
+library(sensitivity)
+
+# come up with first set of sample parameters
+# we will assume that we know the initial population,
+
+Pinitial=10
+
+# want to learn about sensitivity to growth rate (r) and carrying capacity 
+# set the number of parameters
+np=2000
+K = rnorm(mean=200, sd=50, n=np)
+r = rnorm(mean=0.05, sd=0.01, n=np)
+X1 = cbind.data.frame(r=r, K=K)
+
+# repeat to get our second set of samples
+K = rnorm(mean=200, sd=50, n=np)
+r = rnorm(mean=0.05, sd=0.01, n=np)
+X2 = cbind.data.frame(r=r, K=K)
+
+# fix any negative values and they are not meaningful
+X1 = X1 %>% map_df(pmax, 0.0)
+X2 = X2 %>% map_df(pmax, 0.0)
+
+# create our sobel object and get sets ofparameters for running the model
+
+sens_P = sobolSalt(model = NULL,X1, X2, nboot = 300)
+
+# our parameter sets are
+head(sens_P$X)
+
+# lets add names 
+colnames(sens_P$X) = c("r","K")
+
+# run our differential equation and keep the output
+# BUT
+# what output do we want  to keep
+# how about maximum population if we run the model for 200 years, and how many years to get to the carrying capacity
+
+# for illustration lets look at running just one parameter sets and summarizing results
+sens_P$X[1,]
+# recall ODE needs ALL of our parameters in a single list 
+# initial population and times for which we want output 
+Pinitial
+
+# gets results for 200 years (evaluating every year)
+simtimes = seq(from=1, to=200)
+parms = list(r=sens_P$X[1,"r"], K=sens_P$X[1,"K"])
+
+# or
+parms = list(r=as.data.frame(sens_P$X)$r[1], K=as.data.frame(sens_P$X)$K[1])
+
+result = ode(y=Pinitial, times=simtimes, func=dpopgrowth, parms=parms)
+
+head(result)
+colnames(result)=c("time","P")
+# turn it into a data frame
+result = as.data.frame(result)
+ggplot(result, aes(time, P))+geom_point()
+
+# extra our metrics of interest  from this
+# maximum population it gets to
+maxpop = max(result$P)
+maxpop
+
+# years required to get to a threshold population (150)
+# which will tell when this occurs - we will take the first one
+thresh = 150
+idx = which(result$P > thresh)[1]
+
+# if it never gets there
+idx = ifelse(is.na(idx), length(result$P), idx)
+# turn this index into a year (might be the same if time step in 1 but just in case it isn't)
+threshyear = result$time[idx]
+threshyear
+
+# or how about threshold of 50% of carrying capacity
+thresh = 0.5*sens_P$X[1,"K"]
+idx = which(result$P > thresh)[1]
+
+# if it never gets there
+idx = ifelse(is.na(idx), length(result$P), idx)
+# turn this index into a year (might be the same if time step in 1 but just in case it isn't)
+threshyear = result$time[idx]
+threshyear
+
+```
+
+# Try it running ODE for different parameters
+
+
+# Compute our metric for all the parameter sets
+
+What if we want to run for all parameters
+
+Lets create two additional functions that will help us
+
+* a function that computes the metrics we want
+
+* a function that runs our ode solver and computes the metrics (I call it a wrapper function as it is really just a workflow/wrapper to call ode solver and then compute metrics)
+
+
+```{r sen2}
+# turn computing our metrics into a function
+
+compute_metrics = function(result, thresh) {
+  maxpop = max(result$P)
+idx = which(result$P > thresh)[1]
+idx = ifelse(is.na(idx), length(result$P), idx)
+threshyear = result$time[idx]
+return(list(maxpop=maxpop, threshyear=threshyear))}
+
+# try it on our first parameter set, and look at when it gets to 100
+compute_metrics(result, 100)
+
+# great but we need to apply the ode and this function for all of our parameters
+
+
+
+# define a wrapper function to do everything we need - run solver and compute metrics - and send back results for each parameter
+
+# lets make the threshold 90% of carrying capacity
+
+p_wrapper = function(r,K, Pinitial, simtimes, func) {
+    parms = list(r=r, K=K)
+    result = ode(y=Pinitial, times=simtimes, func=func, parms=parms) 
+    colnames(result)=c("time","P")
+  # get metrics
+  metrics=compute_metrics(as.data.frame(result), thresh=100)
+  return(metrics)
+}
+
+# now use pmap as we did before
+
+allresults = as.data.frame(sens_P$X) %>% pmap(p_wrapper, Pinitial=Pinitial, simtimes=simtimes, func=dpopgrowth)
+
+# extract out results from pmap into a data frame
+allres = allresults %>% map_dfr(`[`,c("maxpop","threshyear"))
+
+
+# create boxplots
+tmp = allres %>% pivot_longer(cols=everything(),names_to="metric", values_to="value")
+ggplot(tmp, aes(metric, value, col=metric))+geom_boxplot()
+```
+
+# Compute the sobol indicies for each metric
+
+```{r sen3}
+# sobol can only handle one output at a time  - so we will need to do them separately
+
+sens_P_maxpop = sensitivity::tell(sens_P,allres$maxpop)
+
+# first-order indices (main effect without co-variance)
+sens_P_maxpop$S
+
+# total sensitivity index -note that this partitions the output variance 
+sens_P_maxpop$T
+
+
+
+
+# create another one for max year
+sens_P_threshyear = sensitivity::tell(sens_P,allres$threshyear)
+# first-order indices (main effect without co-variance)
+sens_P_threshyear$S
+
+# total sensitivity index -note that this partitions the output variance - so values sum to 1
+sens_P_threshyear$T
+
+```
+
+# Negative sobol first order indices
+
+if confidence interval includes zero - not a problem
+
+if it doesn't there are numerical issues - try running more samples
+
+# Error messages from ODE
+
+*In lsoda(y, times, func, parms, ...) :
+  an excessive amount of work (> maxsteps ) was done, but integration was not successful - increase maxsteps*
+  
+Suggest that the solver (numerical integration) had issues
+
+  * increasing maxsteps can help
+  
+        *result = ode(y=Pinitial, times=simtimes, func=func, parms=parms, maxsteps=100000) *
+        
+  * trying different methods
+  
+        *result = ode(y=Pinitial, times=simtimes, func=func, parms=parms, method="daspk")*
+        
+  * "stiff" problems are harder for numerical integration to solve - (small changes have big impacts);
+    a threshold carrying capacity does that 
+    
+  
+  
+# Assignment
+
+<a href="../assignments/assignment_growth_ODE.html">here</a><br>
+
+Want to go further?....
+
+Try using Sobol for the diffusion model - what would be your metric?
+

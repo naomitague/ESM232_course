@@ -330,11 +330,11 @@ canopy closure threshold of 50 kgC
 
 Graph the results. (**15% - we look for an appropriate graphs and good visualization practice - labels, etc**)
 
-3. Run a sobol sensitivity analysis that explores how the estimated maximum and mean forest size (e.g maximum and mean values of $C$ over the 300 years) varies with the pre canopy closure growth rate ($r$) and post-canopy closure growth rate ($g$) and canopy closure threshold and carrying capacity($K$)
+3. Run a sobol sensitivity analysis that explores how the 1) estimated maximum forest size (e.g maximum of $C$  300 years, and 2)  forest size after a 100 years) varies with the pre canopy closure growth rate ($r$) and post-canopy closure growth rate ($g$) and canopy closure threshold and carrying capacity($K$)
 
 Assume that parameters are all normally distributed with means as given above and standard deviation of 10% of mean value
 
-Graph the results of the sensitivity analysis as a box plot of maximum forest size and a plot of the two Sobol indices (S and T). (**25% - correct implementation of Sobol and good graphing style -label etc **)
+4. Graph the results of the sensitivity analysis as a box plot of maximum forest size and record the two Sobol indices (S and T). (**25% - correct implementation of Sobol and good graphing style -label etc **)
 
 In 2-3 sentences, discuss what the results of your simulation might mean for climate change impacts on forest growth (e.g think about what parameters climate change might influence ). (**25% - wee look for reasonable discussion that uses the results from your analysis and give extra points for discussions that offer particularly creative or insightful commentary**)
 
