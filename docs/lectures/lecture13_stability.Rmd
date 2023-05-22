@@ -36,7 +36,7 @@ Goal: To provide insight into environmental systems, and how they respond to int
 
 Stability analysis investigates how system state changes, particularly focusing on whether the system state 'ends up' and what happens when there are small perturbations to the system state
 
-Example?
+Examples?
 
 # Stability analysis for simple differential equations
 

@@ -37,8 +37,8 @@ navbar:
            href: lectures/lecture9_morediffusion.html
          - text: "Sobel with ODEs"
            href: lectures/lecture10_sensitivity_withODE.html
-#        - text: "ODEs with Disturbance"
-#          href: lectures/lecture12_growth.html
+         - text: "ODEs with Disturbance"
+           href: lectures/lecture11_growth.html
 #        - text: "Stability"
 #          href: lectures/lecture13_stability.html
 #        - text: "ODE with 2 variables"
