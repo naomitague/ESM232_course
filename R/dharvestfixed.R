@@ -3,17 +3,17 @@
 #' @param time time since start
 #' @param P population
 #' @param parms - as list with three values, r, K, harv
-#' @param r intrinsic growth rate 
+#' @param r intrinsic growth rate
 #' @param K carrying capacity
 #' @param h harvest rate
 #' @param mincarbon minimum carbon to allow harvest
-#' @return derivative of population with time 
+#' @return derivative of population with time
 
-dharvestfixed= function(Time, P, parms) {
-	
-	dP = parms$r * P * (1- P/parms$K) - parms$harv
-	if (P+dP < parms$mincarbon) 
-	  dP = parms$r*P*(1-P/parms$K)
-	
-	return(list(dP))
+dharvestfixed= function(Time, biomass, parms) {
+
+	db = parms$r * biomass * (1- biomass/parms$K) - parms$harv
+	if (biomass+db < parms$mincarbon)
+	  db = parms$r*biomass*(1-biomass/parms$K)
+
+	return(list(db))
 }

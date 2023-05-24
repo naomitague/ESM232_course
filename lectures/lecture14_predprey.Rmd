@@ -22,6 +22,40 @@ library(purrr)
 library(ggpubr)
 ```
 
+# Systems of equations
+
+What if we have more than one variable that is evolving through time and space?
+
+
+  * populations of two species that are changing through time, and interact with each other
+  
+  * pollutant concentrations in a diffusion-advection model where the two pollutants also interact with each other
+  
+  * growth of above-ground and below-ground carbon and nitrogen in a forest
+  
+  * household consumption and savings through time (when consumption depends on savings and vice versa)
+  
+
+These require several differential equations that have to be solved simultaneously 
+
+Systems of equations
+
+# Systems of equations
+
+* can be ordinary (differentiating with respect to one variable (time or space))
+
+* partial if differentiating with respect to multiple variables (x,y,z, time)
+
+
+We can estimate trajectories of systems of equations in much the same way that we
+used numerical integration for our ODE's
+
+
+Here again methods (espeically for complicated parital derivative system of equations ) can be complicated
+
+Call your engineering/math when you run into issues!
+
+
 
 #  Predator-Prey Models 
 
@@ -122,12 +156,13 @@ p2=ggplot(as.data.frame(res), aes(pred, prey))+geom_point()
  p2
  
 ggarrange(p1,p2)
-# try other parameters to bring relative size of preditors higher
 
 
 
 
 ```
+# Try other parameters - try to bring relative size of predictors (versus prey) higher
+
 
 # Other illustations
 

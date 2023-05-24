@@ -1,15 +1,15 @@
 
 #'  Logistic population growth derivative with harvesting
 #' @param time time since start
-#' @param P population
+#' @param biomass biomass
 #' @param parms - as list with three values, r, K, harv
-#' @param r intrinsic growth rate 
+#' @param r intrinsic growth rate
 #' @param K carrying capacity
 #' @param h harvest rate
-#' @return derivative of population with time 
+#' @return db derivative of biomass with time
 
-dharvest= function(Time, P, parms) {
-	
-	dP = parms$r * P * (1- P/parms$K) - parms$harv*P
-	return(list(dP))
+dharvest= function(Time, biomass, parms) {
+
+	db = parms$r * biomass * (1- biomass/parms$K) - parms$harv*biomass
+	return(list(db))
 }
