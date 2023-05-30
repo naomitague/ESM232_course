@@ -1,0 +1,43 @@
+---
+title: "harvest with lot"
+output: html_document
+date: "2023-05-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r stabilitynew}
+
+source("../R/lotvmodKharvest.R")
+# set parameter list
+pars = data.frame(rprey=0.95, alpha=0.01, eff=0.6,pmort=0.4, K=2000, harvest=10, minharvest=50)
+
+
+# times when you want to evaluate
+days = seq(from=1,to=1000)
+
+# lets first see what happens when we start with 1 of each
+currpop=c(prey=5, pred=1)
+# run our differential equation solver
+res = ode(func=lotvmodKharvest, y=currpop, times=days, parms=pars)
+# extract the results
+res_smallstart = as.data.frame(res) %>% gather(key="animal", value="pop",-time)
+# graph both populations over time
+p1=ggplot(res_smallstart, aes(time, pop, col=animal))+geom_line()
+p1
+
+# lets first see what happens when we start our estimates of stable populations
+stablepop = c(prey=preyi, pred=predi)
+res = ode(func=lotvmodK, y=stablepop, times=days, parms=pars)
+# estract the results
+res_stablestart = as.data.frame(res) %>% gather(key="animal", value="pop",-time)
+# graph both populations over time
+p2=ggplot(res_stablestart, aes(time, pop, col=animal))+geom_line()
+p2
+
+# of course in this case these are not very realistic populations, so it is unlikely that you would get to something stable given parameters - but if they were different you might find a stable and realistic population
+
+# try
+```
