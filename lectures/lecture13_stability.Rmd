@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(sensitivity)
 library(tidyverse)
 library(deSolve)
+library(ggpubr)
 ```
 
 
@@ -24,7 +25,7 @@ library(deSolve)
 # Stability
 
 
-Stability analysis investigates how system state changes, particularly focusing on whether the system state 'ends up' and what happens when there are small perturbations to the system state
+Stability analysis investigates how the  system state changes, particularly focusing on where the system state 'ends up' over time and what happens when there are small perturbations to the system state
 
 
 
@@ -60,8 +61,8 @@ Goal: To provide insight into environmental systems, and how they respond to int
   
 Stability focus..
 
-  * *examine derivative at different values (simpler, not solving required but just tells you how system will change given a particular state)*
-  * *how does stability vary with inputs/parameters*
+  * *examine derivatives at different values (simpler, no integration required but just tells you how system will change given a particular state)*
+  * *how does systems state evolution vary with inputs/parameters*
 
 
 # Model versus the real world
@@ -195,7 +196,7 @@ source("../R/dharvestfixed.R")
 carbon = seq(from=0, to=1000)
 dcarbon= unlist(carbon %>% map(dharvestfixed,Time=NULL, parms=list(r=0.05, K=1000, mincarbon=0, harv=10)))
 
-a =ggplot(as.data.frame(carbon,dcarbon), aes(carbon, dcarbon))+geom_point()+geom_hline(yintercept = 0, col="red")+
+a =ggplot(cbind.data.frame(carbon=carbon,dcarbon=dcarbon), aes(carbon, dcarbon))+geom_point()+geom_hline(yintercept = 0, col="red")+
   labs(y="Derivative\n (Rate of change of forest carbon) (kg/C/year)", x="Current Forest Carbon Stock (kgC)")
 a 
 # try it out with different initial conditions to watch how the system moves to a stable state
@@ -250,7 +251,7 @@ ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
 
 # Stability 
 
-How do we think about stablity?
+How do we think about stablity for multiple outputs (e.g. predator/prey)
 
 Populations don't change when derivatives are zero!
 
@@ -258,8 +259,8 @@ What conditions lead to BOTH derivatives being zero
 
 # Stability For *lotvmod*
 
-* dprey = rprey*prey -  alpha*prey*pred
-* dpred = eff*alpha*prey*pred - pmort*pred
+* dprey = rprey * prey -  alpha * prey * pred
+* dpred = eff* alpha * prey * pred - pmort *pred
 
 Make dprey and dpred equal to 0 and rearrange
 
@@ -268,12 +269,12 @@ Make dprey and dpred equal to 0 and rearrange
 
 # Stability For *lotvmodK*
 
-* dprey = rprey*(1-prey/K)*prey -  alpha*prey*pred
-* dpred = eff*alpha*prey*pred - pmort*pred
+* dprey = rprey * (1-prey/K) * prey -  alpha * prey * pred
+* dpred = eff* alpha * prey * pred - pmort * pred
 
 Make dprey and dpred equal to 0 and rearrange
 
-* prey_i = pmort/(eff*alpha)
+* prey_i = pmort/(eff * alpha)
 * pred_i = rprey/alpha * (1-prey_i/K)
 
 Try setting you initial conditions close to these values and see what happens
@@ -288,6 +289,9 @@ pars = data.frame(rprey=0.1, alpha=0.6, eff=0.8,pmort=0.4, K=200)
 # now lets try initial conditions that will be stable
 preyi = with(pars, pmort/(eff*alpha)) 
 predi = with(pars, rprey/alpha*(1-preyi/K)) 
+
+preyi
+predi
 # times when you want to evaluate
 days = seq(from=1,to=500)
 
@@ -310,9 +314,8 @@ res_stablestart = as.data.frame(res) %>% gather(key="animal", value="pop",-time)
 p2=ggplot(res_stablestart, aes(time, pop, col=animal))+geom_line()
 p2
 
-# of course in this case these are not very realistic populations, so it is unlikely that you would get to something stable given parameters - but if they were different you might find a stable and realistic population
+# explore with some different parameters
 
-# try
 ```
 
 
@@ -325,5 +328,23 @@ p2
 * more complex definitions - think of metrics that looks at
 ranges, cycling, return to a population above some threshold after disturbance
 
+* for more complex definitions of stablity you'd need to do the
+integration (e.g run the ode solver) and then plot or compute a metric of stability
+
+
 # Assignment
 
+Consider how you might add hunting  of prey to the predator prey model that we've been using in class
+
+Build this model (e.g add harvesting to the lotvmodK.R), you should make sure that you don't hunt more prey than exist. To ensure that you might also add a minumum prey population input that must be met before hunting is allowed.
+
+Explore how different hunting levels and different minimum prey populations (before hunting is allowed) are likely to effect the stability of the populations of both predator and prey. Use this exploration to recommend a hunting target that will be sustainable (e.g leave you with a stable prey and predator population)
+
+You can assume the following
+rprey=0.95, alpha=0.01, eff=0.6,pmort=0.4, K=2000,
+
+A key challenge is how you might want to define stability? Its up to you but you will need to write a sentence to explain why you chose the measure that you did.  It could be something as simple as maintaining a population above some value 50 years into the future.
+
+Its also up to you how you "explore" hunting  - you can simply try different values or do it more formally by running your model across a range of values
+
+Submit the Rmarkdown that documents your exploration (e.g how you tested different hunting level and how you defined a stability metric) and provides you estimated sustainable hunting level. 

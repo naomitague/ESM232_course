@@ -41,8 +41,8 @@ navbar:
            href: lectures/lecture11_growth.html
          - text: "ODE with 2 variables"
            href: lectures/lecture12_predprey.html
-#        - text: "Stability"
-#          href: lectures/lecture13_stability.html
+         - text: "Stability"
+           href: lectures/lecture13_stability.html
 #        - text: "ODE with 2 variables"
 #          href: lectures/lecture14_predprey.html
 #        - text: "Modeling Example - thinning"
