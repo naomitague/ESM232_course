@@ -169,7 +169,8 @@ Math geeks and engineers have developed all kinds of strategies for search param
 One more distinction
 
 * Constrained vs unconstrained
-unconstrained …what we’ve been looking at
+
+unconstrained …what we’ve been looking at in calibration exercies
 
 * Constrained….add rules about what parameters can be selected (e.g  you must purchase at least 20 units of x)
 
