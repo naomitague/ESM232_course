@@ -1,0 +1,219 @@
+---
+title: 'Post Calibration Workshop'
+output:
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+  pdf_document: default
+  ioslides_presentation:
+    highlight: pygments
+  beamer_presentation:
+    highlight: pygments
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(sensitivity)
+library(tidyverse)
+library(lubridate)
+library(reldist)
+library(purrr)
+library(ggpubr)
+```
+
+## Recall our investigation of calibration
+
+I provided you with streamflow estimates from a hydrologic model, run many times with different parameters wets
+
+Your testk:
+
+* we defined ranges for parameters
+* we defined measures of fit
+* calculated "fit" for each parameter set
+* chose the best parameter set
+
+Essentially optimization
+
+
+#  Original calibration script
+
+
+I computed low flow metrics and based my calibration selection on how well the model
+matched several low flow measures of fit - all combined into a single measure
+
+
+```{r multiple}
+source("../R/nse.R")
+
+source("../R/relerr.R")
+
+source("../R/cper.R")
+source("../R/compute_lowflowmetrics_all.R")
+
+source("../R/get_waterYearDay .R")
+
+# observed data set
+sager = read.table("../Data/sager.txt", header=T)
+head(sager)
+
+# add date
+sager = sager %>% mutate(date = paste(day,month,year, sep="/"))
+sager$date = as.Date(sager$date,"%d/%m/%Y")
+
+# multiple results - lets say we've run the model for multiple years, 
+#each column  is streamflow for a different parameter set
+msage = read.table("../Data/sagerm.txt", header=T)
+
+# keep track of number of simulations (e.g results for each parameter set) 
+# use as a column names
+nsim = ncol(msage)
+snames = sprintf("S%d",seq(from=1, to=nsim))
+colnames(msage)=snames
+
+
+# lets say we know the start date from our earlier output
+msage$date = sager$date
+msage$month = sager$month
+msage$year = sager$year
+msage$day = sager$day
+msage$wy = sager$wy
+
+# lets add observed
+msage = left_join(msage, sager[,c("obs","date")], by=c("date"))
+
+head(msage)
+
+# how can we plot all results - lets plot water year 1970 otherwise its hard to see
+msagel = msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="run", values_to="flow")
+# subset for split sample calibration
+short_msage = subset(msage, wy < 1975)
+
+# compute performance measures for output from all parameters
+
+res = short_msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>%
+  map_df(compute_lowflowmetrics_all, o=short_msage$obs, month=short_msage$month, day=short_msage$day, year=short_msage$year, wy=short_msage$wy)
+
+# note here we use map_df to get a dataframe back 
+
+
+# interesting to look at range of metrics - could use this to decide on
+# acceptable values
+summary(res)
+# we can add a row that links with simulation number
+res$sim = snames
+
+# graph range of performance measures
+resl = res %>% pivot_longer(-sim, names_to="metric", values_to="value")
+
+ggplot(resl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="free")
+
+
+# select the best one based on the combined metric
+best = res[which.max(res$combined),]
+
+# running the model forward
+# so we can look at the full time series
+
+# lets start with streamflow estimates from best performing parameter set
+ ggplot(msage, aes(date, msage[,best$sim])) + geom_line()+geom_line(aes(date, obs), col="red") 
+
+ 
+# for comparison lets consider how worst and best parameters perform for subsequent simulations
+# focusing specifically on August streamflow
+ worst = res[which.min(res$combined),]
+ 
+ compruns = msage %>% select(best$sim, worst$sim, date, obs, month, day, year, wy)
+ compruns = subset(compruns, wy > 1970)
+ compruns_mwy = compruns %>% select(-c(day,date, year)) %>% group_by(month, wy) %>% summarize(across(everything(), mean))
+ 
+ compruns_mwyl = compruns_mwy %>% pivot_longer(cols=!c(month,wy), names_to="sim", values_to="flow")
+ compruns_mwyl %>% subset(month==8) %>% ggplot(aes(sim,flow ))+geom_boxplot()+labs(ylab="August flow")
+ 
+
+
+
+
+```
+
+# Look at class selected parameters
+
+```{r, classmthy}
+
+tmp = c("S6, S29, S32, S10, S95, S78, S89, S82, S1, S2, S95, S21, S99, S87, S97")
+class_good_sim = unlist(strsplit(tmp, "[ ,]+"))
+tmp = c("S29 S78 S32")
+ class_really_good_sim =unlist(strsplit(tmp, "[ ,]+"))
+ 
+
+
+ compruns_mwy = msage %>% select(-c(day,date, year)) %>% group_by(month, wy) %>% summarize(across(everything(), mean))
+ 
+ compruns_mwyl = compruns_mwy %>% pivot_longer(cols=!c(month,wy), names_to="sim", values_to="flow")
+ compruns_mwyl %>% subset(month==8) %>% ggplot(aes(sim,flow ))+geom_boxplot()
+ 
+compruns_mwyl = compruns_mwyl %>% mutate(mgood=ifelse(sim %in% class_really_good_sim, TRUE, FALSE))
+compruns_mwyl = compruns_mwyl %>% mutate(good=ifelse(sim %in% class_good_sim, TRUE, FALSE))
+  
+compruns_mwyl %>% subset(month==8) %>% ggplot(aes(sim,flow, fill=interaction(good,mgood) ))+geom_boxplot()
+ 
+compruns_mwyl %>% subset((month==8) & (good | sim=="obs")) %>% ggplot(aes(sim,flow, fill=interaction(good,mgood) ))+geom_boxplot() + scale_fill_discrete(labels=c("Observed","Good","Multi-Good"))+labs(fill="Calibration Set", y="August Flow")
+
+compruns_mwyl %>% subset((month==1) & (good | sim=="obs")) %>% ggplot(aes(sim,flow, fill=interaction(good,mgood) ))+geom_boxplot() + scale_fill_discrete(labels=c("Observed","Good","Multi-Good"))+labs(fill="Calibration Set", y="January Flow")
+
+all_runs = subset(compruns_mwyl, sim != "obs") %>% group_by(month,wy) %>% summarize(flow=mean(flow),good=FALSE, mgood=FALSE)
+unselected_runs = subset(compruns_mwyl, sim != "obs" & !good) %>% group_by(month,wy) %>% summarize(flow=mean(flow),good=FALSE, mgood=FALSE)
+selected_runs = subset(compruns_mwyl, sim != "obs" & good) %>% group_by(month,wy) %>% summarize(flow=mean(flow),good=FALSE, mgood=FALSE)
+all_runs$sim = "all"
+unselected_runs$sim = "unselected"
+selected_runs$sim = "selected"
+tmp = rbind.data.frame(all_runs, unselected_runs, subset(compruns_mwyl, sim==best$sim | sim=="obs"), selected_runs)
+tmp %>% subset((month %in% c(8))) %>% ggplot(aes(sim,flow, fill=sim ))+geom_boxplot()+ scale_fill_discrete(labels=c("Unselected","Good","Multi-Good"))+labs(fill="Calibration Set", y="August Flow")
+
+
+
+ 
+ 
+```
+
+# look at water year day
+
+```{r classwyd}
+msage$wyd = get_waterYearDay(msage$date, wyMonth=10)
+
+ compruns_wyd = msage %>% select(-c(day,date, year, month, wy)) %>% group_by(wyd) %>% summarize(across(everything(), mean))
+ 
+ compruns_wydl = compruns_wyd %>% pivot_longer(cols=!c(wyd), names_to="sim", values_to="flow") 
+compruns_wydl = compruns_wydl %>% mutate(mgood=ifelse(sim %in% class_really_good_sim, TRUE, FALSE))
+compruns_wydl = compruns_wydl %>% mutate(good=ifelse(sim %in% class_good_sim, TRUE, FALSE))
+all_runs = subset(compruns_wydl, sim != "obs") %>% group_by(wyd) %>% summarize(flow=mean(flow),good=FALSE, mgood=FALSE)
+unselected_runs = subset(compruns_wydl, sim != "obs" & !good) %>% group_by(wyd) %>% summarize(flow=mean(flow),good=FALSE, mgood=FALSE)
+all_runs$sim = "all"
+unselected_runs$sim = "unselected"
+
+selected_runs = subset(compruns_wydl, sim != "obs" & good) %>% group_by(wyd) %>% summarize(flow=mean(flow),good=FALSE, mgood=FALSE)
+selected_runs$sim = "allselected"
+
+tmp = rbind.data.frame(compruns_wydl, all_runs[,colnames(compruns_wydl)], 
+                       unselected_runs[,colnames(compruns_wydl)],
+                        selected_runs[,colnames(compruns_wydl)],
+                       subset(compruns_wydl, sim=="obs"))
+tmp %>% subset( (good | (sim=="obs" | sim=="all" | sim=="unselected"))) %>% ggplot(aes(wyd,flow, color=sim) )+geom_line() 
+
+
+tmp %>% subset( (sim=="allselected" | sim=="obs" | sim=="all" | sim=="unselected")) %>% ggplot(aes(wyd,flow, color=sim) )+geom_line() + labs(y="Mean Daily Flow (mm/day)")
+
+
+
+```
+
+# What we learn
+
+* calibration results depend on the metric
+
+* as a results, calibration can be imprecise and may depend no only on metric, but time available
+for calibration
+
+* keeping multiple parameters that give "reasonable" results provides more robust modeling results

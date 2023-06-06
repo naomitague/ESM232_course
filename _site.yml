@@ -43,8 +43,8 @@ navbar:
            href: lectures/lecture12_predprey.html
          - text: "Stability"
            href: lectures/lecture13_stability.html
-#        - text: "ODE with 2 variables"
-#          href: lectures/lecture14_predprey.html
+         - text: "Optimization"
+           href: lectures/lecture_14_optimize.html
 #        - text: "Modeling Example - thinning"
 #          href: lectures/lecture15_thinexample/index.html
 #        - text: "Choosing Models"
@@ -77,6 +77,8 @@ navbar:
           href: assignments/assign_LHS.html
         - test: "Assign 5: Sobol with ODE"
           href: assignments/assignment_growth_ODE.html
+#        - test: "Assign Final"
+#          href: assignments/final.html
 #        - text: "Paper: Example Model"
 #          href: assignments/thinning_model_example.html
 
