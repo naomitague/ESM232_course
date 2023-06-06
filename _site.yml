@@ -43,6 +43,8 @@ navbar:
            href: lectures/lecture12_predprey.html
          - text: "Stability"
            href: lectures/lecture13_stability.html
+         - text: "Discrete Dynamic Matrix Models"
+           href: lectures/lecture14_agestructure.html
          - text: "Optimization"
            href: lectures/lecture_14_optimize.html
 #        - text: "Modeling Example - thinning"
