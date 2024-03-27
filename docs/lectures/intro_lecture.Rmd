@@ -191,3 +191,28 @@ Problem: how will forest carbon sequestration change if fire frequency increases
 
 Outputs carbon sequestration for different fire frequencies
 
+# For Next Class
+
+
+1. Fill out *Help us get to know you* survey on *Canvas*
+
+2. Listen to *only* timestap 26:27 to 31:22  (basically 5 minutes) of the following blog by Lisa Felman Barrett - a highly cited psychologist
+
+    * [blog  26:27 to 31:22](https://youtu.be/NbdRIVCBqNI?t=1587)
+
+    * if you are interested you can learn
+[More about Lisa Felman Barrett](https://www.affective-science.org/lisa-feldman-barrett.shtml)
+
+    * Think about what an inverse inference problem might be in the context of the environment
+
+3. Listen to this podcast on climate models - Pay particular attention to how Gavin Schmidt talks about the design, goal and **skill** of models
+
+    * [The emergent pattersn of climate change](https://www.ted.com/talks/gavin_schmidt_the_emergent_patterns_of_climate_change?language=en)
+
+    * If you are interested you can learn
+[More about Gavid Schmidt](https://www.giss.nasa.gov/staff/gschmidt/)
+
+
+4. After listening to these podcast, do the following
+
+    a. Think of a conceptual model that you or someone else might use to understand some pattern that they observe in the environment (in other words a model that might help them to solve an inverse inference problem to understand the mechanisms that causes the observation)?
