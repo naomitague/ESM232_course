@@ -11,42 +11,42 @@ navbar:
       menu:
          - text: "Intro"
            href: lectures/intro_lecture.html
-         - text: "Getting Started w Models"
-           href: lectures/lecture2.conceptual.simple.html
-         - text: "Building Models"
-           href: lectures/lecture3.building_models.html
-         - text: "Informal Sensitivity Analysis"
-           href: lectures/lecture4_informal_sensitivity.html
-         - text: "Sensitivity Analysis"
-           href: lectures/lecture5_sensitivity.html
-         - text: "Sobol Sensitivity Analysis"
-           href: lectures/lecture6_sensitivity_sobol.html
-         - text: "Dynamic Modeling part I"
-           href: lectures/lecture7_simpledynamic.html
-         - text: "Calibration"
-           href: lectures/lEveningworkshop_Calibration.html
+#         - text: "Getting Started w Models"
+#           href: lectures/lecture2.conceptual.simple.html
+#         - text: "Building Models"
+#           href: lectures/lecture3.building_models.html
+#         - text: "Informal Sensitivity Analysis"
+#           href: lectures/lecture4_informal_sensitivity.html
+#         - text: "Sensitivity Analysis"
+#           href: lectures/lecture5_sensitivity.html
+#         - text: "Sobol Sensitivity Analysis"
+#           href: lectures/lecture6_sensitivity_sobol.html
+#         - text: "Dynamic Modeling part I"
+#           href: lectures/lecture7_simpledynamic.html
+#         - text: "Calibration"
+#           href: lectures/lEveningworkshop_Calibration.html
 
 #        - text: "Simple Dynamic Models"
 #          href: lectures/lecture9_simpledynamic.html
 
     - text: "Topics-Second Half"
       menu:
-         - text: "More on Dynamic Models"
-           href: lectures/lecture8_moredynamic.html
-         - text: "Diffusion Part 2"
-           href: lectures/lecture9_morediffusion.html
-         - text: "Sobel with ODEs"
-           href: lectures/lecture10_sensitivity_withODE.html
-         - text: "ODEs with Disturbance"
-           href: lectures/lecture11_growth.html
-         - text: "ODE with 2 variables"
-           href: lectures/lecture12_predprey.html
-         - text: "Stability"
-           href: lectures/lecture13_stability.html
-         - text: "Discrete Dynamic Matrix Models"
-           href: lectures/lecture14_agestructure.html
-         - text: "Optimization"
-           href: lectures/lecture_14_optimize.html
+#         - text: "More on Dynamic Models"
+#           href: lectures/lecture8_moredynamic.html
+#         - text: "Diffusion Part 2"
+#           href: lectures/lecture9_morediffusion.html
+#         - text: "Sobel with ODEs"
+#           href: lectures/lecture10_sensitivity_withODE.html
+#         - text: "ODEs with Disturbance"
+#           href: lectures/lecture11_growth.html
+#         - text: "ODE with 2 variables"
+#           href: lectures/lecture12_predprey.html
+#         - text: "Stability"
+#           href: lectures/lecture13_stability.html
+#         - text: "Discrete Dynamic Matrix Models"
+#           href: lectures/lecture14_agestructure.html
+#         - text: "Optimization"
+#           href: lectures/lecture_14_optimize.html
 #        - text: "Modeling Example - thinning"
 #          href: lectures/lecture15_thinexample/index.html
 #        - text: "Choosing Models"
@@ -67,18 +67,18 @@ navbar:
 #          href: lectures/wrapup.pdf
     - text: "Assignments"
       menu:
-        - text: "Assign1: Conceptual Models"
-          href: assignments/Assignment1_preclass.html
-        - text: "Lobell Paper"
-          href: assignments/lobell.2006.pdf
-        - text: "Assign2: Almond Yield Function"
-          href: assignments/almond_yield_function.html
-        - text: "Assign3: Almond Profit Sensitivity"
-          href: assignments/assign3_informal_sen.html
-        - text: "Assign4: LHS Sensitivity"
-          href: assignments/assign_LHS.html
-        - test: "Assign 5: Sobol with ODE"
-          href: assignments/assignment_growth_ODE.html
+        - text: "Assign: Getting to Know You"
+          href: assignments/Assignment1_prep.html
+#        - text: "Lobell Paper"
+#          href: assignments/lobell.2006.pdf
+#        - text: "Assign2: Almond Yield Function"
+#          href: assignments/almond_yield_function.html
+#        - text: "Assign3: Almond Profit Sensitivity"
+#          href: assignments/assign3_informal_sen.html
+#        - text: "Assign4: LHS Sensitivity"
+#          href: assignments/assign_LHS.html
+#        - test: "Assign 5: Sobol with ODE"
+#          href: assignments/assignment_growth_ODE.html
 #        - test: "Assign Final"
 #          href: assignments/final.html
 #        - text: "Paper: Example Model"
