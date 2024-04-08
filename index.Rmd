@@ -3,9 +3,9 @@ title: "Environmental Modelling"
 description: ESM 232 / EDS 230  Spring 2024
 site: distill::distill_website
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}

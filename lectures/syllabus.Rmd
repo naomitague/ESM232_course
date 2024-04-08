@@ -4,10 +4,10 @@ output:
   slidy_presentation:
     highlight: pygments
   html_document: default
+  beamer_presentation:
+    highlight: pygments
   pdf_document: default
   ioslides_presentation:
-    highlight: pygments
-  beamer_presentation:
     highlight: pygments
 ---
 
@@ -82,6 +82,9 @@ please attend discussion section where. you signed up
 -   I will assume that everyone has some basic R skills (from ESM 203, ESM 232, MEDS program courses or other courses), including how to use ggplot, and Rmarkdown and build simple functions
 
 -   Many classes will be working classes so bring laptop to class
+
+- Some of the material (example functions and Rmarkdown code) will also be available on *github*
+I will also provide this material on *canvas* but if you are familiar with *git* then it may be faster to clone and then update the repository.  We will discuss this further when we get to this part of the course
 
 
 

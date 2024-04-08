@@ -35,7 +35,7 @@ output:
 
 #  Building Models 
 
-Functions!
+Modularity! (Functions)
 
 The basic building blocks of models
 
@@ -46,7 +46,13 @@ Functions are the “boxes” of the model - the transfer function that takes in
 More complex models - made up of multiple functions; and nested functions (and main functions that call/user other functions and control the flow - the arrows between boxes)
 
 
-#  Functions 
+#  Modularity 
+```{r, out.width = "25%",out.height="25%", echo=FALSE}
+knitr::include_graphics("../img/lego.png")
+```
+
+
+
 
 For each box/function Decide on 
 
@@ -59,62 +65,6 @@ Data types, units (time and space aggregation), names should be (use descriptive
 **IMPORTANT**
 
 Place each function in its own file (x.R), and put all functions for a given project in *R* subdirectory
-
-
-
-
-#  From conceptual model to flow chart/workflow 
-
-Impact of climate on almond productivity
-
-What is almond productivity? OUTPUT
-
-  * anomoly of yield
-
-What is climate? INPUT
-
-  * monthly precipitation and temperatures
-  
-Parameters
-
-  * coefficients that determine the sensitivity of yield to climate variables
-  
-
-# model flow charts
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture4_building_models/assets/img/simiple_conceptual_model.png")
-```
-
-
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture4_building_models/assets/img/fuller_almond_CM.jpeg")
-```
- 
- 
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture4_building_models/assets/img/more_general_almond_CM.jpeg")
-```
-
-
-
-
-
-# Almond yield examples
-
-```{r}
-
-library(tidyverse)
-source("../R/compute_almond_yield.R")
-compute_almond_yield
-
-clim = read.table("../Data/clim.txt", header=T)
-compute_almond_yield(clim)
-
-
-```
 
 
 #  What’s in the box 
@@ -142,6 +92,20 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.j
 
 
 
+#   Composing Diagrams
+
+Pictorial representation your model and what needs to be included in 
+the model to answer your questions (or achieve your modelling goal)
+
+There are many software tools available for generating conceptual models, I like
+
+
+[Diagrams.net]{https://www.diagrams.net/}
+
+
+
+
+
 
 
 
@@ -163,17 +127,6 @@ Flow Charges
 
 
 
-#   Composing Diagrams
-
-Pictorial representation your model and what needs to be included in 
-the model to answer your questions (or achieve your modelling goal)
-
-There are many software tools available for generating conceptual models, I like
-
-
-[Diagrams.net]{https://www.diagrams.net/}
-
-
 #  SERI-Fire 
 
 * More complex model couple sub-models ( may be a loose coupling where users connects submodels)
@@ -188,7 +141,7 @@ knitr::include_graphics("lecture2.conceptual.simple/assets/img/image9.png")
 
 # Sharing Example R, Data and Rmarkdowns
 
-[esm232_examples github site]{https://github.com/naomitague/ESM232_Examples.git} 
+[esm232_examples github site]{https://github.com/naomitague/ESM232_Examples_S24.git} 
 
 You can clone this repository and then pull before class to get example code and data
 
@@ -196,12 +149,10 @@ Remember that git does not like having nested repositories - so
 keep working respoistories in separate directories
 
 
+# Running Models with Data
 
 
-# Running functions with data - another example
-
-
-[esm232_examples github site]{https://github.com/naomitague/ESM232_Examples.git} 
+[esm232_examples github site]{https://github.com/naomitague/ESM232_Examples_S24.git} 
 
 * solarpv.R
 * InformalSensitivity.Rmd
@@ -210,29 +161,43 @@ keep working respoistories in separate directories
 # Solar function example
 
 
-Design -  function that estimates solar pv power given inputs of radiation
+**Design** -  function that estimates solar pv power given inputs of radiation
 
-Model inputs: solar radiation (daily direct and diffuse)
+**Model inputs**: solar radiation (daily direct and diffuse)
 
-Model outputs: power generated each year and average power over time
+**Model outputs**: power generated each year and average power over time
 
-Parameters: panel efficiency, system performance, units, type of array (uses diffuse or not), plot Y/N
+**Parameters**: panel efficiency, system performance, units, type of array (uses diffuse or not), plot Y/N
 
 Some of these options such as whether to plot determine outputs from the function
 
 AND the type of array to determine whether it uses diffuse radiation, 
 these parameters change how the function/model works
 
-```{r solar}
+# Solar function example as code (InformalSensitivity.Rmd)
+
+Model Code
+
+```{r solar, echo=FALSE}
+library(tidyverse)
+
 source("../R/solarpv.R")
 solarpv
+```
 
+# Some Data
+
+```{r}
 # read in R formatted data
 load("../Data/sierraczosolar.rda")
 
 # already in the format required for the model
 head(sierraczosolar)
 
+```
+
+# Run the model
+```{r}
 # run the model
 solarpv(area=0.1, solar=sierraczosolar, clr="green", eunit="W")
 
@@ -241,13 +206,25 @@ site1 = solarpv(area=0.1, solar=sierraczosolar, clr="green", eunit="W", g=FALSE)
 site1$mean
 site1$annual
 
+```
+
+# Point of the model is to try different options/parameters/inputs
+
+
+**Model inputs**: solar radiation (daily direct and diffuse)
+
+**Model outputs**: power generated each year and average power over time
+
+**Parameters**: panel efficiency, system performance, units, type of array (uses diffuse or not), plot Y/N
+
+```{r}
 # consider a different pv array that only uses 
 # diffuse and has non standard efficiency (0.6)
 site2 = solarpv(area=0.1, solar=sierraczosolar, clr="green", eunit="W", g=FALSE, eff=0.6, etype="direct")
 site2$mean
 
-# try some additional variations
 ```
+
 
 # Informal Sensitivity Analysis
 
@@ -278,7 +255,7 @@ What happens when we vary parameters?
   
 If you need it a good source to review working with *purrr* to extract items from list and repeat operations
 
-[R description](purr.tidyverse.org)
+
 
 [Useful Purrr Resource](https://www.rebeccabarter.com/blog/2019-08-19_purrr/)
 
@@ -290,6 +267,7 @@ If you need it a good source to review working with *purrr* to extract items fro
 # Rmarkdown code for informal sensitivity
 ```{r sen1, eval=T}
 
+library(tidyverse)
 # lets try informal sensitivity analysis again, this time by varying efficiency if we don't know efficiency exactly , lets try 20 samples
 
 # use map from purrr
@@ -298,13 +276,35 @@ eff = rnorm(mean=0.6, sd = 0.1, n=20)
 site2 = eff %>% map(~solarpv( area=0.1, solar=sierraczosolar, clr="green", eunit="W", g=FALSE, etype="direct", eff=.x ))
 
 head(site2)
+```
 
+# Ways to look at results from an informal sensitivity analysis
+
+* <span style="color: green;">Box plots or Violin Plots (where box shows parameter uncertainty)</span>
+
+WHY: To see how big the range of output might be relative to "uncertain" parameter range
+
+ 
+* <span style="color: green;">Plot Response against parameter value</span>
+
+WHY: To see how the parameter influences the results
+
+* <span style="color: green;">Average across parameter uncertainty</span>
+
+
+WHY: If you want the one number that is the "best guess" given uncertainty
+
+# Looks at some code
+
+```{r sen2, eval=T}
 # this is pretty messy - but we can extract a useful data structure,lets say we want 
 # just the annual data (not the mean annual time series), and then reformat as a data frame with nice column names
 tmp = map_df(site2,`[`, c("annual")) 
 
 site2df = data.frame(year = tmp$annual$year, elect= tmp$annual$elect)
+# get rid of that pesk first year
 
+site2df = subset(site2df, year > 1944)
 # now we could plot
 ggplot(site2df, aes(year,elect, group=year ))+geom_boxplot()+labs(y="Electricity generated in W")
 
@@ -329,6 +329,9 @@ ggplot(site2_mean, aes(y=mean))+geom_boxplot()+
 # or to see what the sensitivity looks like
 ggplot(site2_mean, aes(eff, mean))+geom_point()+
   labs(y="Electricity in W", x="Solar Efficiency")
+
+# my best guess
+mean(site2_mean$mean)
 
 ```
 

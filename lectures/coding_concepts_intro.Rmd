@@ -1,7 +1,14 @@
 ---
 title: "Coding Concepts"
-output: html_document
-date: "2023-04-03"
+output:
+  pdf_document: default
+  ioslides_presentation:
+    highlight: pygments
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+  beamer_presentation:
+    highlight: pygments
 ---
 
 ```{r setup, include=FALSE}

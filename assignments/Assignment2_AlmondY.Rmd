@@ -1,15 +1,31 @@
 ---
-title: "Almond Yield as a Function "
-output: html_document
+title: 'Almond Yield as a Function '
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+#  ASSIGNMENT 2 Almond Yields
 
-# Goal
 
- For this assignment you will work in pairs
+Lobell et al., 2006 used data to build models of tree crop yield for California that captured how
+climate variation (place and time) might influence yield
+
+
+* Yield anomaly
+
+* Climate variables
+
+Assumptions...as you work think about what these are...
+
+
+# Assignment
+
+
+ For this assignment you will work in *pairs*
 
 Your goal is to implement a simple model of almond yield anomaly response to climate
 
@@ -35,10 +51,13 @@ Here are some ideas to think though. The climate data is going to need to be pro
 
 The first example is where the climate variables are separately input into the function - climate data is processed beforehand as part of model set up
 
-The second is where a climate data frame is the input in the function and you extract the useful data from it as part of the model. 
+The second is where a climate data frame is the input to the function and you extract the useful data from it as part of the model. 
 
 
 You can pick which option you prefer (or try both)
+If you want a coding challenge, you could  create a model that works for any crop
+
+
 
 # Run the model
 
@@ -71,7 +90,7 @@ I will tell you that
 
 #  Notes
 
-We will build on this on Tuesday's class 
+We will build on this in next Thursday's class 
 
 * There are always multiple ways to code something in R;
 
@@ -91,7 +110,7 @@ shows how you applied the function to the test climate data (*clim.txt*)
 
 # Grading Rubric
 
-Diagram (20 pts)
+Conceptual model (20 pts)
 
   * a clear diagram that corresponds with your R function (10 pts)
   * inputs and output and parameters shown on the diagram (10 pts)
