@@ -62,7 +62,7 @@ ethresh = runif(min=base_thresh-deviation*base_thresh,
 # now run our model for the parameters
 site2 = ethresh %>% map(~solarpv( area=0.1, 
                       solar=sierraczosolar, clr="green", 
-                      eunit="W", g=FALSE, etype="direct", 
+                      eunit="W", g=FALSE, etype="direct", eff=0.8, PR=0.75,
                       ethresh=.x ))
 
 
@@ -85,12 +85,18 @@ mean_elect$ethresh = ethresh
 p1 = ggplot(mean_elect, aes(mean))+geom_histogram()+labs(x="Mean Annual Electricity W")
 p1
 p2 = ggplot(mean_elect, aes(ethresh, mean))+geom_point(cex=2, col="orange")+labs(y="Mean Annual Electricity W", x="Threshold Radiation (kJ/m2)  \nabove which energy production is more efficient")
-ggarrange(p1,p2)
+#ggarrange(p1,p2)
 
 
 ```
 
+# Sensitivity to Energy Threshold is not linear
 
+Sensitivity to parameters that effect a theshold is often complex (and not linear!)
+
+```{r}
+ggarrange(p1,p2)
+```
 
 
 
@@ -147,7 +153,7 @@ p1 = ggplot(mean_elect, aes(ethresh, mean, col=eff))+geom_point(cex=2)+
   labs(y="Mean Annual Electricity W", x="Threshold Radiation (kJ/m2)  \n above which energy production is more efficient")
 p2 = ggplot(mean_elect, aes(eff, mean, col=ethresh))+geom_point(cex=2)+
   labs(y="Mean Annual Electricity W", x="Efficiency")
-ggarrange(p1,p2)
+#ggarrange(p1,p2)
 
 # what do we learn from this
 
@@ -159,9 +165,19 @@ annual_elect$elect = tmp$annual$elect
 
 
 ```
+# Sensitivity to two different parameters
+
+* note how one parameter **eff** overshadows the response to *"ethresh**
+
+* note the linear response to *eff*
+
+```{r}
+ggarrange(p1,p2)
+```
 
 
-# Using a *For* Loop
+# Additional notes: Using a *For* Loop for sensitivity analysis
+
 ```{r}
 
 # using a for loop
@@ -197,6 +213,129 @@ tmp = subset(tmp, tmp$year > 1944)
 ggplot(tmp, aes(as.factor(year), value))+
   geom_boxplot()+labs(y="Mean Annual Electricity W", x="Year")
 ```
+
+
+# What you can know about sensitivity before informal/formal sensitivity analysis
+
+* Parameter interactions are *evident* in the equations
+
+Recall our reservoir model
+
+* **Input**: Reservoir height and flow rate
+
+* **Output**: Instantaneous power generation (W/s)
+
+* **Parameters**: K (efficiency) , ρ (density of water), g (acceleration due to gravity)
+
+P = ρ * h * r * g * K 
+
+* P is Power in watts,
+* ρ is the density of water (~1000 kg/m3)
+* h is height in meters, 
+* r is flow rate in cubic meters per second,
+* g is acceleration due to gravity of 9.8 m/s2, 
+* K Efficiency is a coefficient of efficiency ranging from 0 to 1.
+
+ <span style="color: blue;">
+The "effect" of **K** (efficiency) will depend on the other parameters
+
+ <span style="color: blue;">
+A 1% change in **K** will lead to a 1% change in Power
+
+ 
+<span style="color: blue;">
+How much Power (magnitude) will change with an increase **K** will depend on value
+of other parameters and inputs
+
+ 
+<span style="color: blue;">
+So you could say that Power is more sensitive to efficiency for larger flow rates or larger heights,
+We know this because the are multiplied together!
+
+# Some code to convince you of this
+
+```{r simplex}
+source("../R/power_gen.R")
+
+Power_K1 = power_gen(height=2, flow=4, K=0.1, g=9.8)
+Power_K1
+Power_K2 = power_gen(height=2, flow=4, K=0.2, g=9.8)
+Power_K2
+
+# if you double K, you will double power (linear response)
+# relative change in power
+0.1*2
+
+Power_K1*2
+
+Power_K2/Power_K1
+
+
+# but absolute change in power depends on other parmaters/inputs
+# absolute change in pawer or magnitude of the change in power with change in efficiency (difference)
+Power_K2-Power_K1
+
+# if hieght is 3 instead of 2
+Power_K1 = power_gen(height=3, flow=4, K=0.1, g=9.8)
+Power_K1
+Power_K2 = power_gen(height=3, flow=4, K=0.2, g=9.8)
+Power_K2
+
+# Power still doubles (relative change is the same)
+Power_K1*2
+
+# But absolute change is greater
+Power_K2-Power_K1
+
+
+
+
+```
+
+
+
+# What you can know about sensitivity before "sensitivity analysis"
+
+* when transfer function is linear (equation *tells* you what the sensitivity is)
+
+* Imagine that habitat suitability for parrot can be modelled with the following equations, where
+
+* **PS** probability that parrots will be found in a given location
+* **P** is mean annual precipitation
+* **T** is mean annual temperature
+* $k_P$ and $k_T$ are empriically derived coefficients
+
+ $$
+ PS = k_P * P + k_T * T
+ $$
+ 
+ 
+<span style="color: blue;">
+ Sensitivity to $k_P$ and $k_T$ will be linear
+ 
+ <span style="color: blue;">
+ Which coefficient will matter more?
+ 
+ <span style="color: blue;">
+*IF*  **P** and **T** where in the same units (e.g percent deviation from a mean value), then you could use
+ the coefficients to tell you if parrot suitablity would be more sensitive to a 10% change in preciitation versus a 10% change in temperature
+ 
+
+
+# What you can not know about sensitivity before "sensitivity analysis"
+
+* Looking at the form of the equations in the box (transfer function) often tells you something about sensitivity
+
+
+* BUT if you don't know what's in the box (transfer function) or if it has multiple boxes its difficult to tell
+
+* any equation/transfer function with thresholds (if's, max, min's) hard to tell, sometimes parameters may 
+matter sometimes they will not
+
+* the first derivative of the equation with respect to the parameter IS the sensitivity; so if you can take the derivative you can *know* something about the sensitivity
+
+
+
 
 # Building models with blocks - functions that call other functions
 
@@ -358,7 +497,9 @@ In your same groups -
 
 + Do a simple informal sensitivity analysis of almond yield profit using at least 2 parameters
 
-+ Create a single graph of the results - you can decide what is the most meaningful graph 
++ Create 2 graphs of the results - you can decide what is the most meaningful graph 
 
+* Write a short paragraph (in the Rmarkdown document) to summarize you interpretation of your model results (e.g what do 'take away' from your model and sensitivity analysis)
 
-Submit as a group: an Rmarkdown document, your R files for almond yield and profit model, and Graph on Canvas- 
+Submit as a group: an Rmarkdown document, your R files for almond yield and profit model  on Canvas- 
+Due Date Thursday April 18
