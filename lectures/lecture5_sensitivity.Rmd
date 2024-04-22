@@ -122,11 +122,13 @@ Library for Latin Hypercube Sampling and Sensitivity Analysis
 
 # Steps for Latin HyperCube Sampling
 
-* create a matrix with random samples for the number of parameters that you have
-  * we will use this to choose quantiles that will fully sample parameter space
+* create a matrix (essentially our hypter cube) with random samples for the number of parameters that you have
+  * these are essentially quantiles that will let us fully sample the parameter space
 
-* use these quantiles to sample expected parameter distributions
-
+* use these quantiles to sample from actual  parameter distributions
+  * we do this by adding in the characteristics of the distributions
+      * type (e.g normal, uniform)
+      * parameters (e.g mean, variance)
 
 
 
@@ -211,13 +213,35 @@ In that case to quantify sensitivity you need summary metrics
 
 Which one depends on what you care about
 
+# Example: Almond Yield
 
+* I'm going to return some summary information from my model
+* You could do this in a separate function!
+
+I'll return
+
+* max yield
+
+* min yield 
+
+* average yield
+
+often helpful when doing sensitivity analysis to place w
 ```{r almondsens}
+
+#
+compute_almond_yield
+```
+
+# now lets run for our parameters and climate data
+
+```{r almondsens2}
 
 
 # read in the input data
-SB=read.table("../data/clim.txt", header=T)
-clim= SB
+clim=read.table("../data/clim.txt", header=T)
+
+
 
 
 
@@ -322,37 +346,65 @@ to graph the results
 
 It can be used for both partial correlation coefficients and partial rank correlation coefficients
 
-# Pcc
+# Correlation and Pcc for Maximum Yield
 ```{r quantifying}
 # combine parameter sets with output
 
 
+# simple correlation coefficients
+result = map(parm, cor.test, y=yieldsd$maxyield)
+result$Tmincoeff1
+result$Tmincoeff2
+result$Pcoeff1
+result$Pcoeff2
+result$intercep
 
-senresult = pcc(parm, yieldsd$maxyield)
+# just the confidence interval
+justconf = result %>% map_df("conf.int")
+justconf
 
-# see coefficients
-senresult
-# efficiently plot them
-plot(senresult)
-
-# try again using rank coefficients
+# partial regression rank coefficients
 
 senresult_rank = pcc(parm, yieldsd$maxyield, rank=TRUE )
 senresult_rank
 plot(senresult_rank)
 
-# R sometimes returns complex lists - to see what you have
-str(senresult)
 
-senresult$PCC
+```
 
-# what parameters is the result most sensitive to, 
-# does this match your scatter plot
+# Try again for minimum yield
 
-# try for other outputs
+```{r quantifying2}
+# combine parameter sets with output
+
+
+# simple correlation coefficients
+result = map(parm, cor.test, y=yieldsd$minyield)
+result$Tmincoeff1
+result$Tmincoeff2
+result$Pcoeff1
+result$Pcoeff2
+result$intercep
+
+# just the confidence interval
+justconf = result %>% map_df("conf.int")
+justconf
+
+# try again using rank coefficients
+
+senresult_rank = pcc(parm, yieldsd$minyield, rank=TRUE )
+senresult_rank
+plot(senresult_rank)
+
+
+```
+
+
 
 
 # plot parameter sensitivity
+
+```{r plotting}
 # a bit tricky but nice way to make it easy to plot all parameters against all values
 tmp = cbind.data.frame(yieldsd, parm)
 tmp2 = tmp %>% gather(maxyield, minyield, meanyield, value="yvalue",key="yieldtype")
@@ -418,9 +470,8 @@ Quantify sensitivity
 
 ---
 
-# Assignment
+# In class : Repeat for a Different Example
 
-With a new group: Sensitivity Analysis
 
 Often when we are estimating vegetation or crop water use we need to know the atmospheric conductance - which is essentially how easily water diffuses into the air and depends largely on windspeed (you get more evaporation in windier conditions) Atmospheric conductance is also influenced by the vegetation itself and the turbulence it creates
 
@@ -428,7 +479,7 @@ I've provided a function to compute atmospheric conductance $C_{at}$ (how easily
 
 **The function *Catm.R* is provided**
 
-
+# Atmospheric conductance (simple model)
 So that you know what it does - here's some background on the function
 $$
 C_{at} = \frac{v_m}{6.25*{ln(\frac{z_m-z_d}{z_0})}^2}
@@ -449,9 +500,9 @@ $v$ is windspeed (cm/s)
 
 Typical values if $k_d$ and $k_o$ are 0.7 and 0.1 respectively (so use those as defaults)
 
-**Your task**
+# Your task
 
-For a given forest, you will perform a sensitivity analysis of model predictions of conductance
+For a given forest, perform a sensitivity analysis of model predictions of conductance
 Consider the sensitivity of your estimate to uncertainty in the following parameters and inputs
   
   * $height$ 
@@ -473,22 +524,8 @@ b) Run the atmospheric conductance model for these parameters
 c) Plot conductance estimates in a way that accounts for parameter uncertainty
 d) Plot conductance estimates against each of your parameters
 e) Estimate the Partial Rank Correlation Coefficients
-f) Discuss what your results tell you about how aerodynamic conductance? What does it suggest about what you should focus on if you want to reduce uncertainty in aerodymaic conductance estimates? Does this tell you anything about the sensitivity of plant water use to climate change? 
 
-Submit the Rmarkdown (or link to git repo) as usual
+# Submit partial rank correlation coefficience to discussion 
 
-**Grading Rubric**
 
-* Generation of parameter values using latin hypercube sampling (10pts)
-* Running model for the parameters (10pts)
-* Graph of conductance uncertainty 
-  * meaningful graph (5pts)
-  * graphing style (axis labels, legibility) (5 pts)
-* Graph of conductance against parameter values 
-  * meaningful graph (5pts)
-  * graphing style (axis labels, legibility) (5 pts)
-* Correct Rank Correlation Coefficients (10 pts)
-* Discussion (10pts)
-  * suggestion for how to reduce uncertainty that follows from your analysis (5pts)
-  * idea about how uncertainty might impact estimate of plant water use under climate change (5pts)
 

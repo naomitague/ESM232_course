@@ -21,6 +21,51 @@ library(tidyverse)
 library(purrr)
 ```
 
+
+# Larger Complex Models
+
+Only do sensitivity on some inputs/parameters
+
+
+Use Latin Hypercube to generate samples
+
+Run model for samples
+
+Generate Summary Statistics and graph
+
+
+---
+
+# More Information on Sensitivity Analysis
+
+[Applying Sensitivity Analysis in Biology] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2570191/)
+
+Nice paper on sensitivity analysis for environmental modeling
+<a href="../img/Saltelli.2010.pdf" download>Click to Download</a>
+
+Saltelli, Andrea, and Paola Annoni. "How to avoid a perfunctory sensitivity analysis." Environmental Modelling & Software 25, no. 12 (2010): 1508-1517
+
+
+---
+
+#  Steps in Sensitivity Analysis 
+
+Define the distribution of input parameters (e.g normal with its mean and standard deviation)
+
+Define the outputs to be considered (e.g if your output is time series are you looking at daily, max, min, annual ?)
+
+Sample from pdf of input parameters - we use *randomLHS* for this
+
+Run the model for each sample
+
+Graph the results
+
+Quantify sensitivity
+  * we used *pcc*
+
+
+---
+
 # Sobol
 
 Sobol sensitivity analysis is similar to LHS approach as a way to efficiently sample parameter space 
@@ -30,7 +75,7 @@ Sobol is more general - it can use measured parameter samples (we will approxima
 Sobol is a *variance-based* method
 
 Sobol quantifies sensitivity by 
-breaking the variance of output into 
+breaking the variance of output into contributions by parameters
 
 # Sobol Indices - Quantifying Sensitivity
 
@@ -100,17 +145,16 @@ source("../R/Catm.R")
 np=1000
 k_o = rnorm(mean=0.1,sd=0.1*0.1, n=np)
 k_d = rnorm(mean=0.7, sd=0.7*0.1, n=np)
-v = rnorm(mean=200, sd=10, n=np)
-height = runif(min=5, max=15, n=np)
-
+v = rnorm(mean=250, sd=30, n=np)
+height = runif(min=9.5, max=10.5, n=np)
 
 X1 = cbind.data.frame(k_o, k_d, v, height=height)
 
 # repeat sampling
 k_o = rnorm(mean=0.1,sd=0.1*0.1, n=np)
 k_d = rnorm(mean=0.7, sd=0.7*0.1, n=np)
-v = rnorm(mean=200, sd=10, n=np)
-height = runif(min=5, max=15, n=np)
+v = rnorm(mean=250, sd=30, n=np)
+height = runif(min=9.5, max=10.5, n=np)
 
 X2 = cbind.data.frame(k_o, k_d, v, height=height)
 
@@ -161,26 +205,35 @@ sens_Catm_Sobol$T
 
 print(sens_Catm_Sobol)
 
+```
  
+# Plotting
+
+* uncertainty in the output
+
+* relationships you are interested in
+
+* response to most sensitive parameters
+
+```{r sobolplot}
 # graph two most sensitive parameters
 both = cbind.data.frame(parms, gs=sens_Catm_Sobol$y)
 
-# look at response of conductance to the two most important variables
+# look at overall gs sensitvity to uncertainty
+ggplot(both, aes(x=gs))+geom_histogram()+geom_vline(xintercept=mean(both$gs), col="cyan")
+
+# look at response of conductance to the two interesting variables
 ggplot(both, aes(v,gs, col=height))+geom_point()+labs(y="Conductance (mm/s)", x="Windspeed")
 
+
+# look at response of conductance to the two most important variables
+ggplot(both, aes(k_d,gs, col=k_o))+geom_point()+labs(y="Conductance (mm/s)", x="k_d parameter")
+# use second most sensitive parameter (using most important as color)
+ggplot(both, aes(k_o,gs, col=k_d))+geom_point()+labs(y="Conductance (mm/s)", x="k_d parameter")
+
 ```
 
-# Some example articles
-```{r}
 
-```
-
- [Snow modeling](Snow_sobol.pdf)
- 
- [Building Cooling Energy Mdoel](building_energy_sobol.pdf)
- 
- [Uranium in Groundwater Model](Uranium_water_sobol.pdf)
- 
  
 
 # Second order indices
@@ -216,3 +269,90 @@ sens_Catm_Sobol2$T
 sens_Catm_Sobol2$S2
 
 ```
+
+# Assignment Part I
+
+Choose one of the 3 papers below that provide an example of sensitivity analysis of model parameters. 
+After going through the paper, write a paragraph describing how results of the *sensitivity analysis* reported on in the paper might contribute to understanding (or prediction) within an environmental problem solving or management context.  
+
+[Snow modeling](Snow_sobol.pdf)
+ 
+ [Building Cooling Energy Mdoel](building_energy_sobol.pdf)
+ 
+ [Uranium in Groundwater Model](Uranium_water_sobol.pdf)
+ 
+
+# Assignment Part 2
+
+Recall our model of atmospheric conductance
+$$
+C_{at} = \frac{v_m}{6.25*{ln(\frac{z_m-z_d}{z_0})}^2}
+$$
+$$
+z_d = k_d*h
+$$
+$$
+z_0 = k_0*h
+$$
+
+
+$z_m$ is the height at which windspeed is measured - must be higher than the vegetation (cm), it is usually measured 200 cm  above the vegetation
+
+$h$ is vegetation height (cm)
+
+$v$ is windspeed (cm/s)
+
+Typical values if $k_d$ and $k_o$ are 0.7 and 0.1 respectively (so use those as defaults)
+
+# Your task
+
+Repeat the sensitivity analysis that we have been working on in class BUT lets assume that
+we are in a different locations - where windpeeds are substantially higher and more variable 
+AND vegetation is shorter - See details below
+
+Consider the sensitivity of your estimate to uncertainty in the following parameters and inputs
+  
+  * $height$ 
+  
+  * $k_d$
+  
+  * $k_0$
+  
+  * $v$
+  
+Windspeeds $v$ are normally distributed with a mean of  300 cm/s with a standard deviation of 50 cm/s
+
+For vegetation height assume that height is somewhere between 3.5 and 5.5 m (but any value in that range is equally likely)
+
+For the $k_d$ and $k_0$ parameters you can assume that they are normally distributed with standard deviation of 1% of their default values
+
+a) Use the Sobel approach to generate parameter values for the 4 parameters
+b) Run the atmospheric conductance model for these parameters 
+c) Plot conductance estimates in a way that accounts for parameter uncertainty
+d) Plot conductance estimates against windspeed use the parameter that is 2nd in terms of total effect on response
+e) Estimate the Sobel Indices for your outut
+f) Comment on what this tells you about how atmospheric conductance and its sensitivity to variation in windspped differs in this setting as compared to the setting that we examined in class where windspeed was lower and less variable and vegetation was taller. 
+
+
+Submit the Rmarkdown on Canvas as usual
+
+**Grading Rubric**
+
+PART I (Paper Examples)
+* Discussion of the implication of parameter uncertainty from example paper (20pts)
+    * explanation directly relates to a specific parameter (10pts)
+    * explanation explores how parameter uncertainty might meaningfully impact results (10pts)
+
+PART II (Atmospheric Conductance)    
+* Generation of parameter values using Sobel (10pts)
+* Running model for the parameters (10pts)
+* Graph of  uncertainty of the response variable
+  * meaningful graph (5pts)
+  * graphing style (axis labels, legibility) (5 pts)
+* Graph of relationship between output and windspeed
+  * choice of color (see instructions) (5pts)
+  * graphing style (axis labels, legibility) (5 pts)
+* Computing Sobel Indicators (10 pts)
+* Discussion (10pts)
+  * correctly identifying how sensitivity to windspeed changed with setting (5pts)
+ 
