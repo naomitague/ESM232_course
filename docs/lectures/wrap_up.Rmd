@@ -1,0 +1,67 @@
+---
+title: "Wrap Up"
+output:
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+css: "bootstrap.min.css"
+date: "2023-06-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Why we model
+
+
+#  Types of Models
+
+Conceptual.............Mathematical
+
+Stochastic.............Deterministic
+
+Lumped.............Spatially Distributed: *SPACE*
+
+Static.............Dynamic  : *TIME*
+
+Abstract.............Physically/Process Based
+
+but biggest differences may often be the degree specific processes/parameters are accounted for
+
+
+# Implementing
+
+
+  * simple input-output (functions)
+  * coupled models (wrappers)
+  * dynamic models (differential equations)
+  * discrete dynamic (difference equations)
+  
+  
+# Techniques
+
+* workflow
+
+* Translate conceptual model into functions (a single box or set of connected boxes) 
+  * useful to diagram this (flow chart)
+
+* Define inputs (data type, units)
+
+* Define output (data type, units)
+
+* Define model structure (mathematical representation of transfer functions)
+
+* Does model already exist if so choose it
+
+* If not
+
+  * Choose programming language
+
+  * Write model
+
+  * Document the model  (meta data)
+
+  * Test model
+  
+* Sensitivity 
