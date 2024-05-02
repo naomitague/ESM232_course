@@ -100,3 +100,95 @@ ggplot(Ptimep, aes(years,P, col=r))+geom_point()+labs(x="years",y="Rabbit Popula
 
 
 ```
+
+
+# Solving by thinking of problem as a difference equations
+
+Population models can be discrete (rather than continuous)
+
+So we could implement them as difference equations and iterate
+
+
+```{r iterate1}
+source("../R/discrete_logistic_popK.R")
+# notice how a for loop is used to iterate
+
+# how many rabbits after 50 years given a growth of 0.1
+# starting with 1 rabbit - but a carrying capcity of 500
+
+discrete_logistic_pop
+
+discrete_logistic_pop(P0=1, r=0.05,K=200, T=50)
+
+# save results
+discrete_result = discrete_logistic_pop(P0=1, r=0.05, K=200, T=50)
+
+# lets also keep the parameters for use later
+P0=1
+r=0.05
+K=200
+T=50
+
+```
+
+# Compare discrete and analytic results
+
+Save the results from both to compare
+
+
+```{r closed}
+
+source("../R/exppop.R")
+
+exppop(P0=P0, r=r, K=K, T=T)
+analytic_result = exppop(P0=P0, r=r, K=K, T=T)
+
+analytic_result
+discrete_result
+
+# why are they different
+# look at trajectories
+
+growth_result = data.frame(time=seq(from=1,to=100))
+
+growth_result$Panalytic = growth_result$time %>% map_dbl(~exppop( P0=1,r=0.05, K=200,T=.x ))
+
+growth_result$Pdiscrete = growth_result$time %>% map_dbl(~discrete_logistic_pop( P0=1,r=0.05, K=200,T=.x ))
+
+tmp = growth_result %>% gather(key="Ptype",value="P",-time)
+ggplot(tmp, aes(time,P, col=Ptype))+geom_point()
+
+# try running them for longer time periods to see what happens 
+# change the value of r, K , P0 - see how it effects the results
+```
+
+
+# ODE example
+```{r usingode}
+
+
+source("../R/dexppop.R")
+
+dexppop
+library(deSolve)
+initialrabbits = 20
+years = seq(from=1, to=100, by=2)
+
+# run the solver
+Ptime = ode(y=initialrabbits, times=years, func=dexppop,parms=c(0.01))
+head(Ptime)
+colnames(Ptime)=c("year","P")
+
+# notice that there are additional pieces of information year, including the method used for integration
+attributes(Ptime)
+
+# this also means you need to extract just the data frame for plotting
+ggplot(as.data.frame(Ptime), aes(year,P))+geom_point()+labs(y="Population", "years")
+
+# this also works (of course function can be by order)
+Ptime=ode(initialrabbits, years, dexppop,0.03)
+colnames(Ptime)=c("year","P")
+ggplot(as.data.frame(Ptime), aes(year,P))+geom_point()+labs(y="Population", "years")
+
+
+```

@@ -1,6 +1,8 @@
 ---
-title: "Assignment: Using Sobol with an ODE"
-output: html_document
+title: 'Assignment: Using Sobol with an ODE'
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-05-17"
 ---
 
