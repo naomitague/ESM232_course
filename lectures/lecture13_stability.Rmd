@@ -249,6 +249,20 @@ ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
 
 ```
 
+
+# Extra Credit Assignment
+
+
+1. Add a harvesting to your forest growth model from the previous assignment
+You can be as simple or complex as you want (e.g you could repeat what I did above by making harvesting proportional to biomass)
+
+2. Perform some sensitivity analysis to assess how harvesting parameters interact with forest growth parameters to influence
+forest carbon at the end of the simulation time period (you can choose how long this is)
+
+3. Write 2-3 sentences to comment on what you might learn from your sensitivity analysis
+
+
+
 # Stability 
 
 How do we think about stablity for multiple outputs (e.g. predator/prey)

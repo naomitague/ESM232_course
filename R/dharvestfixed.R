@@ -11,9 +11,12 @@
 
 dharvestfixed= function(Time, biomass, parms) {
 
-	db = parms$r * biomass * (1- biomass/parms$K) - parms$harv
-	if (biomass+db < parms$mincarbon)
+  # reduce harvest rate as you get below minimum carbon
+
+	if (biomass < parms$mincarbon)
 	  db = parms$r*biomass*(1-biomass/parms$K)
+	else
+	  db = parms$r * biomass * (1- biomass/parms$K) - parms$harv
 
 	return(list(db))
 }

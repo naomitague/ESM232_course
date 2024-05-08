@@ -43,13 +43,12 @@ a force of change
   
 Examples? 
 
-How would we model these?
 
 # Modelling disturbance
 
-Disturbance is <span style="color:orange">**exogenous**</span>, (outside of the model)
+Disturbance is <span style="color:orange">**exogenous**</span>, (modelled outside of the model and then input) 
 
-Disturbance is integrated into the model  <span style="color:orange">*endogenous**</span>
+Disturbance is integrated into the model  <span style="color:orange">**endogenous**</span>
 
 # Questions to ask
 
@@ -70,7 +69,7 @@ Endogenous allows for a more complete integration of the disturbance
 # Modelling disturbance - an example
 
 
-What would our model look like if we harvest the forest on a regular basis
+What would a model of forest growth look like if we harvest a forest on a regular basis
 
 Some possible  options
 
@@ -87,7 +86,7 @@ Some possible  options
 
 We can build this on a forest growth model
 
-# Lets consider forest growth
+# Lets consider forest growth using our simple growth model
 
 Modeling carbon growth in a forest
 
@@ -123,14 +122,25 @@ ggplot(as.data.frame(forest),aes(time, carbon) )+geom_line()
 
 ```
 
-# Regular Harvest
+# Endogenous Example - Regular Harvest
 
 Lets consider a regular harvesting of the forest
 
 Lets start with an annual proportional harvest
 
-We can include harvesting in our forest  (and a new parameter **harv** (proportional harvesting rate))
+How would you change the differential equation to implement this - try it!
 
+* modify *dexppopK*
+* rerun starting with mature conditions (lets say 30kg C)
+* harvest 10% of the forest every year
+* run the model for 500 years
+* try changing the harvesting rate to see what happens
+
+# My answer
+
+We can include harvesting in our forest with a new parameter **harv** (proportional harvesting rate))
+
+I also changed the variable names to be more meaningful
 
 
 ```{r harvest}
@@ -141,8 +151,8 @@ dharvest
 
 # try it out
 tm = seq(from=1, to=500)
-Cinitial = 1
-gps = list(harv=0.18, K=100, r=0.2)
+Cinitial = 30
+gps = list(harv=0.1, K=100, r=0.2)
 res = ode(Cinitial,tm, dharvest, gps)
 colnames(res)=c("time","carbon")
 
@@ -155,6 +165,13 @@ ggplot(as.data.frame(res), aes(time, carbon))+geom_point()
 
 Compute trajectories of forest biomass (or carbon) over time - given different harvesting rates
 
+* create a vector of different harvesting rates that we want to try
+* write a wrapper function to run our model and extract trajectories
+* run the wrapper function for our harvesting rates
+* graph
+
+# My code
+
 ```{r harvest2}
 
 # what if we harvest a a much greater rates
@@ -162,7 +179,7 @@ Compute trajectories of forest biomass (or carbon) over time - given different h
 harvestr = seq(from=0.0, to=0.4, by=0.025)
 
 # save all of the trajectories
-# use a wrapper function to just return the carbon trajectories
+# use a wrapper function to just return the carbon trajectories from ODE output
 getcarbon = function(Cinitial, tm, harv, K, r, hfunc) {
   gps = list(harv=harv, K=K, r=r)
   res = ode(Cinitial,tm, hfunc, gps)
@@ -177,6 +194,8 @@ res = harvestr %>% map_dfc(~getcarbon( Cinitial=Cinitial, tm=tm, K=100, r=0.2, h
 colnames(res)=harvestr
 res=as.data.frame(res)
 res$time=tm
+head(res)
+
 # put in to a form where we can plot
 resl = gather(res, key="harvestr",value="carbon", -time)
 ggplot(resl,aes(time, carbon, col=harvestr))+geom_line()
@@ -190,7 +209,8 @@ ggplot(resl,aes(time, carbon, col=harvestr))+geom_line()
 ggplot(subset(resl, time < 10),aes(time, carbon, col=harvestr))+geom_line()
 
 ```
-# Interactions
+
+# Parameter Interactions
 
 How do different harvest rates interact with different growth rates (and/or) carrying capacity?
 
@@ -201,7 +221,9 @@ Explore on your own
 Try different combination of growth and 
 harvest rates...
 
-notice how carbon growth changes...what does stability mean - can you find parameter sets that lead to a stable non-zero forest
+* Notice how carbon growth changes...
+* What does stability mean - 
+* Can you find parameter sets that lead to a stable non-zero forest
 
 # Sensitivity Analysis
 
@@ -209,16 +231,24 @@ We could do some sensitivity analysis to see how harvest rate, and growth rate i
 
 Sensitivity of what? What do we care about?
 
-  * forest ends up after 10 years and 50 years (short and long planning horizons)
+  * where forest ends up after 10 years and 50 years (short and long planning horizons)
 
-We will use our compute metrics and wrapper to make this easy
+We will design a function to compute metrics and a wrapper to make this easy
 
 ```{r harvestsend}
 
 # fixed amount per year
 source("../R/dharvest.R")
 
+# compute our two metrics of interest - harvest after 10 and 50 years
+# make it general in case we want to use other times
+compute_short_long_C = function(carbontime, short=10, long=50) {
+ Cshort = carbontime %>% subset(time==short) %>% select(C)
+ Clong = carbontime %>% subset(time==long) %>% select(C)
+ # use as numeric to clean up
+return(list(Cshort=as.numeric(Cshort), Clong=as.numeric(Clong)))}
 
+# now lets get our sample parameters
 # lets assume a uniform distribution of harvest rates
 # and of normal growth rates
 np=200
@@ -237,29 +267,34 @@ X2 = cbind.data.frame(r=r, harv=harv)
 
 sens_forest = sobolSalt(model = NULL,X1, X2, nboot = 300)
 colnames(sens_forest$X)= c("r","harv")
+
+head(sens_forest$X)
+
 # do a quick test
 # try it out
 tm = seq(from=1, to=50)
-Cinitial = 1
+Cinitial = 30
 parms = list(r=sens_forest$X[1,1], harv=sens_forest$X[1,2], K=100)
+
 res = ode(y=Cinitial,times=tm, func=dharvest, parms=parms)
 res=as.data.frame(res)
 colnames(res)=c("time","C")
 
-# compute our two metrics of interest - harvest after 10 and 50 years
-compute_metrics = function(res) {
- C50 = res[50]
- C10 = res[10]
-return(list(C50=C50, C10=C10))}
+compute_short_long_C(res)
+
+```
+# Build our wrapper function and run for all the parameter sets
+
+```{r}
 
 # use a wrapper function to just return the carbon trajectories
-p_wrapper = function(r,harv, K, Cinitial, simtimes, func) {
+p_wrapper = function(r,harv, K, Cinitial, simtimes, odefunc, metricfunc) {
     parms = list(r=r, K=K, harv=harv)
-    result = ode(y=Cinitial, times=simtimes, func=func, parms=parms) 
+    result = ode(y=Cinitial, times=simtimes, func=odefunc, parms=parms) 
     result=as.data.frame(result)
    colnames(result)=c("time","C")
   # get metrics
-  metrics=compute_metrics(result$C)
+  metrics=metricfunc(result)
   return(metrics)
 }
 
@@ -267,28 +302,43 @@ p_wrapper = function(r,harv, K, Cinitial, simtimes, func) {
 
 # try it out
 tm = seq(from=1, to=50)
-Cinitial = 1
+Cinitial = 30
 
 
-allresults = as.data.frame(sens_forest$X) %>% pmap(p_wrapper, K=100, Cinitial=Cinitial, simtimes=tm, func=dharvest)
+allresults = as.data.frame(sens_forest$X) %>% pmap(p_wrapper, K=100, Cinitial=Cinitial, simtimes=tm, odefunc=dharvest, metricfunc=compute_short_long_C)
 
 # extract out results from pmap into a data frame
-allres = allresults %>% map_dfr(`[`,c("C10","C50"))
+allres = allresults %>% map_dfr(`[`,c("Cshort","Clong"))
+# clean up the column names
+allres = as.data.frame(allres)
+
+head(allres)
 
 tmp = allres %>% gather(key="metric", value="value")
 ggplot(tmp, aes(metric, value, col=metric))+geom_boxplot()
+```
+
+# Explore more
+
+* graph response by parameter
+* sobol indices
+
+Try it
+```{r graphs}
+
 
 # link with parameters to see how parameters together
-# impact something we care about C50
+# impact something we care about Clong
+# report harvest as a percent for easy of interpretation
 
 allresp = cbind.data.frame(sens_forest$X, allres)
-ggplot(allresp, aes(harv, C50, col=r))+geom_point()
+ggplot(allresp, aes(harv*100, Clong, col=r))+geom_point()+labs(y="Forest Carbon After 50 years", x="Harvest Rate (% of current biomass)", col="Growth Rate")
 
 # notice how we can see the impact of harvesting - and how growth rates reduce the sustainable harvest
 
 
 # sobol indices
-sens_forest_C50 = sensitivity::tell(sens_forest, allres$C50)
+sens_forest_C50 = sensitivity::tell(sens_forest, allres$Clong)
 rownames(sens_forest_C50$T)=c("r","harv")
 sens_forest_C50$T
 rownames(sens_forest_C50$S)=c("r","harv")
@@ -300,7 +350,9 @@ sens_forest_C50$S
 
 What if you wanted to take the same amount of carbon each year - what would the model look like?
 
-# Fixed Example
+Think about what you would need to do to make this realistic
+
+# Fixed Harvest Example
 
 ```{r fixed}
 
@@ -309,27 +361,30 @@ source("../R/dharvestfixed.R")
 dharvestfixed
 
 # try it out with different initial conditions to watch how the system moves to a stable state
-tm = seq(from=1, to=500)
-Cinitial = 500
-gps = list(harv=10, K=1000, r=0.05, mincarbon=0)
+tm = seq(from=1, to=100)
+Cinitial = 30
+gps = list(harv=2, K=1000, r=0.05, mincarbon=20)
 
 res = ode(Cinitial,tm, dharvestfixed, gps)
+
 colnames(res)=c("time","carbon")
+head(res)
+tail(res)
+
+# notice how it fails after a certain length of time
+# try another method
+res = ode(Cinitial,tm, dharvestfixed, gps, method="euler")
+colnames(res)=c("time","carbon")
+head(res)
+tail(res)
 
 ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 10kg/year\n Starting conditions 500kgC")
+   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
+
+
+ggplot(as.data.frame(res), aes(time, carbon))+geom_line()+
+   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
+
+#why this pattern
 ```
-
-
-
-# Extra Credit Assignment
-
-
-1. Add a harvesting to your forest growth model from the previous assignment
-You can be as simple or complex as you want (e.g you could repeat what I did above by making harvesting proportional to biomass)
-
-2. Perform some sensitivity analysis to assess how harvesting parameters interact with forest growth parameters to influence
-forest carbon at the end of the simulation time period (you can choose how long this is)
-
-3. Write 2-3 sentences to comment on what you might learn from your sensitivity analysis
 
