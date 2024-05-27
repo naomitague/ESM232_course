@@ -20,10 +20,128 @@ library(purrr)
 library(ggpubr)
 ```
 
-# See notes on population matrix modeling (agestructure.pdf)
+# Dynamic Models - Discrete 
+
+Recall using in our diffusion model where we divided the world into "chunks"
+
+This can be appropriate for...
+* discrete population numbers (annual human populations)
+
+Still an approximation because births/deaths happen all the time but "reasonable" to ignore
+
+We can use "looping" rather than iteration
+
+Makes it easy to do systems of equations 
+  * tracking multiple variables
+  
+# Discrete Dynamic Example (age structured population)
+
+* tracking multiple variables
+  * numbers of individuals in each age group
+  * note we are "discretizing" both time and age here
+  
+A system of equation that evolves the age struture (each age group) over time
+
+* Sometimes called a population "matrix" model
+
+# The basics
+
+Suppose a population has individuals in different age
+groups (lets say 4)
+
+* Populations of individuals in each group: 
+  * n0(t)
+  * n1(t),
+  * n2(t)
+  * n3(t), where t is time
+
+* Groups - lump all individuals in that age range (even
+though in reality there will be a range of ages
+
+* Dynamically model the evolution of that population
+
+# Evolving
+
+To evolve the population we also need to think about
+births, deaths and aging
+
+* births depend on fertility rates of the different
+groups
+
+* aging simply evolves one group to the next
+
+* death remove individuals from a group
+
+# Defining growth for overall population numbers
+
+if b is birth rate and d is death rate
+
+* n(t+1) = n(t) + (b-d) n(t)
+
+* n(t+1) = (1+r) n(t) where r is an intrinsic rate of
+increase (proportional/per capita rate of change)
+
+* n(t+1) = *l* n(t) = where *l* is really the finite (geometric
+growth rate)
+
+# For multiple age classes we look survival probability
+
+*  define a survival parameter $S_k$ that gives the fraction of
+individuals that survive from age class k to age class k+1,
+
+* for example n2(t + 1) = $S_1$ * n1(t).
+
+* in this case, the time step/increment must be the same as
+the increment between age classes!
+
+* we often work with 1 year but could be 1 month (but age
+classes would also be 1 month apart)
+
+# Births
+
+
+
+Births are little trickier because they may come from
+multiple age classes, so define the
+
+* parameter $F_j$ as the per capita fertility in age class j.
+* The newly born all enter into age class 1, i.e.
+
+* n1(t + 1) = $F_2$ * n2(t) + $F_3$ * n3(t)
+
+* assume that population census is right after breeding
+*  note that fertility is not fecundity (birth per capita but
+includes survivability - live almost year to be included)
+
+
+![](../img/birth.jpg)
+
 # Set up the Leslie Matrix
 
-[Leslie Matrix](lecture17_matrix/SimpleLeslie.pdf)
+![](../img/leslie1.jpg)
+
+# Use it with matrix multiplication to iterate
+
+Could use nested *for* loops here but this is more efficient
+
+  * outer loop for time
+  * inner loop through each group
+
+
+Matrix multiplication is often used for discrete system of equation dynamic models
+
+
+![](../img/lesliematrix.jpg)
+
+
+# If you keep iterating
+
+repeating above gets you to
+
+![](../img/respop.jpg)
+
+
+# Lets see in R
 
 ```{r setupleslie}
 nclasses = 5
@@ -102,15 +220,26 @@ ggplot(popl, aes(timestep, pop,fill=as.factor(age)))+geom_col(position="dodge")+
 
 # Multiple Time Steps
 
-use function to evolve a population through time
+use a wrapper function to evolve a population through time
 
-* inputs = survivability, fertility, initial population, time steps
-* output = final population matrix
+* inputs = survivability, fertility, initial population, time steps (all as vectors)
+* output =  populations as a total by time and as broken down by age by time 
 * a dynamic model - difference equations - similar to our diffusion model
+
+
+Lets look at a bigger population - China
+
+Break it in to decades,first decade of life (0 to 10 years old)
+final decade greater than 90
+
+
+
  
 ```{r multitime}
 
 source("../R/evolve_pop.R")
+
+evolve_pop
 
 # example evolve China pop
 # fertility rates
@@ -118,6 +247,8 @@ F1 = 0.0
 F2 = 0.25/2
 F3 = 0.5/2
 F4 = 0.25/2
+# assume all others also zero
+# why divide by 2?
 
 # survivability - based on mortality rates per thousand per decade
 p12 = 1-79/1000 
@@ -181,7 +312,7 @@ we can impact their survivability so we want to know how sensitive populations w
 but we also have uncertainty in what we know about reproduction rates
 
 
-* 0-1 months - no fertiliaty = survivability about 90%
+* 0-1 months - no fertility = survivability about 90%
 * 1-2 months - population tends to double, survivability about 70%
 * more 2 months - population fertility around 20%, suvivability only 30%
 
