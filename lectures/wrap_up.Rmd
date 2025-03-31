@@ -1,0 +1,169 @@
+---
+title: "Wrap up"
+output:
+  slidy_presentation:
+    highlight: pygments
+  html_document: default
+  pdf_document: default
+  ioslides_presentation:
+    highlight: pygments
+  beamer_presentation:
+    highlight: pygments
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Model Goals
+
+<span style="color: green;">*Understanding*</span> (how does something work, what are key drivers of responses, how do different drivers interact)
+
+
+
+<span style="color: green;">*Estimation/Scenario*</span> (what might be the consequences of decisions we make about the environment)
+
+
+
+<span style="color: green;">*Communication* </span>- contribute to education and broader understanding
+
+# Goals
+
+The <span style="color: green;">goal</span> will help you to define the core pieces of a model
+
+Often helpful to start at the end: Outputs - what do you want
+
+
+# Conceptual Models
+
+* models are **always** simplifications of reality - they help us to make sense of reality by focusing on specific aspects that are most relevant to your goal
+
+* always start a modeling project by diagramming your conceptual model - how to you see the system; 
+    * from here you design or choose your 'actual' model
+
+* in a project, dialogue it is critical to dialogue to agree on the conceptual model
+
+* <span style="color: blue;">"all models are wrong but some are useful"</span>  - British Statistician George Box
+
+
+
+
+#  Types of Models
+
+Conceptual.............Mathematical
+
+Stochastic.............Deterministic
+
+Lumped.............Spatially Distributed: *SPACE*
+
+Static.............Dynamic  : *TIME*
+
+Abstract.............Physically/Process Based
+
+but biggest differences may often be the degree specific processes/parameters are accounted for
+
+# Some Examples 
+
+notice how its often challenging to know what a complex model does
+(Tague and Frew, 2021)
+
+# Implementing or Choosing - what fits
+
+
+  * simple input-output (functions)
+  * coupled models (wrappers)
+  * dynamic models (differential equations)
+  * discrete dynamic (difference equations)
+  
+# Models in time and space
+
+* challenges in running models over space / time
+
+* space/time resolution matters
+
+* integration (numerical solutions)
+
+* some useful concepts
+  * stability
+  * disturbance
+  
+# Some examples of more complex models
+
+* RHESSys applications to fire and water
+* Air pollution and EJ
+
+# Techniques
+
+<span style="color: orange;">Workflow</span>
+
+* Translate conceptual model into functions (a single box or set of connected boxes) 
+  * useful to diagram this (flow chart)
+
+* Define inputs (data type, units)
+
+* Define output (data type, units)
+
+* Define model structure (mathematical representation of transfer functions)
+
+* Does model already exist if so choose it
+
+* If not
+
+  * Choose programming language
+
+  * Write model
+
+  * Document the model 
+
+  * Test model
+  
+* Sensitivity Analysis
+
+* Calibration
+
+* Summarize how output answers the question asked
+
+# Sensitivity Analysis
+
+* defining variation or uncertainty in parameters
+
+* informal (play - and why its important!)
+
+* techniques (like Sobol) for effectively searching parameters space
+
+* graphing!
+
+* sensitivity of "what" - extracting summary metrics to focus sensitivity analysis on meaningful (given your question) metrics
+
+* quantifying sensitivity 
+  * particularly useful when you have many parameters
+  * can help you choose what to graph
+  * can help focus on where uncertainty reduction is needed
+  
+# Calibration 
+
+* choosing metrics to define performance
+
+  * "fuzzy" metrics
+  * building combined metrics
+
+* continuing to use multiple "good" parameter sets so that model results are more robust to the limits of calibration
+
+# Optimization 
+
+* similar to calibration where you are trying to find a single "good" parameter set
+
+* "free" or "choice" parameters that you are trying to optimize
+
+* sensitivity analysis still matters
+
+
+
+
+
+
+# Thank you!
+
+* feel free to reach out to me with questions / thoughts on modeling 
+
+* thanks to Ojas for his support
