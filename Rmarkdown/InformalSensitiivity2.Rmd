@@ -18,7 +18,6 @@ library(tidyverse)
 library(purrr)
 
 library(ggpubr)
-
 ```
 
 
@@ -31,44 +30,54 @@ library(ggpubr)
 * Code so that its easy to change
 
 ```{r ethresh}
-# lets try sensitivity analysis again, 
+# lets try sensitivity analysis again,
 # ethresh - is defaulted to 10000; lets try +- 15%
 # lets try 20 samples
 # assume a uniform distribution - we don't know anything about variation
-deviation = 0.15
-base_thresh = 10000
-ethresh = runif(min=base_thresh-deviation*base_thresh, 
-                max = base_thresh+deviation*base_thresh, n=20)
+deviation <- 0.15
+base_thresh <- 10000
+ethresh <- runif(
+  min = base_thresh - deviation * base_thresh,
+  max = base_thresh + deviation * base_thresh, n = 20
+)
 
 # now run our model for the parameters
-site2 = ethresh %>% map(~solarpv( area=0.1, 
-                      solar=sierraczosolar, clr="green", 
-                      eunit="W", g=FALSE, etype="direct", 
-                      ethresh=.x ))
+site2 <- ethresh %>% map(~ solarpv(
+  area = 0.1,
+  solar = sierraczosolar, clr = "green",
+  eunit = "W", g = FALSE, etype = "direct",
+  ethresh = .x
+))
 
 
 # extract a useful data structure,lets say we want # just the annual data (not the mean), and then reformat as a data frame with nice column names
-tmp = map_df(site2,`[`, c("annual")) 
-site2df = data.frame(year = tmp$annual$year, 
-                     elect= tmp$annual$elect)
+tmp <- map_df(site2, `[`, c("annual"))
+site2df <- data.frame(
+  year = tmp$annual$year,
+  elect = tmp$annual$elect
+)
 
 # now we could plot
-ggplot(site2df, 
-       aes(as.factor(year),elect, group=year))+
-  geom_boxplot()+
-  labs(y="Electricity generated in W", x="Year")
+ggplot(
+  site2df,
+  aes(as.factor(year), elect, group = year)
+) +
+  geom_boxplot() +
+  labs(y = "Electricity generated in W", x = "Year")
 
 # we also might want to see mean electricity generation across parameter uncertainty
-mean_elect = map_df(site2,`[`, c("mean")) 
+mean_elect <- map_df(site2, `[`, c("mean"))
 # because there is only 1 value for each ethresh we can add as a column
-mean_elect$ethresh = ethresh
+mean_elect$ethresh <- ethresh
 # add the efficiency
-p1 = ggplot(mean_elect, aes(mean))+geom_histogram()+labs(x="Mean Annual Electricity W")
+p1 <- ggplot(mean_elect, aes(mean)) +
+  geom_histogram() +
+  labs(x = "Mean Annual Electricity W")
 p1
-p2 = ggplot(mean_elect, aes(ethresh, mean))+geom_point(cex=2, col="orange")+labs(y="Mean Annual Electricity W", x="Threshold Radiation (kJ/m2)  \nabove which energy production is more efficient")
-ggarrange(p1,p2)
-
-
+p2 <- ggplot(mean_elect, aes(ethresh, mean)) +
+  geom_point(cex = 2, col = "orange") +
+  labs(y = "Mean Annual Electricity W", x = "Threshold Radiation (kJ/m2)  \nabove which energy production is more efficient")
+ggarrange(p1, p2)
 ```
 
 
@@ -96,84 +105,90 @@ Two possible approaches
 # using *pmap*
 
 ```{r secondsensitivity}
-
 # generate samples for both parameters
-nsamples = 300
-deviation = 0.15
-base_thresh = 10000
-ethresh = runif(min=base_thresh-deviation*base_thresh,
-                max = base_thresh+deviation*base_thresh, n=nsamples)
+nsamples <- 300
+deviation <- 0.15
+base_thresh <- 10000
+ethresh <- runif(
+  min = base_thresh - deviation * base_thresh,
+  max = base_thresh + deviation * base_thresh, n = nsamples
+)
 
-eff = rnorm(mean=0.6, sd = 0.1, n=nsamples)
+eff <- rnorm(mean = 0.6, sd = 0.1, n = nsamples)
 
-parms = cbind.data.frame(eff, ethresh)
+parms <- cbind.data.frame(eff, ethresh)
 
-# use pmap 
+# use pmap
 # takes function name and then names of all parameters that don't change
-results = parms %>% pmap(solarpv,  area=0.1, 
-                         solar=sierraczosolar, clr="green",
-                         eunit="W", g=FALSE, etype="direct")
+results <- parms %>% pmap(solarpv,
+  area = 0.1,
+  solar = sierraczosolar, clr = "green",
+  eunit = "W", g = FALSE, etype = "direct"
+)
 
 results[[1]]
 length(results)
 
 # now we can extract results from the list as above
-mean_elect = map_df(results,`[`, c("mean")) 
+mean_elect <- map_df(results, `[`, c("mean"))
 # and we can add the parameter values for each run
-mean_elect = cbind.data.frame(mean_elect, parms)
+mean_elect <- cbind.data.frame(mean_elect, parms)
 
 # plot - pick on of the 2 parameter as a color
 
-p1 = ggplot(mean_elect, aes(ethresh, mean, col=eff))+geom_point(cex=2)+
-  labs(y="Mean Annual Electricity W", x="Threshold Radiation (kJ/m2)  \n above which energy production is more efficient")
-p2 = ggplot(mean_elect, aes(eff, mean, col=ethresh))+geom_point(cex=2)+
-  labs(y="Mean Annual Electricity W", x="Efficiency")
-ggarrange(p1,p2)
+p1 <- ggplot(mean_elect, aes(ethresh, mean, col = eff)) +
+  geom_point(cex = 2) +
+  labs(y = "Mean Annual Electricity W", x = "Threshold Radiation (kJ/m2)  \n above which energy production is more efficient")
+p2 <- ggplot(mean_elect, aes(eff, mean, col = ethresh)) +
+  geom_point(cex = 2) +
+  labs(y = "Mean Annual Electricity W", x = "Efficiency")
+ggarrange(p1, p2)
 
 # what do we learn from this
 
-# extract annual 
-tmp = map_df(results,`[`, c("annual")) 
-annual_elect = as.data.frame(tmp$annual$year)
-colnames(annual_elect)="year"
-annual_elect$elect = tmp$annual$elect
-
-
+# extract annual
+tmp <- map_df(results, `[`, c("annual"))
+annual_elect <- as.data.frame(tmp$annual$year)
+colnames(annual_elect) <- "year"
+annual_elect$elect <- tmp$annual$elect
 ```
 
 
 # Using a *For* Loop
 ```{r}
-
 # using a for loop
-# start by creating a data structures to hold results, separate 
+# start by creating a data structures to hold results, separate
 # for scenario mean and annual values
-mean_elect_for = rep(NA, times=nsamples)
+mean_elect_for <- rep(NA, times = nsamples)
 # for annual we need rows as years, columns for samples
-years = unique(sierraczosolar$year)
-annual_elect_for = as.data.frame(matrix(ncol=nsamples, nrow=length(years)))
-annual_elect_for$year=years
+years <- unique(sierraczosolar$year)
+annual_elect_for <- as.data.frame(matrix(ncol = nsamples, nrow = length(years)))
+annual_elect_for$year <- years
 
 
 for (i in 1:nsamples) {
-  res = solarpv( area=0.1, solar=sierraczosolar,
-                 clr="green", eunit="W", g=FALSE, etype="direct",
-                 ethresh=parms$ethresh[i],
-                 eff = parms$eff[i])
-  
-  annual_elect_for[,i] = res$annual$elect
-  mean_elect_for[i]= res$mean
+  res <- solarpv(
+    area = 0.1, solar = sierraczosolar,
+    clr = "green", eunit = "W", g = FALSE, etype = "direct",
+    ethresh = parms$ethresh[i],
+    eff = parms$eff[i]
+  )
+
+  annual_elect_for[, i] <- res$annual$elect
+  mean_elect_for[i] <- res$mean
 }
 
 # plot
-me = cbind.data.frame(mean=mean_elect_for, parms)
-ggplot(me, aes(eff, mean, col=ethresh))+geom_point(cex=2)+
-  labs(y="Mean Annual Electricity W", x="Efficiency")
+me <- cbind.data.frame(mean = mean_elect_for, parms)
+ggplot(me, aes(eff, mean, col = ethresh)) +
+  geom_point(cex = 2) +
+  labs(y = "Mean Annual Electricity W", x = "Efficiency")
 
-tmp = annual_elect_for %>% pivot_longer(cols=-c(year))
+tmp <- annual_elect_for %>% pivot_longer(cols = -c(year))
 
-ggplot(tmp, aes(as.factor(year), value))+
-  geom_boxplot()+labs(y="Mean Annual Electricity W", x="Year")
+ggplot(tmp, aes(as.factor(year), value)) +
+  geom_boxplot() +
+  labs(y = "Mean Annual Electricity W", x = "Year")
 ```
 
 # Building models with blocks - functions that call other functions
@@ -188,7 +203,7 @@ Develop a conceptual model
 
 ```{r  out.width="75%", out.height="75%", echo=FALSE }
 library(knitr)
-include_graphics("../img/power_comparison_figure.jpeg",) 
+include_graphics("../img/power_comparison_figure.jpeg", )
 ```
 
 # 
@@ -214,7 +229,6 @@ We will use output from our solarpv function as input into a function that estim
                     * netpre (net present value of that profit)
 
 ```{r valuep}
-
 source("../R/compute_NPV.R")
 source("../R/compute_profit_frompower.R")
 
@@ -225,15 +239,17 @@ compute_NPV
 # use solar from  site1 from above as input
 head(annual_elect)
 
-profit_solar = compute_profit_frompower(energy=annual_elect$elect,
-                                        year=annual_elect$year,
-                                        price=30, discount=0.04)
+profit_solar <- compute_profit_frompower(
+  energy = annual_elect$elect,
+  year = annual_elect$year,
+  price = 30, discount = 0.04
+)
 
 head(profit_solar)
 
-ggplot(profit_solar, aes(as.factor(year), netpre, group=year))+geom_boxplot()+
-  labs(y="Profit in current $", x="Year")
-
+ggplot(profit_solar, aes(as.factor(year), netpre, group = year)) +
+  geom_boxplot() +
+  labs(y = "Profit in current $", x = "Year")
 ```
 # Recall we also have a function that computes hydropower
 
@@ -261,7 +277,7 @@ This is a static (one point in time), deterministic, lumped (one place) model; i
 #' Power Generation
 #'
 #' This function computes instantaneous power generation
-#’ from a reservoir given its height and flow rate into turbines
+# ’ from a reservoir given its height and flow rate into turbines
 #' @param rho Density of water (kg/m3) Default is 1000
 #' @param g Acceleration due to gravity (m/sec2) Default is 9.8
 #' @param Kefficiency Turbine Efficiency (0-1) Default is 0.8
@@ -272,12 +288,9 @@ This is a static (one point in time), deterministic, lumped (one place) model; i
 #' @return Power generation (W/s)
 
 
-power_gen = function(height, flow, rho=1000, g=9.8, Keff=0.8) {
-
- 
-
+power_gen <- function(height, flow, rho = 1000, g = 9.8, Keff = 0.8) {
   # calculate power
-    result = rho * height * (flow) * g * Keff
+  result <- rho * height * (flow) * g * Keff
 
 
   return(result)
@@ -289,24 +302,25 @@ see how function works
 
 ```{r eval=TRUE}
 library(tidyverse)
-power_gen = function(height, flow, rho=1000, g=9.8, Keff=0.8) {
-
-result = rho * height * flow * g * Keff
-return(result)
+power_gen <- function(height, flow, rho = 1000, g = 9.8, Keff = 0.8) {
+  result <- rho * height * flow * g * Keff
+  return(result)
 }
 
-power_gen(height=10, flow=2)
-power_gen(10,2)
-power_gen(10,2, g=4.2)
+power_gen(height = 10, flow = 2)
+power_gen(10, 2)
+power_gen(10, 2, g = 4.2)
 
 # generate some test data
-measured_height=runif(min=1, max=100, n=20)
+measured_height <- runif(min = 1, max = 100, n = 20)
 
 # create a data frame to store results of model run
-power_estimate = cbind.data.frame(height=measured_height, estimate=power_gen(height=measured_height, flow=2))
+power_estimate <- cbind.data.frame(height = measured_height, estimate = power_gen(height = measured_height, flow = 2))
 
 # graph
-ggplot(power_estimate,aes(height, estimate) )+geom_point()+labs(y="power in W/x", x="height (m)")
+ggplot(power_estimate, aes(height, estimate)) +
+  geom_point() +
+  labs(y = "power in W/x", x = "height (m)")
 ```
 
 # Putting it all together
@@ -318,68 +332,78 @@ Notice that we can 're-use' our functions such as **compute_profit_frompower** f
 (such as our reservoir power model) to build out our complete model
 
 ```{r reuse}
-
 # rerun 'sampling' in using_data_with_functions.Rmd. above to get results from our reserovir model
 
 # lets start with hydro power
 source("../R/power_gen.R")
 
-# we are 'making up' inputs for hydro power - to have it match the number of year 
+# we are 'making up' inputs for hydro power - to have it match the number of year
 # that we had solar values for, lets sets the number of runs equal to the number of years
 
-number_years = length(profit_solar$year)
+number_years <- length(profit_solar$year)
 
-reservoir_model_res= as.data.frame(matrix(nrow=number_years, ncol=3))
+reservoir_model_res <- as.data.frame(matrix(nrow = number_years, ncol = 3))
 
-colnames(reservoir_model_res)=c("height","flow","power")
+colnames(reservoir_model_res) <- c("height", "flow", "power")
 
 # Step 2 - generate heights and flow rates
-reservoir_model_res$height = rnorm(mean=10, sd=1, n=number_years)
+reservoir_model_res$height <- rnorm(mean = 10, sd = 1, n = number_years)
 
-reservoir_model_res$flow = runif(min=0.1, max=1, n=number_years)
+reservoir_model_res$flow <- runif(min = 0.1, max = 1, n = number_years)
 
-# Step 3 - generate uncertainty due to reservoir efficiency, lets assume that 
+# Step 3 - generate uncertainty due to reservoir efficiency, lets assume that
 # we know its somewhere between 0.4 and 0.7
-Keff = runif(min=0.4, max=0.7, n=20)
+Keff <- runif(min = 0.4, max = 0.7, n = 20)
 
 # Step 3 - apply model to get power for each height, flow rate (each year), across
 # uncertainty in efficiency
-reservoir = Keff %>% map_dfc(~power_gen(
-  height=reservoir_model_res$height, 
-  flow=reservoir_model_res$flow, Keff=.x) )
+reservoir <- Keff %>% map_dfc(~ power_gen(
+  height = reservoir_model_res$height,
+  flow = reservoir_model_res$flow, Keff = .x
+))
 
-colnames(reservoir)=Keff
+colnames(reservoir) <- Keff
 
 head(reservoir)
 
 # add years - remember we are making up data for the same years that we have solar
-reservoir$year = profit_solar$year
+reservoir$year <- profit_solar$year
 
-# reorganize for easier analysis 
-reservoirg=as.data.frame(reservoir) %>% pivot_longer(!year,names_to="Keff", values_to="power")
+# reorganize for easier analysis
+reservoirg <- as.data.frame(reservoir) %>% pivot_longer(!year, names_to = "Keff", values_to = "power")
 head(reservoirg)
 
 # create profit from hydro
-profit_hydro = compute_profit_frompower(energy=reservoirg$power, year= reservoirg$year, price=30, discount=0.04)
+profit_hydro <- compute_profit_frompower(energy = reservoirg$power, year = reservoirg$year, price = 30, discount = 0.04)
 
 names(profit_hydro)
 
 # plot
-ggplot(profit_hydro, aes(as.factor(year), netpre, group=year))+geom_boxplot()+labs(y="Net Present Value of Power in 1945 Dollars", x="Year")
+ggplot(profit_hydro, aes(as.factor(year), netpre, group = year)) +
+  geom_boxplot() +
+  labs(y = "Net Present Value of Power in 1945 Dollars", x = "Year")
 
 # compare with solar
-a=ggplot(profit_hydro, aes(year, netpre, group=year))+geom_boxplot()+labs(title="Hydro",y="Net Present Values in 1945 Dollars", x="Year")
-b=ggplot(profit_solar, aes(year, netpre, group=year))+geom_boxplot()+labs(title="Solar", y="Net Present Values in 1945 Dollars", x="Year")
-ggarrange(a,b)
+a <- ggplot(profit_hydro, aes(year, netpre, group = year)) +
+  geom_boxplot() +
+  labs(title = "Hydro", y = "Net Present Values in 1945 Dollars", x = "Year")
+b <- ggplot(profit_solar, aes(year, netpre, group = year)) +
+  geom_boxplot() +
+  labs(title = "Solar", y = "Net Present Values in 1945 Dollars", x = "Year")
+ggarrange(a, b)
 
 # put on one graph
-ggplot(profit_hydro, aes(year, netpre, group=year))+geom_boxplot()+labs(y="Net Present Values in 1945 Dollars", x="Year", title="Both") +
-  geom_boxplot(data=profit_solar, aes(year, netpre, group=year), fill="orange")
+ggplot(profit_hydro, aes(year, netpre, group = year)) +
+  geom_boxplot() +
+  labs(y = "Net Present Values in 1945 Dollars", x = "Year", title = "Both") +
+  geom_boxplot(data = profit_solar, aes(year, netpre, group = year), fill = "orange")
 
 # or do get a nice legend
-profit_hydro$etype="Hydro"
-profit_solar$etype="Solar"
-tmp = rbind.data.frame(profit_hydro, profit_solar)
-ggplot(tmp, aes(as.factor(year), netpre, fill=etype))+geom_boxplot()+labs(y="Net Present Values in 1945 Dollars", x="Year", fill="Power Type")+scale_fill_manual(values=c("blue","orange"))
-
+profit_hydro$etype <- "Hydro"
+profit_solar$etype <- "Solar"
+tmp <- rbind.data.frame(profit_hydro, profit_solar)
+ggplot(tmp, aes(as.factor(year), netpre, fill = etype)) +
+  geom_boxplot() +
+  labs(y = "Net Present Values in 1945 Dollars", x = "Year", fill = "Power Type") +
+  scale_fill_manual(values = c("blue", "orange"))
 ```

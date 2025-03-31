@@ -11,6 +11,20 @@ output:
     highlight: pygments
     
 ---
+# STEPS: Modeling for Problem Solving in ES
+
+Clearly define your goal (a question you want to answer, hypothesis you want to test, prediction you want to make) - as precisely as possible
+
+-   Design or Select your model
+
+-   Implement the model
+
+-   Evaluate the model and quantify uncertainty
+
+-   Apply the model to the goal
+
+-   Communicate model results
+
 
 
 #  Steps for Design and Implement your model 
@@ -193,19 +207,17 @@ load("../Data/sierraczosolar.rda")
 
 # already in the format required for the model
 head(sierraczosolar)
-
 ```
 
 # Run the model
 ```{r}
 # run the model
-solarpv(area=0.1, solar=sierraczosolar, clr="green", eunit="W")
+solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W")
 
 # run and save results - but don't plot
-site1 = solarpv(area=0.1, solar=sierraczosolar, clr="green", eunit="W", g=FALSE)
+site1 <- solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W", g = FALSE)
 site1$mean
 site1$annual
-
 ```
 
 # Point of the model is to try different options/parameters/inputs
@@ -218,11 +230,10 @@ site1$annual
 **Parameters**: panel efficiency, system performance, units, type of array (uses diffuse or not), plot Y/N
 
 ```{r}
-# consider a different pv array that only uses 
+# consider a different pv array that only uses
 # diffuse and has non standard efficiency (0.6)
-site2 = solarpv(area=0.1, solar=sierraczosolar, clr="green", eunit="W", g=FALSE, eff=0.6, etype="direct")
+site2 <- solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W", g = FALSE, eff = 0.6, etype = "direct")
 site2$mean
-
 ```
 
 
@@ -266,14 +277,13 @@ If you need it a good source to review working with *purrr* to extract items fro
 
 # Rmarkdown code for informal sensitivity
 ```{r sen1, eval=T}
-
 library(tidyverse)
 # lets try informal sensitivity analysis again, this time by varying efficiency if we don't know efficiency exactly , lets try 20 samples
 
 # use map from purrr
 # notice how map adds the one parameter that is missing from the input list
-eff = rnorm(mean=0.6, sd = 0.1, n=20)
-site2 = eff %>% map(~solarpv( area=0.1, solar=sierraczosolar, clr="green", eunit="W", g=FALSE, etype="direct", eff=.x ))
+eff <- rnorm(mean = 0.6, sd = 0.1, n = 20)
+site2 <- eff %>% map(~ solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W", g = FALSE, etype = "direct", eff = .x))
 
 head(site2)
 ```
@@ -297,42 +307,49 @@ WHY: If you want the one number that is the "best guess" given uncertainty
 # Looks at some code
 
 ```{r sen2, eval=T}
-# this is pretty messy - but we can extract a useful data structure,lets say we want 
+# this is pretty messy - but we can extract a useful data structure,lets say we want
 # just the annual data (not the mean annual time series), and then reformat as a data frame with nice column names
-tmp = map_df(site2,`[`, c("annual")) 
+tmp <- map_df(site2, `[`, c("annual"))
 
-site2df = data.frame(year = tmp$annual$year, elect= tmp$annual$elect)
+site2df <- data.frame(year = tmp$annual$year, elect = tmp$annual$elect)
 # get rid of that pesk first year
 
-site2df = subset(site2df, year > 1944)
+site2df <- subset(site2df, year > 1944)
 # now we could plot
-ggplot(site2df, aes(year,elect, group=year ))+geom_boxplot()+labs(y="Electricity generated in W")
+ggplot(site2df, aes(year, elect, group = year)) +
+  geom_boxplot() +
+  labs(y = "Electricity generated in W")
 
 # we also might want an average across parameter uncertainty
-site2_average = site2df %>% group_by(year) %>% dplyr::summarize(elect=mean(elect))
+site2_average <- site2df %>%
+  group_by(year) %>%
+  dplyr::summarize(elect = mean(elect))
 
 # now add this to the plot - note that we remove the grouping by using group=1
-ggplot(site2df, aes(year,elect, group=year))+geom_boxplot()+labs(y="Electricity in W")+
-  geom_line(data=site2_average, aes(year, elect, group=1), col="orange")
+ggplot(site2df, aes(year, elect, group = year)) +
+  geom_boxplot() +
+  labs(y = "Electricity in W") +
+  geom_line(data = site2_average, aes(year, elect, group = 1), col = "orange")
 
 # we could also plot how the mean annual electricity varies with efficiency (eff from above)
 site2[[1]]
 
-tmp = map_df(site2,`[`, c("mean")) 
+tmp <- map_df(site2, `[`, c("mean"))
 
 # how variable is electricity generation (mean over all time) with uncertainty in solar efficiency
 
-site2_mean = data.frame(eff=eff, elect= tmp)
-ggplot(site2_mean, aes(y=mean))+geom_boxplot()+
-  labs(x="Electricity in W")
+site2_mean <- data.frame(eff = eff, elect = tmp)
+ggplot(site2_mean, aes(y = mean)) +
+  geom_boxplot() +
+  labs(x = "Electricity in W")
 
 # or to see what the sensitivity looks like
-ggplot(site2_mean, aes(eff, mean))+geom_point()+
-  labs(y="Electricity in W", x="Solar Efficiency")
+ggplot(site2_mean, aes(eff, mean)) +
+  geom_point() +
+  labs(y = "Electricity in W", x = "Solar Efficiency")
 
 # my best guess
 mean(site2_mean$mean)
-
 ```
 
 

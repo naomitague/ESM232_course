@@ -5,12 +5,12 @@
 #' @param K maximum pop (carrying capacity)
 #' @return population at time T
 #'
-exppop = function(T,P0,r, K) {
-    # analytical calculation of population
-    P = P0 * exp(r*T)
-    # check to see if greater than carrying capacity
-    if (P > K) {
-      P = K
-    }
-    return(P)
+exppop <- function(T, P0, r, K) {
+  # analytical calculation of population
+  P <- P0 * exp(r * T)
+  # check to see if greater than carrying capacity
+  if (P > K) {
+    P <- K
+  }
+  return(P)
 }

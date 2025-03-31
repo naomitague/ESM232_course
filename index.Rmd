@@ -16,12 +16,10 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Learn more about publishing to GitHub Pages at:
 # https://rstudio.github.io/distill/publish_website.html#github-pages
-
 ```
 
 ```{r, out.width = "100%", fig.cap = "Image: A hillside a bloom - a place where I run my ecohydrologic model RHESSYs" }
-
-# UPDATE IMAGE HERE 
+# UPDATE IMAGE HERE
 # or copy/paste this code elsewhere, updating the file path, to add other images to your site!
 knitr::include_graphics("img/flower-hill.jpg")
 ```

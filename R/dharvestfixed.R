@@ -1,4 +1,3 @@
-
 #'  Logistic population growth derivative with harvesting
 #' @param time time since start
 #' @param P population
@@ -9,14 +8,14 @@
 #' @param mincarbon minimum carbon to allow harvest
 #' @return derivative of population with time
 
-dharvestfixed= function(Time, biomass, parms) {
-
+dharvestfixed <- function(Time, biomass, parms) {
   # reduce harvest rate as you get below minimum carbon
 
-	if (biomass < parms$mincarbon)
-	  db = parms$r*biomass*(1-biomass/parms$K)
-	else
-	  db = parms$r * biomass * (1- biomass/parms$K) - parms$harv
+  if (biomass < parms$mincarbon) {
+    db <- parms$r * biomass * (1 - biomass / parms$K)
+  } else {
+    db <- parms$r * biomass * (1 - biomass / parms$K) - parms$harv
+  }
 
-	return(list(db))
+  return(list(db))
 }

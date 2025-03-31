@@ -9,83 +9,83 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r stabilitynew}
-
 source("../R/lotvmodKharvest.R")
 # set parameter list
-pars = data.frame(rprey=0.95, alpha=0.01, eff=0.6,pmort=0.4, K=2000, harvest=10, minharvest=50)
+pars <- data.frame(rprey = 0.95, alpha = 0.01, eff = 0.6, pmort = 0.4, K = 2000, harvest = 10, minharvest = 50)
 
 
-# want to learn about sensitivity to growth rate (r) and carrying capacity 
+# want to learn about sensitivity to growth rate (r) and carrying capacity
 # set the number of parameters
-np=200
-K = rnorm(mean=2000, sd=20, n=np)
-rprey = rnorm(mean=0.95, sd=0.03,n=np)
-pmort = rnorm(mean=0.4, sd=0.03,n=np)
-alpha= rnorm(mean=0.01, sd=0.005, n=np)
-eff= rnorm(mean=0.6, sd=0.01, n=np)
-harvest = runif(min=0, max=80, n=np)
-minharvest_mult = runif(min=1, max=10, n=np)
-X1 = cbind.data.frame(rprey=rprey, K=K, alpha=alpha, eff=eff, pmort=pmort, harvest=harvest, minharvest_mult=minharvest_mult)
+np <- 200
+K <- rnorm(mean = 2000, sd = 20, n = np)
+rprey <- rnorm(mean = 0.95, sd = 0.03, n = np)
+pmort <- rnorm(mean = 0.4, sd = 0.03, n = np)
+alpha <- rnorm(mean = 0.01, sd = 0.005, n = np)
+eff <- rnorm(mean = 0.6, sd = 0.01, n = np)
+harvest <- runif(min = 0, max = 80, n = np)
+minharvest_mult <- runif(min = 1, max = 10, n = np)
+X1 <- cbind.data.frame(rprey = rprey, K = K, alpha = alpha, eff = eff, pmort = pmort, harvest = harvest, minharvest_mult = minharvest_mult)
 
 
 # repeat to get our second set of samples
-np=200
-K = rnorm(mean=2000, sd=20, n=np)
-rprey = rnorm(mean=0.95, sd=0.03,n=np)
-pmort = rnorm(mean=0.4, sd=0.03,n=np)
-alpha= rnorm(mean=0.01, sd=0.005, n=np)
-eff= rnorm(mean=0.6, sd=0.01, n=np)
-harvest = runif(min=0, max=80, n=np)
-minharvest_mult = runif(min=1, max=10, n=np)
-X2 = cbind.data.frame(rprey=rprey, K=K, alpha=alpha, eff=eff, pmort=pmort, harvest=harvest, minharvest_mult=minharvest_mult)
+np <- 200
+K <- rnorm(mean = 2000, sd = 20, n = np)
+rprey <- rnorm(mean = 0.95, sd = 0.03, n = np)
+pmort <- rnorm(mean = 0.4, sd = 0.03, n = np)
+alpha <- rnorm(mean = 0.01, sd = 0.005, n = np)
+eff <- rnorm(mean = 0.6, sd = 0.01, n = np)
+harvest <- runif(min = 0, max = 80, n = np)
+minharvest_mult <- runif(min = 1, max = 10, n = np)
+X2 <- cbind.data.frame(rprey = rprey, K = K, alpha = alpha, eff = eff, pmort = pmort, harvest = harvest, minharvest_mult = minharvest_mult)
 
 
 
 # create our sobel object and get sets ofparameters for running the model
-sens_PP = sobolSalt(model = NULL,X1, X2, nboot = 300)
+sens_PP <- sobolSalt(model = NULL, X1, X2, nboot = 300)
 
 # name parameter sets...
-colnames(sens_PP$X) = c("rprey","K","alpha","eff","pmort","harvest","minharvest_mult")
+colnames(sens_PP$X) <- c("rprey", "K", "alpha", "eff", "pmort", "harvest", "minharvest_mult")
 
 
-# our metrics 
+# our metrics
 # lets say we  want the maximum and minimum  of both predictor and prey
 
-compute_metrics = function(result) {
-  preylate = mean(result$prey[400:500])
-  predlate = mean(result$prey[400:500])
-return(list(preylate=preylate, predlate=predlate))}
+compute_metrics <- function(result) {
+  preylate <- mean(result$prey[400:500])
+  predlate <- mean(result$prey[400:500])
+  return(list(preylate = preylate, predlate = predlate))
+}
 
 # build a wrapper function
 
 
-p_wrapper = function(rprey,alpha, eff, pmort, K, harvest, minharvest_mult, currpop, days, func) {
-#    parms = list(rprey=rprey, alpha=alpha, eff=eff, pmort=pmort, K=K, harvest=harvest, minharvest=harvest*minharvest_mult)
-parms = list(rprey=0.95, alpha=0.01, eff=0.6,pmort=0.4, K=2000, harvest=harvest, minharvest=harvest*minharvest_mult)
-    result = ode(y=currpop, times=days, func=func, parms=parms) 
-    colnames(result)=c("time","prey","pred")
+p_wrapper <- function(rprey, alpha, eff, pmort, K, harvest, minharvest_mult, currpop, days, func) {
+  #    parms = list(rprey=rprey, alpha=alpha, eff=eff, pmort=pmort, K=K, harvest=harvest, minharvest=harvest*minharvest_mult)
+  parms <- list(rprey = 0.95, alpha = 0.01, eff = 0.6, pmort = 0.4, K = 2000, harvest = harvest, minharvest = harvest * minharvest_mult)
+  result <- ode(y = currpop, times = days, func = func, parms = parms)
+  colnames(result) <- c("time", "prey", "pred")
   # get metrics
-  metrics=compute_metrics(as.data.frame(result))
+  metrics <- compute_metrics(as.data.frame(result))
   return(metrics)
 }
 
 
 # run our model for all parameters and extract the results
-currpop=c(prey=1, pred=1)
-days = seq(from=1,to=500)
-allresults = as.data.frame(sens_PP$X) %>% pmap(p_wrapper, currpop=currpop, days=days, func=lotvmodKharvest)
- 
+currpop <- c(prey = 1, pred = 1)
+days <- seq(from = 1, to = 500)
+allresults <- as.data.frame(sens_PP$X) %>% pmap(p_wrapper, currpop = currpop, days = days, func = lotvmodKharvest)
+
 # take results back to unlisted form
-allres = allresults %>% map_dfr(`[`,c("predlate","preylate"))
-allres = cbind.data.frame(allres, sens_PP$X)
+allres <- allresults %>% map_dfr(`[`, c("predlate", "preylate"))
+allres <- cbind.data.frame(allres, sens_PP$X)
 
-ggplot(allres, aes(harvest, preylate, col=minharvest_mult))+geom_point()
+ggplot(allres, aes(harvest, preylate, col = minharvest_mult)) +
+  geom_point()
 
-allres$preylate_clean = ifelse(is.na(allres$preylate),0, allres$preylate)
-sens_PP_preylate = sens_PP %>% sensitivity::tell(y=allres$preylate_clean)
-rownames(sens_PP_preylate$S)=c("rprey","K","alpha","eff","pmort","harvest","hm")
+allres$preylate_clean <- ifelse(is.na(allres$preylate), 0, allres$preylate)
+sens_PP_preylate <- sens_PP %>% sensitivity::tell(y = allres$preylate_clean)
+rownames(sens_PP_preylate$S) <- c("rprey", "K", "alpha", "eff", "pmort", "harvest", "hm")
 sens_PP_preylate$S
-rownames(sens_PP_preylate$T)=c("rprey","K","alpha","eff","pmort","harvest","hm")
+rownames(sens_PP_preylate$T) <- c("rprey", "K", "alpha", "eff", "pmort", "harvest", "hm")
 sens_PP_prelate$T
-
 ```

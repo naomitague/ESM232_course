@@ -1,4 +1,3 @@
-
 #'  Logistic population growth derivative
 #' @param time time since start
 #' @param P population
@@ -7,8 +6,7 @@
 #' @param K carrying capacity
 #' @return derivative of population with time
 
-dpopgrowth = function(Time, P, parms) {
-
-	dP = parms$r * P * (1- P/parms$K)
-	return(list(dP))
+dpopgrowth <- function(Time, P, parms) {
+  dP <- parms$r * P * (1 - P / parms$K)
+  return(list(dP))
 }

@@ -1,0 +1,27 @@
+---
+title: "What is a model?"
+format: revealjs
+editor: visual
+---
+
+![](images/image2-01.png)
+
+# Mathematical Representation of this model
+
+Precipitation = Evapotranspiration + Change in Storage
+
+P = ET + ΔS
+
+(at global scales ΔS includes streamflow since that water is still "stored" in the earth)
+
+Water balance can tell you a lot
+
+![](../lectures/intro_lecture/assets/img/image2.png)
+
+# Model Goals
+
+Because models are only approximations of reality - the most important part of the modelling process is knowing **why** you want to build a model
+
+Some broad types of goals
+
+*Understanding* (how does something work, what are key drivers of responses, how do different drivers interact)

@@ -10,19 +10,18 @@
 #'
 #' @return  Conductance (mm/s)
 
-Catm = function(v, height, zm_add=2, k_o=0.1, k_d=0.7) {
+Catm <- function(v, height, zm_add = 2, k_o = 0.1, k_d = 0.7) {
+  zd <- k_d * height
+  zo <- k_o * height
 
+  zm <- height + zm_add
 
-    zd = k_d*height
-    zo = k_o*height
+  zd <- ifelse(zd < 0, 0, zd)
+  Ca <- ifelse(zo > 0,
+    v / (6.25 * log((zm - zd) / zo)**2), 0
+  )
 
-    zm = height+zm_add
-
-    zd = ifelse(zd < 0, 0, zd)
-    Ca = ifelse(zo > 0,
-     v / (6.25*log((zm-zd)/zo)**2),0)
-
-# convert to mm
-    Ca = Ca*1000
-   return(Ca)
+  # convert to mm
+  Ca <- Ca * 1000
+  return(Ca)
 }

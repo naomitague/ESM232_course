@@ -24,27 +24,30 @@ library(ggpubr)
 
 # Calibration (Review from last class)
 ```{r simple}
-
-sager = read.table("../Data/sager.txt", header=T)
+sager <- read.table("../Data/sager.txt", header = T)
 head(sager)
 
 # add date
-sager = sager %>% mutate(date = paste(day,month,year, sep="/"))
-sager$date = as.Date(sager$date,"%d/%m/%Y")
+sager <- sager %>% mutate(date = paste(day, month, year, sep = "/"))
+sager$date <- as.Date(sager$date, "%d/%m/%Y")
 
 # plot
-sagerl = sager %>% pivot_longer(cols=c("model","obs"), names_to="source",
-                                  values_to="flow")
+sagerl <- sager %>% pivot_longer(
+  cols = c("model", "obs"), names_to = "source",
+  values_to = "flow"
+)
 
 # basic plot
-p1=ggplot(sagerl, aes(date, flow, col=source, linetype=source))+geom_line()
+p1 <- ggplot(sagerl, aes(date, flow, col = source, linetype = source)) +
+  geom_line()
 
-p2=ggplot(subset(sagerl, wy==1980), aes(date, flow, col=source, linetype=source))+geom_line()+scale_y_continuous(trans="log")+labs(y="streamflow mm/day")
+p2 <- ggplot(subset(sagerl, wy == 1980), aes(date, flow, col = source, linetype = source)) +
+  geom_line() +
+  scale_y_continuous(trans = "log") +
+  labs(y = "streamflow mm/day")
 
-# look at it another way with 1:1 line 
-ggarrange(p1,p2, ncol=1)
-
-
+# look at it another way with 1:1 line
+ggarrange(p1, p2, ncol = 1)
 ```
 
 
@@ -77,38 +80,38 @@ is a different model run for Sagehen Creek
 # Read in data plot results for an example year (1974)
 
 ```{r multiple1}
+# multiple results - lets say we've run the model for multiple years,
+# each column  is streamflow for a different parameter set
+msage <- read.table("../Data/sagerm.txt", header = T)
 
-# multiple results - lets say we've run the model for multiple years, 
-#each column  is streamflow for a different parameter set
-msage = read.table("../Data/sagerm.txt", header=T)
-
-# keep track of number of simulations (e.g results for each parameter set) 
+# keep track of number of simulations (e.g results for each parameter set)
 # use as a column names
-nsim = ncol(msage)
-snames = sprintf("S%d",seq(from=1, to=nsim))
-colnames(msage)=snames
+nsim <- ncol(msage)
+snames <- sprintf("S%d", seq(from = 1, to = nsim))
+colnames(msage) <- snames
 
 
 # lets say we know the start date from our earlier output
-msage$date = sager$date
-msage$month = sager$month
-msage$year = sager$year
-msage$day = sager$day
-msage$wy = sager$wy
+msage$date <- sager$date
+msage$month <- sager$month
+msage$year <- sager$year
+msage$day <- sager$day
+msage$wy <- sager$wy
 
 # lets add observed
-msage = left_join(msage, sager[,c("obs","date")], by=c("date"))
+msage <- left_join(msage, sager[, c("obs", "date")], by = c("date"))
 
 head(msage)
 # how can we plot all results - lets plot water year 1970 otherwise its hard to see
-msagel = msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="run", values_to="flow")
+msagel <- msage %>% pivot_longer(cols = !c(date, month, year, day, wy), names_to = "run", values_to = "flow")
 
-p1=ggplot(subset(msagel, wy ==1974), aes(as.Date(date), flow, col=run))+geom_line()+theme(legend.position = "none")
+p1 <- ggplot(subset(msagel, wy == 1974), aes(as.Date(date), flow, col = run)) +
+  geom_line() +
+  theme(legend.position = "none")
 # lets add observed streamflow
-p1=p1+geom_line(data=subset(sager, wy == 1974), aes(as.Date(date), obs), size=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
+p1 <- p1 + geom_line(data = subset(sager, wy == 1974), aes(as.Date(date), obs), size = 2, col = "black", linetype = 2) + labs(y = "Streamflow", x = "Date")
 
 p1
-
 ```
 
 # Calibration Metrics
@@ -124,15 +127,15 @@ knitr::include_graphics("../img/fuzzy.jpg")
 
 
 ```{r multiple}
-
 source("../R/nse.R")
 source("../R/relerr.R")
 # subset for split sample calibration
-short_msage = subset(msage, wy < 1975)
+short_msage <- subset(msage, wy < 1975)
 
 # compute performance measures for output from all parameters
-res = short_msage %>% select(!c("date","month","year","day","wy","obs")) %>%
-      map_dbl(nse, short_msage$obs) # purrr function here! map_dbl will apply the function nse() to each column in our data frame against the observed and returns a vector
+res <- short_msage %>%
+  select(!c("date", "month", "year", "day", "wy", "obs")) %>%
+  map_dbl(nse, short_msage$obs) # purrr function here! map_dbl will apply the function nse() to each column in our data frame against the observed and returns a vector
 
 head(res)
 
@@ -140,23 +143,24 @@ head(res)
 # another example using our low flow statistics
 # use apply to compute for all the data
 source("../R/compute_lowflowmetrics_all.R")
-res = short_msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>%
-  map_df(compute_lowflowmetrics_all, o=short_msage$obs, month=short_msage$month, day=short_msage$day, year=short_msage$year, wy=short_msage$wy)
-# note here we use map_df to get a dataframe back 
+res <- short_msage %>%
+  select(-date, -month, -day, -year, -wy, -obs) %>%
+  map_df(compute_lowflowmetrics_all, o = short_msage$obs, month = short_msage$month, day = short_msage$day, year = short_msage$year, wy = short_msage$wy)
+# note here we use map_df to get a dataframe back
 
 
 # interesting to look at range of metrics - could use this to decide on
 # acceptable values
 summary(res)
 # we can add a row that links with simulation number
-res$sim = snames
+res$sim <- snames
 
 # graph range of performance measures
-resl = res %>% pivot_longer(-sim, names_to="metric", values_to="value")
+resl <- res %>% pivot_longer(-sim, names_to = "metric", values_to = "value")
 
-ggplot(resl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="free")
-
-
+ggplot(resl, aes(metric, value)) +
+  geom_boxplot() +
+  facet_wrap(~metric, scales = "free")
 ```
 
 # Explore how 'good' parameters compare with "bad" parameters
@@ -165,30 +169,33 @@ Extract out the "best" and "worst" parameter set
 
 ```{r extract}
 # select the best one based on the combined metric
-best = res[which.max(res$combined),]
+best <- res[which.max(res$combined), ]
 
 # running the model forward
 # so we can look at the full time series
 
 # lets start with streamflow estimates from best performing parameter set
- ggplot(msage, aes(date, msage[,best$sim])) + geom_line()+geom_line(aes(date, obs), col="red") 
+ggplot(msage, aes(date, msage[, best$sim])) +
+  geom_line() +
+  geom_line(aes(date, obs), col = "red")
 
- 
+
 # for comparison lets consider how worst and best parameters perform for subsequent simulations
 # focusing specifically on August streamflow
- worst = res[which.min(res$combined),]
- 
- compruns = msage %>% select(best$sim, worst$sim, date, obs, month, day, year, wy)
- compruns = subset(compruns, wy > 1970)
- compruns_mwy = compruns %>% select(-c(day,date, year)) %>% group_by(month, wy) %>% summarize(across(everything(), mean))
- 
- compruns_mwyl = compruns_mwy %>% pivot_longer(cols=!c(month,wy), names_to="sim", values_to="flow")
- compruns_mwyl %>% subset(month==8) %>% ggplot(aes(sim,flow ))+geom_boxplot()
- 
+worst <- res[which.min(res$combined), ]
 
+compruns <- msage %>% select(best$sim, worst$sim, date, obs, month, day, year, wy)
+compruns <- subset(compruns, wy > 1970)
+compruns_mwy <- compruns %>%
+  select(-c(day, date, year)) %>%
+  group_by(month, wy) %>%
+  summarize(across(everything(), mean))
 
-
-
+compruns_mwyl <- compruns_mwy %>% pivot_longer(cols = !c(month, wy), names_to = "sim", values_to = "flow")
+compruns_mwyl %>%
+  subset(month == 8) %>%
+  ggplot(aes(sim, flow)) +
+  geom_boxplot()
 ```
 
 
@@ -312,21 +319,19 @@ We can use the combined accuracy measure to define behavioural (acceptable) para
 <a id="behavioral"></a>
 
 ```{r behavioral, echo=TRUE}
-
 summary(res$combined)
 
 # 1) selecting behaviorial or acceptable parameters sets
 
-threshold = 0.3
-res_acc = subset(res, combined > threshold)
+threshold <- 0.3
+res_acc <- subset(res, combined > threshold)
 head(res_acc)
 
 # as an alternative  what if you want the top N parameter sets
-topN = 50
-tmp = res[order(res$combined,decreasing=T),]  # reorder from highest to lowest 
-res_acc=tmp[1:topN,] # select the highest 50 
+topN <- 50
+tmp <- res[order(res$combined, decreasing = T), ] # reorder from highest to lowest
+res_acc <- tmp[1:topN, ] # select the highest 50
 head(res_acc)
-
 ```
 
 # Defining weights (likelihood) for parameter sets
@@ -340,12 +345,11 @@ We want the sum of the weights to equal 1
 * note we now only work with behavioural parameter sets (in ** res_acc ** versus ** res **)
 
 ```{r weighting, echo=TRUE}
-
 # create a weight for each parameter set based on its relative accuracy - we do this so all weights sum to 1
-sum_acc=sum(res_acc$combined)
-res_acc$wt_acc=res_acc$combined/sum_acc
+sum_acc <- sum(res_acc$combined)
+res_acc$wt_acc <- res_acc$combined / sum_acc
 
-head(res_acc[,c("sim","combined","wt_acc")])
+head(res_acc[, c("sim", "combined", "wt_acc")])
 
 # look at values
 summary(res_acc$wt_acc)
@@ -353,7 +357,7 @@ summary(res_acc$wt_acc)
 # check to see that they sum to one
 sum(res_acc$wt_acc)
 
-Nacc = nrow(res_acc)
+Nacc <- nrow(res_acc)
 Nacc
 ```
 
@@ -367,38 +371,41 @@ knitr::include_graphics("../img/glue2.jpg")
 
 
 ```{r mle, echo=TRUE}
-
 # generate a streamflow as weighted average of all  acceptable parameter sets
 
-# recall that msagel is the flow data for all runs so we 
+# recall that msagel is the flow data for all runs so we
 # can link with weights from res_acc by run id
-msagel  =  msage %>% pivot_longer(cols=!c(date, month, year, day,wy, obs), names_to="sim", values_to="flow")
+msagel <- msage %>% pivot_longer(cols = !c(date, month, year, day, wy, obs), names_to = "sim", values_to = "flow")
 
 
 # subset only acceptable runs
-msagel_acc = subset(msagel, sim %in% res_acc$sim)
+msagel_acc <- subset(msagel, sim %in% res_acc$sim)
 # join with weights from res_acc, left_join will repeat weights for each day in streamflow trajectory
-msagel_acc = left_join(msagel_acc, res_acc, by="sim")
+msagel_acc <- left_join(msagel_acc, res_acc, by = "sim")
 
 # finally multiply flow by weight
-msagel_acc = msagel_acc %>% mutate(flow_wt = flow*wt_acc)
+msagel_acc <- msagel_acc %>% mutate(flow_wt = flow * wt_acc)
 
-head(msagel_acc[,c("date","obs","sim","flow","combined","wt_acc","flow_wt")])
+head(msagel_acc[, c("date", "obs", "sim", "flow", "combined", "wt_acc", "flow_wt")])
 
 # now we can average streamflow for each day from all the runs # using the weights
-aver_flow = msagel_acc %>% group_by(date) %>% dplyr::summarize(meanstr = sum(flow_wt))
+aver_flow <- msagel_acc %>%
+  group_by(date) %>%
+  dplyr::summarize(meanstr = sum(flow_wt))
 
 # add some date information or simply add to simQ
 
-ggplot(aver_flow, aes(x=date, y=meanstr))+geom_line(col="red")+labs(y="Streamflow mm/day")
+ggplot(aver_flow, aes(x = date, y = meanstr)) +
+  geom_line(col = "red") +
+  labs(y = "Streamflow mm/day")
 
 # add some of the other date info and plot a subset
-aver_flow$wy = msage$wy
-wycheck=1985
-ggplot(subset(aver_flow, wy == wycheck), aes(x=date, y=meanstr, col="model_wt"))+
-  geom_line()+labs(y="Streamflow mm/day")+
-  geom_line(data=subset(msage, wy==wycheck), aes(date, obs, col="obs")) 
-
+aver_flow$wy <- msage$wy
+wycheck <- 1985
+ggplot(subset(aver_flow, wy == wycheck), aes(x = date, y = meanstr, col = "model_wt")) +
+  geom_line() +
+  labs(y = "Streamflow mm/day") +
+  geom_line(data = subset(msage, wy == wycheck), aes(date, obs, col = "obs"))
 ```
 
 # Final step of GLUE
@@ -410,31 +417,35 @@ We could also compute quantiles rather than just mean
 We can use the `wtd.quantile()` function in the `reldist` package to do this - it computes quantiles accounting for different weights on each observation
 
 ```{r plotting, echo=TRUE}
- 
 # compute quantiles based on performance weights
-quant_flow = msagel_acc %>% group_by(date) %>% dplyr::summarize(
-  flow10=wtd.quantile(x=flow, weight=wt_acc, q=0.1),
-  flow50=wtd.quantile(x=flow, weight=wt_acc, q=0.5),
-  flow90=wtd.quantile(x=flow, weight=wt_acc, q=0.9)
-)
+quant_flow <- msagel_acc %>%
+  group_by(date) %>%
+  dplyr::summarize(
+    flow10 = wtd.quantile(x = flow, weight = wt_acc, q = 0.1),
+    flow50 = wtd.quantile(x = flow, weight = wt_acc, q = 0.5),
+    flow90 = wtd.quantile(x = flow, weight = wt_acc, q = 0.9)
+  )
 
 
 # ad observed back
-quant_flow_obs = left_join(quant_flow, msage[,c("date","month","year", "day","wy","obs")], 
-                       by=c("date"))
+quant_flow_obs <- left_join(quant_flow, msage[, c("date", "month", "year", "day", "wy", "obs")],
+  by = c("date")
+)
 
 # format for plotting
-quant_flowl = quant_flow_obs %>% pivot_longer(col=c(flow10, flow50, flow90, obs), 
-                                          values_to="flow", names_to="quantile")
+quant_flowl <- quant_flow_obs %>% pivot_longer(
+  col = c(flow10, flow50, flow90, obs),
+  values_to = "flow", names_to = "quantile"
+)
 
 # plot
-ggplot(subset(quant_flowl, wy==1985), aes(date, flow, col=quantile))+geom_line()
+ggplot(subset(quant_flowl, wy == 1985), aes(date, flow, col = quantile)) +
+  geom_line()
 
 # to see low flows, transform y-axis
-ggplot(subset(quant_flowl, wy==1980), aes(date, flow, col=quantile))+
-  geom_line()+scale_y_continuous(trans="log")
-
-
+ggplot(subset(quant_flowl, wy == 1980), aes(date, flow, col = quantile)) +
+  geom_line() +
+  scale_y_continuous(trans = "log")
 ```
 
 # Extra Credit

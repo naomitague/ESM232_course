@@ -105,21 +105,20 @@ source("../R/dexppopK.R")
 
 dexppopK
 # set parameters
-forestparms = list(K=100,r=0.2)
+forestparms <- list(K = 100, r = 0.2)
 
 # create a time sequence
-tm = seq(from=1,to=100)
+tm <- seq(from = 1, to = 100)
 
 # start a small forest
-postfire_initial_carbon = 2
+postfire_initial_carbon <- 2
 
 # watch it grow
-forest = ode(y=postfire_initial_carbon, times=tm, dexppopK, parms=forestparms)
+forest <- ode(y = postfire_initial_carbon, times = tm, dexppopK, parms = forestparms)
 
-colnames(forest)=c("time","carbon")
-ggplot(as.data.frame(forest),aes(time, carbon) )+geom_line()
-
-
+colnames(forest) <- c("time", "carbon")
+ggplot(as.data.frame(forest), aes(time, carbon)) +
+  geom_line()
 ```
 
 # Endogenous Example - Regular Harvest
@@ -144,21 +143,19 @@ I also changed the variable names to be more meaningful
 
 
 ```{r harvest}
-
 # fixed amount per year
 source("../R/dharvest.R")
 dharvest
 
 # try it out
-tm = seq(from=1, to=500)
-Cinitial = 30
-gps = list(harv=0.1, K=100, r=0.2)
-res = ode(Cinitial,tm, dharvest, gps)
-colnames(res)=c("time","carbon")
+tm <- seq(from = 1, to = 500)
+Cinitial <- 30
+gps <- list(harv = 0.1, K = 100, r = 0.2)
+res <- ode(Cinitial, tm, dharvest, gps)
+colnames(res) <- c("time", "carbon")
 
-ggplot(as.data.frame(res), aes(time, carbon))+geom_point()
-
-
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point()
 ```
 
 # How does harvesting rate effect carbon 
@@ -173,32 +170,32 @@ Compute trajectories of forest biomass (or carbon) over time - given different h
 # My code
 
 ```{r harvest2}
-
 # what if we harvest a a much greater rates
 # lets vary the harvest rates from 0.0 to 0.4
-harvestr = seq(from=0.0, to=0.4, by=0.025)
+harvestr <- seq(from = 0.0, to = 0.4, by = 0.025)
 
 # save all of the trajectories
 # use a wrapper function to just return the carbon trajectories from ODE output
-getcarbon = function(Cinitial, tm, harv, K, r, hfunc) {
-  gps = list(harv=harv, K=K, r=r)
-  res = ode(Cinitial,tm, hfunc, gps)
-  colnames(res)=c("time","carbon")
-  res=as.data.frame(res)
-  return(carbon=res$carbon)
+getcarbon <- function(Cinitial, tm, harv, K, r, hfunc) {
+  gps <- list(harv = harv, K = K, r = r)
+  res <- ode(Cinitial, tm, hfunc, gps)
+  colnames(res) <- c("time", "carbon")
+  res <- as.data.frame(res)
+  return(carbon = res$carbon)
 }
 
 # apply this function to all harvest values
-res = harvestr %>% map_dfc(~getcarbon( Cinitial=Cinitial, tm=tm, K=100, r=0.2, hfun=dharvest, harv=.x))
+res <- harvestr %>% map_dfc(~ getcarbon(Cinitial = Cinitial, tm = tm, K = 100, r = 0.2, hfun = dharvest, harv = .x))
 # rows are time, columns are carbon for each harvest scenario
-colnames(res)=harvestr
-res=as.data.frame(res)
-res$time=tm
+colnames(res) <- harvestr
+res <- as.data.frame(res)
+res$time <- tm
 head(res)
 
 # put in to a form where we can plot
-resl = gather(res, key="harvestr",value="carbon", -time)
-ggplot(resl,aes(time, carbon, col=harvestr))+geom_line()
+resl <- gather(res, key = "harvestr", value = "carbon", -time)
+ggplot(resl, aes(time, carbon, col = harvestr)) +
+  geom_line()
 
 
 # notice that stable forest value changes with harvest rates
@@ -206,8 +203,8 @@ ggplot(resl,aes(time, carbon, col=harvestr))+geom_line()
 # notes that some forests are not stable - (or forest size goes to zero)
 
 # see this at the beginning - plot the first 10 years
-ggplot(subset(resl, time < 10),aes(time, carbon, col=harvestr))+geom_line()
-
+ggplot(subset(resl, time < 10), aes(time, carbon, col = harvestr)) +
+  geom_line()
 ```
 
 # Parameter Interactions
@@ -236,86 +233,89 @@ Sensitivity of what? What do we care about?
 We will design a function to compute metrics and a wrapper to make this easy
 
 ```{r harvestsend}
-
 # fixed amount per year
 source("../R/dharvest.R")
 
 # compute our two metrics of interest - harvest after 10 and 50 years
 # make it general in case we want to use other times
-compute_short_long_C = function(carbontime, short=10, long=50) {
- Cshort = carbontime %>% subset(time==short) %>% select(C)
- Clong = carbontime %>% subset(time==long) %>% select(C)
- # use as numeric to clean up
-return(list(Cshort=as.numeric(Cshort), Clong=as.numeric(Clong)))}
+compute_short_long_C <- function(carbontime, short = 10, long = 50) {
+  Cshort <- carbontime %>%
+    subset(time == short) %>%
+    select(C)
+  Clong <- carbontime %>%
+    subset(time == long) %>%
+    select(C)
+  # use as numeric to clean up
+  return(list(Cshort = as.numeric(Cshort), Clong = as.numeric(Clong)))
+}
 
 # now lets get our sample parameters
 # lets assume a uniform distribution of harvest rates
 # and of normal growth rates
-np=200
+np <- 200
 
-r = rnorm(mean=0.3, sd=0.05, n=np)
-harv = runif(min=0.0, max=0.4, n=np)
-K = 
-X1 = cbind.data.frame(r=r, harv=harv)
+r <- rnorm(mean = 0.3, sd = 0.05, n = np)
+harv <- runif(min = 0.0, max = 0.4, n = np)
+K <-
+  X1 <- cbind.data.frame(r = r, harv = harv)
 
 # repeat to get our second set of samples
-r = rnorm(mean=0.3, sd=0.05, n=np)
-harv = runif(min=0.0, max=0.4, n=np)
-X2 = cbind.data.frame(r=r, harv=harv)
+r <- rnorm(mean = 0.3, sd = 0.05, n = np)
+harv <- runif(min = 0.0, max = 0.4, n = np)
+X2 <- cbind.data.frame(r = r, harv = harv)
 
 # create our sobel object and get sets of parameters for running the model
 
-sens_forest = sobolSalt(model = NULL,X1, X2, nboot = 300)
-colnames(sens_forest$X)= c("r","harv")
+sens_forest <- sobolSalt(model = NULL, X1, X2, nboot = 300)
+colnames(sens_forest$X) <- c("r", "harv")
 
 head(sens_forest$X)
 
 # do a quick test
 # try it out
-tm = seq(from=1, to=50)
-Cinitial = 30
-parms = list(r=sens_forest$X[1,1], harv=sens_forest$X[1,2], K=100)
+tm <- seq(from = 1, to = 50)
+Cinitial <- 30
+parms <- list(r = sens_forest$X[1, 1], harv = sens_forest$X[1, 2], K = 100)
 
-res = ode(y=Cinitial,times=tm, func=dharvest, parms=parms)
-res=as.data.frame(res)
-colnames(res)=c("time","C")
+res <- ode(y = Cinitial, times = tm, func = dharvest, parms = parms)
+res <- as.data.frame(res)
+colnames(res) <- c("time", "C")
 
 compute_short_long_C(res)
-
 ```
 # Build our wrapper function and run for all the parameter sets
 
 ```{r}
-
 # use a wrapper function to just return the carbon trajectories
-p_wrapper = function(r,harv, K, Cinitial, simtimes, odefunc, metricfunc) {
-    parms = list(r=r, K=K, harv=harv)
-    result = ode(y=Cinitial, times=simtimes, func=odefunc, parms=parms) 
-    result=as.data.frame(result)
-   colnames(result)=c("time","C")
+p_wrapper <- function(r, harv, K, Cinitial, simtimes, odefunc, metricfunc) {
+  parms <- list(r = r, K = K, harv = harv)
+  result <- ode(y = Cinitial, times = simtimes, func = odefunc, parms = parms)
+  result <- as.data.frame(result)
+  colnames(result) <- c("time", "C")
   # get metrics
-  metrics=metricfunc(result)
+  metrics <- metricfunc(result)
   return(metrics)
 }
 
 # notice how we added in K, a parameter that we are NOT varying
 
 # try it out
-tm = seq(from=1, to=50)
-Cinitial = 30
+tm <- seq(from = 1, to = 50)
+Cinitial <- 30
 
 
-allresults = as.data.frame(sens_forest$X) %>% pmap(p_wrapper, K=100, Cinitial=Cinitial, simtimes=tm, odefunc=dharvest, metricfunc=compute_short_long_C)
+allresults <- as.data.frame(sens_forest$X) %>% pmap(p_wrapper, K = 100, Cinitial = Cinitial, simtimes = tm, odefunc = dharvest, metricfunc = compute_short_long_C)
 
 # extract out results from pmap into a data frame
-allres = allresults %>% map_dfr(`[`,c("Cshort","Clong"))
+allres <- allresults %>% map_dfr(`[`, c("Cshort", "Clong"))
 # clean up the column names
-allres = as.data.frame(allres)
+allres <- as.data.frame(allres)
 
 head(allres)
 
-tmp = allres %>% gather(key="metric", value="value")
-ggplot(tmp, aes(metric, value, col=metric))+geom_boxplot()
+tmp <- allres %>% gather(key = "metric", value = "value")
+ggplot(tmp, aes(metric, value, col = metric)) +
+  geom_boxplot()
 ```
 
 # Explore more
@@ -325,25 +325,24 @@ ggplot(tmp, aes(metric, value, col=metric))+geom_boxplot()
 
 Try it
 ```{r graphs}
-
-
 # link with parameters to see how parameters together
 # impact something we care about Clong
 # report harvest as a percent for easy of interpretation
 
-allresp = cbind.data.frame(sens_forest$X, allres)
-ggplot(allresp, aes(harv*100, Clong, col=r))+geom_point()+labs(y="Forest Carbon After 50 years", x="Harvest Rate (% of current biomass)", col="Growth Rate")
+allresp <- cbind.data.frame(sens_forest$X, allres)
+ggplot(allresp, aes(harv * 100, Clong, col = r)) +
+  geom_point() +
+  labs(y = "Forest Carbon After 50 years", x = "Harvest Rate (% of current biomass)", col = "Growth Rate")
 
 # notice how we can see the impact of harvesting - and how growth rates reduce the sustainable harvest
 
 
 # sobol indices
-sens_forest_C50 = sensitivity::tell(sens_forest, allres$Clong)
-rownames(sens_forest_C50$T)=c("r","harv")
+sens_forest_C50 <- sensitivity::tell(sens_forest, allres$Clong)
+rownames(sens_forest_C50$T) <- c("r", "harv")
 sens_forest_C50$T
-rownames(sens_forest_C50$S)=c("r","harv")
+rownames(sens_forest_C50$S) <- c("r", "harv")
 sens_forest_C50$S
-
 ```
 
 # Fixed Harvest
@@ -355,36 +354,37 @@ Think about what you would need to do to make this realistic
 # Fixed Harvest Example
 
 ```{r fixed}
-
 source("../R/dharvestfixed.R")
 
 dharvestfixed
 
 # try it out with different initial conditions to watch how the system moves to a stable state
-tm = seq(from=1, to=100)
-Cinitial = 30
-gps = list(harv=2, K=1000, r=0.05, mincarbon=20)
+tm <- seq(from = 1, to = 100)
+Cinitial <- 30
+gps <- list(harv = 2, K = 1000, r = 0.05, mincarbon = 20)
 
-res = ode(Cinitial,tm, dharvestfixed, gps)
+res <- ode(Cinitial, tm, dharvestfixed, gps)
 
-colnames(res)=c("time","carbon")
+colnames(res) <- c("time", "carbon")
 head(res)
 tail(res)
 
 # notice how it fails after a certain length of time
 # try another method
-res = ode(Cinitial,tm, dharvestfixed, gps, method="euler")
-colnames(res)=c("time","carbon")
+res <- ode(Cinitial, tm, dharvestfixed, gps, method = "euler")
+colnames(res) <- c("time", "carbon")
 head(res)
 tail(res)
 
-ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
 
 
-ggplot(as.data.frame(res), aes(time, carbon))+geom_line()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_line() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
 
-#why this pattern
+# why this pattern
 ```
 

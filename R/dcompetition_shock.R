@@ -13,25 +13,22 @@
 #'  \emph{Ka}  carrying capacity of population a
 #'  \emph{Kb}. carrying capacity of population b
 #' @examples
-#'  currpop=c(a=10,b=10)
+#' currpop <- c(a = 10, b = 10)
 #  days = seq(from=1,to=100)
-#'  shock = rbinom(length(days), size=1, prob=0.2)
-#'  pars = c(ra=0.5, rb=0.3, alphaab=1.0, alphaba=1.0,   Ka=100, Kb=200, shock=shock, sena, senb)
-#' res = ode(func=dcompetition, y=currpop, times=days, parms=pars)
+#' shock <- rbinom(length(days), size = 1, prob = 0.2)
+#' pars <- c(ra = 0.5, rb = 0.3, alphaab = 1.0, alphaba = 1.0, Ka = 100, Kb = 200, shock = shock, sena, senb)
+#' res <- ode(func = dcompetition, y = currpop, times = days, parms = pars)
 #'
 #' @return  dcompetition returns a list containing the following components
 #' \describe{
 #' \item{da}{rate of change of prey populutation}
 #' \item{db}{rate of change of preditor populutation}
-#'}
+#' }
 
-dcompetition_shock = function(t, pop, pars) {
-with(as.list(c(pars,pop)), {
-da = ra*a*(1-(a+alphaab*b)/Ka)-sena*shock[t]*a
-db = rb*b*(1-(b+alphaba*a)/Kb)-senb*shock[t]*b
-return(list(c(da,db)))})
+dcompetition_shock <- function(t, pop, pars) {
+  with(as.list(c(pars, pop)), {
+    da <- ra * a * (1 - (a + alphaab * b) / Ka) - sena * shock[t] * a
+    db <- rb * b * (1 - (b + alphaba * a) / Kb) - senb * shock[t] * b
+    return(list(c(da, db)))
+  })
 }
-
-
-
-

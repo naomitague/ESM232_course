@@ -67,33 +67,41 @@ observed time series and mdoelled time series
 
   
 ```{r simple}
-
-sager = read.table("../Data/sager.txt", header=T)
+sager <- read.table("../Data/sager.txt", header = T)
 head(sager)
 
 # add date
-sager = sager %>% mutate(date = paste(day,month,year, sep="/"))
-sager$date = as.Date(sager$date,"%d/%m/%Y")
+sager <- sager %>% mutate(date = paste(day, month, year, sep = "/"))
+sager$date <- as.Date(sager$date, "%d/%m/%Y")
 
 # plot
-sagerl = sager %>% pivot_longer(cols=c("model","obs"), names_to="source",
-                                  values_to="flow")
+sagerl <- sager %>% pivot_longer(
+  cols = c("model", "obs"), names_to = "source",
+  values_to = "flow"
+)
 
 # basic plot
-ggplot(sagerl, aes(date, flow, col=source, linetype=source))+geom_line()
+ggplot(sagerl, aes(date, flow, col = source, linetype = source)) +
+  geom_line()
 
 # change axis to get a closer look at performance at low values
 # when you have high dynamic range (lots of large and small values), taking log can help
 # with visualization
-ggplot(sagerl, aes(date, flow, col=source, linetype=source))+geom_line()+scale_y_continuous(trans="log")+labs(y="streamflow mm/day")
+ggplot(sagerl, aes(date, flow, col = source, linetype = source)) +
+  geom_line() +
+  scale_y_continuous(trans = "log") +
+  labs(y = "streamflow mm/day")
 
 # focus on a shorter time period to see more closely
-ggplot(subset(sagerl, wy==1977), aes(date, flow, col=source, linetype=source))+geom_line()+scale_y_continuous(trans="log")+labs(y="streamflow mm/day")
+ggplot(subset(sagerl, wy == 1977), aes(date, flow, col = source, linetype = source)) +
+  geom_line() +
+  scale_y_continuous(trans = "log") +
+  labs(y = "streamflow mm/day")
 
 # consider as x-y graph to find biass
-ggplot(sager, aes(obs, model))+geom_point()+geom_abline(intercept=0, slope=1, col="red")
-
-
+ggplot(sager, aes(obs, model)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, col = "red")
 ```
 
 
@@ -103,30 +111,35 @@ from a hydrologic model applied to a Sierra watershed
 # Graph
 
 ```{r simple2}
-
-sager = read.table("../Data/sager.txt", header=T)
+sager <- read.table("../Data/sager.txt", header = T)
 head(sager)
 
 # add date
-sager = sager %>% mutate(date = paste(day,month,year, sep="/"))
-sager$date = as.Date(sager$date,"%d/%m/%Y")
+sager <- sager %>% mutate(date = paste(day, month, year, sep = "/"))
+sager$date <- as.Date(sager$date, "%d/%m/%Y")
 
 # plot
-sagerl = sager %>% pivot_longer(cols=c("model","obs"), names_to="source",
-                                  values_to="flow")
+sagerl <- sager %>% pivot_longer(
+  cols = c("model", "obs"), names_to = "source",
+  values_to = "flow"
+)
 
 # basic plot
-ggplot(sagerl, aes(date, flow, col=source, linetype=source))+geom_line()
+ggplot(sagerl, aes(date, flow, col = source, linetype = source)) +
+  geom_line()
 
 # change access to get a closer look at performance at low values
 # when you have high dynamic range (lots of large and small values), taking log can help
 # with visualization
-ggplot(sagerl, aes(date, flow, col=source, linetype=source))+geom_line()+scale_y_continuous(trans="log")+labs(y="streamflow mm/day")
+ggplot(sagerl, aes(date, flow, col = source, linetype = source)) +
+  geom_line() +
+  scale_y_continuous(trans = "log") +
+  labs(y = "streamflow mm/day")
 
-# look at it another way with 1:1 line 
-ggplot(sager, aes(obs, model))+geom_point()+geom_abline(intercept=0, slope=1, col="red")
-
-
+# look at it another way with 1:1 line
+ggplot(sager, aes(obs, model)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, col = "red")
 ```
 
 
@@ -162,8 +175,6 @@ over or underestimating
 
 
 ```{r, evals}
-
-
 source("../R/nse.R")
 
 source("../R/relerr.R")
@@ -174,13 +185,11 @@ nse
 relerr
 cper
 
-nse(m=sager$model, o=sager$obs)
+nse(m = sager$model, o = sager$obs)
 
-relerr(m=sager$model, o=sager$obs)*100
+relerr(m = sager$model, o = sager$obs) * 100
 
-cper(m=sager$model, o=sager$obs, weight.nse=0.8)
-
-
+cper(m = sager$model, o = sager$obs, weight.nse = 0.8)
 ```
 
 # Scale and subsetting
@@ -198,19 +207,22 @@ Performance also depends on the time scale and period that you are evaluating
   
 ```{r, timesteps}
 # try a different time step
-sager_wy = sager %>% group_by(wy) %>% summarize(model=sum(model), obs=sum(obs))
+sager_wy <- sager %>%
+  group_by(wy) %>%
+  summarize(model = sum(model), obs = sum(obs))
 
 nse(sager_wy$model, sager_wy$obs)
-cper(m=sager_wy$model, o=sager_wy$obs, weight.nse=0.8)
+cper(m = sager_wy$model, o = sager_wy$obs, weight.nse = 0.8)
 
 # just look at august flow
 # first sum by month
-tmp = sager %>% group_by(wy, month) %>% summarize(model=sum(model), obs=sum(obs))
+tmp <- sager %>%
+  group_by(wy, month) %>%
+  summarize(model = sum(model), obs = sum(obs))
 
 # now extract august
-sager_aug = subset(tmp, month==8)
+sager_aug <- subset(tmp, month == 8)
 cor(sager_aug$model, sager_aug$obs)
-
 ```
 
 #  Exercise on your own
@@ -240,16 +252,14 @@ mymetric = function(combinedataframe) {...
 
 
 ```{r, multimetric}
-
 # turn your evaluation metric into a function
 source("../R/compute_lowflowmetrics.R")
 compute_lowflowmetrics
 
-compute_lowflowmetrics(m=sager$model,o=sager$obs, month=sager$month, day=sager$day, year=sager$year, wy=sager$wy)
+compute_lowflowmetrics(m = sager$model, o = sager$obs, month = sager$month, day = sager$day, year = sager$year, wy = sager$wy)
 
 # use different low flow months
-compute_lowflowmetrics(m=sager$model,o=sager$obs, month=sager$month, day=sager$day, year=sager$year, wy=sager$wy, low_flow_months = c(7:9))
-
+compute_lowflowmetrics(m = sager$model, o = sager$obs, month = sager$month, day = sager$day, year = sager$year, wy = sager$wy, low_flow_months = c(7:9))
 ```
   
 # Combining  multiple metrics into a single value 
@@ -305,37 +315,39 @@ $$
 
 
 ```{r combined}
+perf <- compute_lowflowmetrics(m = sager$model, o = sager$obs, month = sager$month, day = sager$day, year = sager$year, wy = sager$wy, low_flow_months = c(7:9))
 
-perf = compute_lowflowmetrics(m=sager$model,o=sager$obs, month=sager$month, day=sager$day, year=sager$year, wy=sager$wy, low_flow_months = c(7:9))
+perf <- as.data.frame((perf))
 
-perf = as.data.frame((perf))
-
-# remember you want error to be low but correlation to be high 
+# remember you want error to be low but correlation to be high
 # so we need to transform in some way
 
 # normalize by max error = if error is greater than this we don't care
 # can try many ideas -  maybe 50% of mean daily summer observed low flow
-tmp = sager %>% subset(month %in% c(7:9)) 
-errmax = mean(tmp$obs)*0.5
+tmp <- sager %>% subset(month %in% c(7:9))
+errmax <- mean(tmp$obs) * 0.5
 errmax
 
-perf = perf %>% mutate(annual_min_err_trans = max(0,(1-abs(annual_min_err/errmax) )))
-      
-# for monthly we can do a similar thing to find maximum allowable error   
-tmp = sager %>% subset(month %in% c(7:9)) %>% group_by(wy, month) %>% summarize(obs=sum(obs))
+perf <- perf %>% mutate(annual_min_err_trans = max(0, (1 - abs(annual_min_err / errmax))))
 
-errmax = mean(tmp$obs)*0.5
- 
-perf = perf %>% mutate(low_month_err_trans = max(0,(1-abs(low_month_err/errmax) )))
+# for monthly we can do a similar thing to find maximum allowable error
+tmp <- sager %>%
+  subset(month %in% c(7:9)) %>%
+  group_by(wy, month) %>%
+  summarize(obs = sum(obs))
+
+errmax <- mean(tmp$obs) * 0.5
+
+perf <- perf %>% mutate(low_month_err_trans = max(0, (1 - abs(low_month_err / errmax))))
 
 # now we have 4 measures that we can combine together
 
-perf = perf %>% mutate(combined = (annual_min_cor + annual_min_err_trans + low_month_err_trans + low_month_cor)/4)
+perf <- perf %>% mutate(combined = (annual_min_cor + annual_min_err_trans + low_month_err_trans + low_month_cor) / 4)
 perf
 
 # or weight differently - we know that minimum flows are hard to get so we can weight those differently
 
-perf = perf %>% mutate(combined2 = 0.1*annual_min_cor + 0.1*annual_min_err_trans + 0.4*low_month_err_trans+ 0.4*low_month_cor)
+perf <- perf %>% mutate(combined2 = 0.1 * annual_min_cor + 0.1 * annual_min_err_trans + 0.4 * low_month_err_trans + 0.4 * low_month_cor)
 
 perf
 
@@ -343,7 +355,6 @@ perf
 source("../R/compute_lowflowmetrics_all.R")
 
 compute_lowflowmetrics_all
-
 ```
 # Your turn! Part 1: Come up with a combined metric that you think is interesting 
 
@@ -383,45 +394,47 @@ and want to see going forward how much parameter selection influences results
 Some code to help organize things
 
 ```{r multiple}
+# multiple results - lets say we've run the model for multiple years,
+# each column  is streamflow for a different parameter set
+msage <- read.table("../Data/sagerm.txt", header = T)
 
-# multiple results - lets say we've run the model for multiple years, 
-#each column  is streamflow for a different parameter set
-msage = read.table("../Data/sagerm.txt", header=T)
-
-# keep track of number of simulations (e.g results for each parameter set) 
+# keep track of number of simulations (e.g results for each parameter set)
 # use as a column names
-nsim = ncol(msage)
-snames = sprintf("S%d",seq(from=1, to=nsim))
-colnames(msage)=snames
+nsim <- ncol(msage)
+snames <- sprintf("S%d", seq(from = 1, to = nsim))
+colnames(msage) <- snames
 
 
 # lets say we know the start date from our earlier output
-msage$date = sager$date
-msage$month = sager$month
-msage$year = sager$year
-msage$day = sager$day
-msage$wy = sager$wy
+msage$date <- sager$date
+msage$month <- sager$month
+msage$year <- sager$year
+msage$day <- sager$day
+msage$wy <- sager$wy
 
 # lets add observed
-msage = left_join(msage, sager[,c("obs","date")], by=c("date"))
+msage <- left_join(msage, sager[, c("obs", "date")], by = c("date"))
 
 head(msage)
 
 # how can we plot all results - lets plot water year 1970 otherwise its hard to see
-msagel = msage %>% pivot_longer(cols=!c(date, month, year, day,wy), names_to="run", values_to="flow")
+msagel <- msage %>% pivot_longer(cols = !c(date, month, year, day, wy), names_to = "run", values_to = "flow")
 
-p1=ggplot(subset(msagel, wy == 1970), aes(as.Date(date), flow, col=run))+geom_line()+theme(legend.position = "none")
+p1 <- ggplot(subset(msagel, wy == 1970), aes(as.Date(date), flow, col = run)) +
+  geom_line() +
+  theme(legend.position = "none")
 p1
 
 # lets add observed streamflow
-p1+geom_line(data=subset(sager, wy == 1970), aes(as.Date(date), obs), size=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
+p1 + geom_line(data = subset(sager, wy == 1970), aes(as.Date(date), obs), size = 2, col = "black", linetype = 2) + labs(y = "Streamflow", x = "Date")
 
 # subset for split sample calibration
-short_msage = subset(msage, wy < 1975)
+short_msage <- subset(msage, wy < 1975)
 
 # compute performance measures for output from all parameters
-res = short_msage %>% select(!c("date","month","year","day","wy","obs")) %>%
-      map_dbl(nse, short_msage$obs) 
+res <- short_msage %>%
+  select(!c("date", "month", "year", "day", "wy", "obs")) %>%
+  map_dbl(nse, short_msage$obs)
 # purrr function here! map_dbl will apply the function nse() to each column in our data frame against the observed and returns a vector
 
 head(res)
@@ -430,48 +443,54 @@ head(res)
 # another example using our low flow statistics
 # use apply to compute for all the data
 source("../R/compute_lowflowmetrics_all.R")
-res = short_msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>%
-  map_df(compute_lowflowmetrics_all, o=short_msage$obs, month=short_msage$month, day=short_msage$day, year=short_msage$year, wy=short_msage$wy)
-# note here we use map_df to get a dataframe back 
+res <- short_msage %>%
+  select(-date, -month, -day, -year, -wy, -obs) %>%
+  map_df(compute_lowflowmetrics_all, o = short_msage$obs, month = short_msage$month, day = short_msage$day, year = short_msage$year, wy = short_msage$wy)
+# note here we use map_df to get a dataframe back
 
 
 # interesting to look at range of metrics - could use this to decide on
 # acceptable values
 summary(res)
 # we can add a row that links with simulation number
-res$sim = snames
+res$sim <- snames
 
 # graph range of performance measures
-resl = res %>% pivot_longer(-sim, names_to="metric", values_to="value")
+resl <- res %>% pivot_longer(-sim, names_to = "metric", values_to = "value")
 
-ggplot(resl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="free")
+ggplot(resl, aes(metric, value)) +
+  geom_boxplot() +
+  facet_wrap(~metric, scales = "free")
 
 
 # select the best one based on the combined metric
-best = res[which.max(res$combined),]
+best <- res[which.max(res$combined), ]
 
 # running the model forward
 # so we can look at the full time series
 
 # lets start with streamflow estimates from best performing parameter set
- ggplot(msage, aes(date, msage[,best$sim])) + geom_line()+geom_line(aes(date, obs), col="red") 
+ggplot(msage, aes(date, msage[, best$sim])) +
+  geom_line() +
+  geom_line(aes(date, obs), col = "red")
 
- 
+
 # for comparison lets consider how worst and best parameters perform for subsequent simulations
 # focusing specifically on August streamflow
- worst = res[which.min(res$combined),]
- 
- compruns = msage %>% select(best$sim, worst$sim, date, obs, month, day, year, wy)
- compruns = subset(compruns, wy > 1970)
- compruns_mwy = compruns %>% select(-c(day,date, year)) %>% group_by(month, wy) %>% summarize(across(everything(), mean))
- 
- compruns_mwyl = compruns_mwy %>% pivot_longer(cols=!c(month,wy), names_to="sim", values_to="flow")
- compruns_mwyl %>% subset(month==8) %>% ggplot(aes(sim,flow ))+geom_boxplot()
- 
+worst <- res[which.min(res$combined), ]
 
+compruns <- msage %>% select(best$sim, worst$sim, date, obs, month, day, year, wy)
+compruns <- subset(compruns, wy > 1970)
+compruns_mwy <- compruns %>%
+  select(-c(day, date, year)) %>%
+  group_by(month, wy) %>%
+  summarize(across(everything(), mean))
 
-
-
+compruns_mwyl <- compruns_mwy %>% pivot_longer(cols = !c(month, wy), names_to = "sim", values_to = "flow")
+compruns_mwyl %>%
+  subset(month == 8) %>%
+  ggplot(aes(sim, flow)) +
+  geom_boxplot()
 ```
 
 # Your turn! Part 2: Using your performance metric

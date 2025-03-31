@@ -29,7 +29,6 @@ Think about what you would need to do to make this realistic
 # Fixed Harvest Example
 
 ```{r fixed}
-
 source("../R/dharvestfixed.R")
 
 dharvestfixed
@@ -49,14 +48,13 @@ try it
 what happens?
 
 ```{r try100}
+tm <- seq(from = 1, to = 100)
+Cinitial <- 30
+gps <- list(harv = 2, K = 1000, r = 0.05, mincarbon = 20)
 
-tm = seq(from=1, to=100)
-Cinitial = 30
-gps = list(harv=2, K=1000, r=0.05, mincarbon=20)
+res <- ode(Cinitial, tm, dharvestfixed, gps)
 
-res = ode(Cinitial,tm, dharvestfixed, gps)
-
-colnames(res)=c("time","carbon")
+colnames(res) <- c("time", "carbon")
 head(res)
 tail(res)
 ```
@@ -73,23 +71,23 @@ See *ode* help for some options
 
 # example
 ```{r try2}
-
-
 # notice how it fails after a certain length of time
 # try another method
-res = ode(Cinitial,tm, dharvestfixed, gps, method="euler")
-colnames(res)=c("time","carbon")
+res <- ode(Cinitial, tm, dharvestfixed, gps, method = "euler")
+colnames(res) <- c("time", "carbon")
 head(res)
 tail(res)
 
-ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
 
 
-ggplot(as.data.frame(res), aes(time, carbon))+geom_line()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_line() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
 
-#why this pattern
+# why this pattern
 ```
 
 
@@ -129,15 +127,15 @@ using proportional harvest,  what rate leads to a stable forest
 
 ```{r stableforest}
 source("../R/dharvest.R")
-tm = seq(from=1, to=100)
-Cinitial = 30
-gps = list(harv=0.1, K=1000, r=0.05, mincarbon=20)
-res = ode(Cinitial,tm, dharvest, gps, method="euler")
-colnames(res)=c("time","carbon")
+tm <- seq(from = 1, to = 100)
+Cinitial <- 30
+gps <- list(harv = 0.1, K = 1000, r = 0.05, mincarbon = 20)
+res <- ode(Cinitial, tm, dharvest, gps, method = "euler")
+colnames(res) <- c("time", "carbon")
 
-ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Proportional Harvest of 10% per year \n Starting conditions 30kgC")
-
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Proportional Harvest of 10% per year \n Starting conditions 30kgC")
 ```
 
 
@@ -200,18 +198,18 @@ and a growth rate of 0.05, etc
 
 
 ```{r simpleapp}
-
-tm = seq(from=1, to=100)
-gps = list(harv=0.04, K=1000, r=0.05)
+tm <- seq(from = 1, to = 100)
+gps <- list(harv = 0.04, K = 1000, r = 0.05)
 
 # create a vector of current values of carbon
-Ccurr = data.frame(Ccurr=seq(from=1, to=300, by=5))
-Ccurr$derv= unlist(Ccurr$Ccurr %>% map(~dharvest(parms=gps, Time=NULL, biomass=.x) ))
+Ccurr <- data.frame(Ccurr = seq(from = 1, to = 300, by = 5))
+Ccurr$derv <- unlist(Ccurr$Ccurr %>% map(~ dharvest(parms = gps, Time = NULL, biomass = .x)))
 
-                                                  
-ggplot(Ccurr, aes(Ccurr, derv))+geom_point()+geom_hline(yintercept = 0, col="red")+
-  labs(y="Derivative\n (Rate of change of forest carbon) \n(kg/C/year)", x="Current Forest Carbon Stock (kgC)")
 
+ggplot(Ccurr, aes(Ccurr, derv)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "red") +
+  labs(y = "Derivative\n (Rate of change of forest carbon) \n(kg/C/year)", x = "Current Forest Carbon Stock (kgC)")
 ```
 
 # what do you learn from this?
@@ -226,19 +224,18 @@ our harvest rate and growth rate?
 
 
 ```{r try3}
-
 # rerun our model with new initial condition that we take from the plot
-tm = seq(from=1, to=100)
-gps = list(harv=0.04, K=1000, r=0.05)
+tm <- seq(from = 1, to = 100)
+gps <- list(harv = 0.04, K = 1000, r = 0.05)
 
-Cinitial=300
-res = ode(Cinitial,tm, dharvest, gps)
-colnames(res)=c("time","carbon")
+Cinitial <- 300
+res <- ode(Cinitial, tm, dharvest, gps)
+colnames(res) <- c("time", "carbon")
 
 
-ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Proportional Harvest of 4%year\n Starting conditions 300kgC")
-
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Proportional Harvest of 4%year\n Starting conditions 300kgC")
 ```
 
 # Using derivatives to algerbraically find stability
@@ -268,45 +265,44 @@ try repeating above with lower and higher harvest rates
 
 
 ```{r stability2}
-
 source("../R/dharvest.R")
 dharvest
 
 # given some forest characteristics - lets look at derivatives under different harvest rates
-lowHrate = 0.015
-gps = list(harv=lowHrate, K=100, r=0.05)
+lowHrate <- 0.015
+gps <- list(harv = lowHrate, K = 100, r = 0.05)
 
 # look at the derivative over a range of forest sizes
 
-findstable = data.frame(Ccurr=seq(from=1, to=100, by=5))
+findstable <- data.frame(Ccurr = seq(from = 1, to = 100, by = 5))
 # notice use of Time=NULL, and map to compute derivative
 # for different values of forest biomass
-findstable$dervHlow= unlist(findstable$Ccurr %>% map(~dharvest(parms=gps, Time=NULL, biomass=.x) ))
-                                                  
-ggplot(findstable, aes(Ccurr, dervHlow))+geom_point()+geom_hline(yintercept = 0, col="red")+
-  labs(y="Derivative\n (Rate of change of forest carbon) (kg/C/year)", x="Current Forest Carbon Stock (kgC)")
+findstable$dervHlow <- unlist(findstable$Ccurr %>% map(~ dharvest(parms = gps, Time = NULL, biomass = .x)))
+
+ggplot(findstable, aes(Ccurr, dervHlow)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "red") +
+  labs(y = "Derivative\n (Rate of change of forest carbon) (kg/C/year)", x = "Current Forest Carbon Stock (kgC)")
 
 # look at a different harvest rate
-midHrate=0.02
-gps = list(harv=midHrate, K=100, r=0.05)
-findstable$dervHmid= unlist(findstable$Ccurr %>% map(~dharvest(parms=gps, Time=NULL, biomass=.x) ))
- 
+midHrate <- 0.02
+gps <- list(harv = midHrate, K = 100, r = 0.05)
+findstable$dervHmid <- unlist(findstable$Ccurr %>% map(~ dharvest(parms = gps, Time = NULL, biomass = .x)))
+
 # try high rate
-highHrate=0.05
-gps = list(harv=highHrate, K=100, r=0.05)
-findstable$dervHhigh= unlist(findstable$Ccurr %>% map(~dharvest(parms=gps, Time=NULL, biomass=.x) ))
- 
+highHrate <- 0.05
+gps <- list(harv = highHrate, K = 100, r = 0.05)
+findstable$dervHhigh <- unlist(findstable$Ccurr %>% map(~ dharvest(parms = gps, Time = NULL, biomass = .x)))
+
 
 # plot them all together
-tmp = gather(findstable, key="HarvestRate", value="value", -Ccurr)
-ggplot(tmp, aes(Ccurr, value, color=HarvestRate))+geom_point()+geom_hline(yintercept = 0, col="black")+
-  labs(x="Forest Biomass (kgC)", y="Forest Growth Rate (kgC/year)")
+tmp <- gather(findstable, key = "HarvestRate", value = "value", -Ccurr)
+ggplot(tmp, aes(Ccurr, value, color = HarvestRate)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "black") +
+  labs(x = "Forest Biomass (kgC)", y = "Forest Growth Rate (kgC/year)")
 
 # notice how with higher harvest rates the stable population will be lower
-
-
-
-
 ```
 
 # Stability in changing systems - just looking at dervatives
@@ -319,28 +315,25 @@ If we start with a Forest Carbon of 50 and a high harvest rate what will happen
 
 Try it to find out if you are right
 ```{r  check}
-
-tm = seq(from=1, to=500)
-gps = list(harv=lowHrate, K=100, r=0.05)
-Pinitial=50
-res = ode(Pinitial,tm, dharvest, gps)
-colnames(res)=c("time","carbon")
-ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
-  labs(y="Forest Biomass (kgC)", x="Year", title="low harvest rate")
-  
-
-
-
-gps = list(harv=highHrate, K=100, r=0.05)
-Pinitial=50
-res = ode(Pinitial,tm, dharvest, gps)
-colnames(res)=c("time","carbon")
-ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
- labs(y="Forest Biomass (kgC)", x="Year", title="High Harvest Rate")
+tm <- seq(from = 1, to = 500)
+gps <- list(harv = lowHrate, K = 100, r = 0.05)
+Pinitial <- 50
+res <- ode(Pinitial, tm, dharvest, gps)
+colnames(res) <- c("time", "carbon")
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "low harvest rate")
 
 
 
 
+gps <- list(harv = highHrate, K = 100, r = 0.05)
+Pinitial <- 50
+res <- ode(Pinitial, tm, dharvest, gps)
+colnames(res) <- c("time", "carbon")
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "High Harvest Rate")
 ```
 
 # Discussion Section
@@ -361,65 +354,68 @@ Think about how you would explore stability here
 # here's what I did
 
 ```{r stability}
-
 source("../R/dharvestfixed.R")
 
 # first lets look at how the derivative varies with the size of forest
 
-carbon = seq(from=0, to=1000)
-dcarbon= unlist(carbon %>% map(dharvestfixed,Time=NULL, parms=list(r=0.05, K=1000, mincarbon=0, harv=10)))
+carbon <- seq(from = 0, to = 1000)
+dcarbon <- unlist(carbon %>% map(dharvestfixed, Time = NULL, parms = list(r = 0.05, K = 1000, mincarbon = 0, harv = 10)))
 
-a =ggplot(cbind.data.frame(carbon=carbon,dcarbon=dcarbon), aes(carbon, dcarbon))+geom_point()+geom_hline(yintercept = 0, col="red")+
-  labs(y="Derivative\n (Rate of change of forest carbon) (kg/C/year)", x="Current Forest Carbon Stock (kgC)")
-a 
+a <- ggplot(cbind.data.frame(carbon = carbon, dcarbon = dcarbon), aes(carbon, dcarbon)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "red") +
+  labs(y = "Derivative\n (Rate of change of forest carbon) (kg/C/year)", x = "Current Forest Carbon Stock (kgC)")
+a
 # try it out with different initial conditions to watch how the system moves to a stable state
-tm = seq(from=1, to=500)
-Pinitial = 500
-gps = list(harv=10, K=1000, r=0.05, mincarbon=0)
+tm <- seq(from = 1, to = 500)
+Pinitial <- 500
+gps <- list(harv = 10, K = 1000, r = 0.05, mincarbon = 0)
 
-res = ode(Pinitial,tm, dharvestfixed, gps)
-colnames(res)=c("time","carbon")
+res <- ode(Pinitial, tm, dharvestfixed, gps)
+colnames(res) <- c("time", "carbon")
 
-b=ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 10kg/year\n Starting conditions 500kgC")
-ggarrange(a,b)
+b <- ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 500kgC")
+ggarrange(a, b)
 
 #  try smaller starting condition
-tm = seq(from=1, to=500)
-Pinitial = 150
-gps = list(harv=10, K=1000, r=0.05, mincarbon=0)
+tm <- seq(from = 1, to = 500)
+Pinitial <- 150
+gps <- list(harv = 10, K = 1000, r = 0.05, mincarbon = 0)
 
-res = ode(Pinitial,tm, dharvestfixed, gps)
-colnames(res)=c("time","carbon")
+res <- ode(Pinitial, tm, dharvestfixed, gps, method = "euler")
+colnames(res) <- c("time", "carbon")
 
-c=ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
+c <- ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
 
-ggarrange(b,a,c)
+ggarrange(b, a, c)
 
 #  try other stable starting condition
-tm = seq(from=1, to=500)
+tm <- seq(from = 1, to = 500)
 
 # unstable
-Pinitial =275
+Pinitial <- 275
 # stable
-Pinitial = 277
-gps = list(harv=10, K=1000, r=0.05, mincarbon=0)
+Pinitial <- 277
+gps <- list(harv = 10, K = 1000, r = 0.05, mincarbon = 0)
 
-res = ode(Pinitial,tm, dharvestfixed, gps )
-colnames(res)=c("time","carbon")
+res <- ode(Pinitial, tm, dharvestfixed, gps)
+colnames(res) <- c("time", "carbon")
 
-ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
 
 # try a different method
-res = ode(Pinitial,tm, dharvestfixed, gps, method="euler" )
-colnames(res)=c("time","carbon")
+res <- ode(Pinitial, tm, dharvestfixed, gps, method = "euler")
+colnames(res) <- c("time", "carbon")
 
-ggplot(as.data.frame(res), aes(time, carbon))+geom_point()+
-   labs(y="Forest Biomass (kgC)", x="Year", title="Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
-
-
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
 ```
 
 

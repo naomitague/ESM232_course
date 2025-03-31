@@ -13,24 +13,21 @@
 #'  \emph{Ka}  carrying capacity of population a
 #'  \emph{Kb}. carrying capacity of population b
 #' @examples
-#'  currpop=c(a=10,b=10)
+#' currpop <- c(a = 10, b = 10)
 #  days = seq(from=1,to=100)
-#'  pars = c(ra=0.5, rb=0.3, alphaab=1.0, alphaba=1.0,  pmorta=0.2, pmortb=0.1, Ka=100, Kb=200, )
-#' res = ode(func=dcompetition, y=currpop, times=days, parms=pars)
+#' pars <- c(ra = 0.5, rb = 0.3, alphaab = 1.0, alphaba = 1.0, pmorta = 0.2, pmortb = 0.1, Ka = 100, Kb = 200, )
+#' res <- ode(func = dcompetition, y = currpop, times = days, parms = pars)
 #'
 #' @return  dcompetition returns a list containing the following components
 #' \describe{
 #' \item{da}{rate of change of prey populutation}
 #' \item{db}{rate of change of preditor populutation}
-#'}
+#' }
 
-dcompetition = function(t, pop, pars) {
-with(as.list(c(pars,pop)), {
-da = ra*a*(1-(a+alphaab*b)/Ka)
-db = rb*b*(1-(b+alphaba*a)/Kb)
-return(list(c(da,db)))})
+dcompetition <- function(t, pop, pars) {
+  with(as.list(c(pars, pop)), {
+    da <- ra * a * (1 - (a + alphaab * b) / Ka)
+    db <- rb * b * (1 - (b + alphaba * a) / Kb)
+    return(list(c(da, db)))
+  })
 }
-
-
-
-

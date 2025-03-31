@@ -121,11 +121,10 @@ what would the change in GDP be for 3% change in unemployment rate if the slope 
 
 
 ```{r, okum example}
-
 # from Okum's Law - change in GDP is a linear function of change in unemployment rate
 # note for teaching I'm coding this inline but a good practice is to code the function in its own R file
-compute_GDP_change = function( unemploy_change, slope=-1.8, intercept=3.2) {
-  delta_GDP = intercept + slope*unemploy_change
+compute_GDP_change <- function(unemploy_change, slope = -1.8, intercept = 3.2) {
+  delta_GDP <- intercept + slope * unemploy_change
   return(delta_GDP)
 }
 
@@ -135,7 +134,6 @@ compute_GDP_change(3)
 
 # what if unemployment was even more sensitive
 compute_GDP_change(3, slope = -10)
-
 ```
 
 
@@ -173,12 +171,11 @@ Here are some examples of how to create and manipulate lists
 
 ```{r lists}
 # simple list
-sale =  list(number=c(2,4,9), quality="high", what="apple", cost=4)
+sale <- list(number = c(2, 4, 9), quality = "high", what = "apple", cost = 4)
 sale
 sale$cost
 sale$number
 sale[4]
-
 ```
 
 # Lists and Functions
@@ -197,15 +194,14 @@ Lists are used to return multiple values from functions
  
 # Sample data for Biodiversity Function
 ```{r}
-
 # get the function
 source("../R/compute_diversity.R")
 
 # sampling categorical data
 # create possible values
-flower_types = c("iris","daisy","poppy","rose","dandelion","weed","violet")
+flower_types <- c("iris", "daisy", "poppy", "rose", "dandelion", "weed", "violet")
 # sample (with replacement)
-garden = sample(flower_types, size=20, replace=T)
+garden <- sample(flower_types, size = 20, replace = T)
 compute_diversity(garden)
 ```
  

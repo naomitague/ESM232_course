@@ -6,12 +6,11 @@
 #' @return relerr
 
 
-relerr = function(m,o) {
+relerr <- function(m, o) {
+  err <- m - o
+  meanobs <- mean(o)
+  meanerr <- mean(err)
 
-  err = m-o
-  meanobs = mean(o)
-  meanerr = mean(err)
-
-  res = meanerr/meanobs
+  res <- meanerr / meanobs
   return(res)
 }

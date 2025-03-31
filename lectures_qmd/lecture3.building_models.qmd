@@ -1,0 +1,397 @@
+---
+title: "Steps for building models"
+format: revealjs
+editor: visual
+---
+
+# STEPS: Modeling for Problem Solving in ES
+
+Clearly define your goal (a question you want to answer, hypothesis you want to test, prediction you want to make) - as precisely as possible
+
+-   Design or Select your model
+
+-   Implement the model
+
+-   Evaluate the model and quantify uncertainty
+
+-   Apply the model to the goal
+
+-   Communicate model results
+
+# Steps for Design and Implement your model
+
+-   Diagram your model
+
+-   Translate diagram into a mathematical representation
+
+-   Choose programming language
+
+-   Define inputs (data type, units)
+
+-   Define output (data type, units)
+
+-   Define model structure
+
+-   Write model
+
+-   Document the model (meta data)
+
+-   Test model
+
+# Building Models
+
+Modularity! (Functions)
+
+The basic building blocks of models
+
+Functions can be written in all languages; in many languages (object-oriented) like C++, Python, functions are also objects
+
+Functions are the “boxes” of the model - the transfer function that takes inputs and returns outputs
+
+More complex models - made up of multiple functions; and nested functions (and main functions that call/user other functions and control the flow - the arrows between boxes)
+
+# Modularity
+
+```{r, out.width = "25%",out.height="25%", echo=FALSE}
+knitr::include_graphics("../img/lego.png")
+```
+
+For each box/function Decide on
+
+-   Inputs and parameters
+
+-   Outputs
+
+Data types, units (time and space aggregation), names should be (use descriptive names)
+
+**IMPORTANT**
+
+Place each function in its own file (x.R), and put all functions for a given project in *R* subdirectory
+
+# What’s in the box
+
+Often more complicated than a simple single equation (regression results)
+
+So we need to think through steps are - what is connected with what
+
+Diagrams are a good place to start
+
+# Modularity - Discrete Tasks
+
+Hierarchical in level of details
+
+Big chunks (coarse detail) -\> progressively finer
+
+Note ‘tasks’ that need to be repeated
+
+All tasks should have inputs and outputs
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.jpeg")
+```
+
+# Model design flowcharts
+
+Some model designers uses standard symbols for the different model components
+
+Building Models ![](lecture2.conceptual.simple/assets/img/image14.png)
+
+# • PhD of Norman Crawford under supervision of Ray K Linsley at Stanford University in 1962
+
+Flow Charges
+
+![](lecture2.conceptual.simple/assets/img/image15.png)
+
+# SERI-Fire
+
+-   More complex model couple sub-models ( may be a loose coupling where users connects submodels)
+
+-   How do ecological and human factors interact to influence fire regimes
+
+```{r, out.width = "75%",out.height="75%", echo=FALSE}
+knitr::include_graphics("lecture2.conceptual.simple/assets/img/image9.png")
+```
+
+# Sharing Example R, Data and Rmarkdowns
+
+\[esm232_examples github site\]{https://github.com/naomitague/ESM232_Examples_S24.git}
+
+You can clone this repository and then pull before class to get example code and data
+
+Remember that git does not like having nested repositories - so keep working respoistories in separate directories
+
+# Running Models with Data
+
+\[esm232_examples github site\]{https://github.com/naomitague/ESM232_Examples_S24.git}
+
+-   solarpv.R
+-   InformalSensitivity.Rmd
+-   InformalSensitivity2.Rmd
+
+# Solar function example
+
+**Design** - function that estimates solar pv power given inputs of radiation
+
+**Model inputs**: solar radiation (daily direct and diffuse)
+
+**Model outputs**: power generated each year and average power over time
+
+**Parameters**: panel efficiency, system performance, units, type of array (uses diffuse or not), plot Y/N
+
+Some of these options such as whether to plot determine outputs from the function
+
+AND the type of array to determine whether it uses diffuse radiation, these parameters change how the function/model works
+
+# Solar function example as code (InformalSensitivity.Rmd)
+
+Model Code
+
+```{r solar, echo=FALSE}
+library(tidyverse)
+
+source("../R/solarpv.R")
+solarpv
+```
+
+# Some Data
+
+```{r}
+# read in R formatted data
+load("../Data/sierraczosolar.rda")
+
+# already in the format required for the model
+head(sierraczosolar)
+```
+
+# Run the model
+
+```{r}
+# run the model
+solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W")
+
+# run and save results - but don't plot
+site1 <- solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W", g = FALSE)
+site1$mean
+site1$annual
+```
+
+# Point of the model is to try different options/parameters/inputs
+
+**Model inputs**: solar radiation (daily direct and diffuse)
+
+**Model outputs**: power generated each year and average power over time
+
+**Parameters**: panel efficiency, system performance, units, type of array (uses diffuse or not), plot Y/N
+
+```{r}
+# consider a different pv array that only uses
+# diffuse and has non standard efficiency (0.6)
+site2 <- solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W", g = FALSE, eff = 0.6, etype = "direct")
+site2$mean
+```
+
+# Informal Sensitivity Analysis
+
+What happens when we vary parameters?
+
+**Informal** - just try varying parameters
+
+-   decide which parameter(s) and what range to vary the parameter over - what is the uncertainty? (+- 15% )?
+
+-   figure out how to efficiently run your model over parameter variation and save results as you go
+
+-   analyze the sensitivity (simply plotting for now)
+
+# Helpful tools
+
+-   Sampling
+
+    **runif**, **rnorm** (sampling from uniform and normal distributions) **seq** (for creating a sequence of numbers)
+
+-   Repeating
+
+    -   in R - *purrr* package, also *apply* family of function
+
+    -   classic *for* loops
+
+If you need it a good source to review working with *purrr* to extract items from list and repeat operations
+
+[Useful Purrr Resource](https://www.rebeccabarter.com/blog/2019-08-19_purrr/)
+
+-   we will start by using **map** - which "maps\* a function (runs it ) for a list of values, we can also use these function to extract values from a list
+
+# R code for informal sensitivity
+
+```{r sen1, eval=T}
+library(tidyverse)
+# lets try informal sensitivity analysis again, this time by varying efficiency if we don't know efficiency exactly , lets try 20 samples
+
+# use map from purrr
+# notice how map adds the one parameter that is missing from the input list
+eff <- rnorm(mean = 0.6, sd = 0.1, n = 20)
+site2 <- eff %>% map(~ solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W", g = FALSE, etype = "direct", eff = .x))
+
+head(site2)
+```
+
+# Ways to look at results from an informal sensitivity analysis
+
+-   [Box plots or Violin Plots (where box shows parameter uncertainty)]{style="color: green;"}
+
+WHY: To see how big the range of output might be relative to "uncertain" parameter range
+
+-   [Plot Response against parameter value]{style="color: green;"}
+
+WHY: To see how the parameter influences the results
+
+-   [Average across parameter uncertainty]{style="color: green;"}
+
+WHY: If you want the one number that is the "best guess" given uncertainty
+
+# Looks at some code
+
+```{r sen2, eval=T}
+# this is pretty messy - but we can extract a useful data structure,lets say we want
+# just the annual data (not the mean annual time series), and then reformat as a data frame with nice column names
+tmp <- map_df(site2, `[`, c("annual"))
+
+site2df <- data.frame(year = tmp$annual$year, elect = tmp$annual$elect)
+# get rid of that pesk first year
+
+site2df <- subset(site2df, year > 1944)
+# now we could plot
+ggplot(site2df, aes(year, elect, group = year)) +
+  geom_boxplot() +
+  labs(y = "Electricity generated in W")
+
+# we also might want an average across parameter uncertainty
+site2_average <- site2df %>%
+  group_by(year) %>%
+  dplyr::summarize(elect = mean(elect))
+
+# now add this to the plot - note that we remove the grouping by using group=1
+ggplot(site2df, aes(year, elect, group = year)) +
+  geom_boxplot() +
+  labs(y = "Electricity in W") +
+  geom_line(data = site2_average, aes(year, elect, group = 1), col = "orange")
+
+# we could also plot how the mean annual electricity varies with efficiency (eff from above)
+site2[[1]]
+
+tmp <- map_df(site2, `[`, c("mean"))
+
+# how variable is electricity generation (mean over all time) with uncertainty in solar efficiency
+
+site2_mean <- data.frame(eff = eff, elect = tmp)
+ggplot(site2_mean, aes(y = mean)) +
+  geom_boxplot() +
+  labs(x = "Electricity in W")
+
+# or to see what the sensitivity looks like
+ggplot(site2_mean, aes(eff, mean)) +
+  geom_point() +
+  labs(y = "Electricity in W", x = "Solar Efficiency")
+
+# my best guess
+mean(site2_mean$mean)
+```
+
+# ASSIGNMENT 3 Almond Yields
+
+Lobell et al., 2006 used data to build models of tree crop yield for California that captured how climate variation (place and time) might influence yield
+
+-   Yield anomaly
+
+-   Climate variables
+
+Assumptions...as you work think about what these are...
+
+# Assignment
+
+For this assignment you will work in *pairs*
+
+Your goal is to implement a simple model of almond yield anomaly response to climate
+
+-   Inputs: daily times series of minimum, maximum daily temperatures and precipitation
+
+-   Outputs: maximum, minimum and mean yield anomoly for a input time series
+
+The Lobell et al. 2006 paper will be the source for the transfer function that you will use in your model; specifically look at the equations in table 2.
+
+# What you will do - Model Set Up
+
+1.  Draw diagram to represent your model - how it will translate inputs to outputs, with parameters that shape the relationship between inputs an outputs - on your diagram list what your inputs, parameters and outputs are with units
+
+2.  Implement your diagram as an R function
+
+Here are some ideas to think though. The climate data is going to need to be processed (e.g note that the model uses climate data from a particular month - you have ALL of the climate as daily data). Here are two possible model outlines to follow
+
+● Almond_model \<- function(clim_var1, clim_var2, parameters){……}
+
+● Almond_model \<- function(clim, parameters){……}
+
+The first example is where the climate variables are separately input into the function - climate data is processed beforehand as part of model set up
+
+The second is where a climate data frame is the input in the function and you extract the useful data from it as part of the model.
+
+You can pick which option you prefer (or try both)
+
+# Run the model
+
+3.  Run your model for the **clim.txt** data that is posted on Canvas,
+
+**clim.txt** has the following columns
+
+these 4 columns tell you when climate observations were made
+
+-   *day*
+-   *month*
+-   *year*
+-   *wy* (water year)
+
+the next 3 columns are the climate observations
+
+-   maximum (*tmax_c*) daily temperature
+-   minimum (*tmin_c*) daily temperature
+-   precipitation (*precip*) on that day in mm
+
+# check your work
+
+I will tell you that
+
+-   the maximum almond yield anomaly should be approximately 1920 ton/acre
+-   the lowest almond yield anomaly should be approximately -0.027 ton/acre
+-   the mean almond yield anomaly should be approximately 182 ton/acre
+
+# Notes
+
+-   There are always multiple ways to code something in R;
+
+-   Remember that we want to strive for our code being as simple and streamline as possible.
+
+-   Style counts.
+
+    -   Make sure you choose meaningful variable names and add comments.
+    -   Include comments at the top of the function to tell the user what the inputs/outputs are and their units and format.
+
+# What to hand in on Canvas
+
+Two separate files (or a link to a repository with these files)
+
+1.  a R file that has your function definition
+2.  a Rmarkdown file that includes your conceptual model (embed as picture) and shows how you applied the function to the test climate data (*clim.txt*)
+
+# Grading Rubric
+
+Conceptual model (20 pts)
+
+-   a clear diagram that corresponds with your R function (10 pts)
+-   inputs and output and parameters shown on the diagram (10 pts)
+
+R Implementation (30 pts)
+
+-   correct function implementation (\*.R file) (10 pts)
+-   application of the function to **clim.txt** (in Rmarkdown file) (10 pts)
+-   coding practices (clear documentation, informative variables names) (10 pts)
+
+Review the following \* InformalSensitivity.Rmd \* InformalSensitivity2.Rmd

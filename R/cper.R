@@ -9,17 +9,14 @@
 #' @return  combined 0-1 performance measure
 
 
-cper = function(m,o,weight.nse=0.5, weight.relerr=0.5) {
+cper <- function(m, o, weight.nse = 0.5, weight.relerr = 0.5) {
+  nse <- nse(m, o)
+  mnse <- max(nse, 0)
 
-  nse = nse(m,o)
-  mnse = max(nse,0)
+  rel.err <- relerr(m, o)
+  merr <- 1.0 - min(1.0, abs(rel.err) / max(abs(rel.err)))
 
-  rel.err = relerr(m,o)
-  merr = 1.0-min(1.0, abs(rel.err)/max(abs(rel.err)))
-
-  combined = weight.nse*mnse + weight.relerr*merr
+  combined <- weight.nse * mnse + weight.relerr * merr
 
   return(combined)
-
 }
-
