@@ -1,0 +1,169 @@
+---
+title: "Syllabus"
+format: pdf
+editor: visual
+---
+
+# Teaching Approach
+
+Class will include a mix of lectures and in class hands-on examples, using students’ own computers.
+
+I will often provide a Quatro document for you to go through prior to class so you can learn at your own pace and
+
+# Teaching team
+
+**Instructor:** Naomi Tague (https://tagueteamlab.org/)
+
+-   **Office:** Bren Hall 4516
+-   **Office hours:** email to set a time
+-   **Email:** tague\@ucsb.edu
+
+**Teaching assistant:** Ojas Sarup
+
+-   **Office:** BH 4329 (Manzanita)
+-   **Office hours:** Friday 10:30 to 12:30
+-   **Email:** ojassarup\@ucsb.edu
+
+# Where we will be
+
+-   **Lectures:** Tues, Thur 8:00am - 9:15 am (**BH 1414**)\
+-   **Discussion Section 1** Tues 1:00pm-2:00pm (**BH 1510**)\
+-   **Discussion Section 2** Tues 2:00pm-2:50pm (**BH 1510**)
+
+please attend discussion section where. you signed up
+
+# Learning objectives
+
+-   Gain familiarity with different types of models and the situations where you might use them
+
+-   Understand how to choose the 'right model' for the job
+
+-   Know how to build simple models including
+
+    -   input-output models
+    -   basic dynamic models
+    -   matrix models
+
+-   Gain some basic skills that are useful in applying models including
+
+    -   parameter sensitivity analysis
+    -   uncertainty analysis
+    -   model calibration and evaluation
+
+# Computing
+
+-   I will assume that everyone has some basic R skills (from ESM 203, ESM 232, MEDS program courses or other courses), including how to use ggplot, and Quatro and build simple functions
+
+-   Many classes will be working classes so bring laptop to class
+
+-   Some of the material (example functions and Quatro code) will also be available on *github* I will also provide this material on *canvas* but if you are familiar with *git* then it may be faster to clone and then update the repository. We will discuss this further when we get to this part of the course
+
+# ChatGPT and other AI-tools
+
+[Interesting Paper on AI-tools in Computing Education](https://dl.acm.org/doi/pdf/10.1145/3624720)
+
+Tools
+
+-   Github Copilot (most widely used by programmers)
+-   ChatGPT
+
+(both built from CODEX by OpenAI)
+
+In 2020, test CODEX scored 78% on intro to computing test, in 2023 it scored 98%
+
+Other studies show less accuracy...depends on the problem
+
+# Using AI-tools in this course
+
+-   AI-tools great resources but effective use requires understanding how to ask good questions
+
+-   Use this course to build that understanding, think about the meta concepts. Ask yourself - What are situations you might apply a technique/idea/concept;
+
+-   You gain skills by **Practicing**
+
+-   For assignments/practice
+
+    -   **Always** write the code yourself - but you use AI-tools to help find syntax
+    -   Use AI-tools to explain other peoples code (including class examples)
+    -   Use AI-tools to help interpret error messages
+
+# Attendance
+
+-   you are expected to come to class - its part of the learning (pair-share)
+
+-   some assignments will be started and even completed in class
+
+# Tentative schedule
+
+| Week      | Lecture topics                                    |
+|-----------|---------------------------------------------------|
+| April 1   | Into: What is a model                             |
+| April 3   | Conceptual Models                                 |
+| April 8   | Using models with data                            |
+| April 10  | Complex model Example                             |
+| April 15  | Informal Sensitivity Analysis (no formal lecture) |
+| April 18. | Informal Sensitivity Analysis (no formal lecture) |
+| April 22  | Sensitivity Analysis I                            |
+| April 24  | Sensitivity Analysis II                           |
+| April 29  | Dynamic Models - Analytical Solutions             |
+| May 1     | Dynamic Models - ODE Solver                       |
+| May 6     | Sensitivity with Dynamic Models                   |
+| May 8     | Stability with Dynamic Models                     |
+| May 13    | 2 Variable/Time Series Models                     |
+| May 15    | What Makes a Good Model                           |
+| May 20    | Calibration                                       |
+| May 20/22 | Make up - Calibration Exercise                    |
+| May 22    | Optimization                                      |
+| May 27    | Discrete Models                                   |
+| May 29    | Discrete Models 2                                 |
+| June 3    | Return to Big Picture                             |
+| June 5    | Wrap Up                                           |
+
+# Assignments (Tentative Assign/Due Dates)
+
+There are 8 +1(short Q/A) assignments. Some assignments will be done in groups.
+
+| Assign/Due     | Assignment                        |
+|----------------|-----------------------------------|
+| April 1/3      | Getting to know you (Q/A)         |
+| April 5/7      | Conceptual Model                  |
+| April 8/14     | Almond Yield                      |
+| April 15/21    | Informal Sensitivity Analysis     |
+| April 24/1     | Sobel                             |
+| May 6/12       | ODE with Sobel                    |
+| May 13/2       | Two-variable Dynamics             |
+| May 20 or 22/2 | Model Calibration and Uncertainty |
+| May 29/3       | Final Assignment                  |
+|                |                                   |
+
+Assignments will vary in length but most will be short coding assignments with a 1- paragraph write up.
+
+Assignments will be submitted on [Canvas](https://www.canvas.ucsb.edu/) *Canvas* provides grading rubrics that you may find helpful.
+
+# Protocols and Guidance
+
+-   Learning to program is hard and I may not always explain in a way that is accessible to you - So if you don't understand something *ASK*
+
+-   Ideally ask in class - you will help me to learn how to explain (or find an answer if I don't know it) and you will help others
+
+    -   if you don't feel comfortable asking , reach out to me or Ojas
+
+-   Environmental modeling and the coding involved gets better with practice and play - Don't just read the Quatro - try the code, try variations on the ideas presented, make up stuff to try, get your feet wet
+
+-   Programming means making mistakes, expect it, stay calm and try again - if you get frustrated step away and come back; be creative
+
+-   **Respect and Support each other**
+
+    -   when working in groups, pay attention to your partner, if they are not at your skill level, help them learn - recognize that we all have different backgrounds
+    -   listen - different perspectives contribute to modeling - ask questions; figure out how different people *see* the world (what is there conceptual model)
+    -   you learn by helping others - do that!
+
+-   If you are really struggling, reach out to Ojas or myself, we can help (or if you just want to chat about something )
+
+# Coding Best Practices
+
+-   clear, readible (well-documented) code
+
+-   informative variable and function names
+
+-   graphs that are easy to understand (labels, legends, strategic use of color)
