@@ -420,7 +420,7 @@ Remember that git does not like having nested repositories - so keep working res
 
 **For Next Week**
 
--  Assignment 2 due Monday
+-  Assignment 2 due Monday (April 14)
 -  Assignment 3 given on Tuesday (April 15)
 -  Assignment 3 due Monday April 21
 
