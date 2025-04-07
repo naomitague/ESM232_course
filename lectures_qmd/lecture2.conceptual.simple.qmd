@@ -94,9 +94,9 @@ This is the **MOST** important step
 
 -   What processes in complex reality are your going to consider? why?
 
-- What is in the "box" that translates inputs to outputs?
+-   What is in the "box" that translates inputs to outputs?
 
-**Good questions even for machine learning models - why?** 
+**Good questions even for machine learning models - why?**
 
 # Things to think about
 
@@ -108,15 +108,11 @@ This is the **MOST** important step
 
 # Whats in the box
 
-
-
 Often more complicated than a simple single equation (regression results)
 
 So we need to think through steps are - what is connected with what
 
 Diagrams are a good place to start
-
-
 
 # Composing Diagrams
 
@@ -126,13 +122,11 @@ There are many software tools available for generating conceptual models, I like
 
 \[Diagrams.net\]{https://www.diagrams.net/}
 
-
-
 # Example
 
 ![](img/cmhydro.png)
 
-*PhD of Norman Crawford under supervision of Ray K Linsley at Stanford University in 1962* 
+*PhD of Norman Crawford under supervision of Ray K Linsley at Stanford University in 1962*
 
 # Example of a model to classify something
 
@@ -169,7 +163,6 @@ There are many software tools available for generating conceptual models, I like
     -   inputs, parameters and outputs
     -   relationships/processes
     -   assumptions
-
 
 # Types of Model
 

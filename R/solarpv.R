@@ -14,7 +14,7 @@
 #' @return annual (power for each year), avg (average power) (see eunits for units)
 
 solarpv <- function(area, eff = 0.8, PR = 0.75, solar, clr = "blue", eunits = "J", etype = "both", g = TRUE, ethresh = 10000) {
-  # find energy to use depending on use options
+  # calculate total daily energy - depending on whether array can use diffuse
   if (etype == "diffuse") {
     solar$total <- solar$Kdown_diffuse
   } else {
@@ -25,22 +25,25 @@ solarpv <- function(area, eff = 0.8, PR = 0.75, solar, clr = "blue", eunits = "J
     }
   }
 
-  # apply efficiency scaled to 0 when below threshold
+  # array efficiency declines linearly when solar is below a threshold
+  # make an internal function to adjust efficiency based on this
+
   adjusteff <- function(x, ethresh, eff) {
     result <- ifelse((x > ethresh), eff * x, x * eff * (max(0, x / ethresh)))
     return(result)
   }
 
+  # apply the efficiency function to the solar radiation data
   solar <- solar %>% mutate(Kadj = adjusteff(total, ethresh = ethresh, eff = eff))
 
 
-  # total annual radiation
+  # aggregate by year to get annual radiation totals
   annualsolar <- solar %>%
     group_by(year) %>%
     dplyr::summarize(Kadj = sum(Kadj))
 
 
-  # compute electricity
+  # compute electricity based on annual radiation
   annualsolar$elect <- area * PR * annualsolar$Kadj
 
   ylbs <- "kJ/yr"
