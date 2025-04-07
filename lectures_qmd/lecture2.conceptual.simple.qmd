@@ -1,6 +1,9 @@
 ---
-title: 'Conceptual Modesl to Types of Models '
-format: revealjs
+title: 'Types of Models '
+format:
+  revealjs:
+    theme: solarized
+    resources: ["img/"]
 editor: visual
 ---
 
@@ -14,19 +17,19 @@ editor: visual
 
 You are doing this all the time - there are many reasons to make this process explicit (computer aided modeling)
 
-Thought on inverse inference? Pair-Share your conceptual models?
+Thought on inverse inference?
+
+Pair-Share
 
 # Conceptual Models
 
 -   models are **always** simplifications of reality - they help us to make sense of reality by focusing on specific aspects that are most relevant to your goal
 
--   always start a modeling project by diagramming your conceptual model - how to you see the system;
+-   always start a modeling project by diagramming your conceptual model - how do you see the system;
 
     -   from here you design or choose your 'actual' model
 
--   in a project, dialogue it is critical to dialogue to agree on the conceptual model
-
--   "all models are wrong but some are useful" - British Statistician George Box
+-   in a project, it is critical to dialogue to agree on the conceptual model
 
 # Getting to a good conceptual model
 
@@ -52,31 +55,36 @@ Thought on inverse inference? Pair-Share your conceptual models?
 
 **Parameters** : Slope and intercept of the line
 
-The US "changes in unemployment -- GDP growth" regression with the 95% confidence bands. ![](intro_lecture/assets/img/image7.png)
+The US "changes in unemployment -- GDP growth" regression with the 95% confidence bands.
+
+![](img/GDP.png)
 
 # Goals
 
 The goal will help you to define the core pieces of a model
 
-Often helpful to start at the end: Outputs
+Often helpful to start at the end: **Outputs**
 
-Problem: which piece of land should be purchased to maximize biodiversity?
+*Problem*: how will forest carbon sequestration change if fire frequency increases with warming
 
-Outputs: monetary costs and benefits of different options in 2015 dollars, including "non-market" benefits
+-   What might be the outputs of a model?
+-   What might be the assumptions
+
+# Example1
+
+*Outputs*: carbon sequestration for different fire frequencies
+
+*Assumptions*..stand-age versus carbon trajectories won't change with warming
+
+# Goals - Example 2
+
+*Problem*: which piece of land should be purchased to maximize biodiversity?
+
+# Goals - Example 2
+
+*Outputs*: monetary costs and benefits of different options in 2015 dollars, including "non-market" benefits
 
 Assumptions: non-market benefits are reflected by ..
-
-# Goals
-
-The goal will help you to define the core pieces of a model
-
-Often helpful to start at the end: Outputs
-
-Problem: how will forest carbon sequestration change if fire frequency increases with warming
-
-Outputs carbon sequestration for different fire frequencies
-
-Assumptions..stand-age versus carbon trajectories won't change with warming
 
 # Conceptual Models
 
@@ -86,15 +94,59 @@ This is the **MOST** important step
 
 -   What processes in complex reality are your going to consider? why?
 
-    -   Inverse Inference - you think this mechanisms, parameter, input leads to the response you are observing (understanding)
-    -   You expect this process to be significantly influence outcome you are interested in (prediction)
-    -   You want to "show" what influences an observation/prediction (communication)
+- What is in the "box" that translates inputs to outputs?
 
--   Good question even for maching learning models - why?
+**Good questions even for machine learning models - why?** 
 
-# Conceptual Models
+# Things to think about
 
-Things to think about
+-   Inverse Inference - what mechanisms, parameters, inputs leads to the response you are observing (understanding)
+
+-   What processes do you expect to be significantly influence outcome you are interested in (prediction)
+
+-   How do you "show" what influences an observation/prediction (communication)
+
+# Whats in the box
+
+
+
+Often more complicated than a simple single equation (regression results)
+
+So we need to think through steps are - what is connected with what
+
+Diagrams are a good place to start
+
+
+
+# Composing Diagrams
+
+Pictorial representation your model and what needs to be included in the model to answer your questions (or achieve your modelling goal)
+
+There are many software tools available for generating conceptual models, I like
+
+\[Diagrams.net\]{https://www.diagrams.net/}
+
+
+
+# Example
+
+![](img/cmhydro.png)
+
+*PhD of Norman Crawford under supervision of Ray K Linsley at Stanford University in 1962* 
+
+# Example of a model to classify something
+
+![](img/cmclassify.png)
+
+# SERI-Fire
+
+-   More complex model couple sub-models ( may be a loose coupling where users connects submodels)
+
+-   How do ecological and human factors interact to influence fire regimes
+
+![](img/cmseri.png)
+
+# Conceptual Models: Things to think about
 
 -   What inputs/parameters will influence how a process/mechanism leads to the outputs you are interested in
 
@@ -111,20 +163,13 @@ Things to think about
 # In Class
 
 -   Form groups of 3
--   With your group, come up with a modeling goal related to some topic in environmental science
--   Decide if the goal is understanding, prediction or communication
+-   With your group, come up with a modeling goal
+-   Decide if the goal is understanding,prediction or communication
 -   Brainstorm on important
     -   inputs, parameters and outputs
-    -   relationships/processes that need to be considered in the model
+    -   relationships/processes
     -   assumptions
 
-# Composing Diagrams
-
-Pictorial representation your model and what needs to be included in the model to answer your questions (or achieve your modelling goal)
-
-There are many software tools available for generating conceptual models, I like
-
-\[Diagrams.net\]{https://www.diagrams.net/}
 
 # Types of Model
 
@@ -136,33 +181,31 @@ Useful because the *type* of model will have implications for how you *build* an
 
 # Stochastic - Deterministic
 
-Stochastic: Model output is the probability of flood events of a magnitude greater than 500 m3/sec given rainfall probability distribution (artificial or generated from data) for a 100km2 watershed
+**Stochastic**: Model output is the probability of flood events of a magnitude greater than 500 m3/sec given rainfall probability distribution (artificial or generated from data) for a 100km2 watershed
 
-Deterministic: Model output is the depth of flood given a rainfall event of 10cm over a 100km2 watershed
+**Deterministic**: Model output is the depth of flood given a rainfall event of 10cm over a 100km2 watershed
 
-[source](http://www.vertex42.com/ExcelArticles/mc/MonteCarloSimulation.html)
+# Stochastic - Deterministic
 
-![](lecture2.conceptual.simple/assets/img/image1.gif)
+![](img/cm_hydro.gif)
 
 # Lumped …Spatially distributed
 
-Lumped - single point in space, or space doesn’t matter
+**Lumped** - single point in space, or space doesn’t matter
 
-Spatially distributed - model is applied to different “patches” in space
+**Spatially distributed** - model is applied to different “patches” in space
 
 -   spatial units are independent
 
 -   spatial units interact with each other
 
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/spatial.001.png")
-```
+![](img/spatial.001.png)
 
 # Climate models are good examples
 
 [source](http://eo.ucar.edu/staff/rrussell/climate/modeling/climate_model_resolution.html)
 
-![](lecture2.conceptual.simple/assets/img/image3.jpeg)
+![](img/gcm_spatial.jpeg)
 
 Resolution matters for spatial models
 
@@ -170,11 +213,9 @@ Resolution matters for spatial models
 
 Static - Processes or Variables modeled do not evolve with time
 
-Dynamic - model elements evolve through time - and variables/results at one time step typically depends on previous time step
+Dynamic - model elements evolve through time - variables/results at one time step typically depends on previous time step
 
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/temporal.001.png")
-```
+![](img/temporal.001.png)
 
 # Example of a time varying (dynamic) model
 
@@ -182,33 +223,34 @@ Modeling disease through time
 
 [source](http://www.econometricsbysimulation.com/2013/05/sir-model-flue-season-dynamic.html)
 
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/image13.png")
-```
+![](img/disease_time.png)
 
 # Abstract - Physically/Process based
 
-Abstract - relationship between inputs and output depends on parameters that don’t necessarily have a physical meaning - machine learning models are good examples
+**Abstract** - relationship between inputs and output depends on parameters that don’t necessarily have a physical meaning - machine learning models are good examples
 
-Physically based - parameters do have a physical meaning (could be measured) - relationships derived from first principles (theory) of how things work
+**Physically based** - parameters do have a physical meaning (could be measured) - relationships derived from first principles (theory) of how things work
+
+# Physically based can be "approximate"
 
 Think...simple bucket model
 
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/image4.jpeg")
-```
+![](img/bucket.jpeg)
 
-# Basic components of models
+# Why it the type of models matters
 
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.jpeg")
-```
+-   assumptions
+-   implementation
+-   output
+    -   format
+    -   analysis
+    -   visualization
 
-# How to start
+# How to start - what is my model
 
 -   What are your inputs-outputs
 
--   What’s in the box (the model itself) that gives you a relationship between outputs and inputs
+-   What’s in the box (the model itself) that gives you a relationship between outputs and inputs, type of model
 
 -   Transfer function
 
@@ -228,27 +270,23 @@ Abstract.............Physically/Process Based
 
 but biggest differences may often be the degree specific processes/parameters are accounted for
 
-# Types of models: Example
+# Goal
 
--   Input: Reservoir height (height) and flow rate (flow)
+Estimate the power generated from a reservoir ...
 
--   Output: Instantaneous power generation (W/s)
+# Example: Conceptual model
 
--   Parameter: Reservoir Efficiency (K)
+![](img/reservoir_cm.jpeg)
 
-Conceptual model
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture3_conceptualmodels2/assets/img/reservoir_cm.001.jpeg")
-```
-
-# Types of models: Example
+# Example: Input/Output/Parameters
 
 -   **Input**: Reservoir height and flow rate
 
 -   **Output**: Instantaneous power generation (W/s)
 
 -   **Parameters**: K Efficiency , ρ (density of water), g (acceleration due to gravity)
+
+# Mathematical model
 
 P = ρ \* h \* r \* g \* K Efficiency;
 
@@ -259,9 +297,18 @@ P = ρ \* h \* r \* g \* K Efficiency;
 -   g is acceleration due to gravity of 9.8 m/s2,
 -   K Efficiency is a coefficient of efficiency ranging from 0 to 1.
 
-This is a static (one point in time), deterministic, lumped (one place) model; its more or less physically based
+Type of model?
 
-# Types of models: Example
+# What type of model is this?
+
+This is a
+
+-   **static** (one point in time),
+-   **deterministic**
+-   **spatially lumped** (one place)
+-   its more or less **physically based**
+
+# Related Types of models: Example
 
 If we expand the model to output power production over a year, where inputs were streamflow for each day into the reservoir - *Dynamic Model*
 

@@ -50,11 +50,9 @@ Functions are the “boxes” of the model - the transfer function that takes in
 
 More complex models - made up of multiple functions; and nested functions (and main functions that call/user other functions and control the flow - the arrows between boxes)
 
+
 # Modularity
 
-```{r, out.width = "25%",out.height="25%", echo=FALSE}
-knitr::include_graphics("../img/lego.png")
-```
 
 For each box/function Decide on
 
@@ -78,55 +76,25 @@ Diagrams are a good place to start
 
 # Modularity - Discrete Tasks
 
-Hierarchical in level of details
+- Hierarchical in level of details
 
-Big chunks (coarse detail) -\> progressively finer
+- Big chunks (coarse detail) -\> progressively finer
 
-Note ‘tasks’ that need to be repeated
+- Note ‘tasks’ that need to be repeated
 
-All tasks should have inputs and outputs
+- All tasks should have inputs and outputs
 
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/model_basic.001.jpeg")
-```
+![](img/model_basic.jpeg)
+
 
 # Model design flowcharts
 
 Some model designers uses standard symbols for the different model components
 
-Building Models ![](lecture2.conceptual.simple/assets/img/image14.png)
+![](img/flowelement.png)
 
-# • PhD of Norman Crawford under supervision of Ray K Linsley at Stanford University in 1962
 
-Flow Charges
 
-![](lecture2.conceptual.simple/assets/img/image15.png)
-
-# SERI-Fire
-
--   More complex model couple sub-models ( may be a loose coupling where users connects submodels)
-
--   How do ecological and human factors interact to influence fire regimes
-
-```{r, out.width = "75%",out.height="75%", echo=FALSE}
-knitr::include_graphics("lecture2.conceptual.simple/assets/img/image9.png")
-```
-
-# Sharing Example R, Data and Rmarkdowns
-
-\[esm232_examples github site\]{https://github.com/naomitague/ESM232_Examples_S24.git}
-
-You can clone this repository and then pull before class to get example code and data
-
-Remember that git does not like having nested repositories - so keep working respoistories in separate directories
-
-# Running Models with Data
-
-\[esm232_examples github site\]{https://github.com/naomitague/ESM232_Examples_S24.git}
-
--   solarpv.R
--   InformalSensitivity.Rmd
--   InformalSensitivity2.Rmd
 
 # Solar function example
 
@@ -142,28 +110,46 @@ Some of these options such as whether to plot determine outputs from the functio
 
 AND the type of array to determine whether it uses diffuse radiation, these parameters change how the function/model works
 
-# Solar function example as code (InformalSensitivity.Rmd)
+# Solar function example as code
 
 Model Code
 
+Read through - questions?
 ```{r solar, echo=FALSE}
 library(tidyverse)
 
-source("../R/solarpv.R")
+source("R/solarpv.R")
 solarpv
 ```
 
 # Some Data
 
-```{r}
+We will plot to check that the input data makes sense
+
+If we plot radiation by month, does it have expected seasonal pattern?
+
+```{r datacheck}
+
+library(tidyverse)
 # read in R formatted data
-load("../Data/sierraczosolar.rda")
+load("Data/sierraczosolar.rda")
 
 # already in the format required for the model
 head(sierraczosolar)
+
+# plot
+# lets make months names rather than labels
+
+sierraczosolar$month <- factor(sierraczosolar$month, levels = 1:12, labels = month.abb)
+
+# now plot
+ggplot(sierraczosolar, aes(x = month, y = (Kdown_direct+Kdown_diffuse))) +
+  geom_boxplot() +
+  labs(x = "Month", y = "Solar Radiation (W/m2)") +
+  theme_bw()
 ```
 
-# Run the model
+# Run the model with this data
 
 ```{r}
 # run the model
@@ -174,6 +160,23 @@ site1 <- solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W",
 site1$mean
 site1$annual
 ```
+
+# Visual Checking
+
+- what issue jumps out - what might be the cause?
+- how would you fix this?
+
+```{r}
+# remove the first year from the dataset
+sierraczosolar <- sierraczosolar %>%
+  filter(year > 1944)
+
+# now run the model again
+site1 <- solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W", g = TRUE)
+```
+
+# Try changing an input and see what you get!
+
 
 # Point of the model is to try different options/parameters/inputs
 
@@ -258,7 +261,6 @@ tmp <- map_df(site2, `[`, c("annual"))
 site2df <- data.frame(year = tmp$annual$year, elect = tmp$annual$elect)
 # get rid of that pesk first year
 
-site2df <- subset(site2df, year > 1944)
 # now we could plot
 ggplot(site2df, aes(year, elect, group = year)) +
   geom_boxplot() +
@@ -295,6 +297,20 @@ ggplot(site2_mean, aes(eff, mean)) +
 # my best guess
 mean(site2_mean$mean)
 ```
+
+# Sharing Example R, Data and Rmarkdowns
+
+\[esm232_examples github site\]{https://github.com/naomitague/ESM232_Examples_S24.git}
+
+You can clone this repository and then pull before class to get example code and data
+
+Remember that git does not like having nested repositories - so keep working respoistories in separate directories
+
+# Running Models with Data
+
+\[esm232_examples github site\]{https://github.com/naomitague/ESM232_Examples_S24.git}
+
+
 
 # ASSIGNMENT 3 Almond Yields
 
