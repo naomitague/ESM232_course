@@ -206,7 +206,7 @@ library(knitr)
 include_graphics("../img/power_comparison_figure.jpeg", )
 ```
 
-# 
+
 
 To start - lets create what we need to compute net present value of power generated for multiple years 
 

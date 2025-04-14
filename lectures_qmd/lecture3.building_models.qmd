@@ -47,21 +47,19 @@ Modularity! (Functions)
 
 The basic building blocks of models
 
+Functions are the “boxes” of the model
 
-Functions are the “boxes” of the model 
+-   the transfer function that takes inputs and returns outputs
+-   most languages have a function library (e.g. R, Python, C++)
 
-  - the transfer function that takes inputs and returns outputs
-  - most languages have a function library (e.g. R, Python, C++)
+More complex models
 
-More complex models 
+-   made up of multiple functions;
+-   boxes with arrows
+-   *main* function that calls other functions, flow control
+-   nested functions (functions that other functions and control the flow
 
-- made up of multiple functions; 
-- boxes with arrows
-- *main* function that calls other functions, flow control
-- nested functions (functions that other functions and control the flow 
-
-
-# For each box/function 
+# For each box/function
 
 Decide on
 
@@ -119,9 +117,7 @@ AND the type of array to determine whether it uses diffuse radiation, these para
 
 Model Code
 
-You need *tidyverse*, *here* libraries to run.  
-
-
+You need *tidyverse*, *here* libraries to run.
 
 ```{r solar, echo=FALSE}
 library(tidyverse)
@@ -135,19 +131,18 @@ solarpv
 
 We will plot to check that the input data makes sense
 
-- look at data 
-- plot radiation by month
+-   look at data
+-   plot radiation by month
 
 ```{r datacheck}
 
-library(tidyverse)
-# read in R formatted data
-load(here("Data/sierraczosolar.rda"))
+
 
 # already in the format required for the model
 head(sierraczosolar)
 
 ```
+
 ## Plot {.scrollable}
 
 ```{r datacheck2, echo=TRUE}
@@ -179,10 +174,10 @@ site1$annual
 
 # On your own
 
-- read through function code
-- run the model with the data
-- change parameter and re-run
-- turn graphing on
+-   read through function code
+-   run the model with the data
+-   change parameter and re-run
+-   turn graphing on
 
 # Visual Checking
 
@@ -200,7 +195,7 @@ site1 <- solarpv(area = 0.1,
 
 ```
 
- Try changing an input and see what you get!
+Try changing an input and see what you get!
 
 # Playing with models
 
@@ -237,9 +232,9 @@ What happens when we vary parameters?
 
 -   Sampling
 
-    - *runif*, 
-    - *rnorm* (sampling from uniform and normal distributions) 
-    - *seq* (for creating a sequence of numbers)
+    -   *runif*,
+    -   *rnorm* (sampling from uniform and normal distributions)
+    -   *seq* (for creating a sequence of numbers)
 
 -   Repeating
 
@@ -250,12 +245,11 @@ If you need it a good source to review working with *purrr* to extract items fro
 
 [Useful Purrr Resource](https://www.rebeccabarter.com/blog/2019-08-19_purrr/)
 
-
 # Example
 
-- we will start by using **map** 
-- which "maps* a function (runs it ) for a list of values, 
-- we can also use these function to extract values from a list
+-   we will start by using **map**
+-   which "maps\* a function (runs it ) for a list of values,
+-   we can also use these function to extract values from a list
 
 # R code for informal sensitivity
 
@@ -263,15 +257,15 @@ We are not sure what the efficiency of the PV array is
 
 How important is this parameter to the results?
 
-
 How we do this depends on what we know about efficiency
 
-- manufacturer reports mean and standard deviation*
-- manufacturer provides a range   
+-   manufacturer reports mean and standard deviation\*
+-   manufacturer provides a range
 
 Mean 0.6 standard deviation of 0.1
 
-# R code 
+# R code
+
 ```{r sen1, eval=T, echo=TRUE}
 library(tidyverse)
 
@@ -293,20 +287,19 @@ head(site2)
 
 ## Data Structures {.scrollable}
 
+-   challenge in sensitivity analysis is often what data structure to use
 
-- challenge in sensitivity analysis is often what data structure to use 
-- organize parameter variation and result variation
+-   organize parameter variation and result variation
 
-- R often returns lists - but not so easy for organization
+-   R often returns lists - but not so easy for organization
 
-- ask yourself what you want to do with the data, then put in a structure that will make this easy
+-   ask yourself what you want to do with the data, then put in a structure that will make this easy
 
-- e.g two different data frames
-  - plot variation in mean annual electricity by *eff*
-  - plot variation in each year due to variation in   *eff*
-  -  a data frame is often the best structure for graphing
- 
-  
+-   e.g two different data frames
+
+    -   plot variation in mean annual electricity by *eff*
+    -   plot variation in each year due to variation in *eff*
+    -   a data frame is often the best structure for graphing
 
 ```{r sen1b, eval=T}
 
@@ -318,7 +311,6 @@ tmp <- map_dfr(site2, `[`, c("annual"))
 site2df <- data.frame(year = tmp$annual$year, elect = tmp$annual$elect)
 head(site2df)
 ```
-
 
 ## Looking at results from informal sensitivity analysis {.scrollable}
 
@@ -336,9 +328,8 @@ WHY: If you want the one number that is the "best guess" given uncertainty
 
 ## Variation in annual electricity due to parameter uncertainty {.scrollable}
 
-* boxplot
-* just need all the annual electricity by year
-
+-   boxplot
+-   just need all the annual electricity by year
 
 ```{r sen2, eval=T, echo=TRUE}
 
@@ -349,9 +340,10 @@ ggplot(site2df, aes(year, elect, group = year)) +
   labs(y = "Electricity generated in W")
 ```
 
-## Add an average line 
+## Add an average line
 
 Why?
+
 ```{r sen2b, eval=T, echo=TRUE}
 # we also might want an average across parameter uncertainty
 site2_average <- site2df %>%
@@ -365,12 +357,13 @@ ggplot(site2df, aes(year, elect, group = year)) +
   geom_line(data = site2_average, aes(year, elect, group = 1), col = "orange")
 ```
 
-## How does efficiency impact mean annual electricity estimate  {.scrollable}
+## How does efficiency impact mean annual electricity estimate {.scrollable}
 
-- Data structure with *eff* and mean annual electricity
-- X-Y plots
+-   Data structure with *eff* and mean annual electricity
+-   X-Y plots
 
 Organize the data
+
 ```{r sene, eval=T, echo=TRUE}
 # we could also plot how the mean annual electricity varies with efficiency (eff from above)
 site2[[1]]
@@ -384,8 +377,8 @@ site2_mean <- data.frame(eff = eff, elect = tmp)
 
 ## Plot {.scrollable}
 
-- how variable is the model output given parameter variation
-- how does the variation in parameter impact model output
+-   how variable is the model output given parameter variation
+-   how does the variation in parameter impact model output
 
 ```{r sene2, eval=T, echo=TRUE}
 ggplot(site2_mean, aes(y = mean)) +
@@ -403,36 +396,32 @@ mean(site2_mean$mean)
 
 # Sharing Example R, Data and Rmarkdowns
 
-\[esm232_examples github site\]{https://github.com/naomitague/ESM232_Examples_S24.git}
+<https://github.com/naomitague/ESM232_EDS230_Examples.git>
 
 You can clone this repository and then pull before class to get example code and data
 
 Remember that git does not like having nested repositories - so keep working respoistories in separate directories
 
-## Schedule for this week and next  {.scrollable}
+## Schedule for this week and next {.scrollable}
 
 **For Thursday**
 
 -   Start work on Assignment 2 (see below)
 -   Read through InformalSensitivity.Rmd
--   Recorded Lecture 
+-   Recorded Lecture
 -   Ojas will review some basics of coding and writing functions in Section
 
 **For Next Week**
 
--  Assignment 2 due Monday (April 14)
--  Assignment 3 given on Tuesday (April 15)
--  Assignment 3 due Monday April 21
-
+-   Assignment 2 due Monday (April 14)
+-   Assignment 3 given on Tuesday (April 15)
+-   Assignment 3 due Monday April 21
 
 **Working Materials**
 
--  Read through InformalSensitivity2.Rmd
--  Ojas will review Informal Sensitivity Rmarkdowns in section
--  No formal class
-
-
-
+-   Read through InformalSensitivity2.Rmd
+-   Ojas will review Informal Sensitivity Rmarkdowns in section
+-   No formal class
 
 # ASSIGNMENT 2 Almond Yields
 
@@ -519,7 +508,7 @@ Two separate files (or a link to a repository with these files)
 1.  a R file that has your function definition
 2.  a Rmarkdown file that includes your conceptual model (embed as picture) and shows how you applied the function to the test climate data (*clim.txt*)
 
-## Grading Rubric  {.scrollable}
+## Grading Rubric {.scrollable}
 
 Conceptual model (20 pts)
 
@@ -531,4 +520,3 @@ R Implementation (30 pts)
 -   correct function implementation (\*.R file) (10 pts)
 -   application of the function to **clim.txt** (in Rmarkdown file) (10 pts)
 -   coding practices (clear documentation, informative variables names) (10 pts)
-
