@@ -366,7 +366,7 @@ PART I (Paper Examples)
 
 PART II (Atmospheric Conductance)
 
--   Generation of parameter values using Sobel (10pts)
+-   Generation of parameter values using Sobol (10pts)
 -   Running model for the parameters (10pts)
 -   Graph of uncertainty of the response variable
     -   meaningful graph (5pts)
@@ -374,6 +374,6 @@ PART II (Atmospheric Conductance)
 -   Graph of relationship between output and windspeed
     -   choice of color (see instructions) (5pts)
     -   graphing style (axis labels, legibility) (5 pts)
--   Computing Sobel Indicators (10 pts)
+-   Computing Sobol Indicators (10 pts)
 -   Discussion (10pts)
     -   correctly identifying how sensitivity to windspeed changed with setting (5pts)

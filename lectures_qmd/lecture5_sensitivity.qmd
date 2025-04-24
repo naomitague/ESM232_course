@@ -317,7 +317,6 @@ I'll return
 
 -   average yield
 
-
 ```{r almondsens}
 #
 compute_almond_yield
