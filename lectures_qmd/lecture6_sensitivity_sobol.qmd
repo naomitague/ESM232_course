@@ -1,14 +1,10 @@
 ---
-title: "Sensitivity using Sobol"
-output:
-  slidy_presentation:
-    highlight: pygments
-  html_document: default
-  pdf_document: default
-  ioslides_presentation:
-    highlight: pygments
-  beamer_presentation:
-    highlight: pygments
+title: "Sensitivity Analysis with Sobol"
+format: revealjs
+theme: solarized
+resources: ["img/"]
+css: ["slides.css"]
+editor: visual
 ---
 
 ```{r setup, include=FALSE}
@@ -19,10 +15,11 @@ library(sensitivity)
 library(tidyverse)
 # library(lhs)
 library(purrr)
+library(here)
 ```
 
 
-# Larger Complex Models
+## Larger Complex Models {.scrollable}
 
 Only do sensitivity on some inputs/parameters
 
@@ -34,9 +31,8 @@ Run model for samples
 Generate Summary Statistics and graph
 
 
----
 
-# More Information on Sensitivity Analysis
+## More Information on Sensitivity Analysis {.scrollable}
 
 [Applying Sensitivity Analysis in Biology] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2570191/)
 
@@ -48,7 +44,7 @@ Saltelli, Andrea, and Paola Annoni. "How to avoid a perfunctory sensitivity anal
 
 ---
 
-#  Steps in Sensitivity Analysis 
+##  Steps in Sensitivity Analysis {.scrollable}
 
 Define the distribution of input parameters (e.g normal with its mean and standard deviation)
 
@@ -66,7 +62,7 @@ Quantify sensitivity
 
 ---
 
-# Sobol
+## Sobol {.scrollable}
 
 Sobol sensitivity analysis is similar to LHS approach as a way to efficiently sample parameter space 
 
@@ -77,7 +73,7 @@ Sobol is a *variance-based* method
 Sobol quantifies sensitivity by 
 breaking the variance of output into contributions by parameters
 
-# Sobol Indices - Quantifying Sensitivity
+## Sobol Indices - Quantifying Sensitivity {.scrollable}
 
 Indices are computed using parameter-output variance relationships; they are estimates so the indices themselves
 have uncertainty bounds
@@ -101,7 +97,7 @@ Several Indices
 
 
 
-# Sobol in R
+## Sobol in R {.scrollable}
 
 * *Sensitivity* package
 
@@ -117,7 +113,7 @@ Several Indices
 
 [Variance Based Methods](https://www.sciencedirect.com/science/article/pii/S0010465509003087?casa_token=xG4MJV4hwJgAAAAA:Tq_CLHTqtM1wDvhzviZFgm6sVBdOoYzQdFfOGplEi5OUxLSWxaKITce-CzxLxfS6993rNnbK1Q)
 
-# Sobol - how to
+## Sobol - how to {.scrollable}
 
 
 * run Sobol to get parameter sets in a sensitivity analysis object
@@ -128,17 +124,70 @@ Several Indices
 Generation of parameter sets slightly different
 
   * generate **two** samples of parameter sets by 
-  samplng from apriori (expected) distributions
+  sampling from a-priori (expected) distributions
   * these would be the "hypothetical" distributions based on assumptions about the data
   * ideally these would be distributions that you actually sampled
 
-#  Example 
-Atmospheric Conductance as a function of windspeed, vegetation height and parameters
+##  Example Atmospheric Conductance {.scrollable}
 
-First lets get the parameters
+Often when we are estimating vegetation or crop water use we need to know the atmospheric conductance - which is essentially how easily water diffuses into the air and depends largely on windspeed (you get more evaporation in windier conditions) 
+
+Atmospheric conductance is also influenced by the vegetation itself and the turbulence it creates
+
+I've provided a function to compute atmospheric conductance $C_{at}$ (how easily vapor diffuses from vegetation surfaces)
+
+**The function *Catm.R* is provided**
+
+## Atmospheric conductance (simple model) {.scrollable}
+So that you know what it does - here's some background on the function
+$$
+C_{at} = \frac{v_m}{6.25*{ln(\frac{z_m-z_d}{z_0})}^2}
+$$
+$$
+z_d = k_d*h
+$$
+$$
+z_0 = k_0*h
+$$
+
+
+$z_m$ is the height at which windspeed is measured - must be higher than the vegetation (cm), it is usually measured 200 cm  above the vegetation
+
+$h$ is vegetation height (cm)
+
+$v$ is windspeed (cm/s)
+
+Typical values if $k_d$ and $k_o$ are 0.7 and 0.1 respectively (so use those as defaults)
+
+## Sensitivity Anallysis Goal {.scrollable}
+
+For a given forest, perform a sensitivity analysis of model predictions of conductance
+Consider the sensitivity to uncertainty in the following parameters and inputs
+  
+  * $height$ 
+  
+  * $k_d$
+  
+  * $k_0$
+  
+  * $v$
+  
+Windspeeds $v$ are normally distributed with a mean of  250 cm/s with a standard deviation of 30 cm/s
+
+For vegetation height assume that height is somewhere between 9.5 and 10.5 m (but any value in that range is equally likely)
+
+For the $k_d$ and $k_0$ parameters you can assume that they are normally distributed with standard deviation of 1% of their default values
+
+
+## Steps: Generate Parameters {.scrollable}
+
+First we need to generate parameter sets for the Sobol analysis
+
+ - 2 sets of samples of all of the parameters, we will make these up by sampling from expected distributions
+ - use *sobolSalt* to generate the parameter sets
 
 ```{r}
-source("../R/Catm.R")
+source(here("R/Catm.R"))
 
 # generate two examples of random number from parameter distributions
 
@@ -167,7 +216,7 @@ sens_Catm_Sobol <- sobolSalt(model = NULL, X1, X2, nboot = 100)
 # your parameters sets for sensitivity analysis are in X
 ```
 
-# Sobol Indices
+## Steps: Compute Sobol Indices {.scrollable}
 
 now run model for Sobol generated parameter sets and compute indices
 
@@ -206,7 +255,7 @@ sens_Catm_Sobol$T
 print(sens_Catm_Sobol)
 ```
  
-# Plotting
+## Steps: Plotting {.scrollable}
 
 * uncertainty in the output
 
@@ -242,7 +291,7 @@ ggplot(both, aes(k_o, gs, col = k_d)) +
 
  
 
-# Second order indices
+## Second order indices {.scrollable}
 
 Optional for this course
 
@@ -274,7 +323,7 @@ sens_Catm_Sobol2$T
 sens_Catm_Sobol2$S2
 ```
 
-# Assignment Part I
+## Assignment Part I {.scrollable}
 
 Choose one of the 3 papers below that provide an example of sensitivity analysis of model parameters. 
 After going through the paper, write a paragraph describing how results of the *sensitivity analysis* reported on in the paper might contribute to understanding (or prediction) within an environmental problem solving or management context.  
@@ -286,7 +335,7 @@ After going through the paper, write a paragraph describing how results of the *
  [Uranium in Groundwater Model](Uranium_water_sobol.pdf)
  
 
-# Assignment Part 2
+## Assignment Part 2 {.scrollable}
 
 Recall our model of atmospheric conductance
 $$
@@ -308,8 +357,8 @@ $v$ is windspeed (cm/s)
 
 Typical values if $k_d$ and $k_o$ are 0.7 and 0.1 respectively (so use those as defaults)
 
-# Your task
-
+## Your task{ .scrollable}
+ 
 Repeat the sensitivity analysis that we have been working on in class BUT lets assume that
 we are in a different locations - where windpeeds are substantially higher and more variable 
 AND vegetation is shorter - See details below
@@ -343,11 +392,15 @@ Submit the Rmarkdown on Canvas as usual
 **Grading Rubric**
 
 PART I (Paper Examples)
+
 * Discussion of the implication of parameter uncertainty from example paper (20pts)
-    * explanation directly relates to a specific parameter (10pts)
-    * explanation explores how parameter uncertainty might meaningfully impact results (10pts)
+
+    *explanation directly relates to a specific parameter (10pts)
+
+    *explanation explores how parameter uncertainty might meaningfully impact results (10pts)
 
 PART II (Atmospheric Conductance)    
+
 * Generation of parameter values using Sobel (10pts)
 * Running model for the parameters (10pts)
 * Graph of  uncertainty of the response variable
