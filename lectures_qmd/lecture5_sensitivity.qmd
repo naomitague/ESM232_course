@@ -41,14 +41,13 @@ P = ρ \* h \* r \* g \* K
 
 <span style="color: blue;"> The "effect" of **K** (efficiency) will depend on the other parameters
 
- A 1% change in **K** will lead to a 1% change in Power
+A 1% change in **K** will lead to a 1% change in Power
 
 <span style="color: blue;"> How much Power (magnitude) will change with an increase **K** will depend on value of other parameters and inputs
 
 So you could say that Power is more sensitive to efficiency for larger flow rates or larger heights, We know this because the are multiplied together!
 
 ## Some code to convince you of this {.scrollable}
-
 
 ```{r simplex}
 # lets look at the power generation function
@@ -66,13 +65,13 @@ Power_K1 * 2
 
 Power_K2 / Power_K1
 ```
-## {.scrollable}
+
+##  {.scrollable}
 
 *Because* the equation is just multiplying factors
 
-
-- Relative change is the same as the change in efficiency (K)
-- Absolute change in power with change in efficiency depends on other parameters
+-   Relative change is the same as the change in efficiency (K)
+-   Absolute change in power with change in efficiency depends on other parameters
 
 So what happens to sensitivity if height is 3 instead of 2
 
@@ -104,7 +103,6 @@ $$
  PS = k_P * P + k_T * T
 $$
 
-
 -   **PS** probability that parrots will be found in a given location
 
 -   **P** is mean annual precipitation
@@ -112,8 +110,6 @@ $$
 -   **T** is mean annual temperature
 
 -   $k_P$ and $k_T$ are empirically derived coefficients
-
-
 
 <span style="color: blue;"> Sensitivity to $k_P$ and $k_T$ will be linear
 
@@ -145,8 +141,7 @@ Challenge is sampling parameter uncertainty space and balancing this against com
 
 Optimization - special type of sensitivity analysis
 
-
-## Single Parameter Sensitivity
+## Single Parameter Sensitivity {.scrollable}
 
 Vary one parameter but hold the others constant
 
@@ -160,8 +155,6 @@ Consider the sensitivity of a seasonal snow accumulation and melt model to both 
 
 -   for lower temperature, radiation may matter much more - so temperatures related to radiation absorption (e.g albedo) will have a greater impact on output
 
-
-
 ## Steps in Sensitivity Analysis {.scrollable}
 
 -Define the range (pdf) of input parameters
@@ -174,8 +167,6 @@ Consider the sensitivity of a seasonal snow accumulation and melt model to both 
 
 -Quantify sensitivity
 
-
-
 # Sensitivity Analysis: What ranges should I vary my parameters over {.scrollable}
 
 -   range (min, max, middle values)
@@ -186,22 +177,19 @@ Consider the sensitivity of a seasonal snow accumulation and melt model to both 
 
 -   If parameter’s are estimated (e.g a regression slope, coefficients from another model) then statistics such as confidence bounds can help you to define the ranges
 
-
 ## Approaches to sampling parameter space
 
-- Random - Monte Carlo
+-   Random - Monte Carlo
 
-- Latin Hypercube
+-   Latin Hypercube
 
-- Sobel
+-   Sobel
 
 Difference is in how you sample parameter space - tradeoffs with efficiency, likelihood of capturing responses from rarer parameters
-
 
 ## Latin Hyper Cube
 
 generating random samples from equally probability intervals ![](img/LHC.png)
-
 
 ## Tools in R
 
@@ -230,7 +218,7 @@ generating random samples from equally probability intervals ![](img/LHC.png)
         -   type (e.g normal, uniform)
         -   parameters (e.g mean, variance)
 
-## Example of using Latin Hypercube sampling for sensitivity analysis
+## Example of using Latin Hypercube sampling for sensitivity analysis {.scrollable}
 
 Lets look at our almond yield example
 
@@ -293,7 +281,7 @@ head(parm)
 
 but first
 
-## Examining Output
+## Examining Output {.scrollable}
 
 Sensitivity of What?
 
@@ -316,7 +304,7 @@ In that case to quantify sensitivity you need summary metrics
 
 Which one depends on what you care about
 
-## Example: Almond Yield
+## Example: Almond Yield {.scrollable}
 
 -   I'm going to return some summary information from my model
 -   You could do this in a separate function!
@@ -329,20 +317,17 @@ I'll return
 
 -   average yield
 
-often helpful when doing sensitivity analysis to place w
 
 ```{r almondsens}
 #
 compute_almond_yield
 ```
 
-## now lets run for our parameters and climate data
+## now lets run for our parameters and climate data {.scrollable}
 
 ```{r almondsens2}
 # read in the input data
 clim <- read.table(here("data/clim.txt"), header = T)
-
-
 
 
 
@@ -371,8 +356,6 @@ Plot relationship between parameter and output to understand how uncertainty in 
     -   constant slope, even distribution
 
 -   Scatterplots against parameter values
-
-
 
 ```{r senplot}
 # add uncertainty bounds on our estimates
@@ -420,28 +403,30 @@ If relationships between output and input are close to linear,
 
 -   Partial correlation coefficient (PCC) for multiple parameters;
 
-    ```         
-    * Correlation after effects of other parameters accounted for
+    \`\`\`
 
-    * Correlation of X and Y accounting for Z (all other parameters)
+    -   Correlation after effects of other parameters accounted for
 
-    * Computed as the correlation of the *residuals* from linear regression of
+    -   Correlation of X and Y accounting for Z (all other parameters)
 
-        * X with Z
+    -   Computed as the correlation of the *residuals* from linear regression of
 
-        * Y with Z
-    `
-- for *rank* correlation use ranks instead of values
+        -   X with Z
 
+        -   Y with Z \`
+
+-   for *rank* correlation use ranks instead of values
 
 ## Quantifying Sensitivity {.scrollable}
 
-- Linear and monotonic relationship between x and y
+-   Linear and monotonic relationship between x and y
+
 -   Correlation Coefficient - linear monotonic
 
-- Non-linear relationship, but monotonic between x and y 
-  -   you transform x and y (e.g log transform)
-  -   Partial Rank Correlation Coefficient - non-linear but monotonic
+-   Non-linear relationship, but monotonic between x and y
+
+    -   you transform x and y (e.g log transform)
+    -   Partial Rank Correlation Coefficient - non-linear but monotonic
 
 R function *pcc* in *sensitivity* package can compute these for you AND makes it easy to graph the results
 
@@ -473,23 +458,26 @@ justconf
 ## Parital Rank Correlation Coefficients for Maximum Yield
 
 we can use *pcc* to compute these for us
+
 ```{r quantifying2}
 # partial regression rank coefficients
 senresult_rank <- pcc(parm, yieldsd$maxyield, rank = TRUE)
 senresult_rank
 
 ```
+
 ## plot results
+
 ```{r quantifyingp2}
 # plot results
 plot(senresult_rank)
 ```
 
-## Try on your own 
+## Try on your own
 
--  Partial Rank Correlation Coefficients for Minimum Yield
+-   Partial Rank Correlation Coefficients for Minimum Yield
 
-- how are they different from results for maximum yield
+-   how are they different from results for maximum yield
 
 ## Code
 
@@ -527,4 +515,3 @@ ggplot(tmp3, aes(parmvalue, yvalue, col = yieldtype)) +
   geom_point() +
   facet_wrap(~ yieldtype * parm, scales = "free", ncol = 5)
 ```
-
