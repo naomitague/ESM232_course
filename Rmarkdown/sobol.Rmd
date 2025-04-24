@@ -11,6 +11,7 @@ library(tidyverse)
 library(gridExtra)
 library(purrr)
 library(ggpubr)
+library(here)
 ```
 
 
@@ -26,9 +27,6 @@ library(ggpubr)
 
 * R help pages for *Sensitivity* provide many good references
 
-* This is a nice overview paper
-
-[Variance Based Methods](https://www.sciencedirect.com/science/article/pii/S0010465509003087?casa_token=xG4MJV4hwJgAAAAA:Tq_CLHTqtM1wDvhzviZFgm6sVBdOoYzQdFfOGplEi5OUxLSWxaKITce-CzxLxfS6993rNnbK1Q)
 
 # Sobol - how to
 
@@ -49,7 +47,7 @@ Generation of parameter sets slightly different
 Atmospheric Conductance as a function of windspeed, vegetation height and parameters
 
 ```{r, setup}
-source("../R/Catm.R")
+source(here("R/Catm.R"))
 
 # generate two examples of random number from parameter distributions
 
