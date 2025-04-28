@@ -472,13 +472,13 @@ senresult_rank
 plot(senresult_rank)
 ```
 
-## Try on your own
+## Try on your own {.scrollable}
 
 -   Partial Rank Correlation Coefficients for Minimum Yield
 
 -   how are they different from results for maximum yield
 
-## Code
+## Code {.scrollable}
 
 ```{r quantifying3}
 # combine parameter sets with output
@@ -514,3 +514,32 @@ ggplot(tmp3, aes(parmvalue, yvalue, col = yieldtype)) +
   geom_point() +
   facet_wrap(~ yieldtype * parm, scales = "free", ncol = 5)
 ```
+
+
+## Compare PCC for different output {.scrollable}
+
+```{r, pcc}
+
+senresult_rank_min <- pcc(parm, yieldsd$minyield, rank = TRUE)
+senresult_rank_min
+
+
+senresult_rank_max <- pcc(parm, yieldsd$maxyield, rank = TRUE)
+senresult_rank_max
+
+
+senresult_rank_mean <- pcc(parm, yieldsd$meanyield, rank = TRUE)
+senresult_rank_mean
+
+tmp = cbind.data.frame(senresult_rank_min$PRCC, senresult_rank_max$PRCC, senresult_rank_mean$PRCC)
+colnames(tmp)=c("min", "max", "mean")
+tmp$parm = rownames(tmp)
+tmpp = tmp %>% gather(-parm, key = "output", value = "PRCC")
+```
+
+## Plot
+```{r, pccplot}
+ggplot(tmpp, aes(parm, PRCC, col=output))+geom_point(size=2)
+
+```
+
