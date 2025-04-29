@@ -7,17 +7,15 @@ css: ["slides.css"]
 editor: visual
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(purrr)
 library(deSolve)
+library(here)
 ```
 
-# Return to big picture - model types
-
-
+## Return to big picture - model types {.scrollable}
 
 Conceptual.............Mathematical
 
@@ -29,10 +27,9 @@ Static.............Dynamic : *TIME*
 
 Abstract.............Physically/Process Based
 
+## Dynamic Models {.scrollable}
 
-# Dynamic Models
-
- Example of a time varying (dynamic) model
+Example of a time varying (dynamic) model
 
 Modeling disease through time
 
@@ -40,158 +37,199 @@ Modeling disease through time
 
 ![](img/disease_time.png)
 
-# Spatial models that interact - similar to dynamic
+## Spatial models that interact - similar to dynamic {.scrollable}
 
-* Key idea is dependency from one point in time/space to the next!
+-   Key idea is dependency from one point in time/space to the next!
 
-* This implies a differential/difference equation to describe the process/transfer function
-
+-   This implies a differential/difference equation to describe the process/transfer function
 
 **Spatially distributed** - model is applied to different “patches” in space
 
 -   spatial units are independent
 
--   <span style="color: red;">spatial units interact with each other
+## Spatial models that interact - similar to dynamic {.scrollable}
 
 ![](img/spatial.001.png)
 
-# Dynamic modeling
+## Dynamic modeling {.scrollable}
 
-Dynamic modeling is common in environmental problems solving
-- Similar issues: what happens at one place, depends on neighbors; what happens at one time; depends on previous time
-- Space - two way; Time is usually one-way
-- Dynamic system modeling - quickly becomes complex (Engineering degrees spend a lot of time on this; there are books, entire journals etc on this topic)
+Dynamic modeling is common in environmental problems solving 
 
-# Why you should care
+- Similar issues: what happens at one place, depends on neighbors; 
+- what happens at one time; depends on previous time - 
+
+Space - two way; 
+Time is usually one-way  
+
+Dynamic system modeling - quickly becomes complex (Engineering degrees spend a lot of time on this; there are books, entire journals etc on this topic)
+
+## Why you should care {.scrollable}
 
 Many environmental problems and questions can be related to
-* Diffusion
-* Population
-* Both often require dynamics models; and both often require thinking about dynamics in space and in time
 
-# Vocab
+* Diffusion 
+* Population 
+
+Both often require dynamics models; and both often require thinking about dynamics in space and in time
+
+## Vocab {.scrollable}
 
 Some useful terminology
-- stocks - variables that evolve over time
-- flows - transfers between variables or from the system
-- parameters - values that controls the relationship between stocks and flows
-- sink - something that absorbs flows 
-- source - something that generates flows
 
-# More terminology
+- **stocks** - variables that evolve over time 
+- **flows** - transfers between variables or from the system 
+- **parameters** - values that controls the relationship between stocks and flows 
+- **sink** - something that absorbs flows 
+-  **source** - something that generates flows
 
-- **System state**: value of all variables need to describe the "entity that evolves through time" at a particular point in time
-  - usually think of these as stores (soil moisture, bank account balance, number of individuals in a particular age class)
-- **State-space**: description of the entity may require multiple variables - for a watershed this could be soil moisture, water currently in dam and water stored in trees, and for each "grid" in a watershed)
-- **State-space trajectories**: how the system state evolves through time
-- **Initial conditions**: values to describe the system state at the beginning
+## More terminology {.scrollable}
 
+-   **System state**: value of all variables need to describe the "entity that evolves through time" at a particular point in time
+    -   usually think of these as stores (soil moisture, bank account balance, number of individuals in a particular age class)
+-   **State-space**: description of the entity may require multiple variables - for a watershed this could be soil moisture, water currently in dam and water stored in trees, and for each "grid" in a watershed)
+-   **State-space trajectories**: how the system state evolves through time
+-   **Initial conditions**: values to describe the system state at the beginning
 
-# Examples - note the feedback loops (time dependency)
+## Examples - note the feedback loops (time dependency) {.scrollable}
 
-![](../lectures/dynamicmodels/dynamicmodels.008.jpeg)
----
-![](../lectures/dynamicmodels/dynamicmodels.009.jpeg)
----
-
-# Feekback is a key feature of dynamic models
+![](img/simplerabbit.jpg)
 
 
-* dynamic systems often have *feedbak* loops
-  * positive 
-  * negative
-  
-* feedbacks often lead to non-linear responses 
-  * think "runaway" growth
-  
-#  Discrete vs Continuous
+## Human engineering example {.scrollable}
 
-* do we break time/space in to "chunks" *discrete*
+![](img/engineerexample.jpg)
+## Feekback is a key feature of dynamic models {.scrollable}
 
-* or think of time/space as a stream. *continuous*
+-   dynamic systems often have *feedbak* loops
+    -   positive
+    -   negative
+-   feedbacks often lead to non-linear responses
+    -   think "runaway" growth
 
-Discrete might be modeling something that occurs once every period; water withdrawls,
-tax revenues
+## Discrete vs Continuous models {.scrollable}
 
-Continuous would be things like pollution, water that are always changing in time
+-   do we break time/space in to "chunks" *discrete*
 
-Discrete models for dynamic processes use *difference* equations
-Continuous models for dynamic processes use *differential* equations
+-   or think of time/space as a stream. *continuous*
 
-Often it depends on how you look at the system - 
+**Discrete** might be modeling something that occurs once every period; water withdrawls, tax revenues
+
+**Continuous** would be things like pollution, water that are always changing in time
+
+Discrete models for dynamic processes use *difference* equations Continuous models for dynamic processes use *differential* equations
+
+Often it depends on how you look at the system -
 
 
----
-
-# Dynamic System
+## Dynamic System {.scrollable}
 
 Initial conditions
 
-* to model how something evolves over space and time
-  * you need to know where it starts from
-  
-  * setting initial conditions is usually part of dynamic modellinng
-  
+-   to model how something evolves over space and time
+    -   you need to know where it starts from
+
+    -   setting initial conditions is usually part of dynamic modellinng
+
 Boundary Value Problems
 
-* especially for spatial dynamic models sometimes initial conditions are provided
-values at "end points" 
+-   especially for spatial dynamic models sometimes initial conditions are provided values at "end points"
 
-
-# Stability
+## Stability {.scrollable}
 
 Dynamic systems may lead to *unstable* or *stable* or *cyclic* states over time
 
-* stable...output converges to a particular over time, or for *cyclic* a 
-repeated patterns of values
+-   **stable**...output converges to a particular over time, or for *cyclic* a repeated patterns of values
 
-* unstable ...grows to infinity
+-   **unstable** ...grows to infinity
 
-* *chaotic* ..highly sensitive to initial conditions
+-   *chaotic* ..highly sensitive to initial conditions
 
-
-* for the same dynamic systems whether you are stable can change with parameters and initial conditions
+-   for the same dynamic systems whether you are stable can change with parameters and initial conditions
 
 
-# Simple Example
+## Partner Exercies
+
+Discuss examples of dynamic systems
+* spatial interaction
+* temporal interaction
+* both
+
+* Positive feedback
+* Negative feedback
+
+Think of a model where you might have a multi-dimensional system state
+ 
+* what variables would define the state-space
+* what would control the evolution of the state-space
+
+* what would be the initial conditions
+
+
+## Simple Example {.scrollable}
 
 Exponential Growth - Simple Dynamic System
 
-- rate of growth(change) = r * population(density)
--  differential equation
-* $dP$ / $dt$ = $rP$
+-   rate of growth(change) = r \* population(density)
+-   differential equation
+-   $dP$ / $dt$ = $rP$
+
+## Exponential Growth - Simple Dynamic System {.scrollable}
+
+-  differential equation 
+
+$dP$ / $dt$ = $rP$
+
+-  an analytic solution exists so we can write Population as a function of time by integrating both sides
+
+-  $P = PO * exp(rt)$ 
+
+This is a regular input-output function - that gives population after some time t
+
+## Simple Implementation {.scrollable}
+
+```{r exppop1, echo=TRUE}
+source(here("R/exppop.R"))
+exppop
+
+# lets look at how this models population over time
+years <- seq(from = 1, to = 100, by = 2)
+Ptime <- years %>% map_dbl(~ exppop(P0 = 20, r = 0.01, T = .x))
+
+                           # keep track of what times we ran
+Ptime <- data.frame(P = Ptime, years = years)
+# plot
+ggplot(Ptime, aes(years, P)) +
+  geom_point() +
+  labs(x = "years", y = "Rabbit Population")
+```
 
 
+## Integration, or Solving Differential Equations {.scrollable}
 
-# Exponential Growth - Simple Dynamic System
-• differential equation
-* $dP$ / $dt$ = $rP$
+-We want the value of the dependent variation (population)
+over a range of values for independent variable (time)
 
-• an analytic solution exists so we can write Population as a function of time (integrating both sides)
-• P = PO * exp(rt)
-* This is a regular input-output function - that gives population after some time t
+- We know how dependent variable is changing (that's the
+differential equation) 
 
-# Simple Implementation 
 
-![](../lectures/dynamicmodels/dynamicmodels.014.jpeg)
----
-![](../lectures/dynamicmodels/dynamicmodels.015.jpeg)
----
-![](../lectures/dynamicmodels/dynamicmodels.016.jpeg)
----
-![](../lectures/dynamicmodels/dynamicmodels.017.jpeg)
----
+$dP / dt = rP$
 
-# Implementing Dynamic Models in R
+- For each P we can approximate the next P after a small time
+period
+
+* $P_{t+1} = P + dP / dt *  Timestep$
+* But as P changes $dP /dt$ changes so we have to keep time step small (really small if possible)
+
+## Implementing Dynamic Models in R {.scrollable}
 
 Dynamic models always involves derivatives (equations that express how things change from time step to time step or place to place )
 
-
 Implement population growth as a derivative - a model of population change
 
-```{r derivaties, echo=TRUE}
+```{r derivaties, echo=TRUE, eval=TRUE}
 # note that we include time here but we don't use it; we will need this later
-source("../R/dexppop.R")
+source(here("R/dexppop.R"))
 
 dexppop
 # see how it works
@@ -207,47 +245,54 @@ dexppop(t = 100, P = 20, r = 0.01)
 pops <- seq(from = 1, to = 100)
 tmp <- pops %>% map(~ dexppop(time = 0, r = 0.01, P = .x))
 pchange <- unlist(tmp)
+```
 
+## plotting the derivative (rate of change) {.scrollable}
 
+```{r, plotderivatives, echo=TRUE}
 pdyn <- data.frame(pops, pchange)
 ggplot(pdyn, aes(pops, pchange)) +
   geom_point(col = "green", size = 1.5)
-
-
-# why is this a straight line?
-# how many new individuals are born at each population level
-
-# try this - add a carrying capacity (dP/dt = 0 if P > carryingcapacity)
 ```
 
 
-# Integration
+-  why is this a straight line?
+-  how many new individuals are born at each population level
+
+ try this - add a carrying capacity (dP/dt = 0 if P > carryingcapacity)
+`
+
+## Integration {.scrollable}
 
 What if we wanted to look at population in 20 years given an initial condition
 
-Two options
+Two options - First (and easiest)
 
-* explicit solution to differential equation is known; e.g. you can integrate both sides of the equation! Not always possible but lets look at a case where it is possible
+-   explicit solution to differential equation is known; e.g. you can integrate both sides of the equation! Not always possible but lets look at a case where it is possible
+-   you can get the answer exactly and quickly this way
 
-* must be solved by iteration; this is what we do when we can't integrate both sides 
+## Explicit Solution is available {.scrollable}
 
-# Explicit Solution is available
+Even with carrying capacity there is an analytical solution, depending on
+how you think about carrying capacity
+
+-   if you think of carrying capacity as a *hard* limit on the population growth rate, then you can still use the same equation, and just add a limit
 
 ```{r explicit}
-source("../R/exppop.R")
+source(here("R/exppopK.R"))
 
-exppop
+exppopK
 
 # gives population after any time given an initial population
 
 # 20 rabbits, growth rate of 0.01 how many in 30 years
-exppop(T = 30, P0 = 20, r = 0.01, K = 1000)
+exppopK(T = 30, P0 = 20, r = 0.01, K = 1000)
 
 # if we want to see how population evolves over time - generate a time series by running our model for each point in time
 
 initialrabbits <- 20
 years <- seq(from = 1, to = 100, by = 2)
-Ptime <- years %>% map_dbl(~ exppop(P0 = initialrabbits, r = 0.01, K = 1000, T = .x))
+Ptime <- years %>% map_dbl(~ exppopK(P0 = initialrabbits, r = 0.01, K = 1000, T = .x))
 
 # keep track of what times we ran
 Ptime <- data.frame(P = Ptime, years = years)
@@ -263,9 +308,9 @@ max_r <- 0.1
 min_r <- 0.01
 K <- 1000
 
-tmp <- years %>% map_dbl(~ exppop(r = max_r, P0 = initialrabbits, K = K, T = .x))
+tmp <- years %>% map_dbl(~ exppopK(r = max_r, P0 = initialrabbits, K = K, T = .x))
 Ptime$Pmaxr <- tmp
-tmp <- years %>% map_dbl(~ exppop(r = min_r, P0 = initialrabbits, K = K, T = .x))
+tmp <- years %>% map_dbl(~ exppopK(r = min_r, P0 = initialrabbits, K = K, T = .x))
 Ptime$Pminr <- tmp
 
 head(Ptime)
@@ -276,46 +321,46 @@ ggplot(Ptimep, aes(years, P, col = r)) +
 
 # notice how population becomes unstable for high growth rates!
 ```
-# Integration
+
+## Integration {.scrollable}
 
 What if we wanted to look at population in 20 years given an initial condition
 
 Two options
 
-* explicit solution to differential equation is known; e.g. you can integrate both sides of the equation! Not always possible but lets look at a case where it is possible
+-   explicit solution to differential equation is known; e.g. you can integrate both sides of the equation! Not always possible but lets look at a case where it is possible
 
-* must be solved by iteration; this is what we do when we can't integrate both sides 
-# What if no analytical solutions is available
+-   must be solved by iteration; this is what we do when we can't integrate both sides 
 
-# Example 
+
+What if no analytical solutions is available
+
+# Example {.scrollable}
 
 Continue looking at our rabbit population but we can't solve it..
 
-* iterate through time
+-   iterate through time
 
-* calculate rate of change at initial conditions (e.g value of differential 
-equation for initial conditions)
+-   calculate rate of change at initial conditions (e.g value of differential equation for initial conditions)
 
-* add that value to initial conditions, to create state at time t + 1
+-   add that value to initial conditions, to create state at time t + 1
 
-* re-calculate rate of change (e.g value of differential equation for
-state at time t+1)
+-   re-calculate rate of change (e.g value of differential equation for state at time t+1)
 
-* keep doing this
+-   keep doing this
 
 Key questions is how much of a "jump" in t do we do
 
-If you do this you are "kind of"  turning the differential equation into a difference equation
+If you do this you are "kind of" turning the differential equation into a difference equation
 
-# Solving by thinking of problem as a difference equations
+## Solving by thinking of problem as a difference equations {.scrollable}
 
 Population models can be discrete (rather than continuous)
 
 So we could implement them as difference equations and iterate
 
-
 ```{r iterate1}
-source("../R/discrete_logistic_popK.R")
+source(here("R/discrete_logistic_popK.R"))
 # notice how a for loop is used to iterate
 
 # how many rabbits after 50 years given a growth of 0.1
@@ -335,16 +380,15 @@ K <- 200
 T <- 50
 ```
 
-# Compare discrete and analytic results
+## Compare discrete and analytic results {.scrollable}
 
 Save the results from both to compare
 
-
 ```{r closed}
-source("../R/exppop.R")
+source(here("R/exppop.R"))
 
-exppop(P0 = P0, r = r, K = K, T = T)
-analytic_result <- exppop(P0 = P0, r = r, K = K, T = T)
+exppopK(P0 = P0, r = r, K = K, T = T)
+analytic_result <- exppopK(P0 = P0, r = r, K = K, T = T)
 
 analytic_result
 discrete_result
@@ -354,9 +398,13 @@ discrete_result
 
 growth_result <- data.frame(time = seq(from = 1, to = 100))
 
-growth_result$Panalytic <- growth_result$time %>% map_dbl(~ exppop(P0 = 1, r = 0.05, K = 200, T = .x))
+growth_result$Panalytic <- growth_result$time %>% map_dbl(~ exppopK(P0 = 1, r = 0.05, K = 200, T = .x))
 
 growth_result$Pdiscrete <- growth_result$time %>% map_dbl(~ discrete_logistic_pop(P0 = 1, r = 0.05, K = 200, T = .x))
+```
+
+## Graph
+```{r, graph2, eval=TRUE, echo=TRUE}
 
 tmp <- growth_result %>% gather(key = "Ptype", value = "P", -time)
 ggplot(tmp, aes(time, P, col = Ptype)) +
@@ -364,37 +412,32 @@ ggplot(tmp, aes(time, P, col = Ptype)) +
 
 # try running them for longer time periods to see what happens
 # change the value of r, K , P0 - see how it effects the results
+
 ```
 
-
-
-
-# Solving using numeric integration 
+## Solving using numeric integration {.scrollable}
 
 Using a solver....when you can't do the integration by hand :)
 
-
-Solvers integrate by iteration but doing so in a way 
-that more closely *approximates* analytic integration
+Solvers integrate by iteration but doing so in a way that more closely *approximates* analytic integration
 
 Use mathematical tricks to deal with the fact that the rate of change keeps changing :)
 
-There are different types of *solvers*, some work better than others depending on
-the form of the derivative
+There are different types of *solvers*, some work better than others depending on the form of the derivative
 
-# Numerical integration with ODE
+## Numerical integration with ODE {.scrollable}
 
 Implement the differential equation as a function that
 
-* returns the derivative (as a list)
+-   returns the derivative (as a list)
 
-* inputs time, the variable(s) and a parameter list
+-   inputs time, the variable(s) and a parameter list
 
 (it needs time even though you don’t use it)
 
 My convention: name derivative functions starting with *d* to remind myself that they are computing a derivative
 
-# ODE
+## ODE
 
 Only works for Ordinary Differential Equations - single independent variable (in our case time)
 
@@ -402,16 +445,18 @@ Partial differential equations - more than 1 independent variable (e.g x and y i
 
 R has a solver called *ODE* for solving ordinary differential equations from package **desolve**
 
-# *ODE* requires
+## *ODE* requires {.scrollable}
 
-* initial conditions
-* values of independent where we want values of dependent variable (e.g times where we want population)
-* the derivative as a function
-* a list that contains all  parameter values (or if you have only one parameter then you can use a single value)
+-   initial conditions
+-   values of independent where we want values of dependent variable (e.g times where we want population)
+-   the derivative as a function
+-   a list that contains all parameter values (or if you have only one parameter then you can use a single value)
 
-# ODE example
+## ODE example {.scrollable}
+
+
 ```{r usingode}
-source("../R/dexppop.R")
+source(here("R/dexppop.R"))
 
 dexppop
 library(deSolve)
@@ -439,7 +484,6 @@ ggplot(as.data.frame(Ptime), aes(year, P)) +
   labs(y = "Population", "years")
 ```
 
-# *Homework*
+## *Homework* {.scrollable}
 
 Try to modify *dexppop* so that it includes carrying capacity and compare with what we did for our analytic and then discrete ways of doing this
-
