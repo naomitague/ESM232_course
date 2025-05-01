@@ -1,6 +1,5 @@
 ---
 title: "Diffusion"
-output: html_document
 ---
 
 
@@ -10,12 +9,13 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(deSolve)
+library(here)
 ```
 
 # R implementation
 
 ```{r}
-source("../R/diffusion.R")
+source(here("R/diffusion.R"))
 
 # run our diffusion model (iterative difference equation) with initial concentration of 10, for 8 timestep (size 1m), and 10 space steps (size 1s)
 # using diffusion parameters 0.5 s/m2, 10 m2
@@ -49,3 +49,5 @@ filled.contour(res$qin, xlab = "Time", ylab = "Distance")
 # play with time step, space step and parameters
 ```
 
+# 1. Play with time step, space step and parameters
+# 2. Design different ways to summarize and visualize output 

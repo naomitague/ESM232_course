@@ -53,13 +53,12 @@ Modeling disease through time
 
 ## Dynamic modeling {.scrollable}
 
-Dynamic modeling is common in environmental problems solving 
+Dynamic modeling is common in environmental problems solving
 
-- Similar issues: what happens at one place, depends on neighbors; 
-- what happens at one time; depends on previous time - 
+-   Similar issues: what happens at one place, depends on neighbors;
+-   what happens at one time; depends on previous time -
 
-Space - two way; 
-Time is usually one-way  
+Space - two way; Time is usually one-way
 
 Dynamic system modeling - quickly becomes complex (Engineering degrees spend a lot of time on this; there are books, entire journals etc on this topic)
 
@@ -67,8 +66,8 @@ Dynamic system modeling - quickly becomes complex (Engineering degrees spend a l
 
 Many environmental problems and questions can be related to
 
-* Diffusion 
-* Population 
+-   Diffusion
+-   Population
 
 Both often require dynamics models; and both often require thinking about dynamics in space and in time
 
@@ -76,11 +75,11 @@ Both often require dynamics models; and both often require thinking about dynami
 
 Some useful terminology
 
-- **stocks** - variables that evolve over time 
-- **flows** - transfers between variables or from the system 
-- **parameters** - values that controls the relationship between stocks and flows 
-- **sink** - something that absorbs flows 
--  **source** - something that generates flows
+-   **stocks** - variables that evolve over time
+-   **flows** - transfers between variables or from the system
+-   **parameters** - values that controls the relationship between stocks and flows
+-   **sink** - something that absorbs flows
+-   **source** - something that generates flows
 
 ## More terminology {.scrollable}
 
@@ -94,11 +93,9 @@ Some useful terminology
 
 ![](img/simplerabbit.jpg)
 
-
 ## Human engineering example {.scrollable}
 
-![](img/engineerexample.jpg)
-## Feekback is a key feature of dynamic models {.scrollable}
+![](img/engineerexample.jpg) \## Feekback is a key feature of dynamic models {.scrollable}
 
 -   dynamic systems often have *feedbak* loops
     -   positive
@@ -119,7 +116,6 @@ Some useful terminology
 Discrete models for dynamic processes use *difference* equations Continuous models for dynamic processes use *differential* equations
 
 Often it depends on how you look at the system -
-
 
 ## Dynamic System {.scrollable}
 
@@ -146,24 +142,20 @@ Dynamic systems may lead to *unstable* or *stable* or *cyclic* states over time
 
 -   for the same dynamic systems whether you are stable can change with parameters and initial conditions
 
-
 ## Partner Exercies
 
-Discuss examples of dynamic systems
-* spatial interaction
-* temporal interaction
-* both
+Discuss examples of dynamic systems \* spatial interaction \* temporal interaction \* both
 
-* Positive feedback
-* Negative feedback
+-   Positive feedback
+-   Negative feedback
 
 Think of a model where you might have a multi-dimensional system state
- 
-* what variables would define the state-space
-* what would control the evolution of the state-space
 
-* what would be the initial conditions
+-   what variables would define the state-space
 
+-   what would control the evolution of the state-space
+
+-   what would be the initial conditions
 
 ## Simple Example {.scrollable}
 
@@ -175,13 +167,13 @@ Exponential Growth - Simple Dynamic System
 
 ## Exponential Growth - Simple Dynamic System {.scrollable}
 
--  differential equation 
+-   differential equation
 
 $dP$ / $dt$ = $rP$
 
--  an analytic solution exists so we can write Population as a function of time by integrating both sides
+-   an analytic solution exists so we can write Population as a function of time by integrating both sides
 
--  $P = PO * exp(rt)$ 
+-   $P = PO * exp(rt)$
 
 This is a regular input-output function - that gives population after some time t
 
@@ -203,23 +195,19 @@ ggplot(Ptime, aes(years, P)) +
   labs(x = "years", y = "Rabbit Population")
 ```
 
-
 ## Integration, or Solving Differential Equations {.scrollable}
 
--We want the value of the dependent variation (population)
-over a range of values for independent variable (time)
+-We want the value of the dependent variation (population) over a range of values for independent variable (time)
 
-- We know how dependent variable is changing (that's the
-differential equation) 
-
+-   We know how dependent variable is changing (that's the differential equation)
 
 $dP / dt = rP$
 
-- For each P we can approximate the next P after a small time
-period
+-   For each P we can approximate the next P after a small time period
 
-* $P_{t+1} = P + dP / dt *  Timestep$
-* But as P changes $dP /dt$ changes so we have to keep time step small (really small if possible)
+-   $P_{t+1} = P + dP / dt *  Timestep$
+
+-   But as P changes $dP /dt$ changes so we have to keep time step small (really small if possible)
 
 ## Implementing Dynamic Models in R {.scrollable}
 
@@ -255,12 +243,10 @@ ggplot(pdyn, aes(pops, pchange)) +
   geom_point(col = "green", size = 1.5)
 ```
 
+-   why is this a straight line?
+-   how many new individuals are born at each population level
 
--  why is this a straight line?
--  how many new individuals are born at each population level
-
- try this - add a carrying capacity (dP/dt = 0 if P > carryingcapacity)
-`
+try this - add a carrying capacity (dP/dt = 0 if P \> carryingcapacity) \`
 
 ## Integration {.scrollable}
 
@@ -273,8 +259,7 @@ Two options - First (and easiest)
 
 ## Explicit Solution is available {.scrollable}
 
-Even with carrying capacity there is an analytical solution, depending on
-how you think about carrying capacity
+Even with carrying capacity there is an analytical solution, depending on how you think about carrying capacity
 
 -   if you think of carrying capacity as a *hard* limit on the population growth rate, then you can still use the same equation, and just add a limit
 
@@ -330,8 +315,7 @@ Two options
 
 -   explicit solution to differential equation is known; e.g. you can integrate both sides of the equation! Not always possible but lets look at a case where it is possible
 
--   must be solved by iteration; this is what we do when we can't integrate both sides 
-
+-   must be solved by iteration; this is what we do when we can't integrate both sides
 
 What if no analytical solutions is available
 
@@ -404,6 +388,7 @@ growth_result$Pdiscrete <- growth_result$time %>% map_dbl(~ discrete_logistic_po
 ```
 
 ## Graph
+
 ```{r, graph2, eval=TRUE, echo=TRUE}
 
 tmp <- growth_result %>% gather(key = "Ptype", value = "P", -time)
@@ -453,7 +438,6 @@ R has a solver called *ODE* for solving ordinary differential equations from pac
 -   a list that contains all parameter values (or if you have only one parameter then you can use a single value)
 
 ## ODE example {.scrollable}
-
 
 ```{r usingode}
 source(here("R/dexppop.R"))
