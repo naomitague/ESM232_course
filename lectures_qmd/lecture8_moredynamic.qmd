@@ -13,30 +13,27 @@ library(tidyverse)
 library(deSolve)
 library(here)
 ```
-## Using the ODE solver {.scrollable}
 
+## Using the ODE solver {.scrollable}
 
 To integrate a differential equation using ODE solver in R requires
 
+\*initial conditions
 
-*initial conditions
+\*differential equation
 
-*differential equation
+\*parameters
 
-*parameters
-
-
-## Additional parameters 
-
+## Additional parameters
 
 With the ODE solver we can add additional parameters to the function
 
-* parameters must all be input as a single list 
-* similar to how we return multiple outputs from a function
+-   parameters must all be input as a single list
+-   similar to how we return multiple outputs from a function
 
 see example below..lets add a carrying capacity
 
-## R code with carrying capacity  {.scrollable}
+## R code with carrying capacity {.scrollable}
 
 ```{r exampleode}
 library(deSolve)
@@ -59,6 +56,7 @@ head(results)
 # add more meaningful names
 colnames(results) <- c("year", "P")
 ```
+
 ## Plot
 
 ```{r, plotodep}
@@ -68,9 +66,7 @@ ggplot(as.data.frame(results), aes(year, P)) +
   labs(y = "Population", "years")
 ```
 
-
-
-## Try again with different parameters  {.scrollable}
+## Try again with different parameters {.scrollable}
 
 ```{r exampleode2}
 # same initial condtions
@@ -97,6 +93,7 @@ both <- inner_join(as.data.frame(results), as.data.frame(results2))
 both_p <- both %>% gather(key = "model", value = "P", -year)
 
 ```
+
 ## Plot
 
 ```{r, plotb}
@@ -106,16 +103,15 @@ ggplot(both_p, aes(year, P, col = model)) +
   labs(y = "Population", "years")
 ```
 
-## Differential Equation, Difference (Iteration by hand) comparison  {.scrollable}
+## Differential Equation, Difference (Iteration by hand) comparison {.scrollable}
 
 Remember we have 3 ways now to calculate population
 
-* analytical solution - based on integration (exppop.R) BEST
+-   analytical solution - based on integration (exppop.R) BEST
 
-* using an ode solver for numerical approximation (exppop_play.R)
+-   using an ode solver for numerical approximation (exppop_play.R)
 
-* numerical integration using in discrete steps (discrete_logistic_pop.R)
-
+-   numerical integration using in discrete steps (discrete_logistic_pop.R)
 
 ## How do they differ
 
@@ -160,59 +156,52 @@ ggplot(tmp, aes(time, P, col = Ptype)) +
 # notice Pdifferential is closer to Panalytic than Pdiscrete
 ```
 
-## Other Examples  {.scrollable}
+## Other Examples {.scrollable}
 
-All differential and difference equations are approximations
-The analytical solution is exact
+All differential and difference equations are approximations The analytical solution is exact
 
 Notice that differential equations is a bit more accurate!
 
-## Lets look at something a bit more complicated  {.scrollable}
+## Lets look at something a bit more complicated {.scrollable}
 
-* diffusion (how a contaminent moves through space and time)
-* start with 1 dimension in space
+-   diffusion (how a contaminent moves through space and time)
+-   start with 1 dimension in space
 
-## Diffusion Conceptual model  {.scrollable}
+## Diffusion Conceptual model {.scrollable}
 
 ![](img/diffusion/diffusion.001.jpeg)
 
-## Modeling Diffusion  {.scrollable}
+## Modeling Diffusion {.scrollable}
 
+Diffusion can be implemented as a partial differential equation
 
-Diffusion can be implemented as a partial differential equation 
+Complicated to solve - but there are tool in R for specific types of partial differential equations [Reactive Transport Example](https://cran.r-project.org/web/packages/ReacTran/index.html)
 
-Complicated to solve - but there are tool in R for specific types of partial differential equations
-[Reactive Transport Example](https://cran.r-project.org/web/packages/ReacTran/index.html)
+## Sources for more on diffusion {.scrollable}
 
-## Sources for more on diffusion  {.scrollable}
+More info on differential equations in R [online book differential equation in R](http://www-labs.iro.umontreal.ca/~mignotte/IFT2425/Documents/Solving_Differential_Equations_In_R_Soetaert_K.pdf)
 
-More info on differential equations in R
-[online book differential equation in R](http://www-labs.iro.umontreal.ca/~mignotte/IFT2425/Documents/Solving_Differential_Equations_In_R_Soetaert_K.pdf)
+## Simple diffusion model {.scrollable}
 
+Diffusionn would require partial derivatives - time and space! it gets much more tricky ...beyond this course
 
-## Simple diffusion model  {.scrollable}
-
-Diffusionn would require partial derivatives - time and space! it gets much more tricky ...beyond this course 
-
-Appoximate diffusion with a difference equation - and iterative to get an estimate of how diffusion works 
+Appoximate diffusion with a difference equation - and iterative to get an estimate of how diffusion works
 
 Example of Diffusion - difference equation implementation to see what some issues can be
 
-
-
-## Diffusion in 1 dimension  {.scrollable}
+## Diffusion in 1 dimension {.scrollable}
 
 ![](img/diffusion/diffusion.002.jpeg)
 
-## Diffusion in one dimension through time  {.scrollable}
+## Diffusion in one dimension through time {.scrollable}
 
 ![](img/diffusion/diffusion.003.jpeg)
 
-## Diffusion data structure  {.scrollable}
+## Diffusion data structure {.scrollable}
 
 ![](../lectures/dynamicmodels/diffusion/diffusion.004.jpeg)
 
-## R implementation  {.scrollable}
+## R implementation {.scrollable}
 
 ```{r}
 source(here("R/diffusion.R"))
@@ -232,7 +221,7 @@ filled.contour(result$conc, xlab = "Time", ylab = "Distance")
 filled.contour(t(result$conc), ylab = "Time", xlab = "Distance")
 ```
 
-## Change parameters (diffusivity D, and space and time steps (dx, dt))  {.scrollable}
+## Change parameters (diffusivity D, and space and time steps (dx, dt)) {.scrollable}
 
 ```{r}
 # changes diffusivity and other parameters particularly
@@ -249,13 +238,11 @@ filled.contour(res$qin, xlab = "Time", ylab = "Distance")
 # play with time step, space step and parameters
 ```
 
-
-## Play  {.scrollable}
+## Play {.scrollable}
 
 Try running the diffusion model with different time steps, space steps and parameters
 
-
-## Some examples with different parameters and space/time steps  {.scrollable}
+## Some examples with different parameters and space/time steps {.scrollable}
 
 ```{r}
 # what if we increase diffusivity
@@ -274,15 +261,16 @@ filled.contour(resunstable$conc, xlab = "Time (fraction of hour)", ylab = "Dista
 resunstable <- diff1(initialC = 10, nx = 100, dx = 1, nt = 10, dt = 1, D = 0.8, area = 1)
 filled.contour(resunstable$conc, xlab = "time", ylab = "Distance Along Path")
 ```
-##  Dynamics Models {.scrollable}
 
-* Diffusion example illustrates the challenge of numerical integration
+## Dynamics Models {.scrollable}
 
-* We see evidence of "overshoot" 
+-   Diffusion example illustrates the challenge of numerical integration
 
-* Correct by reducing the time step (but then we have to increase the number of time steps to cover the same period)
-  * recall total time is number of time steps (nt) multiplied by time interval (dt)
-  
+-   We see evidence of "overshoot"
+
+-   Correct by reducing the time step (but then we have to increase the number of time steps to cover the same period)
+
+    -   recall total time is number of time steps (nt) multiplied by time interval (dt)
 
 ## Diffusion Example {.scrollable}
 
@@ -323,27 +311,25 @@ filled.contour(resfast_fixtime$qin - resfast_fixtime$qout, xlab = "Time", ylab =
 
 Useful to brainstorm about what is important
 
+For example
 
-For example 
-
-* time it takes to evenly diffuse?
+-   time it takes to evenly diffuse?
 
 How would we implement that?
 
 ## Extracting information from space-time results {.scrollable}
 
-* pictures can be hard to interpret
+-   pictures can be hard to interpret
 
-* summarizing over one of the dimensions (either space or time) can help
+-   summarizing over one of the dimensions (either space or time) can help
 
-* looking at a single trajectory through time
+-   looking at a single trajectory through time
 
-* looking at spatial variation for one point in time
+-   looking at spatial variation for one point in time
 
-* looking at spatial variation for multiple points in time
+-   looking at spatial variation for multiple points in time
 
 ## Try it {.scrollable}
-
 
 ```{r one option}
 # View(resfast_fixtime$conc)
@@ -383,6 +369,3 @@ ggplot(spatial_aver, aes(time, 100 * sqrt(cvar) / cmean)) +
   geom_line() +
   labs(y = "COV (as percent")
 ```
-
-
-
