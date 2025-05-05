@@ -21,10 +21,11 @@ library(sensitivity)
 -   models that have feedbacks (conditions evolve through time)
 
 -   numerical integration - usually done with a solver
+
     -   only one independent variable ordinary differential equation (e.g just time)
     -   we can use the ODE solver
-    -   derivative is first order 
-      - (e.g $dy/dt$ = ; not $d^2y/dt$+dy/dy = f(y,t))
+    -   derivative is first order
+    -   (e.g $dy/dt$ = ; not $d^2y/dt$+dy/dy = f(y,t))
     -   there also solvers for high order and partial differential equations
 
 ## Sensitivity Analysis of a Differential Equation {.scrollable}
@@ -33,10 +34,10 @@ We can apply sensitivity analysis to a differential equation
 
 A key issue where is sensitivity of what?
 
-Dynamic models often give you many many outputs 
+Dynamic models often give you many many outputs
 
-- time series (streamflow every day for a year, population for 30 years)
-- or output over space (spatially averaged concentration after 10 days?)
+-   time series (streamflow every day for a year, population for 30 years)
+-   or output over space (spatially averaged concentration after 10 days?)
 
 So if we are asking 'sensitivity of what' we need to summarize results in some way (reduce their dimensionality )
 
@@ -59,20 +60,16 @@ Its useful to turn that summarizing workflow into a function
 
 ## In class exerise
 
-For the diffusion model that we've been working with 
+For the diffusion model that we've been working with
 
-- write a function that takes as input the output of the ODE solver and returns a summary
-  - the summary should be a single value
-    - (or if you are ambitious a list of several single value summary statistics)
-  - you can be creative here - what would be an interesting summary
-  - include in comments at the top of the function a rationale for your summary choice
-  
-- check that it works by applying it to 
-  
-Upload your function to Canvas - InClass in this weeks Canvas
-- we will give 10pts for all loaded functions
+-   write a function that takes as input the output of the ODE solver and returns a summary
+    -   the summary should be a single value
+        -   (or if you are ambitious a list of several single value summary statistics)
+    -   you can be creative here - what would be an interesting summary
+    -   include in comments at the top of the function a rationale for your summary choice
+-   check that it works by applying it to
 
-
+Upload your function to Canvas - InClass in this weeks Canvas - we will give 10pts for all loaded functions
 
 ## Workflow for Sensitivity Analysis {.scrollable}
 
@@ -97,8 +94,7 @@ Upload your function to Canvas - InClass in this weeks Canvas
 
 ## Example with our population ODE {.scrollable}
 
-Lets first generate parameter sets and figure out how to run with across
-uncertainty in just one  those parameter sets
+Lets first generate parameter sets and figure out how to run with across uncertainty in just one those parameter sets
 
 Always a good practice to "try" you model on one parameter set *before* trying to run for all parameters
 
@@ -271,7 +267,7 @@ compute_metrics(result, 100)
 
 p_wrapper <- function(r, K, Pinitial, simtimes, odefunc, metricfunc) {
   parms <- list(r = r, K = K)
-  result <- ode(y = Pinitial, times = simtimes, func = odefunc, parms = parms)
+  result <- ode(y = Pinitial, times = simtimes, func = odefunc, parms = parms, method="euler")
   colnames(result) <- c("time", "P")
   # get metrics
   metrics <- metricfunc(as.data.frame(result), thresh = 100)
@@ -363,51 +359,46 @@ Suggest that the solver (numerical integration) had issues
 
 -   "stiff" problems are harder for numerical integration to solve - (small changes have big impacts); a threshold carrying capacity does that
 
-
-
-## <span style="color:orange">Assignment</span> {.scrollable}
+## [Assignment]{style="color:orange"} {.scrollable}
 
 # The model
+
 Consider the following model of forest growth (where forest size in measured in units of carbon (C))
 
-- $dC/dt  = r*C$  for forests where C is below a threshold canopy closure
+-   $dC/dt  = r*C$ for forests where C is below a threshold canopy closure
 
-- $dC/dt = g*(1- C/K)$ for forests where carbon is  at or above the threshold canopy closure
+-   $dC/dt = g*(1- C/K)$ for forests where carbon is at or above the threshold canopy closure
 
-- and $K$ is a carrying capacity in units of carbon
+-   and $K$ is a carrying capacity in units of carbon
 
-
-The size of the forest ($C$), Canopy closure threshold and carrying capacity are all in units of carbon 
-
+The size of the forest ($C$), Canopy closure threshold and carrying capacity are all in units of carbon
 
 You could think of the canopy closure threshold as the size of the forest at which growth rates change from exponential to linear You can think of $r$, as early exponential growth rate and $g$ as the linear growth rate once canopy closure has been reached
 
+## [Your task]{style="color:orange"} {.scrollable}
 
-## <span style="color:orange">Your task</span> {.scrollable}
+1.  Implement this model in R (as a differential equation)
 
-1. Implement this model in R (as a differential equation) 
+2.  Run the model for 300 years (using the ODE solver) starting with an initial forest size of 10 kg/C, and using the following parameters:
 
-2. Run the model for 300 years (using the ODE solver)  starting with an initial forest size of 10 kg/C, and using the following parameters:
+-   canopy closure threshold of 50 kgC
+-   $K$ = 250 kg C (carrying capacity)
+-   $r$= 0.01 (exponential growth rate before before canopy closure)
+-   $g$ = 2 kg/year (linear growth rate after canopy closure)
 
-  * canopy closure threshold of 50 kgC 
-  * $K$ = 250 kg C (carrying capacity) 
-  * $r$=  0.01 (exponential growth rate before before canopy closure)
-  *  $g$ = 2 kg/year (linear growth rate after canopy closure)
+3.  Graph the results. Here you are graphing the trajectory with the parameters as given (e.g no uncertainty)
 
+4.  Run a sobol global (vary all parameters at the same time) sensitivity analysis that explores how the estimated **maximum forest size** (e.g maximum of $C$ 300 years, varies with these parameters
 
-3. Graph the results. Here you are graphing the trajectory with the parameters as given (e.g no uncertainty)
+-   pre canopy closure growth rate ($r$)
+-   post-canopy closure growth rate ($g$)
+-   canopy closure threshold and carrying capacity($K$)
 
-4. Run a sobol global (vary all parameters at the same time) sensitivity analysis that explores how the  estimated **maximum forest size** (e.g maximum of $C$  300 years, varies with these parameters
+Assume that parameters are all normally distributed with means as given above and standard deviation of 10% of mean value
 
-  * pre canopy closure growth rate ($r$) 
-  * post-canopy closure growth rate ($g$) 
-  * canopy closure threshold and carrying capacity($K$)
+5.  Graph the results of the sensitivity analysis as a box plot of maximum forest size and record the two Sobol indices (**S** and **T**).
 
-  Assume that parameters are all normally distributed with means as given above and standard deviation of 10% of mean value
-
-5. Graph the results of the sensitivity analysis as a box plot of maximum forest size and record the two Sobol indices (**S** and **T**).
-
-6. In 2-3 sentences, discuss what the results of your simulation might mean. (For example think about how what parameters climate change might influence).
+6.  In 2-3 sentences, discuss what the results of your simulation might mean. (For example think about how what parameters climate change might influence).
 
 Submit R markdown with model implementation, graphs and sensitivity analysis and R file with your model
 
@@ -417,6 +408,6 @@ You can work in groups or individually
 
 Compute Sobol indices for a second metric: forest size after a 100 years
 
-OR 
+OR
 
 Try using Sobol for the diffusion model - what would be your metric?
