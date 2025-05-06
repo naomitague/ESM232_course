@@ -3,7 +3,6 @@ title: 'Assignment: Using Sobol with an ODE'
 output:
   pdf_document: default
   html_document: default
-date: "2023-05-17"
 ---
 
 ```{r setup, include=FALSE}
@@ -15,13 +14,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Consider the following model of forest growth (where forest size in measured in units of carbon (C))
 
-$dC/dt  = r*C$  for forests where C is below a threshold canopy closure
+*  $dC/dt  = r*C$  for forests where C is below a threshold canopy closure
 
-$dC/dt = g*(1- C/K)$ for forests where carbon is  at or above the threshold canopy closure
+* $dC/dt = g*(1- C/K)$ for forests where carbon is  at or above the threshold canopy closure
 
-and $K$ is a carrying capacity in units of carbon
-
-
+* $K$ is a carrying capacity in units of carbon
 
 
 The size of the forest ($C$), Canopy closure threshold and carrying capacity are all in units of carbon  You could think of the canopy closure threshold as the size of the forest at which growth rates change from exponential to linear You can think of $r$, as early exponential growth rate and $g$ as the linear growth rate once canopy closure has been reached
@@ -53,12 +50,14 @@ The size of the forest ($C$), Canopy closure threshold and carrying capacity are
 
 6. In 2-3 sentences, discuss what the results of your simulation might mean. (For example think about how what parameters climate change might influence).
 
-Submit R markdown with model implementation, graphs and sensitivity analysis and R file with your model
+Submit Quarto with model implementation, graphs and sensitivity analysis and R file with your model
 
 You can work in groups or individually
 
 # Extra Credit
 
-Also compute Sobol indices for a second metric: forest size after a 100 years
+Compute Sobol indices for a second metric: forest size after a 100 years
+OR 
+Try using Sobol for the diffusion model - what would be your metric?
 
 

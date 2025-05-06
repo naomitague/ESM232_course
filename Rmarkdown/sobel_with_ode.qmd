@@ -9,10 +9,11 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(deSolve)
 library(sensitivity)
+library(here)
 ```
 
 ```{r sen}
-source("../R/dpopgrowth.R")
+source(here("R/dpopgrowth.R"))
 
 dpopgrowth
 
@@ -143,7 +144,7 @@ compute_metrics(result, 100)
 
 p_wrapper <- function(r, K, Pinitial, simtimes, odefunc, metricfunc) {
   parms <- list(r = r, K = K)
-  result <- ode(y = Pinitial, times = simtimes, func = odefunc, parms = parms)
+  result <- ode(y = Pinitial, times = simtimes, func = odefunc, parms = parms, method="euler")
   colnames(result) <- c("time", "P")
   # get metrics
   metrics <- metricfunc(as.data.frame(result), thresh = 100)
