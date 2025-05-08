@@ -95,7 +95,7 @@ Let's consider harvesting as **exogenous** first - simply change the starting co
 
 ## Exogeneous model  {.scrollable}
 
-```{r forest}
+```{r forest, echo=TRUE}
 source(here("R/dexppopK.R"))
 
 dexppopK
@@ -113,7 +113,7 @@ forest <- ode(y = postfire_initial_carbon, times = tm, dexppopK, parms = forestp
 ```
 
 ## Exogeneous model - plot  {.scrollable}
-```{r forestplot}
+```{r forestplot, echo=TRUE}
 colnames(forest) <- c("time", "carbon")
 ggplot(as.data.frame(forest), aes(time, carbon)) +
   geom_line()
@@ -140,7 +140,7 @@ We can include harvesting in our forest with a new parameter **harv** (proportio
 I also changed the variable names to be more meaningful
 
 
-```{r harvest}
+```{r harvest, echo=TRUE}
 # fixed amount per year
 source(here("R/dharvest.R"))
 dharvest
@@ -174,7 +174,7 @@ Compute trajectories of forest biomass (or carbon) over time - given different h
 
 ## My code  {.scrollable}
 
-```{r harvest2}
+```{r harvest2, echo=TRUE}
 # what if we harvest a a much greater rates
 # lets vary the harvest rates from 0.0 to 0.4
 harvestr <- seq(from = 0.0, to = 0.4, by = 0.025)
@@ -203,7 +203,7 @@ head(res)
 - Notice that stable forest carbon changes with harvest rates
 - Some forests are not stable - (or forest size goes to zero)
 
-```{r harvest2plot}
+```{r harvest2plot, echo=TRUE}
 # put in to a form where we can plot
 resl <- gather(res, key = "harvestr", value = "carbon", -time)
 ggplot(resl, aes(time, carbon, col = harvestr)) +
@@ -244,7 +244,7 @@ Sensitivity of what? What do we care about?
 
 We will design a function to compute metrics and a wrapper to make this easy
 
-```{r harvestsend}
+```{r harvestsend, echo=TRUE}
 # fixed amount per year
 source(here("R/dharvest.R"))
 
@@ -297,7 +297,7 @@ compute_short_long_C(res)
 ```
 ## Build our wrapper function and run for all the parameter sets  {.scrollable}
 
-```{r, wrapper}
+```{r, wrapper, echo=TRUE}
 # use a wrapper function to just return the carbon trajectories
 p_wrapper <- function(r, harv, K, Cinitial, simtimes, odefunc, metricfunc) {
   parms <- list(r = r, K = K, harv = harv)
@@ -339,7 +339,7 @@ ggplot(tmp, aes(metric, value, col = metric)) +
 * sobol indices
 
 Try it
-```{r graphs}
+```{r graphs, echo=TRUE}
 # link with parameters to see how parameters together
 # impact something we care about Clong
 # report harvest as a percent for easy of interpretation
@@ -368,7 +368,7 @@ Think about what you would need to do to make this realistic
 
 ## Fixed Harvest Example  {.scrollable}
 
-```{r fixed}
+```{r fixed, echo=TRUE}
 source(here("R/dharvestfixed.R"))
 
 dharvestfixed
@@ -394,7 +394,7 @@ tail(res)
 
 ## Plot the results  {.scrollable}
 
-```{r fixedplotting}
+```{r fixedplotting, echo=TRUE}
 ggplot(as.data.frame(res), aes(time, carbon)) +
   geom_point() +
   labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
