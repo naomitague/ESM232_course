@@ -359,100 +359,15 @@ ggplot(as.data.frame(res), aes(time, carbon)) +
 
 ## For next class
 
-* Skim the following papers (in Canvas)
-  * Kennedy et al., 2021
-  * Burke et al., 2021
-  * Graup et al., 2022
-  
-* Pick on of the papers to focus on in more details
-  * In 2-3 sentences write down how sensitivity analysis was done in the paper
-  * Ask one question  - something you'd like to know that wasn't covered or wasn't clear in the paper
-  * If you had the same model set up available to you, what would an additional scenario you'd want to run
+* Burke et al., 2021
+* Graup et al., 2022
+
+* Pick on of the papers to focus on in more detail, for this paper do the following:
+ * In 2-3 sentences, describe how parameter uncertainty was used in the paper
+ * Ask one question - something you'd like to know that wasn't covered or wasn't clear in the paper
+ * If you had the same model set up available to you, what additional scenario could you run? why?
  
-* Upload to Canvas - we will discuss next clas
-
-
-## Discussion Section
-
-
-
-
-What if we have a forest management task -  to make harvest a fixed amount of  carbon but only take it if forest carbon is above a threshold minimum carbon that will insure stability
-
-Think about how you would explore stability here
-
-* use our derivative function based on *dharvestfixed.R*
-
-* assume a forest growth rate of 0.05, a carrying capacity of 1000kg and a harvest rate of 10kg/year
-
-* can you figure out what the two stable values of forest carbon will be without running the ODE
-
-## here's what I did  {.scrollable}
-
-```{r stability}
-source(here("R/dharvestfixed.R"))
-
-# first lets look at how the derivative varies with the size of forest
-
-carbon <- seq(from = 0, to = 1000)
-dcarbon <- unlist(carbon %>% map(dharvestfixed, Time = NULL, parms = list(r = 0.05, K = 1000, mincarbon = 0, harv = 10)))
-
-a <- ggplot(cbind.data.frame(carbon = carbon, dcarbon = dcarbon), aes(carbon, dcarbon)) +
-  geom_point() +
-  geom_hline(yintercept = 0, col = "red") +
-  labs(y = "Derivative\n (Rate of change of forest carbon) (kg/C/year)", x = "Current Forest Carbon Stock (kgC)")
-a
-# try it out with different initial conditions to watch how the system moves to a stable state
-tm <- seq(from = 1, to = 500)
-Pinitial <- 500
-gps <- list(harv = 10, K = 1000, r = 0.05, mincarbon = 0)
-
-res <- ode(Pinitial, tm, dharvestfixed, gps)
-colnames(res) <- c("time", "carbon")
-
-b <- ggplot(as.data.frame(res), aes(time, carbon)) +
-  geom_point() +
-  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 500kgC")
-ggarrange(a, b)
-
-#  try smaller starting condition
-tm <- seq(from = 1, to = 500)
-Pinitial <- 150
-gps <- list(harv = 10, K = 1000, r = 0.05, mincarbon = 0)
-
-res <- ode(Pinitial, tm, dharvestfixed, gps, method = "euler")
-colnames(res) <- c("time", "carbon")
-
-c <- ggplot(as.data.frame(res), aes(time, carbon)) +
-  geom_point() +
-  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
-
-ggarrange(b, a, c)
-
-#  try other stable starting condition
-tm <- seq(from = 1, to = 500)
-
-# unstable
-Pinitial <- 275
-# stable
-Pinitial <- 277
-gps <- list(harv = 10, K = 1000, r = 0.05, mincarbon = 0)
-
-res <- ode(Pinitial, tm, dharvestfixed, gps)
-colnames(res) <- c("time", "carbon")
-
-ggplot(as.data.frame(res), aes(time, carbon)) +
-  geom_point() +
-  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
-
-# try a different method
-res <- ode(Pinitial, tm, dharvestfixed, gps, method = "euler")
-colnames(res) <- c("time", "carbon")
-
-ggplot(as.data.frame(res), aes(time, carbon)) +
-  geom_point() +
-  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
-```
+* Upload to Canvas before class - and we will finalize in class
 
 
 ## Extra Credit Assignment  {.scrollable}
