@@ -4,7 +4,7 @@ output: html_document
 ---
 # In class challenge
 
-We can more formally find stablity by finding the system state when the derivative is zero
+We can more formally find stability  by finding the system state when the derivative is zero
 
 
 What if we have a slightly different forest management task -  to make harvest a fixed amount of  carbon but only take it if it is above a threshold minimum carbon
