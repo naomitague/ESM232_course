@@ -75,7 +75,7 @@ result <- as.data.frame(result)
 ggplot(result, aes(time, P)) +
   geom_point()
 
-# extra our metrics of interest  from this
+# extract our metrics of interest  from this
 # maximum population it gets to
 maxpop <- max(result$P)
 maxpop

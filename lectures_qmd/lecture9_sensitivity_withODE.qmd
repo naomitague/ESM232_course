@@ -58,11 +58,11 @@ So a key step in sensitivity analysis with a dynamics model is summarizing resul
 
 Its useful to turn that summarizing workflow into a function
 
-## In class exerise
+## In class exerise {.scrollable}
 
 For the diffusion model that we've been working with
 
--   write a function that takes as input the output of the ODE solver and returns a summary
+-   write a function that takes as input the output of diffusion function and returns a summary
     -   the summary should be a single value
         -   (or if you are ambitious a list of several single value summary statistics)
     -   you can be creative here - what would be an interesting summary
@@ -85,7 +85,9 @@ Upload your function to Canvas - InClass in this weeks Canvas - we will give 10p
 
 -   run ODE for each parameter sets to fill in this metrics data structure
 
-    -   its usually helpful to create a wrapper function \* runs ODE \* extracts metrics
+    -   its usually helpful to create a wrapper function 
+        - runs ODE 
+        - extracts metrics
     -   run wrapper function for each parameter sets
 
 -   send the metrics data structure back to the sensitivity analysis object (from sobel or LHS)
@@ -94,7 +96,7 @@ Upload your function to Canvas - InClass in this weeks Canvas - we will give 10p
 
 ## Example with our population ODE {.scrollable}
 
-Lets first generate parameter sets and figure out how to run with across uncertainty in just one those parameter sets
+Lets first generate parameter sets and figure out how to run  across uncertainty in just one those parameter sets
 
 Always a good practice to "try" you model on one parameter set *before* trying to run for all parameters
 
@@ -176,7 +178,7 @@ result <- as.data.frame(result)
 ggplot(result, aes(time, P)) +
   geom_point()
 
-# extra our metrics of interest  from this
+# extract our metrics of interest  from this
 # maximum population it gets to
 maxpop <- max(result$P)
 maxpop
