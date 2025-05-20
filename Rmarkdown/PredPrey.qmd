@@ -1,0 +1,334 @@
+---
+title: "predprey
+"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(deSolve)
+library(ggpubr)
+library(tidyverse)
+library(sensitivity)
+library(lhs)
+library(purrr)
+library(ggpubr)
+library(here)
+```
+
+## Example implementation
+
+```{r}
+source(here("R/lotvmod.R"))
+lotvmod
+
+# note the use of with
+# initial conditions
+currpop <- c(prey = 10, pred = 1)
+
+# time points to see results
+days <- seq(from = 1, to = 100, by = 1)
+
+# set parameters
+pars <- c(rprey = 0.5, alpha = 0.3, eff = 0.2, pmort = 0.2, K = 100)
+
+# run the model
+res <- ode(func = lotvmod, y = currpop, times = days, parms = pars)
+```
+
+## Run this model - how would you visualize results?
+
+## Visualizing results
+
+* two variable dynamic models that have feedbacks between variables can create cyclical
+dynamics (and more complex )
+
+* Two ways to look at results
+
+  * time series of each state variable  (pred and prey)
+  
+  * how state variables interact with each other 
+    * interactions through time
+    * x versus y colored by time
+
+## Relationship between populations {.scrollable}
+```{r}
+# graph the results
+head(res)
+# rearrange for easy plotting
+resl <- as.data.frame(res) %>% pivot_longer(-time, names_to = "animal", values_to = "pop")
+p1 <- ggplot(resl, aes(time, pop, col = animal)) +
+  geom_line()
+
+p1
+
+
+p2 <- ggplot(as.data.frame(res), aes(pred, prey)) +
+  geom_point() +
+  labs(y = "Prey", x = "Predators")
+p2
+
+# To make this easier to understand - maybe
+p2b <- ggplot(as.data.frame(res), aes(pred, prey, col = time)) +
+  geom_point() +
+  labs(y = "Prey", x = "Predators")
+p2b
+
+ggarrange(p1, p2b)
+```
+
+# Try other parameters {.scrollable}
+
+- try to bring relative size of predators (versus prey) higher 
+
+- what if you increase the predation rates (what might that look like in reality)
+
+- how might you add a carrying capacity   
+
+
+## Implementation {.scrollable}
+
+```{r examples}
+source(here("R/lotvmodK.R"))
+lotvmodK
+
+# initial conditions
+currpop <- c(prey = 1, pred = 1)
+
+# set parameter list
+pars <- c(rprey = 0.1, alpha = 0.6, eff = 0.8, pmort = 0.4, K = 20)
+
+# times when you want to evaluate
+days <- seq(from = 1, to = 500)
+
+# run our differential equation solver
+res <- ode(func = lotvmodK, y = currpop, times = days, parms = pars)
+
+# rearrange for plotting
+resl <- as.data.frame(res) %>% pivot_longer(-time, names_to = "species", values_to = "pop")
+
+# graph both populations over time
+p1 <- ggplot(resl, aes(time, pop, col = species)) +
+  geom_line()
+p1
+
+# also look at relationships between preditor and prey population and use color for time
+# I will remove the legend here to make it easier to see
+p2 <- ggplot(as.data.frame(res), aes(pred, prey, col = (round(time / 10)))) +
+  geom_point() +
+  theme(legend.position = "none")
+p2
+p2 <- ggplot(as.data.frame(res), aes(pred, prey, col = as.factor(round(time / 10)))) +
+  geom_point() +
+  theme(legend.position = "none")
+p2
+ggarrange(p1, p2)
+
+# try with different parameter sets, can you create one where populations are stable - less cycling?
+```
+
+
+## Code for Lorenz system
+
+Lets look at a Lorenz System Code
+```{r lorenze}
+# lorenz
+source(here("R/lorenz.R"))
+
+lorenz
+```
+
+## Application of Lorenz {.scrollable}
+
+
+```{r lorenzeapp}
+pars <- list(a = 10, b = 28, c = 8 / 3)
+res <- ode(func = lorenz, c(x = 0.1, y = 0, z = 0), times = seq(0, 50, by = 0.01), parms = pars)
+```
+ now plot 
+
+
+* as a phase space diagram (x vs y, x vs z, y vs z) - using time for color
+* as a time series (e.g time on the x axis) add each variable with a different color
+
+then try with different initial conditions
+
+## Plots {.scrollable}
+
+```{r, lr1}
+
+
+ggplot(as.data.frame(res), aes(x, y, col = time)) +
+  geom_point()
+ggplot(as.data.frame(res), aes(x, z, col = time)) +
+  geom_point()
+ggplot(as.data.frame(res), aes(y, z, col = time)) +
+  geom_point()
+
+resl <- as.data.frame(res) %>% gather(key = "var", value = "value", -time)
+ggplot(resl, aes(time, value, col = var)) +
+  geom_line()
+```
+
+## Plot with different initial conditions
+```{r, lr2}
+# try with different initial conditions
+pars <- list(a = 15, b = 28, c = 8 / 4)
+res <- ode(func = lorenz, c(x = 0.3, y = 5, z = 10), times = seq(0, 50, by = 0.01), parms = pars)
+
+ggplot(as.data.frame(res), aes(x, y, col = time)) +
+  geom_point() +
+  scale_colour_gradientn(colours = terrain.colors(10))
+ggplot(as.data.frame(res), aes(x, z, col = time)) +
+  geom_point() +
+  scale_colour_gradientn(colours = terrain.colors(10))
+ggplot(as.data.frame(res), aes(y, z, col = time)) +
+  geom_point() +
+  scale_colour_gradientn(colours = terrain.colors(10))
+
+resl <- as.data.frame(res) %>% gather(key = "var", value = "value", -time)
+ggplot(resl, aes(time, value, col = var)) +
+  geom_line()
+```
+
+
+## Sensitivity analysis
+
+Consider pred-prey 
+BUT what will be the output - if we want to 'quantify sensitivity'
+useful to look at a single value or set of value
+
+For example
+
+* Max Prey Population
+* Min Prey Population
+
+
+## Sensitivity Analysis steps
+
+* Generate parameters (LHS, Sobol)
+* Metrics function
+* Wrapper Function
+* Run wrapper function to get metrics for all parameter sets
+* Graph and compute sensitivity statistics
+
+ Discussion section will review how to do with LHS
+ 
+## Example Sensitivity Analysis {.scrollable}
+
+Given a Predator Prey model with the possible values for parameters
+
+* $K$ - mean of 150, standard deviation 20
+* $r_{prey}$ - some where between 0.01 and 0.3
+* $\alpha$ - somewhere between 0.1 and 0.4
+* $eff$ - mean 0.3 standard deviation 0.01
+* $pmort$ - somewhere between 0.01 and 0.45
+
+How do the maximum and minimum numbers of predators and prey vary across parameters; which is most important in controlling population dynamics?
+
+Initial Conditions:  start with 1 predator and 1 prey and run for 500 time steps
+
+```{r odesen}
+source(here("R/lotvmodK.R"))
+# lets start with sobol
+library(sensitivity)
+
+
+# want to learn about sensitivity to growth rate (r) and carrying capacity
+# set the number of parameters
+np <- 200
+K <- rnorm(mean = 150, sd = 20, n = np)
+rprey <- runif(min = 0.01, max = 0.3, n = np)
+alpha <- runif(min = 0.1, max = 0.4, n = np)
+eff <- rnorm(mean = 0.3, sd = 0.01, n = np)
+pmort <- runif(min = 0.01, max = 0.45, n = np)
+
+X1 <- cbind.data.frame(rprey = rprey, K = K, alpha = alpha, eff = eff, pmort = pmort)
+
+# repeat to get our second set of samples
+np <- 200
+K <- rnorm(mean = 150, sd = 20, n = np)
+rprey <- runif(min = 0.01, max = 0.3, n = np)
+alpha <- runif(min = 0.1, max = 0.4, n = np)
+eff <- rnorm(mean = 0.3, sd = 0.01, n = np)
+pmort <- runif(min = 0.01, max = 0.45, n = np)
+
+X2 <- cbind.data.frame(rprey = rprey, K = K, alpha = alpha, eff = eff, pmort = pmort)
+
+
+# create our sobel object and get sets ofparameters for running the model
+sens_PP <- sobolSalt(model = NULL, X1, X2, nboot = 300)
+
+# name parameter sets...
+colnames(sens_PP$X) <- c("rprey", "K", "alpha", "eff", "pmort")
+
+# our metrics
+# lets say we  want the maximum and minimum  of both predictor and prey
+
+compute_metrics <- function(result) {
+  maxprey <- max(result$prey)
+  maxpred <- max(result$pred)
+  minprey <- min(result$prey)
+  minpred <- min(result$pred)
+  return(list(maxprey = maxprey, minprey = minprey, maxpred = maxpred, minpred = minpred))
+}
+
+# build a wrapper function
+
+
+p_wrapper <- function(rprey, alpha, eff, pmort, K, currpop, days, func) {
+  parms <- list(rprey = rprey, alpha = alpha, eff = eff, pmort = pmort, K = K)
+  result <- ode(y = currpop, times = days, func = func, parms = parms)
+  colnames(result) <- c("time", "prey", "pred")
+  # get metrics
+  metrics <- compute_metrics(as.data.frame(result))
+  return(metrics)
+}
+
+```
+
+## Now run wrapper for all parameters {.scrollable}
+
+* graph 
+* sobol indices
+
+```{r odesen2}
+# run our model for all parameters and extract the results
+currpop <- c(prey = 1, pred = 1)
+days <- seq(from = 1, to = 500)
+allresults <- as.data.frame(sens_PP$X) %>% pmap(p_wrapper, currpop = currpop, days = days, func = lotvmodK)
+
+# take results back to unlisted form
+allres <- allresults %>% map_dfr(`[`, c("maxprey", "minprey", "maxpred", "minpred"))
+
+
+# range of response across parameter uncertainty
+allresl <- allres %>% gather(key = "metric", value = "pop")
+ggplot(allresl, aes(metric, pop)) +
+  geom_boxplot()
+
+# dealing with different scales
+ggplot(allresl, aes(metric, pop, col = metric)) +
+  geom_boxplot() +
+  facet_wrap(~metric, scales = "free")
+# plot cummulative densities
+
+ggplot(allresl, aes(pop, col = metric)) +
+  stat_ecdf(geom = "line") +
+  facet_wrap(~metric, scales = "free")
+
+# create sobol indices for Max Prey
+sens_PP_maxprey <- sens_PP %>% sensitivity::tell(y = allres$maxprey)
+rownames(sens_PP_maxprey$S) <- c("rprey", "K", "alpha", "eff", "pmort")
+sens_PP_maxprey$S
+rownames(sens_PP_maxprey$T) <- c("rprey", "K", "alpha", "eff", "pmort")
+sens_PP_maxprey$T
+```
+
+## What does this tell you
+
+* what are the most important parameters 
+  *  maximum prey
+  *  minimum prey
+  *  maximum predator
+  *  minimum predator
