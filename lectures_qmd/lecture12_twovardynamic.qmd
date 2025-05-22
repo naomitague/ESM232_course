@@ -376,9 +376,10 @@ useful to look at a single value or set of value
 
 For example
 
-* Max Prey Population
-* Min Prey Population
-
+* Max Prey/Predator Population
+* Min Prey/Predator Population
+* Populations at the end of the time period
+* Number of time periods where a population is below a threshold
 
 ## Sensitivity Analysis steps
 
@@ -388,8 +389,7 @@ For example
 * Run wrapper function to get metrics for all parameter sets
 * Graph and compute sensitivity statistics
 
- Discussion section will review how to do with LHS
- 
+
 ## Example Sensitivity Analysis {.scrollable}
 
 Given a Predator Prey model with the possible values for parameters
@@ -399,10 +399,19 @@ Given a Predator Prey model with the possible values for parameters
 * $\alpha$ - somewhere between 0.1 and 0.4
 * $eff$ - mean 0.3 standard deviation 0.01
 * $pmort$ - somewhere between 0.01 and 0.45
+* Initial Conditions:  start with 1 predator and 1 prey 
+* Look at output for 500 time steps
 
-How do the maximum and minimum numbers of predators and prey vary across parameters; which is most important in controlling population dynamics?
+Questions sensitivity analysis might answer
 
-Initial Conditions:  start with 1 predator and 1 prey and run for 500 time steps
+* Does uncertainty in parameter impact our estimates? 
+* Which are the more/most important parameters in controlling population dynamics?
+
+# Set up Sobol Sensitivity {.scrollable}
+
+* parameter samples
+* metric and wrapper function
+
 
 ```{r odesen}
 source(here("R/lotvmodK.R"))
@@ -472,7 +481,8 @@ p_wrapper <- function(rprey, alpha, eff, pmort, K, currpop, days, func) {
 # run our model for all parameters and extract the results
 currpop <- c(prey = 1, pred = 1)
 days <- seq(from = 1, to = 500)
-allresults <- as.data.frame(sens_PP$X) %>% pmap(p_wrapper, currpop = currpop, days = days, func = lotvmodK)
+allresults <- as.data.frame(sens_PP$X) %>% 
+    pmap(p_wrapper, currpop = currpop, days = days, func = lotvmodK)
 
 # take results back to unlisted form
 allres <- allresults %>% map_dfr(`[`, c("maxprey", "minprey", "maxpred", "minpred"))
@@ -492,25 +502,35 @@ ggplot(allresl, aes(metric, pop, col = metric)) +
 ggplot(allresl, aes(pop, col = metric)) +
   stat_ecdf(geom = "line") +
   facet_wrap(~metric, scales = "free")
+```
 
+# Sobol Indices
+
+```{r, sobol}
 # create sobol indices for Max Prey
 sens_PP_maxprey <- sens_PP %>% sensitivity::tell(y = allres$maxprey)
 rownames(sens_PP_maxprey$S) <- c("rprey", "K", "alpha", "eff", "pmort")
 sens_PP_maxprey$S
 rownames(sens_PP_maxprey$T) <- c("rprey", "K", "alpha", "eff", "pmort")
 sens_PP_maxprey$T
+
 ```
 
-## What does this tell you
+## Interpretation of Sobol Indices
 
 * what are the most important parameters 
   *  maximum prey
+  
+* What about other metrics
   *  minimum prey
   *  maximum predator
   *  minimum predator
   
+What is the most important parameter, 
+Which parameters don't matter
+  
 ## Organizing your analysis {.scrollable}
-```{r}
+```{r, org}
 
 # keep track of sensitivity from all metricx
 
@@ -548,7 +568,7 @@ sobol_sumS
 ```
   
 
-## Stablity
+# Stablity {.scrollable}
 
 * simple mathematical definition - when derivatives are zero
   * algerbra
@@ -561,8 +581,98 @@ ranges, cycling, return to a population above some threshold after disturbance
 integration (e.g run the ode solver) and then  compute a metric of stability
    * min or max always above or below a threshold
    * long term values (e.g after X years)
+
+
+## Adding More Complex Inputs {.scrollable}
+
+* What if carrying capacity varied with air temperature
+
+Conceptual Model
+
+* There is a known optimal carrying capacity (*Kopt*)
+  * *Kopt* when ecosystem is at optimal temperature (*Topt*)
+  * As temperature increases or decreases from *Topt*, carrying capacity decreases
+  * *Ksen* is a sensitivity coefficient that describes how much carrying capacity changes with temperature
+`
+* Carrying capacity is a function of temperature
+$K = K_{opt} * (1 - K{sen} * (airT(t) - T_{opt}))$
+
+  * airT(t) is the air temperature at time t
+
+# Implementation Details
+
+* We would also need a model of carrying capacity (K)
+  * determistic (not-dynamic) submodel
+  * needs a time series of air temperature as input
   
-## Assignment
+How do you combine these different types of inputs/parameters and different types of models together
+
+## Dynamic Carrying Capacity Example
+
+
+* Carrying Capacity
+
+$K = K_{opt} * (1 - K{sen} * (airT(t) - T_{opt}))$
+
+* Prey
+
+$\frac{\partial prey}{\partial t} = r_{prey} * (1-\frac{prey}{K})*prey - \alpha * prey * pred$
+
+* Predator
+
+$\frac{\partial pred}{\partial t} = eff * \alpha * pred * prey - mort * pred$
+
+# Code {.scrollable}
+```{r, varyK}
+source(here("R/lotvmodvaryingK.R"))
+lotvmodKvar
+
+
+
+
+# initial conditions
+currpop <- c(prey = 10, pred = 1)
+
+
+
+# set parameters and inputs
+# read in air temperature time series
+airT = readRDS(here("Data/Tavg_Rattlesnake.RDS"))
+head(airT)
+#note if you were interested in specific periods you might want to subset this data
+
+# time points to see results
+days <- seq(from = 1, to = length(airT$tavg), by = 1)
+
+# note you have to use a list now because elements are of a different length
+pars <- list(rprey = 0.5, alpha = 0.3, eff = 0.2, pmort = 0.2, KO= 100, Topt=18, Ksen=0.3, airT=airT$tavg)
+
+# run the model
+res <- ode(func = lotvmodKvar, y = currpop, times = days, parms = pars)
+# graph the results
+head(res)
+# rearrange for easy plotting
+resl <- as.data.frame(res) %>% pivot_longer(-time, names_to = "animal", values_to = "pop")
+p1 <- ggplot(resl, aes(time, pop, col = animal)) +
+  geom_line()
+
+p1
+
+
+p2 <- ggplot(as.data.frame(res), aes(pred, prey)) +
+  geom_point() +
+  labs(y = "Prey", x = "Predators")
+p2
+
+# To make this easier to understand - maybe
+p2b <- ggplot(as.data.frame(res), aes(pred, prey, col = time)) +
+  geom_point() +
+  labs(y = "Prey", x = "Predators")
+p2b
+
+ggarrange(p1, p2b)
+```
+## Assignment {.scrollable}
 
 Consider how you might add hunting of prey to the predator prey model that we've been using in class
 
