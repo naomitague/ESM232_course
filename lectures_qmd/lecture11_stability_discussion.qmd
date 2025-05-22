@@ -1,37 +1,39 @@
 ---
-title: "Stability_fixed_harvest"
-output: html_document
+title: "discussion_section_stability"
+format: html
+editor: visual
 ---
-# In class challenge
 
-We can more formally find stability  by finding the system state when the derivative is zero
+## Discussion Section
 
 
-What if we have a slightly different forest management task -  to make harvest a fixed amount of  carbon but only take it if it is above a threshold minimum carbon
+
+
+What if we have a forest management task -  to make harvest a fixed amount of  carbon but only take it if forest carbon is above a threshold minimum carbon that will insure stability
 
 Think about how you would explore stability here
 
-* create a new derivative function based on *dharvest.R*, but modify so that harvest is now a fixed value rather that a proportion of forest carbon
+* use our derivative function based on *dharvestfixed.R*
 
 * assume a forest growth rate of 0.05, a carrying capacity of 1000kg and a harvest rate of 10kg/year
 
 * can you figure out what the two stable values of forest carbon will be without running the ODE
 
-# here's what I did
+## here's what I did  {.scrollable}
 
 ```{r stability}
-source("../R/dharvestfixed.R")
+source(here("R/dharvestfixed.R"))
 
 # first lets look at how the derivative varies with the size of forest
 
 carbon <- seq(from = 0, to = 1000)
 dcarbon <- unlist(carbon %>% map(dharvestfixed, Time = NULL, parms = list(r = 0.05, K = 1000, mincarbon = 0, harv = 10)))
 
-ggplot(as.data.frame(carbon, dcarbon), aes(carbon, dcarbon)) +
+a <- ggplot(cbind.data.frame(carbon = carbon, dcarbon = dcarbon), aes(carbon, dcarbon)) +
   geom_point() +
   geom_hline(yintercept = 0, col = "red") +
   labs(y = "Derivative\n (Rate of change of forest carbon) (kg/C/year)", x = "Current Forest Carbon Stock (kgC)")
-
+a
 # try it out with different initial conditions to watch how the system moves to a stable state
 tm <- seq(from = 1, to = 500)
 Pinitial <- 500
@@ -40,27 +42,32 @@ gps <- list(harv = 10, K = 1000, r = 0.05, mincarbon = 0)
 res <- ode(Pinitial, tm, dharvestfixed, gps)
 colnames(res) <- c("time", "carbon")
 
-ggplot(as.data.frame(res), aes(time, carbon)) +
+b <- ggplot(as.data.frame(res), aes(time, carbon)) +
   geom_point() +
   labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 500kgC")
-
+ggarrange(a, b)
 
 #  try smaller starting condition
 tm <- seq(from = 1, to = 500)
-Pinitial <- 1
+Pinitial <- 150
 gps <- list(harv = 10, K = 1000, r = 0.05, mincarbon = 0)
 
-res <- ode(Pinitial, tm, dharvestfixed, gps)
+res <- ode(Pinitial, tm, dharvestfixed, gps, method = "euler")
 colnames(res) <- c("time", "carbon")
 
-ggplot(as.data.frame(res), aes(time, carbon)) +
+c <- ggplot(as.data.frame(res), aes(time, carbon)) +
   geom_point() +
   labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
 
+ggarrange(b, a, c)
 
-#  try smaller starting condition
+#  try other stable starting condition
 tm <- seq(from = 1, to = 500)
-Pinitial <- 15
+
+# unstable
+Pinitial <- 275
+# stable
+Pinitial <- 277
 gps <- list(harv = 10, K = 1000, r = 0.05, mincarbon = 0)
 
 res <- ode(Pinitial, tm, dharvestfixed, gps)
@@ -78,4 +85,5 @@ ggplot(as.data.frame(res), aes(time, carbon)) +
   geom_point() +
   labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 10kg/year\n Starting conditions 1kgC")
 ```
+
 

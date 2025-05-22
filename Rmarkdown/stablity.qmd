@@ -56,27 +56,3 @@ ggplot(tmp, aes(Ccurr, value, color = HarvestRate)) +
 # notice how with higher harvest rates the stable population will be lower
 ```
 
-Look at the above graphs to determine what stable forest carbon is likely to be given different harvest rates
-
-Try it to find out if you are right
-```{r  check}
-tm <- seq(from = 1, to = 500)
-gps <- list(harv = lowHrate, K = 100, r = 0.05)
-Pinitial <- 50
-res <- ode(Pinitial, tm, dharvest, gps)
-colnames(res) <- c("time", "carbon")
-ggplot(as.data.frame(res), aes(time, carbon)) +
-  geom_point() +
-  labs(y = "Forest Biomass (kgC)", x = "Year", title = "low harvest rate")
-
-
-
-
-gps <- list(harv = highHrate, K = 100, r = 0.05)
-Pinitial <- 50
-res <- ode(Pinitial, tm, dharvest, gps)
-colnames(res) <- c("time", "carbon")
-ggplot(as.data.frame(res), aes(time, carbon)) +
-  geom_point() +
-  labs(y = "Forest Biomass (kgC)", x = "Year", title = "High Harvest Rate")
-```
