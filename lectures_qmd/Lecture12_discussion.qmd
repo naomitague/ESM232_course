@@ -89,8 +89,7 @@ epi.prcc(cbind.data.frame(sens_pp, allres$maxpred))
 epi.prcc(cbind.data.frame(sens_pp, allres$minprey))
 ```
 
-
-## Stability 
+## Stability
 
 How do we think about stablity for multiple outputs (e.g. predator/prey)
 
@@ -100,26 +99,25 @@ What conditions lead to BOTH derivatives being zero
 
 ## Stability For *lotvmod*
 
-* dprey = rprey * prey -  alpha * prey * pred
-* dpred = eff* alpha * prey * pred - pmort *pred
+-   dprey = rprey \* prey - alpha \* prey \* pred
+-   dpred = eff\* alpha \* prey \* pred - pmort \*pred
 
 Make dprey and dpred equal to 0 and rearrange
 
-* pred_i = rprey/alpha
-* prey_i = pmort/(eff * alpha)
+-   pred_i = rprey/alpha
+-   prey_i = pmort/(eff \* alpha)
 
 ## Stability For *lotvmodK*
 
-* dprey = rprey * (1-prey/K) * prey -  alpha * prey * pred
-* dpred = eff* alpha * prey * pred - pmort * pred
+-   dprey = rprey \* (1-prey/K) \* prey - alpha \* prey \* pred
+-   dpred = eff\* alpha \* prey \* pred - pmort \* pred
 
 Make dprey and dpred equal to 0 and rearrange
 
-* prey_i = pmort/(eff * alpha)
-* pred_i = rprey/alpha * (1-prey_i/K)
+-   prey_i = pmort/(eff \* alpha)
+-   pred_i = rprey/alpha \* (1-prey_i/K)
 
 Try setting you initial conditions close to these values and see what happens
-
 
 ```{r stabilitynew}
 source(here("R/lotvmodK.R"))
