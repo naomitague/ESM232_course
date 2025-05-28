@@ -1,0 +1,251 @@
+---
+title: "Choosing Models in Environmental Science"
+format: revealjs
+execute: 
+  echo: TRUE
+theme: solarized
+resources: ["img/"]
+css: ["slides.css"]
+editor: visual
+---
+
+## Modeling for Problem Solving in ES
+
+1. Define your goal (question, hypothesis, prediction)
+2. Design or select your model
+3. Implement the model
+4. Evaluate the model and quantify uncertainty
+5. Apply the model
+6. Communicate results
+
+---
+
+## Off-the-Shelf Models
+
+- Developed and tested by experts
+- Reduces need to build from scratch
+
+
+![Reinventing the wheel](img/two_prehistoric_women_reinventing_wheel.jpg)
+
+
+
+## Model Selection
+
+- Is model structure **appropriate**?
+- Is model performance **good enough**?
+- Choose the **simplest** model that captures your processes of interest
+
+---
+
+## Model Selection: Is it Appropriate
+
+- Are outputs of interest captured? (e.g., streamflow, ET, N-export)
+- Is resolution appropriate?
+  * space
+  * time
+- Does it include key mechanisms?
+
+---
+
+## Model Selection: Representation
+
+Example - Will a fire in the upper watershed impact ET more than a similarly sized fire lower (nearer the stream) in the watershed?
+
+## RHESSys
+
+- Includes evapotranspiration and links between upslope and downslope water availability to support it
+
+![RHESSys](img/rhessys_processes.png)
+
+## Model Selection: Representation
+
+As trees age does "hardening" of the arteries - e.g reduced
+conductions of the xylem to water impact ET?
+
+![Within Plant Hydro Model](img/vascular.png)
+
+<span style="font-size:50%">*Citation: McElrone, A. J., Choat, B., Gambetta,
+G. A. & Brodersen, C. R. (2013) Water Uptake
+and Transport in Vascular Plants. Nature
+Education Knowledge 4(5):6* </span>
+
+## Model Selection: Representation
+
+Do autonomous vehicles reduce travel and environmental impacts?
+More precise questions - given trip demand from historic data - how many fewer cars are needed, what is the emission reduction due to more efficient cars?
+
+
+![Model Overview](img/model_car.jpg)
+
+
+<span style="font-size:50%">*Citation: Fagnant, Daniel J., and Kara M. Kockelman. "The travel and environmental implications of shared autonomous vehicles, using agent-based model scenarios." Transportation Research Part C: Emerging Technologies 40 (2014): 1-13.* </span>
+
+## Model Selection: A more complex example
+
+What will the impact of autonomous vehicles be on emissions and air quality in different cities (which will likely vary in adoption)
+
+![Overview of Model](img/complex_car.png)
+
+<span style="font-size:40%">*Citation: Ercan, Tolga, Nuri C. Onat, Nowreen Keya, Omer Tatari, Naveen Eluru, and Murat Kucukvar. "Autonomous electric vehicles can reduce carbon emissions and air pollution in cities." Transportation Research Part D: Transport and Environment 112 (2022): 103472.* </span>
+
+
+## Model Selection: Performance
+
+- Does it capture outputs accurately enough?
+
+Examples from your experience?
+
+
+
+
+## "Validation" or Is it Good Enough?
+
+- Error small relative to:
+  - Model application (why do you need the estimate)
+  - Simulated effect size
+  - Literature/state of the art
+  - Demonstrated improvement
+
+## Validation: Types
+
+- **Reasonableness**: physical/logical checks
+- **Accuracy**: comparisons to observations
+
+## Types of comparisons
+
+- Compare with:
+  - Thought experiments
+  - Physical constraints
+  - Other models
+  - Observed data
+
+---
+
+## Thought Experiments/ Physical Constraints {.scrollable}
+
+* Conservation of mass, energy
+* Expected behaviors (zero rain = zero streamflow, no cars = no emissions, more fishing with everything eles the same, less fish)
+
+* Are output physically reasonable
+  * snowpack is not negative
+  * reservoir storage is always positive, less than reservoir capacity
+  * resulting biomass/size/height within known limits for that species
+  * household expenditures more than zero, less than highest income bracket
+
+* Are outputs consistent with known relationships
+
+## Compare with Observations {.scrollable}
+
+What observations?
+
+* local (ideal) - same place
+
+But you often don't have data everywhere
+
+* similar context - similar locations
+* similar processes - same process in different locations
+
+**Important** - even if it matches in the past, may not match in the future if something changes
+
+Examples?
+
+* show model works across a range of conditions
+
+*you might not always do this yourself, build on prior model applciations*
+
+## Examples {.scrollable}
+
+Does the model accurately capture the behavior you are interested in - in the context you are applying it
+
+We want to estimate how streamflow will change in the next 10 years
+
+* **streamflow**
+  * compare to observed streamflow at gage at study site
+  * model applied and output compared observed streamflow from warmer, wetter, colder, drier locations
+  * look at how well model captures streamflow in wet and dry years
+
+We want to estimate fish populations after a new policy is implemented that will change predation rates
+
+* **fish population**
+  * compare to observed population at study site
+  * model applied and output compared to observed populations in warmer and colder locations; high predation or low predation locations
+  * look at how well model captures population growth before and after predators introducted
+
+
+
+## Example: RHESSys Validation
+
+
+![RHESSys_pro](img/rhessys_val.png)
+  
+
+## Evaluating accurary
+
+* relative to your effect size (big or small)
+* relative to best available other option (other models?)
+
+
+
+## Case Study: Santa Fe Water Supply
+
+- Threshold for buying water rights under climate change uncertainty
+
+![sf](img/SantaFe.png)
+
+Use a model to see if we should buy water rights now or wait
+And if vegetation management in water supply catchment would help
+
+## Rhessys model estimates
+
+![sfr](img/SanteFeModel.png)
+---
+
+
+
+
+## Model performance (measuring accuracy)
+
+* First Plot!
+
+
+
+
+## Performance of What?
+
+Similar to sensitivity of what?
+Extracting what is meaningful from the model
+
+![hp](img/hydrographparts.png)
+
+
+## Performance Metrics
+
+- **RMSE**,  **Percent Error**
+
+- what others have you used?
+
+
+## Streamflow data {.scrollable}
+
+Lets start by looking at some data
+
+* **obsmm** is measured streamflow
+* **strmm** is simulated streamflow from a model
+
+Both are daily data and normalized by watershed area (mm/day)
+
+Date information is also included
+
+Consider some different ways you can compare models and observed 
+Graph!
+(what about yearly versus daily?)
+```{r}
+library(tidyverse)
+library(here)
+w8=readRDS(here("Data/w8.RDS"))
+
+
+
+``` 
+

@@ -1,0 +1,242 @@
+---
+title: "Putting sub-models together"
+format:
+  revealjs:
+    theme: solarized
+    resources: ["img/"]
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+library(purrr)
+
+library(ggpubr)
+
+library(here)
+```
+
+# Building models with blocks 
+
+Functions can always embed other functions - and in models the output of one model may be the input to another
+
+-   loosely coupled models - output from one becomes input the other, but this step is  necessarily automatic 
+-   fully coupled - models exchange input and outputs (feedback systems) inside a larger wrapper model (think of it as the *meta* model)
+
+## Example of a loosely coupled model
+
+Generating profit from power generation
+
+Will allow us to compare profits from solar and reservoir power generation
+
+First step: diagram of our model
+
+```{r  out.width="75%", out.height="75%", echo=FALSE }
+library(knitr)
+include_graphics(here("lectures_qmd/img/power_comparison_figure.jpeg" ))
+```
+
+## Defining our boxes/submodels {.scrollable}
+
+To start - lets create what we need to compute net present value of profit from power generated for multiple years
+
+We can re-use this to compute profit for power from either source
+
+-   compute_profit_frompower.R
+
+The profit function also 'calls' another function to compute net present value
+
+-   compute_NPV
+
+    -   inputs: value, time, discount rate
+
+    -   output net present value of input value provide as some time in the future
+
+-   compute_profit_frompower
+
+    -   inputs: energy, year (energy was produced in) price, discount rate
+    -   outputs: single dataframe with columns for
+        -   energy
+        -   year
+        -   net (profit from energy in that year)
+        -   netpre (net present value of that profit)
+
+
+
+```{r valuep, echo=TRUE}
+source(here("R/compute_NPV.R"))
+source(here("R/compute_profit_frompower.R"))
+
+compute_profit_frompower
+
+compute_NPV
+
+# use output from our solar model as input to profit
+# See previous lecture4_informal_sensitivity.qmd  or informal_sensitivity.qmd
+load(here("Data/annual_elect_solar.rda"))
+head(solar_annual_elect)
+
+profit_solar <- compute_profit_frompower(
+  energy = solar_annual_elect$elect,
+  year = solar_annual_elect$year,
+  price = 30, discount = 0.04
+)
+
+head(profit_solar)
+
+profit_solar <- subset(profit_solar, year > 1944)
+
+ggplot(profit_solar, aes(as.factor(year), netpre, group = year)) +
+  geom_boxplot() +
+  labs(y = "Profit in current $", x = "Year")
+```
+
+## Putting it all together{.scrollable}
+
+Full picture of power options
+
+-   run *compute_profit_frompower* for both hydro and solar power
+
+-   include sensitivity analysis to account for parameter undertainty in both
+
+Notice that we can 're-use' our functions such as *compute_profit_frompower* for both sources of power (such as our reservoir power model) to build out our complete picture
+
+## Why?
+
+-   Allows us to compare scenarios, accounting for parameter uncertainty
+
+-   Illustrates a general workflow
+
+    -   design your model - reusing where possible
+    -   accounting for parameter uncertainty
+    -   graphing to analyze results
+
+## First Power Model {.scrollable}
+
+Lets generate some example output for our reservoir model
+
+In "real" application we'd have flow and heigh measurement
+here we will generate by sampling (think of it as test data)
+
+## Code {.scrollable}
+
+- generate sample inputs for each year
+    - corresponding to years that we have power for the solar model
+- generate uncertainty in efficiency
+- run power model for those inputs and parameter uncertainty
+- compute profit from power
+
+(do some data reorganization as we go to make it easier to graph)
+
+```{r powerres, echo=TRUE}
+# repeating what we did before
+# lets start with hydro power
+source(here("R/power_gen.R"))
+
+# Step 1 - create some sample data for our reservoir model
+
+# we are 'making up' inputs for hydro power - to have it match the number of year
+# that we had solar values for, lets sets the number of runs equal to the number of years
+
+number_years <- length(profit_solar$year)
+
+reservoir_model_res <- as.data.frame(matrix(nrow = number_years, ncol = 3))
+
+colnames(reservoir_model_res) <- c("height", "flow", "power")
+
+# Step 2 - generate heights and flow rates
+reservoir_model_res$height <- rnorm(mean = 10, sd = 1, n = number_years)
+
+reservoir_model_res$flow <- runif(min = 0.1, max = 1, n = number_years)
+
+# Step 3 - generate uncertainty due to reservoir efficiency, lets assume that
+# we know its somewhere between 0.4 and 0.7
+Keff <- runif(min = 0.4, max = 0.7, n = 20)
+
+# Step 3 - apply model to get power for each height, flow rate (each year), across
+# uncertainty in efficiency
+reservoir <- Keff %>% map_dfc(~ power_gen(
+  height = reservoir_model_res$height,
+  flow = reservoir_model_res$flow, Keff = .x
+))
+
+colnames(reservoir) <- Keff
+
+head(reservoir)
+
+
+# add years - remember we are making up data for the same years that we have solar
+reservoir$year <- profit_solar$year
+
+# reorganize for easier analysis
+reservoirg <- as.data.frame(reservoir) %>% pivot_longer(!year, names_to = "Keff", values_to = "power")
+head(reservoirg)
+
+# create profit from hydro
+profit_hydro <- compute_profit_frompower(energy = reservoirg$power, year = reservoirg$year, price = 30, discount = 0.04)
+
+names(profit_hydro)
+```
+
+## Plot
+```{r powerresp, echo=TRUE}
+# plot
+ggplot(profit_hydro, aes(as.factor(year), netpre, group = year)) +
+  geom_boxplot() +
+  labs(y = "Net Present Value of Power in 1945 Dollars", x = "Year")
+```
+
+
+## Compare Profit from hydro/reservoir with solar{.scrollable}
+
+we now have profit_hydro and profit_solar
+
+```{r power2, echo=TRUE}
+
+a <- ggplot(profit_hydro, aes(year, netpre, group = year)) +
+  geom_boxplot() +
+  labs(title = "Hydro", y = "Net Present Values in 1945 Dollars", x = "Year")
+b <- ggplot(profit_solar, aes(year, netpre, group = year)) +
+  geom_boxplot() +
+  labs(title = "Solar", y = "Net Present Values in 1945 Dollars", x = "Year")
+ggarrange(a, b)
+
+# put on one graph
+ggplot(profit_hydro, aes(year, netpre, group = year)) +
+  geom_boxplot() +
+  labs(y = "Net Present Values in 1945 Dollars", x = "Year", title = "Both") +
+  geom_boxplot(data = profit_solar, aes(year, netpre, group = year), fill = "orange")
+
+# or do get a nice legend
+profit_hydro$etype <- "Hydro"
+profit_solar$etype <- "Solar"
+tmp <- rbind.data.frame(profit_hydro, profit_solar)
+ggplot(tmp, aes(as.factor(year), netpre, fill = etype)) +
+  geom_boxplot() +
+  labs(y = "Net Present Values in 1945 Dollars", x = "Year", fill = "Power Type") +
+  scale_fill_manual(values = c("blue", "orange"))
+```
+
+## Assignment 4 {.scrollable}
+
+In your same groups -
+
+-   Develop a profit model for your almond yield
+
+-   (you can make this up - think about what the parameters would be)
+
+-   you might assume a baseline profit and then adjust according to the anomaly
+
+-   there are many ways to combine the almond yield and profit functions; you can have the profit function "call"/use the almond yield function; or create a wrapper function that calls them in sequence (first the almond yield and then the profit function)
+
+-   Do a simple informal sensitivity analysis of almond yield profit using at least 2 parameters
+
+-   Create 2 graphs
+    - one that shows yield anomaly for each year, accounting for uncertainty in the parameters
+    - one that show how yield anomaly in general vareies with your parameters
+
+-   Write a short paragraph (in a Quatro document) to summarize you interpretation of your model results (e.g what do 'take away' from your model and sensitivity analysis)
+
+Submit as a group: a Quatro document, your R files for almond yield and profit model on Canvas- Due Date Monday April 21
