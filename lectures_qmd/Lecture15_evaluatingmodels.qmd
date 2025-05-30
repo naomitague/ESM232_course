@@ -8,62 +8,54 @@ editor: visual
 
 Why?
 
-* to make a "case" for why you selected this model for your project
-* to quantify uncertainty in your model outputs
-* to choose parameters that make the model perform well
-  * reduce parameter uncertainty
-  
+-   to make a "case" for why you selected this model for your project
+-   to quantify uncertainty in your model outputs
+-   to choose parameters that make the model perform well
+    -   reduce parameter uncertainty
+
 ## Qantifying Model Performance {.scrollable}
 
-* Depends on type of model output
-  * single value (mean energy production from a solar panel)
-  * time series (streamflow, PM10, monthly energy production )
-  * spatial pattern (population, income level)
-  * space-time (pollution in different cites over time, forest biomass growth across different forests)
-  
-* Depends on observations
-  
-  * often not as "dense" as model output (e.g samples)
-  * sometimes you have a time series (e.g. streamflow, PM10)
-  * sometimes you have a spatial pattern (e.g. population, income level)
-  * often you are sampling (e.g mean PM10, mean streamflow) so there is also error/uncertainty in the observation 
-  
+-   Depends on type of model output
+
+    -   single value (mean energy production from a solar panel)
+    -   time series (streamflow, PM10, monthly energy production )
+    -   spatial pattern (population, income level)
+    -   space-time (pollution in different cites over time, forest biomass growth across different forests)
+
+-   Depends on observations
+
+    -   often not as "dense" as model output (e.g samples)
+    -   sometimes you have a time series (e.g. streamflow, PM10)
+    -   sometimes you have a spatial pattern (e.g. population, income level)
+    -   often you are sampling (e.g mean PM10, mean streamflow) so there is also error/uncertainty in the observation
 
 ## Metrics
 
-
-* what is possible given available data
-* what is important to get "right" given model application
+-   what is possible given available data
+-   what is important to get "right" given model application
 
 ## Example (Picking model based on performance)
 
-
 ![Model Comparison](img/hydrometric.png)
 
-[Staudinger, M., Stahl, K., Seibert, J., Clark, M. P., and Tallaksen, L. M.: Comparison of hydrological model structures based on
-recession and low flow simulations, Hydrol. Earth Syst. Sci. Discuss., 8, 6833-6866, doi:10.5194/hessd-8-6833-2011, 2011]{style="font-size:50%"}
-  ## NSE (Nash-Sutcliffe Efficiency)
-
-
+[Staudinger, M., Stahl, K., Seibert, J., Clark, M. P., and Tallaksen, L. M.: Comparison of hydrological model structures based on recession and low flow simulations, Hydrol. Earth Syst. Sci. Discuss., 8, 6833-6866, doi:10.5194/hessd-8-6833-2011, 2011]{style="font-size:50%"} \## NSE (Nash-Sutcliffe Efficiency)
 
 ## Somme classic metrics
 
-*  t.test (are the means different)
-*  var.test (are the variances different)
+-   t.test (are the means different)
+-   var.test (are the variances different)
 
 Dynamic models (trends over space and time)
 
-*  RMSE (Root Mean Square Error)
-* Correlation ($R^2$)
-* NSE (Nash-Sutcliffe Efficiency) (variance weighted correlation)
+-   RMSE (Root Mean Square Error)
+-   Correlation ($R^2$)
+-   NSE (Nash-Sutcliffe Efficiency) (variance weighted correlation)
 
-But you can code your own
-  * make them an R function for utility
+But you can code your own \* make them an R function for utility
 
 ## NSE
 
 $NSE = \frac{\sum((m_i - o_i)^2)}{\sum((o_i - mean(o))^2}$
-
 
 ``` r
 nse = function(m, o) {
@@ -98,9 +90,7 @@ relerr = function(m, o) {
 -   Handle uncertainty/imprecise data
 -   Fuzzy membership functions useful in calibration based on performance
 
-
 Many options - here's one example
-
 
 $perf(x) = \begin{cases}
   0 & \text{if } x \leq a_1 \\
@@ -110,14 +100,9 @@ $perf(x) = \begin{cases}
    0 & \text{if } x \geq a_4
 \end{cases}$
 
-[Seibert, J., and J. J. McDonnell, On the dialog between experimentalist and modeler in catchment hydrology:
-Use of soft data for multicriteria model calibration, Water Resour. Res., 38(11), 1241, doi:10.1029/2001WR000978, 2002]{style="font-size:50%"}
-
+[Seibert, J., and J. J. McDonnell, On the dialog between experimentalist and modeler in catchment hydrology: Use of soft data for multicriteria model calibration, Water Resour. Res., 38(11), 1241, doi:10.1029/2001WR000978, 2002]{style="font-size:50%"}
 
 # Example application
-
-
-
 
 ------------------------------------------------------------------------
 
@@ -129,10 +114,7 @@ Use of soft data for multicriteria model calibration, Water Resour. Res., 38(11)
 
 $Metric_A * Metric_B * Metric_C$
 
-$Metric_A * weight_A + Metric_B * weight_B + Metric_C * weight_C$
-where
-$weight_A + weight_B + weight_C = 1$
-
+$Metric_A * weight_A + Metric_B * weight_B + Metric_C * weight_C$ where $weight_A + weight_B + weight_C = 1$
 
 ## Normalizing
 
@@ -148,12 +130,9 @@ $L = exp(-n * SSE)$
 
 $L = (max(SSE) - SSE) / max(SSE)$
 
-where $max(SSE)$ is the maximum value of SSE across all models
-or sometimes
+where $max(SSE)$ is the maximum value of SSE across all models or sometimes
 
 $L = (SSE - min(SSE)) / (max(SSE) - min(SSE))$
-
-
 
 ------------------------------------------------------------------------
 
@@ -225,4 +204,3 @@ compute_yield = function(T, P, irr, crop.pars) {
 -   Validate using multiple methods
 -   Quantify and communicate uncertainty
 -   Consider equifinality in interpretation
-
