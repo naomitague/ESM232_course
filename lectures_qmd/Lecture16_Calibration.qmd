@@ -1,0 +1,108 @@
+---
+title: "monday"
+format: revealjs
+execute: 
+  echo: TRUE
+theme: solarized
+resources: ["img/"]
+css: ["slides.css"]
+editor: visual
+---
+
+## Calibration and Optimization
+
+-   Generate parameter sets (e.g., LHS)
+-   Compute metrics for each
+-   Pick the "best" parameter set?
+
+------------------------------------------------------------------------
+
+## Yield Model Example
+
+``` r
+compute_yield = function(T, P, irr, crop.pars) {
+  with(as.list(crop.pars), {
+    nyears = length(T)
+    irr.peryear = rep(irr, nyears)
+    water.input = P + irr.peryear
+    yield = ifelse(water.input < max.water,
+      tp * water.input - ts * abs(T - Topt) + base.yield,
+      tp * max.water - ts * abs(T - Topt) + base.yield)
+    return(pmax(yield, 0))
+  })
+}
+```
+
+------------------------------------------------------------------------
+
+## Equifinality
+
+-   Many parameter sets yield similar performance
+-   Limits confidence in "best" calibration
+
+![Equifinality](img/dottyplots.png)
+
+
+
+-----------------------------------------------------------------------
+## Issue with parameter selection
+
+Parameter selection will be effected by
+  * calibration period
+  * observation/measurement error
+  * poor identifiablity (equifinality)
+  
+How can we be more robust in parameter selection?
+
+## Calibration - can alternative
+
+-   Generate parameter sets (e.g., LHS)
+-   Compute metrics for each
+-   Keep all acceptable parameter sets 
+          * (or sample across them)
+-   If you need a single estimate 
+          * for a reporting
+          * use an ensemble approach
+            * average estimates from all parameters
+            * weight estimate from each parameter by performance
+        
+
+## GLUE Approach
+
+-   Reject poor performers
+-   Retain ALL acceptable sets
+-   Use ensemble to represent uncertainty
+
+![Equifinality](img/weights.png)
+##
+
+[K. Beven and A. Binley, “The future of distributed
+models: model calibration and uncertainty
+prediction,” Hydrological Processes, vol. 6, no. 3,
+pp. 279–298, 1992.]{style="font-size:50%"}
+------------------------------------------------------------------------
+
+## Model Averaging
+
+-   Weighted average of outputs by performance
+-   Produces MWE (Mean Weighted Estimate)
+
+![Bayesiany](img/weightsummer.png)
+------------------------------------------------------------------------
+
+## Bayesian Framework
+
+![Bayesiany](img/bayes.png)
+
+[K. Beven and A. Binley, “The future of distributed
+models: model calibration and uncertainty
+prediction,” Hydrological Processes, vol. 6, no. 3,
+pp. 279–298, 1992.]{style="font-size:50%"}
+## Summary
+
+-   Choose models that are both **appropriate** and **good enough**
+-   Validate using multiple methods
+-   Quantify and communicate uncertainty
+-   Consider equifinality in interpretation
+---
+

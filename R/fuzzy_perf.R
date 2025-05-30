@@ -11,7 +11,7 @@
 
 
 
-fuuzy_perf = function(x, a1,s2,a3,a4) {
+fuzzy_perf = function(x, a1,a2,a3,a4) {
 
   if (length(x) == 0) {
     return(NA)
