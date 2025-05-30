@@ -180,7 +180,6 @@ $L = (SSE - min(SSE)) / (max(SSE) - min(SSE))$
 
 ## Combined Performance
 
-
 Example R function
 
 Lets go back to daily streamflow data
