@@ -46,14 +46,6 @@ relerr(m=sager$model, o=sager$obs)*100
 
 cper(m=sager$model, o=sager$obs, weight.nse=0.8)
 
-
-# try a different time step
-sager_wy = sager %>% group_by(wy) %>% summarize(model=sum(model), obs=sum(obs))
-
-nse(sager_wy$model, sager_wy$obs)
-cper(m=sager_wy$model, o=sager_wy$obs, weight.nse=0.8)
-
-
 # just look at august flow
 # first sum by month
 tmp = sager %>% group_by(month, year) %>% summarize(model=sum(model), obs=sum(obs))
@@ -66,8 +58,6 @@ source(here("R/compute_lowflowmetrics.R"))
 compute_lowflowmetrics(m=sager$model,o=sager$obs, month=sager$month, day=sager$day, year=sager$year, wy=sager$wy)
 
 
-
-# try another metric
 ```
 
 Peformance evaluation  may depend on what parameter set you use
@@ -107,7 +97,7 @@ summary(res)
 
 # another example using our low flow statistics
 # use apply to compute for all the data
-res = msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% apply(2,FUN=compute_lowflowmetrics, o=sager$obs, month=msage$month, day=msage$day, year=msage$year, wy=msage$wy)
+res = msage %>% select(-date, -month, -day, -year, -wy ) %>% apply(2,FUN=compute_lowflowmetrics, o=sager$obs, month=msage$month, day=msage$day, year=msage$year, wy=msage$wy)
 
 # extract information from the list
 results = as.data.frame(matrix(unlist(res), byrow=T, ncol=4))
@@ -128,8 +118,7 @@ ggplot(resultsl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="
 results$setid = seq(from=1,to=nrow(results))
 
 head(msage)
-tmp = paste0("V", seq(from=1, to=nrow(results)))
-colnames(msage)=c(tmp, "date","month","year","day","wy","obs")
+colnames(msage)=c(results$setid, "date","month","year","day","wy")
 msagel = msage %>% gather(key="setid",value="streamflow", -date, -month, -year, -day, -wy)
 
 # pick only good parameters
@@ -146,17 +135,8 @@ ggplot(msagel, aes(as.Date(date), streamflow, col=accept))+geom_line()
 # shorter period for better visualizaton
 ggplot(subset(msagel, wy==1970), aes(as.Date(date), streamflow, col=accept))+geom_line()
 
-# focus only on annual minimum flow
+                                              
 
-annual_min_all = msagel %>% group_by(setid, wy) %>% summarize(minstr=min(streamflow), 
-                                                              minstro=min(obs))
-
-# tag (as TRUE) all the acceptable (post calibration values)
-annual_min_all$accept = ifelse(annual_min_all$setid %in% accept_par$setid, TRUE, FALSE)
-                                                             
-
-ggplot(annual_min_all, aes(x="", y=minstr, fill=accept))+geom_boxplot()
-                                                                          
        
        
 ```

@@ -56,7 +56,6 @@ Why?
 
 ![Model Comparison](img/hydrometric.png)
 
-
 [Staudinger, M., Stahl, K., Seibert, J., Clark, M. P., and Tallaksen, L. M.: Comparison of hydrological model structures based on recession and low flow simulations, Hydrol. Earth Syst. Sci. Discuss., 8, 6833-6866, doi:10.5194/hessd-8-6833-2011, 2011]{style="font-size:50%"}
 
 ## Somme classic metrics {.scrollable}
@@ -108,7 +107,6 @@ relerr = function(m, o) {
 
 ## Soft Metrics: Fuzzy Evaluation
 
-
 -   Handle uncertainty/imprecise/quantitative data
 -   Fuzzy membership functions
 
@@ -124,13 +122,11 @@ $perf(x) = \begin{cases}
 
 [Seibert, J., and J. J. McDonnell, On the dialog between experimentalist and modeler in catchment hydrology: Use of soft data for multicriteria model calibration, Water Resour. Res., 38(11), 1241, doi:10.1029/2001WR000978, 2002]{style="font-size:50%"}
 
-
 # Example application {.scrollable}
 
 For a given year, we just know whether the water manager reported a drought
 
 For our watershed
-
 
 -   if streamflow was less than 800 mm/year then for sure it was a drought
 -   if streamflow was between 800 and 1000 mm/year then it was a drought with some uncertainty
@@ -140,10 +136,7 @@ But all we know is the report for each year
 
 Can we evaluate our model performance given this uncertainty?
 
-Two Conditions 
-*  drought  a1=0, a2=0, a3=800, a4=1000 
-* OK  upper bound just pick really large numbers 
-  * a1=800, a2=1000, a3=10000, a4=10000
+Two Conditions \* drought a1=0, a2=0, a3=800, a4=1000 \* OK upper bound just pick really large numbers \* a1=800, a2=1000, a3=10000, a4=10000
 
 ```{r}
 library(tidyverse)
@@ -167,7 +160,6 @@ for (i in 1:nrow(w8_wy)) {
 
 
 ```
-
 
 ## Combining Metrics
 
@@ -196,7 +188,6 @@ $L = (max(SSE) - SSE) / max(SSE)$
 where $max(SSE)$ is the maximum value of SSE across all models or sometimes
 
 $L = (SSE - min(SSE)) / (max(SSE) - min(SSE))$
-
 
 ## Combined Performance
 
