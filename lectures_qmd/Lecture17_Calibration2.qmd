@@ -1,0 +1,213 @@
+---
+title: "Lecture 17 Calibration2"
+format: revealjs
+execute: 
+  echo: TRUE
+theme: solarized
+resources: ["img/"]
+css: ["slides.css"]
+editor: visual
+---
+
+## Glue - generalized uncertainty analysis {.scrollable}
+
+What if we wanted to keep all of the 'good' parameters
+
+-   we could just keep them all as equally likely
+-   we could weight them by performance
+
+Either way we can graph and come up with 'best' prediction accounting for uncertainty
+
+Create a single measure of accuracy 
+
+
+* *compute_lowflowmetrics_all* added a summary measures 
+
+-   relative error in annual minimum flow estimate
+-   relative error in monthly flow during low flow period
+-   correlation between observed and modelled annual minimum flow
+-   correlation between observed and modelled flow during the low flow period
+
+
+Updates (from *compute_lowflowmetrics*) 
+
+* allows user to input weights (default evenly weighted)
+* transforms error based metrics into 0-1 scale
+```{r startup}
+
+library(tidyverse)
+library(here)
+
+# read metric function
+source(here("R/compute_lowflowmetrics_all.R"))
+
+# load model results from last class
+msage = readRDS(here("Data/msage.RDS"))
+
+# first rearrange so we can plot all results
+msagel = msage %>% gather(key="sim",value="str", -date, -month, -day, -year, -wy,-obs)
+
+# apply our accurracy measure to each parameter set 
+res <-  msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>%
+  apply(2, compute_lowflowmetrics_all, o = msage$obs,
+              month=msage$month, year=msage$year, day=msage$day, wy=msage$wy) 
+results = as.data.frame(matrix(unlist(res), byrow=T, ncol=5))
+colnames(results)=c("annual_min_err","annual_min_cor", "low_month_err", "low_month_cor", "combined")
+results$sim <- msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% colnames()
+
+```
+
+
+## Use the accuracy measure {.scrollable}
+
+Use the combined accuacy measure to define behavioural (acceptable) parameter set (**results_acc**) - two options
+
+* define a threshold (we will use 30%)
+* take top 50 performing parameter sets
+
+
+```{r behavioral, echo=TRUE, eval=TRUE}
+summary(results$combined)
+
+# 1) selecting behaviorial or acceptable parameters sets
+
+threshold <- 0.3
+results_acc <- subset(results, combined > threshold)
+head(results_acc)
+
+# as an alternative  what if you want the top N parameter sets
+topN <- 50
+tmp <- results[order(results$combined, decreasing = T), ]
+results_acc <- tmp[1:topN, ]
+head(results_acc)
+```
+
+## Defining weights (likelihood) for parameter sets {.scrollable}
+
+Now define "weights" (likelihood) based on parameter performance for the acceptable or behaviorial parameters
+
+* accuracy measure defined above will define weight
+* sum of the weights to equal 1
+* we normalize by the range of accuracy for the behavioral parameters
+  * this **relative accuracy** becomes the weight
+* we now only work with behavioural parameter sets 
+ 
+To normalize
+
+$weight$ = $\frac{accuracy - min(accuracy)}{max(accuracy) - min(accuracy)}$
+
+*weight* will be from 0-1 
+
+To make sure it sums to 1 we can divide by the sum of all weights
+
+$weight$ = $\frac{weight}{\sum weight}$
+
+
+## Weighting in R {.scrollable}
+
+```{r weighting, echo=TRUE, eval=TRUE}
+# create a weight for each parameter set based on its relative accuracy - we do this so all weights sum to 1
+max_acc <- max(results_acc$combined)
+min_acc <- min(results_acc$combined)
+
+# normalize weights
+results_acc$w_acc <- (results_acc$combined - min_acc) / (max_acc - min_acc)
+
+# make sure weights sum to one
+sum_acc <- sum(results_acc$combined)
+results_acc$wt_acc <- results_acc$combined / sum_acc
+
+# look at values
+summary(results_acc$wt_acc)
+# check to see that they sum to one
+sum(results_acc$wt_acc)
+
+Nacc <- nrow(results_acc)
+Nacc
+```
+
+# Using weights {.scrollable}
+
+Use weights is to define a maximum likelihood estimate
+* by averaging (weighted by accuracy) streamflow from all behavioural simulations
+
+$MLE$ = $\frac{\sum_{i=1}^{N} flow_i \times weight_i}{\sum_{i=1}^{N} weight_i}$
+
+where 
+* $flow_i$ is the streamflow from simulation $i$ 
+* $weight_i$ is the weight for that simulation
+
+* because we know weights sum to 1 we can just multiply the flow by the weight and sum
+
+## MLE in R {.scrollable}
+```{r mle, echo=TRUE, eval=TRUE}
+# generate streamflow as weighted average of all  acceptable parameter sets
+
+
+# subset only acceptable runs
+msagel_acc <- subset(msagel, sim %in% results_acc$sim)
+# join with weights from res_acc, left_join will repeat weights for each day in streamflow trajectory
+msagel_acc <- left_join(msagel_acc, results_acc, by = "sim")
+head(msagel_acc)
+# finally multiply flow by weight
+msagel_acc <- msagel_acc %>% mutate(str_wt = str * wt_acc)
+
+# now we can average streamflow for each day from all the runs # using the weights
+aver_flow <- msagel_acc %>%
+  group_by(date) %>%
+  dplyr::summarize(str_mse = sum(str_wt))
+
+# add some date information 
+aver_flow <- left_join(aver_flow, msage[, c("date", "month", "year", "day", "wy", "obs")],
+  by = c("date")
+)
+
+# plot
+aver_flowl = aver_flow %>% pivot_longer(
+  cols = c(str_mse, obs),
+  values_to = "str", names_to = "type"
+)
+```
+
+# Graphs of MLE {.scrollable}
+
+```{r mle2, echo=TRUE, eval=TRUE}
+ggplot(aver_flowl, aes(x = date, y = str, col=type)) +
+  geom_line()+
+  labs(y = "Streamflow mm/day")
+
+# add some of the other date info and plot a subset
+wycheck <- 1985
+ggplot(subset(aver_flowl, wy == wycheck), aes(x = date, y = str, col=type)) +  labs(y = "Streamflow mm/day") + geom_line()
+```
+
+# Monthly flow with MLE {.scrollable}
+
+```{r mlemonth, echo=TRUE}
+# we could also calculate mse for august flow
+# get monthly flow
+
+msagel_acc_month <- msagel_acc %>%
+  group_by(month, wy, sim) %>%
+  dplyr::summarize(str = sum(str), obs = sum(obs), wt_acc = mean(wt_acc))
+
+# now MSE for monthly flow
+mse_flow <- msagel_acc_month %>%  
+  group_by(wy, month) %>%
+  dplyr::summarize(str_mse = sum(str*wt_acc), obs = mean(obs))
+
+```
+
+# Graph Monthly MLE {.scrollable}
+
+```{r mlemonth2, echo=TRUE}
+p1=ggplot(subset(msagel_acc_month, month==8), aes(wy, str, group=wy)) +
+  geom_boxplot(position="dodge") +
+  geom_point(aes(wy, obs), col="red") +
+  labs(y = "Streamflow", x = "Date")
+
+p1 + geom_point(data=subset(mse_flow, month==8), aes(wy, str_mse), col="blue") 
+
+
+```
+

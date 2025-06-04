@@ -26,6 +26,7 @@ compute_lowflowmetrics_all <- function(m, o, month, day, year, wy, low_flow_mont
 
   annual_min_cor <- cor(tmp$minm, tmp$mino)
 
+  # if user doesn't specify maximum errors use 50% of mean observed values
   if (is.null(max_err_annual_min)) {
     max_err_annual_min <- 0.5 * mean(tmp$mino)
   }
@@ -44,6 +45,7 @@ compute_lowflowmetrics_all <- function(m, o, month, day, year, wy, low_flow_mont
     max_err_low_month <- 0.5 * mean(low$obs)
   }
 
+  # transform errors to be between 0 and 1
   annual_min_err_trans <- max(0, (1 - abs(annual_min_err / max_err_annual_min)))
   low_month_err_trans <- max(0, (1 - abs(low_month_err / max_err_low_month)))
 
