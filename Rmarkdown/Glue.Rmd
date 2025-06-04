@@ -23,7 +23,7 @@ We weighted all 4 the same
 
 # Use the accuracy measure 
 
-We can use the combined accuacy measure to define behavioural (acceptible) parameter set (**res_acc**) - two options
+We can use the combined accuacy measure to define behavioral (acceptable) parameter set (**res_acc**) - two options
 
 * define a threshold (we will use 30%)
 * take top 50 performing parameter sets
