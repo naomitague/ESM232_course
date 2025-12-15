@@ -15,38 +15,31 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Model Goals
 
-<span style="color: green;">*Understanding*</span> (how does something work, what are key drivers of responses, how do different drivers interact)
+[*Understanding*]{style="color: green;"} (how does something work, what are key drivers of responses, how do different drivers interact)
 
+[*Estimation/Scenario*]{style="color: green;"} (what might be the consequences of decisions we make about the environment)
 
-
-<span style="color: green;">*Estimation/Scenario*</span> (what might be the consequences of decisions we make about the environment)
-
-
-
-<span style="color: green;">*Communication* </span>- contribute to education and broader understanding
+[*Communication* ]{style="color: green;"}- contribute to education and broader understanding
 
 # Goals
 
-The <span style="color: green;">goal</span> will help you to define the core pieces of a model
+The [goal]{style="color: green;"} will help you to define the core pieces of a model
 
 Often helpful to start at the end: Outputs - what do you want
 
-
 # Conceptual Models
 
-* models are **always** simplifications of reality - they help us to make sense of reality by focusing on specific aspects that are most relevant to your goal
+-   models are **always** simplifications of reality - they help us to make sense of reality by focusing on specific aspects that are most relevant to your goal
 
-* always start a modeling project by diagramming your conceptual model - how to you see the system; 
-    * from here you design or choose your 'actual' model
+-   always start a modeling project by diagramming your conceptual model - how to you see the system;
 
-* in a project, dialogue it is critical to dialogue to agree on the conceptual model
+    -   from here you design or choose your 'actual' model
 
-* <span style="color: blue;">"all models are wrong but some are useful"</span>  - British Statistician George Box
+-   in a project, dialogue it is critical to dialogue to agree on the conceptual model
 
+-   ["all models are wrong but some are useful"]{style="color: blue;"} - British Statistician George Box
 
-
-
-#  Types of Models {.scrollable}
+# Types of Models {.scrollable}
 
 Conceptual.............Mathematical
 
@@ -54,111 +47,105 @@ Stochastic.............Deterministic
 
 Lumped.............Spatially Distributed: *SPACE*
 
-Static.............Dynamic  : *TIME*
+Static.............Dynamic : *TIME*
 
 Abstract.............Physically/Process Based
 
 but biggest differences may often be the degree specific processes/parameters are accounted for
 
-
-
 # Implementing or Choosing - what fits
 
+-   simple input-output (functions)
+-   coupled models (wrappers)
+-   dynamic models (differential equations)
+-   discrete dynamic (difference equations)
 
-  * simple input-output (functions)
-  * coupled models (wrappers)
-  * dynamic models (differential equations)
-  * discrete dynamic (difference equations)
-  
 # Models in time and space {.scrollable}
 
-* challenges in running models over space / time
+-   challenges in running models over space / time
 
-* space/time resolution matters
+-   space/time resolution matters
 
-* integration (numerical solutions)
+-   integration (numerical solutions)
 
-* some useful concepts
-  * stability
-  * disturbance
-  
+-   some useful concepts
+
+    -   stability
+    -   disturbance
+
 # Some examples of more complex models
 
-* RHESSys applications to fire and water
-
+-   RHESSys applications to fire and water
 
 # Techniques {.scrollable}
 
-<span style="color: orange;">Workflow</span>
+[Workflow]{style="color: orange;"}
 
-* Translate conceptual model into functions (a single box or set of connected boxes) 
-  * useful to diagram this (flow chart)
+-   Translate conceptual model into functions (a single box or set of connected boxes)
 
-* Define inputs (data type, units)
+    -   useful to diagram this (flow chart)
 
-* Define output (data type, units)
+-   Define inputs (data type, units)
 
-* Define model structure (mathematical representation of transfer functions)
+-   Define output (data type, units)
 
-* Does model already exist if so choose it
+-   Define model structure (mathematical representation of transfer functions)
 
-* If not
+-   Does model already exist if so choose it
 
-  * Choose programming language
+-   If not
 
-  * Write model
+    -   Choose programming language
 
-  * Document the model 
+    -   Write model
 
-  * Test model
-  
-* Sensitivity Analysis
+    -   Document the model
 
-* Calibration
+    -   Test model
 
-* Summarize how output answers the question asked
+-   Sensitivity Analysis
+
+-   Calibration
+
+-   Summarize how output answers the question asked
 
 # Sensitivity Analysis {.scrollable}
 
-* defining variation or uncertainty in parameters
+-   defining variation or uncertainty in parameters
 
-* informal (play - and why its important!)
+-   informal (play - and why its important!)
 
-* techniques (like Sobol) for effectively searching parameters space
+-   techniques (like Sobol) for effectively searching parameters space
 
-* graphing!
+-   graphing!
 
-* sensitivity of "what" - extracting summary metrics to focus sensitivity analysis on meaningful (given your question) metrics
+-   sensitivity of "what" - extracting summary metrics to focus sensitivity analysis on meaningful (given your question) metrics
 
-* quantifying sensitivity 
-  * particularly useful when you have many parameters
-  * can help you choose what to graph
-  * can help focus on where uncertainty reduction is needed
-  
-# Calibration  {.scrollable}
+-   quantifying sensitivity
 
-* choosing metrics to define performance
+    -   particularly useful when you have many parameters
+    -   can help you choose what to graph
+    -   can help focus on where uncertainty reduction is needed
 
-  * "fuzzy" metrics
-  * building combined metrics
+# Calibration {.scrollable}
 
-* continuing to use multiple "good" parameter sets so that model results are more robust to the limits of calibration
+-   choosing metrics to define performance
 
-# Optimization 
+    -   "fuzzy" metrics
+    -   building combined metrics
 
-* similar to calibration where you are trying to find a single "good" parameter set
+-   continuing to use multiple "good" parameter sets so that model results are more robust to the limits of calibration
 
-* "free" or "choice" parameters that you are trying to optimize
+# Optimization
 
-* sensitivity analysis still matters
+-   similar to calibration where you are trying to find a single "good" parameter set
 
+-   "free" or "choice" parameters that you are trying to optimize
 
-
-
-
+-   sensitivity analysis still matters
 
 # Thank you!
 
-* feel free to reach out to me with questions / thoughts on modeling 
+-   feel free to reach out to me with questions / thoughts on modeling
 
-* thanks to Ojas for his support
+-   thanks to Ojas for his support

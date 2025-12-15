@@ -1,0 +1,568 @@
+---
+title: "Sensitivity Analysis"
+format: revealjs
+theme: solarized
+resources: ["img/"]
+css: ["slides.css"]
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library(sensitivity)
+library(tidyverse)
+library(lhs)
+library(purrr)
+library(here)
+```
+
+## What you can know about sensitivity before informal/formal sensitivity analysis {.scrollable}
+
+-   Parameter interactions are *evident* in the equations
+
+Recall our reservoir model
+
+-   **Input**: Reservoir height and flow rate
+
+-   **Output**: Instantaneous power generation (W/s)
+
+-   **Parameters**: K (efficiency) , ρ (density of water), g (acceleration due to gravity)
+
+P = ρ \* h \* r \* g \* K
+
+-   P is Power in watts,
+-   ρ is the density of water (\~1000 kg/m3)
+-   h is height in meters,
+-   r is flow rate in cubic meters per second,
+-   g is acceleration due to gravity of 9.8 m/s2,
+-   K Efficiency is a coefficient of efficiency ranging from 0 to 1.
+
+<span style="color: blue;"> The "effect" of **K** (efficiency) will depend on the other parameters
+
+A 1% change in **K** will lead to a 1% change in Power
+
+<span style="color: blue;"> How much Power (magnitude) will change with an increase **K** will depend on value of other parameters and inputs
+
+So you could say that Power is more sensitive to efficiency for larger flow rates or larger heights, We know this because the are multiplied together!
+
+## Some code to convince you of this {.scrollable}
+
+```{r simplex}
+# lets look at the power generation function
+source(here("R/power_gen.R"))
+Power_K1 <- power_gen(height = 2, flow = 4, K = 0.1, g = 9.8)
+Power_K1
+Power_K2 <- power_gen(height = 2, flow = 4, K = 0.2, g = 9.8)
+Power_K2
+
+# if you double K, you will double power (linear response)
+# relative change in power
+0.1 * 2
+
+Power_K1 * 2
+
+Power_K2 / Power_K1
+```
+
+##  {.scrollable}
+
+*Because* the equation is just multiplying factors
+
+-   Relative change is the same as the change in efficiency (K)
+-   Absolute change in power with change in efficiency depends on other parameters
+
+So what happens to sensitivity if height is 3 instead of 2
+
+```{r simplex2}
+# absolute change in power depends on other parameters/inputs
+# absolute change in pawer or magnitude of the change in power with change in efficiency (difference)
+Power_K2 - Power_K1
+
+# if height is 3 instead of 2
+Power_K1 <- power_gen(height = 3, flow = 4, K = 0.1, g = 9.8)
+Power_K1
+Power_K2 <- power_gen(height = 3, flow = 4, K = 0.2, g = 9.8)
+Power_K2
+
+# Power still doubles (relative change is the same)
+Power_K1 * 2
+
+# But absolute change is greater
+Power_K2 - Power_K1
+```
+
+## What you can know about sensitivity before "sensitivity analysis" {.scrollable}
+
+-   when transfer function is linear (equation *tells* you what the sensitivity is)
+
+-   Imagine that habitat suitability for parrot can be modelled with the following equations, where
+
+$$
+ PS = k_P * P + k_T * T
+$$
+
+-   **PS** probability that parrots will be found in a given location
+
+-   **P** is mean annual precipitation
+
+-   **T** is mean annual temperature
+
+-   $k_P$ and $k_T$ are empirically derived coefficients
+
+<span style="color: blue;"> Sensitivity to $k_P$ and $k_T$ will be linear
+
+if $k_P$ is 0.002 and $k_T$ is 0.01 does that mean parrot suitability is more sensitive to temperature than precipitation?
+
+Quiz...type yes or no
+
+# Sensitivity of the output
+
+Coefficient values - depends on what range in **T** and **P** so its hard to tell just from the coefficients
+
+<span style="color: blue;"> *IF* **P** and **T** were in the same units (e.g percent deviation from a mean value), then you could use the coefficients to tell you if parrot suitability would be more sensitive to a 10% change in precipitation versus a 10% change in temperature
+
+$$
+ PS = k_P * (P-Pavg)/Pavg + k_T * (T-Tavg)/Tavg
+$$
+
+## Statistics
+
+Regression equations are also models
+
+They are *linear* models
+
+The coefficients and standard error tell you about sensitivity - larger coefficients = output more sensitive to variation in the "variable" - smaller standard error = more confidence in coefficient
+
+## When do we need to do sensitivity analysis {.scrollable}
+
+-   Looking at the form of the equations in the box (transfer function) often tells you something about sensitivity
+
+-   The first derivative of the equation with respect to the parameter IS the sensitivity; so if you can take the derivative you can *know* something about the sensitivity
+
+-   BUT if you don't know what's in the box (transfer function) or if it has multiple boxes its difficult to tell
+
+-   any equation/transfer function with thresholds (if's, max, min's) hard to tell (you can't differentiate), sometimes parameters may matter sometimes they will not
+
+What do we do then...explore...and
+
+## Formal Sensitivity Analysis {.scrollable}
+
+Many approaches (entire text books)
+
+Two main classes
+
+-   global simultaneous: vary all parameters over possible ranges
+
+-   local parameter specific: hold all other parameters content and then vary
+
+Challenge is sampling parameter uncertainty space and balancing this against computational limits
+
+Optimization - special type of sensitivity analysis
+
+## Single Parameter Sensitivity {.scrollable}
+
+Vary one parameter but hold the others constant
+
+Useful for focused analysis but..
+
+-   sensitivity to a parameter may change as a function of other parameters
+
+Consider the sensitivity of a seasonal snow accumulation and melt model to both temperature and radiation
+
+-   for high temperatures, radiation may not impact rates substantially since there is less snow
+
+-   for lower temperature, radiation may matter much more - so temperatures related to radiation absorption (e.g albedo) will have a greater impact on output
+
+## Steps in Sensitivity Analysis {.scrollable}
+
+-Define the range (pdf) of input parameters
+
+-Define the outputs to be considered (e.g if you had streamflow are you looking at daily, max, min, annual)
+
+-Sample the pdf of input parameters and use this sample to run the model - repeat many times
+
+-Graph the results
+
+-Quantify sensitivity
+
+# Sensitivity Analysis: What ranges should I vary my parameters over {.scrollable}
+
+-   range (min, max, middle values)
+
+-   pdf (probability density function)
+
+-   If parameters are physically based this can come from literature (e.g range of snow albedo’s, range of hydraulic conductivity in a soil )
+
+-   If parameter’s are estimated (e.g a regression slope, coefficients from another model) then statistics such as confidence bounds can help you to define the ranges
+
+## Approaches to sampling parameter space
+
+-   Random - Monte Carlo
+
+-   Morris Method
+
+-   Latin Hypercube
+
+-   Sobel
+
+Difference is in how you sample parameter space
+
+Trade-offs with efficiency, likelihood of capturing responses from rarer parameters
+
+## Latin Hyper Cube
+
+generating random samples from equally probability intervals ![](img/LHC.png)
+
+## Tools in R
+
+*lhs* (Parameter Space Exploration with Latin Hypercubes) Library for Latin Hypercube Sampling and Sensitivity Analysis
+
+*Install lhs library*
+
+# What we need to use the LHS function
+
+-   number of parameters that you want to perform sensitivity analysis on
+
+-   number of samples
+
+-   distributions of the parameters
+
+“qnorm”,”qunif”, “qlnorm”,”qgamma” many others\]
+
+[More Distributions and Parameters](http://www.stat.umn.edu/geyer/old/5101/rlook.html)
+
+# Steps for Latin HyperCube Sampling
+
+-   create a *lhs* matrix (essentially our hyper cube) which defines quantiles for each parameter
+    -   these are essentially quantiles that will let us fully sample the parameter space
+-   use these quantiles to sample from actual parameter distributions
+    -   we do this by adding in the characteristics of the distributions
+        -   type (e.g normal, uniform)
+        -   parameters (e.g mean, variance)
+
+## Example of using Latin Hypercube sampling for sensitivity analysis {.scrollable}
+
+Lets look at our almond yield example
+
+```{r LHS}
+# for formal sensitivity analysis it is useful to describe output in
+# several summary statistics - how about mean, max and min yield
+source(here("R/compute_almond_yield.R"))
+
+
+# set a random seed to make things 'random'
+set.seed(1)
+
+# which parameters
+pnames <- c("Tmincoeff1", "Tmincoeff2", "Pcoeff1", "Pcoeff2", "intercep")
+
+# how many parameters
+npar <- length(pnames)
+# how many samples
+nsample <- 100
+
+# create our latin hyper cube of quantiles for each parameter
+parm_quant <- randomLHS(nsample, npar)
+colnames(parm_quant) <- pnames
+
+
+
+# choose distributions for parameters - this would come from
+# what you know about the likely range of variation
+# then use our random samples to pick the quantiles
+
+# first set up a data frame to hold the samples for each parameter
+parm <- as.data.frame(matrix(nrow = nrow(parm_quant), ncol = ncol(parm_quant)))
+colnames(parm) <- pnames
+# for each parameter pick samples based on lhs quantiles
+# I'm using several examples normal distribution (with 10% standard deviation) and uniform with +- 10%
+# in reality I should pick distribution from knowledge about uncertainty in parameters
+
+# to make it easy to change i'm setting standard deviation / range variation to a variable
+pvar <- 10
+
+parm[, "Tmincoeff1"] <- qnorm(parm_quant[, "Tmincoeff1"], mean = -0.015, sd = 0.015 / pvar)
+parm[, "Tmincoeff2"] <- qnorm(parm_quant[, "Tmincoeff2"], mean = -0.0046, sd = 0.0046 / pvar)
+
+# for uniform I'm using +- 10%
+parm[, "Pcoeff1"] <- qunif(parm_quant[, "Pcoeff1"], min = -0.07 - 0.07 / pvar, max = -0.07 + 0.07 / pvar)
+parm[, "Pcoeff2"] <- qunif(parm_quant[, "Pcoeff2"], min = -0.0043 - 0.0043 / pvar, max = -0.0043 + 0.0043 / pvar)
+
+parm[, "intercep"] <- qnorm(parm_quant[, "intercep"], mean = 0.28, sd = 0.28 / pvar)
+# note I could also index by column number by names keep things more clear, fewer mistakes
+# parm[,5] = qnorm(parm_quant[,5], mean=0.28, sd=0.28/pvar)
+
+head(parm)
+```
+
+## Run model for parameter sets
+
+-   We will do this in R
+
+-   We can use **pmap** to efficiently run our model for all of our parameter sets
+
+but first
+
+## Examining Output {.scrollable}
+
+Sensitivity of What?
+
+If your model is estimating a single value, you are done
+
+-   long term mean almond yield anomoly
+-   mean profit from solar
+
+But models are often estimating multiple values
+
+-   streamflow
+-   almond yield anomoly for multiple years
+
+In that case to quantify sensitivity you need summary metrics
+
+-   mean
+-   max
+-   min
+-   variance
+
+Which one depends on what you care about
+
+## Example: Almond Yield {.scrollable}
+
+-   I'm going to return some summary information from my model
+-   You could do this in a separate function!
+
+I'll return
+
+-   max yield
+
+-   min yield
+
+-   average yield
+
+```{r almondsens}
+#
+compute_almond_yield
+```
+
+## now lets run for our parameters and climate data {.scrollable}
+
+```{r almondsens2}
+# read in the input data
+clim <- read.table(here("data/clim.txt"), header = T)
+
+
+
+# lets now run our model for all of the parameters generated by LHS
+# pmap is useful here - it is a map function that uses the actual names of input parameters
+
+yields <- parm %>% pmap(compute_almond_yield, clim = clim)
+
+# notice that what pmap returns is a list
+head(yields)
+
+# turn results in to a dataframe for easy display/analysis
+yieldsd <- yields %>% map_dfr(`[`, c("maxyield", "minyield", "meanyield"))
+```
+
+## Plotting {.scrollable}
+
+Plot relationship between parameter and output to understand how uncertainty in parameter impacts the output to determine over what ranges of the parameter uncertainty is most important (biggest effect)
+
+-   Use a box plot (of output) to graphically show the impact of uncertainty on output of interest
+
+-   To see more of the distribution - graph the cumulative distribution
+
+    -   high slope, many values in that range
+    -   low slope, few values in that range
+    -   constant slope, even distribution
+
+-   Scatterplots against parameter values
+
+```{r senplot}
+# add uncertainty bounds on our estimates
+tmp <- yieldsd %>% gather(value = "value", key = "yield")
+ggplot(tmp, aes(yield, value, col = yield)) +
+  geom_boxplot() +
+  labs(y = "Yield (as anomoly)")
+
+# note that you don't see the ranges because of the scale (min yield anomoly much smaller than max) - here's a more informative way to graph
+ggplot(tmp, aes(yield, value, col = yield)) +
+  geom_boxplot() +
+  labs(y = "Yield (as anomoly)") +
+  facet_wrap(~yield, scales = "free")
+
+
+# cumulative distribution
+ggplot(yieldsd, aes(maxyield)) +
+  stat_ecdf()
+
+
+# plot parameter sensitivity
+# a bit tricky but nice way to make it easy to plot all parameters against all values
+tmp <- cbind.data.frame(yieldsd, parm)
+tmp2 <- tmp %>% gather(maxyield, minyield, meanyield, value = "yvalue", key = "yieldtype")
+tmp3 <- tmp2 %>% gather(-yvalue, -yieldtype, key = "parm", value = "parmvalue")
+ggplot(tmp3, aes(parmvalue, yvalue, col = yieldtype)) +
+  geom_point() +
+  facet_wrap(~ yieldtype * parm, scales = "free", ncol = 5)
+```
+
+## Quantifying Sensitivity {.scrollable}
+
+We can essentially fit a regression relationship between input and output - and slope is a measure of sensitivity (standardized regression coefficients) \begin{align*}
+   y = \beta * x + \alpha  \\
+  {\beta}_{std} = \beta * \frac{s_x}{s_y} 
+\end{align*}
+
+where $s_x$ and $s_y$ are standard deviations of x and y
+
+If we have multiple parameters and inputs
+
+If relationships between output and input are close to linear,
+
+-   Correlation coefficient between output and each input (separately)
+
+-   Partial correlation coefficient (PCC) for multiple parameters;
+
+    \`\`\`
+
+    -   Correlation after effects of other parameters accounted for
+
+    -   Correlation of X and Y accounting for Z (all other parameters)
+
+    -   Computed as the correlation of the *residuals* from linear regression of
+
+        -   X with Z
+
+        -   Y with Z \`
+
+-   for *rank* correlation use ranks instead of values
+
+## Quantifying Sensitivity {.scrollable}
+
+-   Linear and monotonic relationship between x and y
+
+-   Correlation Coefficient - linear monotonic
+
+-   Non-linear relationship, but monotonic between x and y
+
+    -   you transform x and y (e.g log transform)
+    -   Partial Rank Correlation Coefficient - non-linear but monotonic
+
+R function *pcc* in *sensitivity* package can compute these for you AND makes it easy to graph the results
+
+It can be used for both partial correlation coefficients and partial rank correlation coefficients
+
+## Correlation for Maximum Yield {.scrollable}
+
+```{r quantifying}
+
+
+# simple correlation coefficients
+result <- map(parm, cor.test, y = yieldsd$maxyield)
+result$Tmincoeff1
+result$Tmincoeff2
+result$Pcoeff10
+result$Pcoeff2
+result$intercep
+
+# extract just the correlation from results list
+justR2 <- result %>% map_df("estimate")
+justR2$pname = names(parm)
+justR2
+
+# extract just the confidence interval from results list
+justconf <- result %>% map_df("conf.int")
+justconf
+```
+
+## Parital Rank Correlation Coefficients for Maximum Yield
+
+we can use *pcc* to compute these for us
+
+```{r quantifying2}
+# partial regression rank coefficients
+senresult_rank <- pcc(parm, yieldsd$maxyield, rank = TRUE)
+senresult_rank
+
+```
+
+## plot results
+
+```{r quantifyingp2}
+# plot results
+plot(senresult_rank)
+```
+
+## Try on your own {.scrollable}
+
+-   Partial Rank Correlation Coefficients for Minimum Yield
+
+-   how are they different from results for maximum yield
+
+## Code {.scrollable}
+
+```{r quantifying3}
+# combine parameter sets with output
+
+
+# simple correlation coefficients
+result <- map(parm, cor.test, y = yieldsd$minyield)
+result$Tmincoeff1
+result$Tmincoeff2
+result$Pcoeff1
+result$Pcoeff2
+result$intercep
+
+# just the confidence interval
+justconf <- result %>% map_df("conf.int")
+justconf
+
+# try again using rank coefficients
+
+senresult_rank <- pcc(parm, yieldsd$minyield, rank = TRUE)
+senresult_rank
+plot(senresult_rank)
+```
+
+## plot parameter sensitivity
+
+```{r plotting}
+# a bit tricky but nice way to make it easy to plot all parameters against all values
+tmp <- cbind.data.frame(yieldsd, parm)
+tmp2 <- tmp %>% gather(maxyield, minyield, meanyield, value = "yvalue", key = "yieldtype")
+tmp3 <- tmp2 %>% gather(-yvalue, -yieldtype, key = "parm", value = "parmvalue")
+ggplot(tmp3, aes(parmvalue, yvalue, col = yieldtype)) +
+  geom_point() +
+  facet_wrap(~ yieldtype * parm, scales = "free", ncol = 5)
+```
+
+## Compare PCC for different output {.scrollable}
+
+```{r, pcc}
+
+senresult_rank_min <- pcc(parm, yieldsd$minyield, rank = TRUE)
+senresult_rank_min
+
+
+senresult_rank_max <- pcc(parm, yieldsd$maxyield, rank = TRUE)
+senresult_rank_max
+
+
+senresult_rank_mean <- pcc(parm, yieldsd$meanyield, rank = TRUE)
+senresult_rank_mean
+
+tmp = cbind.data.frame(senresult_rank_min$PRCC, senresult_rank_max$PRCC, senresult_rank_mean$PRCC)
+colnames(tmp)=c("min", "max", "mean")
+tmp$parm = rownames(tmp)
+tmpp = tmp %>% gather(-parm, key = "output", value = "PRCC")
+```
+
+## Plot
+
+```{r, pccplot}
+ggplot(tmpp, aes(parm, PRCC, col=output))+geom_point(size=2)
+
+```

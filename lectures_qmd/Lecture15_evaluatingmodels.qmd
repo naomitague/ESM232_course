@@ -58,7 +58,7 @@ Why?
 
 [Staudinger, M., Stahl, K., Seibert, J., Clark, M. P., and Tallaksen, L. M.: Comparison of hydrological model structures based on recession and low flow simulations, Hydrol. Earth Syst. Sci. Discuss., 8, 6833-6866, doi:10.5194/hessd-8-6833-2011, 2011]{style="font-size:50%"}
 
-## Somme classic metrics {.scrollable}
+## Some classic metrics {.scrollable}
 
 -   t.test (are the means different)
 -   var.test (are the variances different)

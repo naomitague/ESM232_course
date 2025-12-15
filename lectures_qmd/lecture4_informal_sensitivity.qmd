@@ -18,7 +18,9 @@ library(ggpubr)
 library(here)
 ```
 
-# Solar
+# Questions?
+
+# Solar PV Model Review
 
 ```{r solar, echo=TRUE}
 
@@ -35,83 +37,227 @@ sierraczosolar <- sierraczosolar %>% subset(year > 1944 & year < 1954)
 solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W")
 ```
 
-## Sensitivity Analysis with *ethresh* {.scrollable}
+```{r}
+# remove the first year from the dataset
+sierraczosolar <- sierraczosolar %>%
+  filter(year > 1944)
 
-There is a threshold radiation below which efficiency declines
+# now run the model again
+site1 <- solarpv(area = 0.1, 
+          solar = sierraczosolar, clr = "green", eunit = "W", g = TRUE)
 
-- Last class we used *eff*
-
--   Assume +-15% uncertainty in *ethresh* parameter (uniform distribution)
-
--   Default value (from the function) is 10,000
-
--   Code so that its easy to change the uncertainty
-
--  Think about a data structure to allow us to see how uncertainty impacts annual power estimation for each year, or mean annual power generation
-
-
-```{r ethresh, echo=TRUE}
-# lets try sensitivity analysis again,
-# ethresh - is defaulted to 10000; lets try +- 15%
-# lets try 40 samples
-# assume a uniform distribution - we don't know anything about variation
-deviation <- 0.15
-base_thresh <- 10000
-ethresh <- runif(
-  min = base_thresh - deviation * base_thresh,
-  max = base_thresh + deviation * base_thresh, n = 40
-)
-
-# now run our model for the parameters
-site2 <- ethresh %>% map(~ solarpv(
-  area = 0.1,
-  solar = sierraczosolar, clr = "green",
-  eunit = "W", g = FALSE, etype = "direct", eff = 0.8, PR = 0.75,
-  ethresh = .x
-))
-
-
-# extract a useful data structure,lets say we want  just the annual data (not the mean), and then reformat as a data frame with nice column names
-tmp <- map_df(site2, `[`, c("annual"))
-site2df <- data.frame(
-  year = tmp$annual$year,
-  elect = tmp$annual$elect
-)
-
-# now we could plot
-ggplot(
-  site2df,
-  aes(as.factor(year), elect, group = year)
-) +
-  geom_boxplot() +
-  labs(y = "Electricity generated in W", x = "Year")
-
-# we also might want to see mean electricity generation across parameter uncertainty
-mean_elect <- map_df(site2, `[`, c("mean"))
-
-# because there is only 1 value for each ethresh we can add as a column
-mean_elect$ethresh <- ethresh
-
-
-p1 <- ggplot(mean_elect, aes(y=mean)) +
-  geom_boxplot() +
-  labs(x = "Mean Annual Electricity W")
-p1
-
-# or we might want to see how electricity varies with parameter value
-p2 <- ggplot(mean_elect, aes(ethresh, mean)) +
-  geom_point(cex = 2, col = "orange") +
-  labs(y = "Mean Annual Electricity W", x = "Threshold Radiation (kJ/m2)  \nabove which energy production is more efficient")
-p2
 ```
 
-## Sensitivity to Energy Threshold is not linear
+Try changing an input and see what you get!
 
-Sensitivity to parameters that effect a theshold is often complex (and not linear!)
+# Playing with models
+
+We often build models to try different options
+
+**Model inputs**: solar radiation (daily direct and diffuse)
+
+**Model outputs**: power generated each year and average power over time
+
+**Parameters**: panel efficiency, system performance, units, type of array (uses diffuse or not), plot Y/N
 
 ```{r, echo=TRUE}
-ggarrange(p1, p2)
+# consider a different PV array that only uses
+# diffuse and has non standard efficiency (0.6)
+site2 <- solarpv(area = 0.1, 
+        solar = sierraczosolar, clr = "green", 
+        eunit = "W", g = FALSE, eff = 0.6, etype = "direct")
+site2$mean
+
+# Compare with previous site
+site1$mean
+site2$mean
 ```
+
+# Informal Sensitivity Analysis {.scrollable}
+
+What happens when we vary parameters?
+
+**Informal** - just try varying parameters
+
+-   decide which parameter(s) and what range to vary the parameter over - what is the uncertainty? (+- 15% )?
+
+-   figure out how to efficiently run your model over parameter variation and save results as you go
+
+-   analyze the sensitivity (simply plotting for now)
+
+## Helpful tools {.scrollable}
+
+-   Sampling
+
+    -   *runif*,
+    -   *rnorm* (sampling from uniform and normal distributions)
+    -   *seq* (for creating a sequence of numbers)
+
+-   Repeating
+
+    -   in R - *purrr* package, also *apply* family of function
+    -   classic *for* loops
+
+If you need it a good source to review working with *purrr* to extract items from list and repeat operations
+
+[Useful Purrr Resource](https://www.rebeccabarter.com/blog/2019-08-19_purrr/)
+
+# Example
+
+-   we will start by using **map**
+-   which "maps\* a function (runs it ) for a list of values,
+-   we can also use these function to extract values from a list
+
+# R code for informal sensitivity
+
+We are not sure what the efficiency of the PV array is
+
+How important is this parameter to the results?
+
+How we do this depends on what we know about efficiency
+
+-   manufacturer reports mean and standard deviation\*
+-   manufacturer provides a range
+
+Mean 0.6 standard deviation of 0.1
+
+# R code
+
+```{r sen1, eval=T, echo=TRUE}
+library(tidyverse)
+
+# first come up with varying values for efficiency 
+# if we don't know efficiency exactly , lets try 20 samples
+
+
+eff <- rnorm(mean = 0.6, sd = 0.1, n = 20)
+
+# use map from purrr to run model for all values of eff
+# notice how map adds the one parameter that is missing from the input list
+
+site2 <- eff %>% map(~ solarpv(area = 0.1, 
+  solar = sierraczosolar, clr = "green", 
+  eunit = "W", g = FALSE, etype = "direct", eff = .x))
+
+head(site2)
+```
+
+## Data Structures {.scrollable}
+
+-   challenge in sensitivity analysis is often what data structure to use to store the results
+
+-   organize parameter variation and result variation
+
+-   R often returns lists - but not so easy for organization
+
+-   ask yourself what you want to do with the data, then put in a structure that will make this easy
+
+-   e.g two different data frames
+
+    -   plot variation in mean annual electricity by *eff*
+    -   plot variation in each year due to variation in *eff*
+    -   a data frame is often the best structure for graphing
+
+```{r sen1b, eval=T}
+
+head(str(site2))
+# this is pretty messy - but we can extract a useful data structure,lets say we want
+# just the annual data (not the mean annual time series), and then reformat as a data frame with nice column names
+tmp <- map_dfr(site2, `[`, c("annual"))
+
+site2df <- data.frame(year = tmp$annual$year, elect = tmp$annual$elect)
+head(site2df)
+```
+
+## Looking at results from informal sensitivity analysis {.scrollable}
+
+-   [Box plots or Violin Plots of Model Output (where box shows effect of parameter uncertainty)]{style="color: green;"}
+
+WHY: To see how big the range of output might be relative to "uncertain" parameter range
+
+-   [Plot Response against parameter value]{style="color: green;"}
+
+WHY: To see how the parameter influences the results
+
+-   [Average across parameter uncertainty]{style="color: green;"}
+
+WHY: If you want the one number that is the "best guess" given uncertainty
+
+## Variation in annual electricity due to parameter uncertainty {.scrollable}
+
+-   boxplot
+-   just need all the annual electricity by year
+
+```{r sen2, eval=T, echo=TRUE}
+
+
+# now we could plot
+ggplot(site2df, aes(year, elect, group = year)) +
+  geom_boxplot() +
+  labs(y = "Electricity generated in W")
+```
+
+## Add an average line
+
+Why?
+
+```{r sen2b, eval=T, echo=TRUE}
+# we also might want an average across parameter uncertainty
+site2_average <- site2df %>%
+  group_by(year) %>%
+  dplyr::summarize(elect = mean(elect))
+
+# now add this to the plot - note that we remove the grouping by using group=1
+ggplot(site2df, aes(year, elect, group = year)) +
+  geom_boxplot() +
+  labs(y = "Electricity in W") +
+  geom_line(data = site2_average, aes(year, elect, group = 1), col = "orange")
+```
+
+## How does efficiency impact mean annual electricity estimate {.scrollable}
+
+-   Data structure with *eff* and mean annual electricity
+-   X-Y plots
+
+Organize the data
+
+```{r sene, eval=T, echo=TRUE}
+# we could also plot how the mean annual electricity varies with efficiency (eff from above)
+site2[[1]]
+
+tmp <- map_df(site2, `[`, c("mean"))
+
+# how variable is electricity generation (mean over all time) with uncertainty in solar efficiency
+
+site2_mean <- data.frame(eff = eff, elect = tmp)
+```
+
+## Plot {.scrollable}
+
+-   how variable is the model output given parameter variation
+-   how does the variation in parameter impact model output
+
+```{r sene2, eval=T, echo=TRUE}
+ggplot(site2_mean, aes(y = mean)) +
+  geom_boxplot() +
+  labs(x = "Electricity in W")
+
+# or to see what the sensitivity looks like
+ggplot(site2_mean, aes(eff, mean)) +
+  geom_point() +
+  labs(y = "Electricity in W", x = "Solar Efficiency")
+
+# my best guess
+mean(site2_mean$mean)
+```
+
+# Sharing Example R, Data and Rmarkdowns
+
+<https://github.com/naomitague/ESM232_EDS230_Examples.git>
+
+You can clone this repository and then pull before class to get example code and data
+
+Remember that git does not like having nested repositories - so keep working respoistories in separate directories
 
 ## Combined sensivitivity analysis
 
@@ -119,7 +265,7 @@ ggarrange(p1, p2)
 
 -   *ethresh*
 
-Sample from both of them - each time we run the model we vary both of the parameters
+Sample from both of them - each time we run the model we vary both of the parameters at the same time
 
 Then create plots to show the impact of parameter uncertainty
 
@@ -198,13 +344,13 @@ save(solar_annual_elect, file = here("Data/annual_elect_solar.rda"))
 
 -   note the linear response to *eff*
 
-
 ## plot
+
 ```{r}
 ggarrange(p1, p2)
 ```
 
-## Additional notes {.scrollable} 
+## Additional notes {.scrollable}
 
 Using a *For* Loop for sensitivity analysis
 
@@ -247,7 +393,6 @@ ggplot(tmp, aes(as.factor(year), value)) +
   labs(y = "Mean Annual Electricity W", x = "Year")
 ```
 
-
 # Before next Tuesday I'll add a part 2 to this lecture
 
- In preparation, go through informal_sensitivity.qmd and informal_sensitivity2.qmd make sure you understand the code
+In preparation, go through informal_sensitivity.qmd and informal_sensitivity2.qmd make sure you understand the code

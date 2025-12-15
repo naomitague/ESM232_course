@@ -18,21 +18,23 @@ What if we wanted to keep all of the 'good' parameters
 
 Either way we can graph and come up with 'best' prediction accounting for uncertainty
 
-Create a single measure of accuracy 
+Create a single measure of accuracy
 
-
-* *compute_lowflowmetrics_all* added a summary measures 
+-   *compute_lowflowmetrics_all* added a summary measures
 
 -   relative error in annual minimum flow estimate
+
 -   relative error in monthly flow during low flow period
+
 -   correlation between observed and modelled annual minimum flow
+
 -   correlation between observed and modelled flow during the low flow period
 
+Updates (from *compute_lowflowmetrics*)
 
-Updates (from *compute_lowflowmetrics*) 
+-   allows user to input weights (default evenly weighted)
+-   transforms error based metrics into 0-1 scale
 
-* allows user to input weights (default evenly weighted)
-* transforms error based metrics into 0-1 scale
 ```{r startup}
 
 library(tidyverse)
@@ -57,14 +59,12 @@ results$sim <- msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% coln
 
 ```
 
-
 ## Use the accuracy measure {.scrollable}
 
 Use the combined accuacy measure to define behavioural (acceptable) parameter set (**results_acc**) - two options
 
-* define a threshold (we will use 30%)
-* take top 50 performing parameter sets
-
+-   define a threshold (we will use 30%)
+-   take top 50 performing parameter sets
 
 ```{r behavioral, echo=TRUE, eval=TRUE}
 summary(results$combined)
@@ -86,22 +86,21 @@ head(results_acc)
 
 Now define "weights" (likelihood) based on parameter performance for the acceptable or behaviorial parameters
 
-* accuracy measure defined above will define weight
-* sum of the weights to equal 1
-* we normalize by the range of accuracy for the behavioral parameters
-  * this **relative accuracy** becomes the weight
-* we now only work with behavioural parameter sets 
- 
+-   accuracy measure defined above will define weight
+-   sum of the weights to equal 1
+-   we normalize by the range of accuracy for the behavioral parameters
+    -   this **relative accuracy** becomes the weight
+-   we now only work with behavioural parameter sets
+
 To normalize
 
 $weight$ = $\frac{accuracy - min(accuracy)}{max(accuracy) - min(accuracy)}$
 
-*weight* will be from 0-1 
+*weight* will be from 0-1
 
 To make sure it sums to 1 we can divide by the sum of all weights
 
 $weight$ = $\frac{weight}{\sum weight}$
-
 
 ## Weighting in R {.scrollable}
 
@@ -128,18 +127,16 @@ Nacc
 
 # Using weights {.scrollable}
 
-Use weights is to define a maximum likelihood estimate
-* by averaging (weighted by accuracy) streamflow from all behavioural simulations
+Use weights is to define a maximum likelihood estimate \* by averaging (weighted by accuracy) streamflow from all behavioural simulations
 
 $MLE$ = $\frac{\sum_{i=1}^{N} flow_i \times weight_i}{\sum_{i=1}^{N} weight_i}$
 
-where 
-* $flow_i$ is the streamflow from simulation $i$ 
-* $weight_i$ is the weight for that simulation
+where \* $flow_i$ is the streamflow from simulation $i$ \* $weight_i$ is the weight for that simulation
 
-* because we know weights sum to 1 we can just multiply the flow by the weight and sum
+-   because we know weights sum to 1 we can just multiply the flow by the weight and sum
 
 ## MLE in R {.scrollable}
+
 ```{r mle, echo=TRUE, eval=TRUE}
 # generate streamflow as weighted average of all  acceptable parameter sets
 
@@ -187,15 +184,38 @@ ggplot(subset(aver_flowl, wy == wycheck), aes(x = date, y = str, col=type)) +  l
 # we could also calculate mse for august flow
 # get monthly flow
 
-msagel_acc_month <- msagel_acc %>%
+# summarize monthly flow
+msagel_month <- msagel %>%
   group_by(month, wy, sim) %>%
-  dplyr::summarize(str = sum(str), obs = sum(obs), wt_acc = mean(wt_acc))
+  dplyr::summarize(str = sum(str), obs = sum(obs))
+
+# extract only acceptable runs
+
+msagel_acc_month <- subset(msagel_month, sim %in% results_acc$sim)
+# join with weights from res_acc, left_join will repeat weights for each month in streamflow trajectory
+msagel_acc_month <- left_join(msagel_acc_month, results_acc, by = "sim")
+
 
 # now MSE for monthly flow
 mse_flow <- msagel_acc_month %>%  
   group_by(wy, month) %>%
   dplyr::summarize(str_mse = sum(str*wt_acc), obs = mean(obs))
 
+# For comparison, compute MSE for all simulations
+mse_flow_all <- msagel_month %>%
+  group_by(wy, month) %>%
+  dplyr::summarize(str_mse = mean(str))
+
+mse_flow_all = left_join(mse_flow_all, mse_flow, by = c("wy", "month"), suffix = c("_all", "_mse"))
+
+# see the impact of calibration
+tmp = mse_flow_all %>% subset(month==8) 
+cor(tmp$str_mse_all, tmp$obs)
+cor(tmp$str_mse_mse, tmp$obs)
+
+# but what about across all months
+cor(mse_flow_all$str_mse_all, mse_flow_all$obs)
+cor(mse_flow_all$str_mse_mse, mse_flow_all$obs)
 ```
 
 # Graph Monthly MLE {.scrollable}
@@ -211,3 +231,70 @@ p1 + geom_point(data=subset(mse_flow, month==8), aes(wy, str_mse), col="blue")
 
 ```
 
+# Compare with results from last class {.scrollable}
+
+```{r compare, echo=TRUE}
+
+# plot mean August streamflow for all parameters and acceptable parameters
+msagel_month_avg <- msagel_month %>%
+  group_by(month, sim) %>%
+  dplyr::summarize(str = mean(str), obs = mean(obs))
+msagel_month_avg = msagel_month_avg %>% mutate(accept = ifelse(sim %in% results_acc$sim, "Accept", "Not"))
+
+# read in the results from last class
+goodpar = c(40, 42,29, 68,9,20, 12,32, 10,77)
+other_cal_parms = paste0("V",goodpar)
+msagel_month_avg$othercal = ifelse(msagel_month_avg$sim %in% other_cal_parms, "Accept B", "Not B")
+
+# compute average august flow in observed
+mean_august_obs = mean(subset(msagel_month_avg, month==8)$obs)
+```
+
+## Plot
+
+```{r compare2, echo=TRUE}
+p2 = ggplot(subset(msagel_month_avg, month==8), aes(x=accept, y=str))+geom_boxplot()+geom_hline(yintercept=mean_august_obs, col="red")+geom_boxplot(aes(x=othercal, y=str))  + labs(y = "Mean Streamflow\n", x = "Parameter set") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p2
+```
+
+## Try a different month {.scrollable}
+
+```{r different_month, echo=TRUE}
+
+# compute average december flow in observed
+mean_dec_obs = mean(subset(msagel_month_avg, month==12)$obs)
+
+p3 = ggplot(subset(msagel_month_avg, month==12), aes(x=accept, y=str))+geom_boxplot()+geom_hline(yintercept=mean_dec_obs, col="red")+geom_boxplot(aes(x=othercal, y=str))  + labs(y = "Mean Streamflow \nDecember", x = "Parameter set") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p3
+```
+
+## Annual Total or Minimumm Flow {.scrollable}
+
+```{r annual_total, echo=TRUE}
+# calculate annual total streamflow
+msagel_annual <- msagel %>%
+  group_by(wy, sim) %>%
+  dplyr::summarize(str = sum(str), obs = sum(obs), minstr=min(str), minobs=min(obs))
+
+# added a column to indicate if the parameter set is acceptable
+msagel_annual = msagel_annual %>% mutate(accept = ifelse(sim %in% results_acc$sim, "Accept", "Not"))
+
+# also add a column for class good parameters
+msagel_annual$othercal = ifelse(msagel_annual$sim %in% other_cal_parms, "Accept B", "Not B")
+
+```
+
+## Plot
+
+```{r annual_total_plot, echo=TRUE}
+# plot annual total streamflow
+  p4 = ggplot(msagel_annual, aes(x=factor(wy), y=minstr, 
+  fill=interaction(accept, othercal))) +
+               geom_boxplot(position = position_dodge(width = 0.75)) + labs(x = "Water Year", y = "Streamflow (mm)", fill = "Accept × OtherCal") +
+  theme_minimal() + geom_point(aes(x=factor(wy), y=minobs), col="red")
+  p4
+```

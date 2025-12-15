@@ -1,5 +1,5 @@
 ---
-title: "Steps for building models"
+title: "Getting started with models"
 format:
   revealjs:
     theme: solarized
@@ -7,11 +7,95 @@ format:
 editor: visual
 ---
 
+# How to start - what is my model
+
+-   Clearly define your goal
+
+-   Draw your conceptual model
+
+-   What are your:
+
+-   [Inputs]{style="color: lightblue;"}
+
+-   [Outputs]{style="color: lightblue;"}
+
+-   What’s in the box (the model itself) that gives you a relationship between outputs and inputs, type of model: [Transfer function]{style="color: blue;"}
+
+-   [Parameters]{style="color: lightblue;"} Values that influences how the model relationships work
+
+# Types of Models (what kind do you need?)
+
+Conceptual.............Mathematical
+
+Stochastic.............Deterministic
+
+Lumped.............Spatially Distributed: *SPACE*
+
+Static.............Dynamic : *TIME*
+
+Abstract/ML.............Physically/Process Based
+
+# Goal
+
+Estimate the power generated from a reservoir ...
+
+# Example: Conceptual model
+
+![](img/reservoir_cm.jpeg)
+
+# Example: Input/Output/Parameters
+
+-   **Input**: Reservoir height and flow rate
+
+-   **Output**: Instantaneous power generation (W/s)
+
+-   **Parameters**: K Efficiency , ρ (density of water), g (acceleration due to gravity)
+
+# Mathematical model (Transfer Function)
+
+P = ρ \* h \* r \* g \* K Efficiency;
+
+-   P is Power in watts,
+-   ρ is the density of water (\~1000 kg/m3)
+-   h is height in meters,
+-   r is flow rate in cubic meters per second,
+-   g is acceleration due to gravity of 9.8 m/s2,
+-   K Efficiency is a coefficient of efficiency ranging from 0 to 1.
+
+Type of model?
+
+# What type of model is this?
+
+# Answer:
+
+This is a
+
+-   **static** (one point in time),
+-   **deterministic**
+-   **spatially lumped** (one place)
+-   its more or less **physically based**
+
+How would we expand it to make it
+
+-   dynamic?
+-   spatially distributed?
+-   stochastic?
+
+# Related Types of models: Example
+
+If we expand the model to output power production over a year, where inputs were streamflow for each day into the reservoir - *Dynamic Model*
+
+If we expand to model power production from all the reservoirs in California, accounting for spatial patterns of snowmelt inputs and upstream-downstream relationships - *Spatially Distributed Model*
+
+If we modified the model to estimate the probability distribution of power production, given a probability distribution of reservoir levels - *Stochastic Model*
+
 ## STEPS: Modeling for Problem Solving in ES {.scrollable}
 
 Clearly define your goal (a question you want to answer, hypothesis you want to test, prediction you want to make) - as precisely as possible
 
--   Design or Select your model
+-   Sketch conceptual model
+
+-   **Design or Select your model**
 
 -   Implement the model
 
@@ -21,9 +105,125 @@ Clearly define your goal (a question you want to answer, hypothesis you want to 
 
 -   Communicate model results
 
+## Off-the-Shelf Models
+
+-   Developed and tested by experts
+-   Reduces need to build from scratch
+
+![Reinventing the wheel](img/two_prehistoric_women_reinventing_wheel.jpg)
+
+## Model Selection
+
+-   Is model structure **appropriate**?
+-   Is model performance **good enough**?
+-   Choose the **simplest** model that captures your processes of interest
+
+------------------------------------------------------------------------
+
+## Model Selection: Is it Appropriate
+
+Does it fit your conceptual model
+
+-   Can it use the inputs you have or can get?
+-   Are outputs of interest captured?
+-   Is resolution appropriate?
+    -   space
+    -   time
+-   Does it include key mechanisms?
+
+Can you use it to answer your question - can you change inputs/parameters that reflect scenarios you care about
+
+------------------------------------------------------------------------
+
+## Model Selection: Appropriate
+
+Lets consider two example questions involving tree water use (evapotranspiration) (physically based rather than statistical model)
+
+Example Q1: Will a forest fire in the upper 1/2 of a watershed impact streamflow more than a similarly sized fire lower (nearer the stream) in the watershed?
+
+Why might you need a physically based model rather than a statistical model?
+
+What are some key processes that need to be represented?
+
+With a partner, spend 5 minutes brainstorming on conceptual model - and what you would need to answer this question
+
+## Some initial ideas
+
+Two components of the conceptual model -
+
+-   why does fire impact streamflow (Tree-ET)
+
+-   why does location of fire matter
+
+    -   difference in water use?
+    -   lateral downslope transport of released water to stream
+
+## RHESSys
+
+Includes tree-impact on evapotranspiration and links between upslope and downslope water availability
+
+![RHESSys](img/rhessys_processes.png)
+
+## Model Selection: Representation
+
+Example Q2: As trees age does "hardening" of the arteries - e.g reduced rates of water flow in the xylem, impact their water use (evapotranspiration)?
+
+![Within Plant Hydro Model](img/vascular.png)
+
+[*Citation: McElrone, A. J., Choat, B., Gambetta, G. A. & Brodersen, C. R. (2013) Water Uptake and Transport in Vascular Plants. Nature Education Knowledge 4(5):6*]{style="font-size:50%"}
+
+## Model Selection: Performance
+
+The other 1/2 of model selection is.....
+
+Will it estimate the outputs accurately enough?
+
+**Quiz**
+
+Add an example of how you might evaluate a model to decide if the performance is good enough
+
+Pick an example
+
+-   from your experience with working with models OR
+-   from something you read OR
+-   make something up that makes sense to you
+
+## Is it Good Enough?
+
+-   Error small relative to:
+
+    -   Model application (why do you need the estimate)
+    -   Simulated effect size
+
+-   Demonstrated improvement (its the best 'we've got') for the question that we are asking
+
+-   Based on well established theory
+
+    -   Literature/state of the art
+
+## Model Selection
+
+\*\* is model structure appropriate (fits your conceptual model) \*\* is performance good enough (performance) to answer your question
+
+## Building your own model
+
+Why?
+
+-   can't find an off the shelf model that fits your conceptual model
+
+-   can't find an off the shelf model that works with the data you have
+
+-   can't find an off the shelf model that performs well enough
+
+-   you want to learn how models work
+
+-   you want to be able to experiment with model structure
+
 ## Steps: Design and Implement your model {.scrollable}
 
--   Diagram your model
+-   Conceptual Diagram your model
+
+-   **Design** or Select your model
 
 -   Translate diagram into a mathematical representation
 
@@ -73,32 +273,6 @@ Data types, units (time and space aggregation), names should be (use descriptive
 
 Place each function in its own file (x.R), and put all functions for a given project in *R* subdirectory
 
-# What’s in the box
-
-Often more complicated than a simple single equation (regression results)
-
-So we need to think through steps are - what is connected with what
-
-Diagrams are a good place to start
-
-# Modularity - Discrete Tasks
-
--   Hierarchical in level of details
-
--   Big chunks (coarse detail) -\> progressively finer
-
--   Note ‘tasks’ that need to be repeated
-
--   All tasks should have inputs and outputs
-
-![](img/model_basic.jpeg)
-
-# Model design flowcharts
-
-Some model designers uses standard symbols for the different model components
-
-![](img/flowelement.png)
-
 ## Solar Photovoltaic Model {.scrollable}
 
 **Design** - function that estimates solar pv power given inputs of radiation
@@ -125,6 +299,11 @@ library(here)
 
 source(here("R/solarpv.R"))
 solarpv
+
+# Read in some data
+# read in R formatted data
+load(here("Data/sierraczosolar.rda"))
+
 ```
 
 ## Some Data {.scrollable}
@@ -176,13 +355,19 @@ site1$annual
 
 -   read through function code
 -   run the model with the data
--   change parameter and re-run
+-   change parameters and re-run
 -   turn graphing on
 
 # Visual Checking
 
 -   what issue jumps out - what might be the cause?
 -   how would you fix this?
+
+# Explore for next class
+
+(fix is below)
+
+# Fix
 
 ```{r}
 # remove the first year from the dataset
@@ -194,329 +379,3 @@ site1 <- solarpv(area = 0.1,
           solar = sierraczosolar, clr = "green", eunit = "W", g = TRUE)
 
 ```
-
-Try changing an input and see what you get!
-
-# Playing with models
-
-We often build models to try different options
-
-**Model inputs**: solar radiation (daily direct and diffuse)
-
-**Model outputs**: power generated each year and average power over time
-
-**Parameters**: panel efficiency, system performance, units, type of array (uses diffuse or not), plot Y/N
-
-```{r, echo=TRUE}
-# consider a different PV array that only uses
-# diffuse and has non standard efficiency (0.6)
-site2 <- solarpv(area = 0.1, 
-        solar = sierraczosolar, clr = "green", 
-        eunit = "W", g = FALSE, eff = 0.6, etype = "direct")
-site2$mean
-```
-
-# Informal Sensitivity Analysis {.scrollable}
-
-What happens when we vary parameters?
-
-**Informal** - just try varying parameters
-
--   decide which parameter(s) and what range to vary the parameter over - what is the uncertainty? (+- 15% )?
-
--   figure out how to efficiently run your model over parameter variation and save results as you go
-
--   analyze the sensitivity (simply plotting for now)
-
-## Helpful tools {.scrollable}
-
--   Sampling
-
-    -   *runif*,
-    -   *rnorm* (sampling from uniform and normal distributions)
-    -   *seq* (for creating a sequence of numbers)
-
--   Repeating
-
-    -   in R - *purrr* package, also *apply* family of function
-    -   classic *for* loops
-
-If you need it a good source to review working with *purrr* to extract items from list and repeat operations
-
-[Useful Purrr Resource](https://www.rebeccabarter.com/blog/2019-08-19_purrr/)
-
-# Example
-
--   we will start by using **map**
--   which "maps\* a function (runs it ) for a list of values,
--   we can also use these function to extract values from a list
-
-# R code for informal sensitivity
-
-We are not sure what the efficiency of the PV array is
-
-How important is this parameter to the results?
-
-How we do this depends on what we know about efficiency
-
--   manufacturer reports mean and standard deviation\*
--   manufacturer provides a range
-
-Mean 0.6 standard deviation of 0.1
-
-# R code
-
-```{r sen1, eval=T, echo=TRUE}
-library(tidyverse)
-
-# first come up with varying values for efficiency 
-# if we don't know efficiency exactly , lets try 20 samples
-
-
-eff <- rnorm(mean = 0.6, sd = 0.1, n = 20)
-
-# use map from purrr to run model for all values of eff
-# notice how map adds the one parameter that is missing from the input list
-
-site2 <- eff %>% map(~ solarpv(area = 0.1, 
-  solar = sierraczosolar, clr = "green", 
-  eunit = "W", g = FALSE, etype = "direct", eff = .x))
-
-head(site2)
-```
-
-## Data Structures {.scrollable}
-
--   challenge in sensitivity analysis is often what data structure to use
-
--   organize parameter variation and result variation
-
--   R often returns lists - but not so easy for organization
-
--   ask yourself what you want to do with the data, then put in a structure that will make this easy
-
--   e.g two different data frames
-
-    -   plot variation in mean annual electricity by *eff*
-    -   plot variation in each year due to variation in *eff*
-    -   a data frame is often the best structure for graphing
-
-```{r sen1b, eval=T}
-
-head(str(site2))
-# this is pretty messy - but we can extract a useful data structure,lets say we want
-# just the annual data (not the mean annual time series), and then reformat as a data frame with nice column names
-tmp <- map_dfr(site2, `[`, c("annual"))
-
-site2df <- data.frame(year = tmp$annual$year, elect = tmp$annual$elect)
-head(site2df)
-```
-
-## Looking at results from informal sensitivity analysis {.scrollable}
-
--   [Box plots or Violin Plots of Model Output (where box shows effect of parameter uncertainty)]{style="color: green;"}
-
-WHY: To see how big the range of output might be relative to "uncertain" parameter range
-
--   [Plot Response against parameter value]{style="color: green;"}
-
-WHY: To see how the parameter influences the results
-
--   [Average across parameter uncertainty]{style="color: green;"}
-
-WHY: If you want the one number that is the "best guess" given uncertainty
-
-## Variation in annual electricity due to parameter uncertainty {.scrollable}
-
--   boxplot
--   just need all the annual electricity by year
-
-```{r sen2, eval=T, echo=TRUE}
-
-
-# now we could plot
-ggplot(site2df, aes(year, elect, group = year)) +
-  geom_boxplot() +
-  labs(y = "Electricity generated in W")
-```
-
-## Add an average line
-
-Why?
-
-```{r sen2b, eval=T, echo=TRUE}
-# we also might want an average across parameter uncertainty
-site2_average <- site2df %>%
-  group_by(year) %>%
-  dplyr::summarize(elect = mean(elect))
-
-# now add this to the plot - note that we remove the grouping by using group=1
-ggplot(site2df, aes(year, elect, group = year)) +
-  geom_boxplot() +
-  labs(y = "Electricity in W") +
-  geom_line(data = site2_average, aes(year, elect, group = 1), col = "orange")
-```
-
-## How does efficiency impact mean annual electricity estimate {.scrollable}
-
--   Data structure with *eff* and mean annual electricity
--   X-Y plots
-
-Organize the data
-
-```{r sene, eval=T, echo=TRUE}
-# we could also plot how the mean annual electricity varies with efficiency (eff from above)
-site2[[1]]
-
-tmp <- map_df(site2, `[`, c("mean"))
-
-# how variable is electricity generation (mean over all time) with uncertainty in solar efficiency
-
-site2_mean <- data.frame(eff = eff, elect = tmp)
-```
-
-## Plot {.scrollable}
-
--   how variable is the model output given parameter variation
--   how does the variation in parameter impact model output
-
-```{r sene2, eval=T, echo=TRUE}
-ggplot(site2_mean, aes(y = mean)) +
-  geom_boxplot() +
-  labs(x = "Electricity in W")
-
-# or to see what the sensitivity looks like
-ggplot(site2_mean, aes(eff, mean)) +
-  geom_point() +
-  labs(y = "Electricity in W", x = "Solar Efficiency")
-
-# my best guess
-mean(site2_mean$mean)
-```
-
-# Sharing Example R, Data and Rmarkdowns
-
-<https://github.com/naomitague/ESM232_EDS230_Examples.git>
-
-You can clone this repository and then pull before class to get example code and data
-
-Remember that git does not like having nested repositories - so keep working respoistories in separate directories
-
-## Schedule for this week and next {.scrollable}
-
-**For Thursday**
-
--   Start work on Assignment 2 (see below)
--   Read through InformalSensitivity.Rmd
--   Recorded Lecture
--   Ojas will review some basics of coding and writing functions in Section
-
-**For Next Week**
-
--   Assignment 2 due Monday (April 14)
--   Assignment 3 given on Tuesday (April 15)
--   Assignment 3 due Monday April 21
-
-**Working Materials**
-
--   Read through InformalSensitivity2.Rmd
--   Ojas will review Informal Sensitivity Rmarkdowns in section
--   No formal class
-
-# ASSIGNMENT 2 Almond Yields
-
-Lobell et al., 2006 used data to build models of tree crop yield for California that captured how climate variation (place and time) might influence yield
-
--   Yield anomaly
-
--   Climate variables
-
-Assumptions...as you work think about what these are...
-
-# Assignment
-
-For this assignment you will work in *pairs*
-
-Your goal is to implement a simple model of almond yield anomaly response to climate
-
--   Inputs: daily times series of minimum, maximum daily temperatures and precipitation
-
--   Outputs: maximum, minimum and mean yield anomoly for a input time series
-
-The Lobell et al. 2006 paper will be the source for the transfer function that you will use in your model; specifically look at the equations in table 2.
-
-## What you will do - Model Set Up {.scrollable}
-
-1.  Draw diagram to represent your model - how it will translate inputs to outputs, with parameters that shape the relationship between inputs an outputs - on your diagram list what your inputs, parameters and outputs are with units
-
-2.  Implement your diagram as an R function
-
-Here are some ideas to think though. The climate data is going to need to be processed (e.g note that the model uses climate data from a particular month - you have ALL of the climate as daily data). Here are two possible model outlines to follow
-
-● Almond_model \<- function(clim_var1, clim_var2, parameters){……}
-
-● Almond_model \<- function(clim, parameters){……}
-
-The first example is where the climate variables are separately input into the function - climate data is processed beforehand as part of model set up
-
-The second is where a climate data frame is the input in the function and you extract the useful data from it as part of the model.
-
-You can pick which option you prefer (or try both)
-
-## Run the model {.scrollable}
-
-3.  Run your model for the **clim.txt** data that is posted on Canvas,
-
-**clim.txt** has the following columns
-
-these 4 columns tell you when climate observations were made
-
--   *day*
--   *month*
--   *year*
--   *wy* (water year)
-
-the next 3 columns are the climate observations
-
--   maximum (*tmax_c*) daily temperature
--   minimum (*tmin_c*) daily temperature
--   precipitation (*precip*) on that day in mm
-
-# check your work
-
-I will tell you that
-
--   the maximum almond yield anomaly should be approximately 1920 ton/acre
--   the lowest almond yield anomaly should be approximately -0.027 ton/acre
--   the mean almond yield anomaly should be approximately 182 ton/acre
-
-# Notes
-
--   There are always multiple ways to code something in R;
-
--   Remember that we want to strive for our code being as simple and streamline as possible.
-
--   Style counts.
-
-    -   Make sure you choose meaningful variable names and add comments.
-    -   Include comments at the top of the function to tell the user what the inputs/outputs are and their units and format.
-
-# What to hand in on Canvas
-
-Two separate files (or a link to a repository with these files)
-
-1.  a R file that has your function definition
-2.  a Rmarkdown file that includes your conceptual model (embed as picture) and shows how you applied the function to the test climate data (*clim.txt*)
-
-## Grading Rubric {.scrollable}
-
-Conceptual model (20 pts)
-
--   a clear diagram that corresponds with your R function (10 pts)
--   inputs and output and parameters shown on the diagram (10 pts)
-
-R Implementation (30 pts)
-
--   correct function implementation (\*.R file) (10 pts)
--   application of the function to **clim.txt** (in Rmarkdown file) (10 pts)
--   coding practices (clear documentation, informative variables names) (10 pts)

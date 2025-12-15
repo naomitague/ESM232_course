@@ -27,7 +27,7 @@ Pair-Share
 
 -   always start a modeling project by diagramming your conceptual model - how do you see the system;
 
-    -   from here you design or choose your 'actual' model
+   -   from here you design or choose your 'actual' model
 
 -   in a project, it is critical to dialogue to agree on the conceptual model
 
@@ -38,6 +38,7 @@ Pair-Share
 -   Use that to decide what to include/exclude
 
 -   Define inputs and outputs
+
 
 # Some definitions
 
@@ -96,7 +97,9 @@ This is the **MOST** important step
 
 -   What is in the "box" that translates inputs to outputs?
 
-**Good questions even for machine learning models - why?**
+**Good questions for statistical and machine learning models - why?**
+
+
 
 # Things to think about
 
@@ -106,13 +109,27 @@ This is the **MOST** important step
 
 -   How do you "show" what influences an observation/prediction (communication)
 
+# Inverse Inference Example
+
+A city  health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state 
+
+An amphibian (salamander or newt) population has declined in the Santa Monica Mountains 
+
+Whats in your conceptual model - pick one and summarize in Quiz Inverse Inference on Canvas
+
 # Whats in the box
 
-Often more complicated than a simple single equation (regression results)
+Often more complicated than a simple single equation - such as a multiple regression equation
 
-So we need to think through steps are - what is connected with what
+e.g 
+$Pop_newt = \beta_1 * \beta_2* precipitation + \beta_2*temperature +  \beta_2*presenceof predators + \beta_2*roaddensity + \beta_2*pollutionlevels$
 
-Diagrams are a good place to start
+So we need to think through relationships  - what is connected with what
+
+Example   
+If we think the asthma hospitalization rates are influenced by emission from  a new factory some distance away - we might have to consider relationship between the timing of emissions and prevailing wind patterns and how long particles stay in the air
+
+Why?
 
 # Composing Diagrams
 
@@ -154,7 +171,7 @@ There are many software tools available for generating conceptual models, I like
 
 -   What are some key assumptions?
 
-# In Class
+# Develop a Conceptual Model - Discussion Section   
 
 -   Form groups of 3
 -   With your group, come up with a modeling goal
@@ -163,6 +180,8 @@ There are many software tools available for generating conceptual models, I like
     -   inputs, parameters and outputs
     -   relationships/processes
     -   assumptions
+
+You will expand on this in next weeks discussion section
 
 # Types of Model
 
@@ -230,7 +249,7 @@ Think...simple bucket model
 
 ![](img/bucket.jpeg)
 
-# Why it the type of models matters
+# Why the type of models matters
 
 -   assumptions
 -   implementation
@@ -239,83 +258,3 @@ Think...simple bucket model
     -   analysis
     -   visualization
 
-# How to start - what is my model
-
--   What are your inputs-outputs
-
--   What’s in the box (the model itself) that gives you a relationship between outputs and inputs, type of model
-
--   Transfer function
-
--   Parameters, values that influences how the model relationships work
-
-# Types of Models
-
-Conceptual.............Mathematical
-
-Stochastic.............Deterministic
-
-Lumped.............Spatially Distributed: *SPACE*
-
-Static.............Dynamic : *TIME*
-
-Abstract.............Physically/Process Based
-
-but biggest differences may often be the degree specific processes/parameters are accounted for
-
-# Goal
-
-Estimate the power generated from a reservoir ...
-
-# Example: Conceptual model
-
-![](img/reservoir_cm.jpeg)
-
-# Example: Input/Output/Parameters
-
--   **Input**: Reservoir height and flow rate
-
--   **Output**: Instantaneous power generation (W/s)
-
--   **Parameters**: K Efficiency , ρ (density of water), g (acceleration due to gravity)
-
-# Mathematical model
-
-P = ρ \* h \* r \* g \* K Efficiency;
-
--   P is Power in watts,
--   ρ is the density of water (\~1000 kg/m3)
--   h is height in meters,
--   r is flow rate in cubic meters per second,
--   g is acceleration due to gravity of 9.8 m/s2,
--   K Efficiency is a coefficient of efficiency ranging from 0 to 1.
-
-Type of model?
-
-# What type of model is this?
-
-This is a
-
--   **static** (one point in time),
--   **deterministic**
--   **spatially lumped** (one place)
--   its more or less **physically based**
-
-# Related Types of models: Example
-
-If we expand the model to output power production over a year, where inputs were streamflow for each day into the reservoir - *Dynamic Model*
-
-If we expand to model power production from all the reservoirs in California, accounting for spatial patterns of snowmelt inputs and upstream-downstream relationships - *Spatially Distributed Model*
-
-If we modified the model to estimate the probability distribution of power production, given a probability distribution of reservoir levels - *Stochastic Model*
-
-# Assignment 2 - Conceptual Model
-
-In a group of 2-3, think of a question (related to environmental problem solving) that a model might be useful for answering
-
--   Write down the question
--   List the key inputs, parameters and outputs (as precisely as possible, think about space and time)
--   Sketch the underlying conceptual model that would relate inputs/parameters to the outputs
--   Decide what "type" of model it is based on classification discussed today
-
-Submit on Canvas by Monday April 7th 5pm

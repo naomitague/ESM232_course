@@ -1,0 +1,91 @@
+---
+title: "discussion_lorenz"
+format: revealjs
+editor: visual
+---
+
+## And just for fun (I'll explain why)
+
+-   Lorenz Equations (for fluid dynamics),
+
+-   x,y,z variables that change with time that describe how convection in the atmosphere works - a cell that is warmed from below and cooled from above
+
+-   x rate of convective overturning
+
+-   y departure from linear horizontal (upwelling/downwelling) temperature gradient
+
+-   z departure from linear vertical temperature difference
+
+-   3 equations (dx/dt, dy/dt, dz/dt) that describe how these variables change with time
+
+-   3 parameters (a,b,c) related to atmospheric properties
+
+-   Developed by Meteorologist Edward Lorenz - early climate model development in 1960s
+
+-   Lorenz equations are example of dynamic systems that can exhibit stable and chaotic states depending on parameters and initial conditions
+
+## Code for Lorenz system
+
+Lets look at a Lorenz System Code
+
+```{r lorenze}
+# lorenz
+source(here("R/lorenz.R"))
+
+lorenz
+```
+
+## Application of Lorenz {.scrollable}
+
+```{r lorenzeapp}
+pars <- list(a = 10, b = 28, c = 8 / 3)
+res <- ode(func = lorenz, c(x = 0.1, y = 0, z = 0), times = seq(0, 50, by = 0.01), parms = pars)
+```
+
+now plot
+
+-   as a phase space diagram (x vs y, x vs z, y vs z) - using time for color
+-   as a time series (e.g time on the x axis) add each variable with a different color
+
+then try with different initial conditions
+
+## Plots {.scrollable}
+
+```{r, lr1}
+
+
+ggplot(as.data.frame(res), aes(x, y, col = time)) +
+  geom_point()
+ggplot(as.data.frame(res), aes(x, z, col = time)) +
+  geom_point()
+ggplot(as.data.frame(res), aes(y, z, col = time)) +
+  geom_point()
+
+resl <- as.data.frame(res) %>% gather(key = "var", value = "value", -time)
+ggplot(resl, aes(time, value, col = var)) +
+  geom_line()
+```
+
+## Plot with different initial conditions
+
+```{r, lr2}
+# try with different initial conditions
+pars <- list(a = 15, b = 28, c = 8 / 4)
+res <- ode(func = lorenz, c(x = 0.3, y = 5, z = 10), times = seq(0, 50, by = 0.01), parms = pars)
+
+ggplot(as.data.frame(res), aes(x, y, col = time)) +
+  geom_point() +
+  scale_colour_gradientn(colours = terrain.colors(10))
+ggplot(as.data.frame(res), aes(x, z, col = time)) +
+  geom_point() +
+  scale_colour_gradientn(colours = terrain.colors(10))
+ggplot(as.data.frame(res), aes(y, z, col = time)) +
+  geom_point() +
+  scale_colour_gradientn(colours = terrain.colors(10))
+
+resl <- as.data.frame(res) %>% gather(key = "var", value = "value", -time)
+ggplot(resl, aes(time, value, col = var)) +
+  geom_line()
+```
+
+## 

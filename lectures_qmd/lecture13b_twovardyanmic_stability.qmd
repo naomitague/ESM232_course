@@ -1,0 +1,617 @@
+---
+title: "lecture13b_twovardynamic_sens"
+format: revealjs
+editor: visual
+---
+
+## Sensitivity analysis
+
+Consider pred-prey BUT what will be the output - if we want to 'quantify sensitivity' useful to look at a single value or set of value
+
+For example
+
+-   Max Prey/Predator Population
+-   Min Prey/Predator Population
+-   Populations at the end of the time period
+-   Number of time periods where a population is below a threshold
+
+## Sensitivity Analysis steps
+
+-   Generate parameters (LHS, Sobol)
+-   Metrics function
+-   Wrapper Function
+-   Run wrapper function to get metrics for all parameter sets
+-   Graph and compute sensitivity statistics
+
+## Example Sensitivity Analysis {.scrollable}
+
+Given a Predator Prey model with the possible values for parameters
+
+-   $K$ - mean of 150, standard deviation 20
+-   $r_{prey}$ - some where between 0.01 and 0.3
+-   $\alpha$ - somewhere between 0.1 and 0.4
+-   $eff$ - mean 0.3 standard deviation 0.01
+-   $pmort$ - somewhere between 0.01 and 0.45
+-   Initial Conditions: start with 1 predator and 1 prey
+-   Look at output for 500 time steps
+
+Questions sensitivity analysis might answer
+
+-   Does uncertainty in parameter impact our estimates?
+-   Which are the more/most important parameters in controlling population dynamics?
+
+# Set up Sobol Sensitivity {.scrollable}
+
+-   parameter samples
+-   metric and wrapper function
+
+```{r odesen}
+source(here("R/lotvmodK.R"))
+# lets start with sobol
+library(sensitivity)
+
+
+# want to learn about sensitivity to growth rate (r) and carrying capacity
+# set the number of parameters
+np <- 200
+K <- rnorm(mean = 150, sd = 20, n = np)
+rprey <- runif(min = 0.01, max = 0.3, n = np)
+alpha <- runif(min = 0.1, max = 0.4, n = np)
+eff <- rnorm(mean = 0.3, sd = 0.01, n = np)
+pmort <- runif(min = 0.01, max = 0.45, n = np)
+
+X1 <- cbind.data.frame(rprey = rprey, K = K, alpha = alpha, eff = eff, pmort = pmort)
+
+# repeat to get our second set of samples
+np <- 200
+K <- rnorm(mean = 150, sd = 20, n = np)
+rprey <- runif(min = 0.01, max = 0.3, n = np)
+alpha <- runif(min = 0.1, max = 0.4, n = np)
+eff <- rnorm(mean = 0.3, sd = 0.01, n = np)
+pmort <- runif(min = 0.01, max = 0.45, n = np)
+
+X2 <- cbind.data.frame(rprey = rprey, K = K, alpha = alpha, eff = eff, pmort = pmort)
+
+
+# create our sobel object and get sets ofparameters for running the model
+sens_PP <- sobolSalt(model = NULL, X1, X2, nboot = 300)
+
+# name parameter sets...
+colnames(sens_PP$X) <- c("rprey", "K", "alpha", "eff", "pmort")
+
+# our metrics
+# lets say we  want the maximum and minimum  of both predictor and prey
+
+compute_metrics <- function(result) {
+  maxprey <- max(result$prey)
+  maxpred <- max(result$pred)
+  minprey <- min(result$prey)
+  minpred <- min(result$pred)
+  return(list(maxprey = maxprey, minprey = minprey, maxpred = maxpred, minpred = minpred))
+}
+
+# build a wrapper function
+
+
+p_wrapper <- function(rprey, alpha, eff, pmort, K, currpop, days, func) {
+  parms <- list(rprey = rprey, alpha = alpha, eff = eff, pmort = pmort, K = K)
+  result <- ode(y = currpop, times = days, func = func, parms = parms)
+  colnames(result) <- c("time", "prey", "pred")
+  # get metrics
+  metrics <- compute_metrics(as.data.frame(result))
+  return(metrics)
+}
+
+```
+
+## Now run wrapper for all parameters {.scrollable}
+
+-   graph
+-   sobol indices
+
+```{r odesen2}
+# run our model for all parameters and extract the results
+currpop <- c(prey = 1, pred = 1)
+days <- seq(from = 1, to = 500)
+allresults <- as.data.frame(sens_PP$X) %>% 
+    pmap(p_wrapper, currpop = currpop, days = days, func = lotvmodK)
+
+# take results back to unlisted form
+allres <- allresults %>% map_dfr(`[`, c("maxprey", "minprey", "maxpred", "minpred"))
+
+
+# range of response across parameter uncertainty
+allresl <- allres %>% gather(key = "metric", value = "pop")
+ggplot(allresl, aes(metric, pop)) +
+  geom_boxplot()
+
+# dealing with different scales
+ggplot(allresl, aes(metric, pop, col = metric)) +
+  geom_boxplot() +
+  facet_wrap(~metric, scales = "free")
+# plot cummulative densities
+
+ggplot(allresl, aes(pop, col = metric)) +
+  stat_ecdf(geom = "line") +
+  facet_wrap(~metric, scales = "free")
+```
+
+# Sobol Indices
+
+```{r, sobol}
+# create sobol indices for Max Prey
+sens_PP_maxprey <- sens_PP %>% sensitivity::tell(y = allres$maxprey)
+rownames(sens_PP_maxprey$S) <- c("rprey", "K", "alpha", "eff", "pmort")
+sens_PP_maxprey$S
+rownames(sens_PP_maxprey$T) <- c("rprey", "K", "alpha", "eff", "pmort")
+sens_PP_maxprey$T
+
+```
+
+## Interpretation of Sobol Indices
+
+-   what are the most important parameters
+    -   maximum prey
+-   What about other metrics
+    -   minimum prey
+    -   maximum predator
+    -   minimum predator
+
+What is the most important parameter, Which parameters don't matter
+
+## Organizing your analysis {.scrollable}
+
+```{r, org}
+
+# keep track of sensitivity from all metricx
+
+sens_PP_minprey <- sens_PP %>% sensitivity::tell(y = allres$minprey)
+rownames(sens_PP_minprey$S) <- c("rprey", "K", "alpha", "eff", "pmort")
+sens_PP_minprey$S
+rownames(sens_PP_minprey$T) <- c("rprey", "K", "alpha", "eff", "pmort")
+sens_PP_minprey$T
+
+sens_PP_maxpred <- sens_PP %>% sensitivity::tell(y = allres$maxpred)
+rownames(sens_PP_maxpred$S) <- c("rprey", "K", "alpha", "eff", "pmort")
+sens_PP_maxpred$S
+rownames(sens_PP_maxpred$T) <- c("rprey", "K", "alpha", "eff", "pmort")
+sens_PP_maxpred$T
+sens_PP_minpred <- sens_PP %>% sensitivity::tell(y = allres$minpred)
+rownames(sens_PP_minpred$S) <- c("rprey", "K", "alpha", "eff", "pmort")
+sens_PP_minpred$S
+rownames(sens_PP_minpred$T) <- c("rprey", "K", "alpha", "eff", "pmort")
+sens_PP_minpred$T
+
+
+# put together in a table
+sobol_sumS = as.data.frame(
+   rbind(
+    sens_PP_maxprey$S$original,
+    sens_PP_minprey$S$original,
+   sens_PP_maxpred$S$original,
+    sens_PP_minpred$S$original
+  ))
+colnames(sobol_sumS) <- c("rprey", "K", "alpha", "eff", "pmort")
+rownames(sobol_sumS) <- c("maxprey", "minprey", "maxpred", "minpred")
+sobol_sumS
+
+
+```
+
+## Adding More Complex Inputs {.scrollable}
+
+-   What if carrying capacity varied with air temperature
+
+Conceptual Model
+
+-   There is a known optimal carrying capacity (*Kopt*)
+
+    -   *Kopt* when ecosystem is at optimal temperature (*Topt*)
+    -   As temperature increases or decreases from *Topt*, carrying capacity decreases
+    -   *Ksen* is a sensitivity coefficient that describes how much carrying capacity changes with temperature \`
+
+-   Carrying capacity is a function of temperature $K = K_{opt} * (1 - K{sen} * (airT(t) - T_{opt}))$
+
+    -   airT(t) is the air temperature at time t
+
+# Implementation Details
+
+-   We would also need a model of carrying capacity (K)
+    -   determistic (not-dynamic) submodel
+    -   needs a time series of air temperature as input
+
+How do you combine these different types of inputs/parameters and different types of models together
+
+## Dynamic Carrying Capacity Example
+
+-   Carrying Capacity
+
+$K = K_{opt} * (1 - K{sen} * (airT(t) - T_{opt}))$
+
+-   Prey
+
+$\frac{\partial prey}{\partial t} = r_{prey} * (1-\frac{prey}{K})*prey - \alpha * prey * pred$
+
+-   Predator
+
+$\frac{\partial pred}{\partial t} = eff * \alpha * pred * prey - mort * pred$
+
+# Code {.scrollable}
+
+```{r, varyK}
+source(here("R/lotvmodvaryingK.R"))
+lotvmodKvar
+
+
+
+
+# initial conditions
+currpop <- c(prey = 10, pred = 1)
+
+
+
+# set parameters and inputs
+# read in air temperature time series
+airT = readRDS(here("Data/Tavg_Rattlesnake.RDS"))
+head(airT)
+#note if you were interested in specific periods you might want to subset this data
+
+# time points to see results
+days <- seq(from = 1, to = length(airT$tavg), by = 1)
+
+# note you have to use a list now because elements are of a different length
+pars <- list(rprey = 0.5, alpha = 0.3, eff = 0.2, pmort = 0.2, KO= 100, Topt=18, Ksen=0.3, airT=airT$tavg)
+
+# run the model
+res <- ode(func = lotvmodKvar, y = currpop, times = days, parms = pars)
+# graph the results
+head(res)
+# rearrange for easy plotting
+resl <- as.data.frame(res) %>% pivot_longer(-time, names_to = "animal", values_to = "pop")
+p1 <- ggplot(resl, aes(time, pop, col = animal)) +
+  geom_line()
+
+p1
+
+
+p2 <- ggplot(as.data.frame(res), aes(pred, prey)) +
+  geom_point() +
+  labs(y = "Prey", x = "Predators")
+p2
+
+# To make this easier to understand - maybe
+p2b <- ggplot(as.data.frame(res), aes(pred, prey, col = time)) +
+  geom_point() +
+  labs(y = "Prey", x = "Predators")
+p2b
+
+ggarrange(p1, p2b)
+```
+
+## Stability {.scrollable}
+
+Stability analysis investigates how the system state changes, particularly focusing on where the system state 'ends up' over time and what happens when there are small perturbations to the system state
+
+Other examples?
+
+How would you define it?
+
+## A broader measure of stability {.scrollable}
+
+-   persistence
+
+-   cycling doesn't necessarily mean unstable in an ecological sense
+
+-   define stability based on whether or not structure or function stays within expected ranges after a "press" or "pulse" disturbance
+
+-   can define metrics, similar to what we did for estimating performance or sensitivity
+
+-   multiple metrics can be useful
+
+## Examples? {.scrollable}
+
+Ecological systems?
+
+Human systems?
+
+EJ?
+
+# Stablity {.scrollable}
+
+-   simple mathematical definition - when derivatives are zero
+
+    -   algerbra
+    -   plotting
+
+-   more complex definitions - think of metrics that looks at ranges, cycling, return to a population above some threshold after disturbance
+
+-   for more complex definitions of stability you'd need to do the integration (e.g run the ode solver) and then compute a metric of stability
+
+    -   min or max always above or below a threshold
+    -   long term values (e.g after X years)
+
+##  {.scrollable}
+
+## What harvest rate leads to an unstable forest? {.scrollable}
+
+using proportional harvest, what rate leads to a stable forest
+
+```{r stableforest}
+source(here("R/dharvest.R"))
+dharvest
+
+# set the time steps you want to see
+tm <- seq(from = 1, to = 100)
+
+# inital conditions
+Cinitial <- 30
+
+# set the parameters
+gps <- list(harv = 0.1, K = 1000, r = 0.05, mincarbon = 20)
+
+# run the model
+res <- ode(Cinitial, tm, dharvest, gps, method = "euler")
+colnames(res) <- c("time", "carbon")
+```
+
+# Graph the results
+
+```{r}
+# look at the results
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Proportional Harvest of 10% per year \n Starting conditions 30kgC")
+
+# is it stable
+# what can you change to make it stable
+```
+
+## Ways to use dynamic models {.scrollable}
+
+*Goal: To provide insight into environmental systems, and how they respond to intervention/disturbance/change..*
+
+-   sensitivity analysis of output
+    -   output generated by solving differential equation to see system evolution in time or space
+    -   output response to variation in inputs/parameters
+    -   quantifying how summary measures respond to variation in inputs/parameters
+
+Stability focus..
+
+-   how does systems state evolution vary with inputs/parameters
+-   OR where does the system end up over time
+
+## Model versus the real world {.scrollable}
+
+Models can help to develop understanding, theory and hypothesis about stability by showing how different assumptions (conceptual models) impact stability
+
+The **WHY** of stability
+
+But the real world is more complex - but we can learn by understanding simpler models
+
+## Stability analysis for simple differential equations {.scrollable}
+
+A mathematical approach..
+
+We can look at how the derivative (rate of change) \* under different system states to get a picture of when our system will be stable \* (e.g where small perturbations just bring the system back to a relatively constant state)
+
+One way we can do this WITHOUT solving the differential equation is to look at the derivatives at different values (system states)
+
+-   When the derivative is 0 the system is stable
+
+-   Positive derivatives are growth
+
+-   Negative are decline
+
+We can use derivatives to see whether and when stability will happen
+
+## Harvest as an example {.scrollable}
+
+graph the derivative (how the forest carbon is changing) for different forest carbons (stock/state)
+
+Notice where derivatives are
+
+-   0
+
+-   positive (growing)
+
+-   negative (declining)
+
+Recall these are all for a proportional harvest rate of 4% per year and a growth rate of 0.05, etc
+
+```{r simpleapp}
+tm <- seq(from = 1, to = 100)
+gps <- list(harv = 0.04, K = 1000, r = 0.05)
+
+# create a vector of current values of carbon
+Ccurr <- data.frame(Ccurr = seq(from = 1, to = 300, by = 5))
+Ccurr$derv <- unlist(Ccurr$Ccurr %>% map(~ dharvest(parms = gps, Time = NULL, biomass = .x)))
+```
+
+## Plot the derivative for difference "starting points" (forest carbon
+
+)
+
+```{r simpleapp2}
+ggplot(Ccurr, aes(Ccurr, derv)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "red") +
+  labs(y = "Derivative\n (Rate of change of forest carbon) \n(kg/C/year)", x = "Current Forest Carbon Stock (kgC)")
+```
+
+## what do you learn from this? {.scrollable}
+
+-   Is there a way to get a stable forest, given our harvest rate and growth rate?
+
+-   what size of forest would you need to *start* from
+
+-   try it
+
+```{r try3}
+# rerun our model with new initial condition that we take from the plot
+tm <- seq(from = 1, to = 100)
+gps <- list(harv = 0.04, K = 1000, r = 0.05)
+
+Cinitial <- 300
+res <- ode(Cinitial, tm, dharvest, gps)
+colnames(res) <- c("time", "carbon")
+
+# look at the results
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Proportional Harvest of 4%year\n Starting conditions 300kgC")
+```
+
+## Using derivatives to algerbraically find stability {.scrollable}
+
+We can more formally find stability by finding the system state when the derivative is zero
+
+$$  \frac{\partial C}{\partial t} = r*biomass*(1-\frac{biomass}{K})-harv*biomass$$
+
+$$  0 = r*biomass*(1-\frac{biomass}{K})-harv*biomass $$
+
+$$   biomass = K*\frac{r-h}{r} $$
+
+$$ biomass = 1000 * (0.05-0.04)/0.05 = 200 $$
+
+try it
+
+## Parameter and Initial Conditions Interactions {.scrollable}
+
+Stability also reflects other parameters -such as harvest rate
+
+we can also experiment with how stable harvest might change with harvest rate
+
+try repeating above with lower and higher harvest rates
+
+```{r stability2}
+source(here("R/dharvest.R"))
+dharvest
+
+# given some forest characteristics - lets look at derivatives under different harvest rates
+lowHrate <- 0.015
+gps <- list(harv = lowHrate, K = 100, r = 0.05)
+
+# look at the derivative over a range of forest sizes
+
+findstable <- data.frame(Ccurr = seq(from = 1, to = 100, by = 5))
+# notice use of Time=NULL, and map to compute derivative
+# for different values of forest biomass
+findstable$dervHlow <- unlist(findstable$Ccurr %>% map(~ dharvest(parms = gps, Time = NULL, biomass = .x)))
+
+ggplot(findstable, aes(Ccurr, dervHlow)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "red") +
+  labs(y = "Derivative\n (Rate of change of forest carbon) (kg/C/year)", x = "Current Forest Carbon Stock (kgC)")
+
+# look at a different harvest rate
+midHrate <- 0.02
+gps <- list(harv = midHrate, K = 100, r = 0.05)
+findstable$dervHmid <- unlist(findstable$Ccurr %>% map(~ dharvest(parms = gps, Time = NULL, biomass = .x)))
+
+# try high rate
+highHrate <- 0.05
+gps <- list(harv = highHrate, K = 100, r = 0.05)
+findstable$dervHhigh <- unlist(findstable$Ccurr %>% map(~ dharvest(parms = gps, Time = NULL, biomass = .x)))
+
+
+# plot them all together
+tmp <- gather(findstable, key = "HarvestRate", value = "value", -Ccurr)
+ggplot(tmp, aes(Ccurr, value, color = HarvestRate)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "black") +
+  labs(x = "Forest Biomass (kgC)", y = "Forest Growth Rate (kgC/year)")
+
+# notice how with higher harvest rates the stable population will be lower
+```
+
+## Stability in changing systems - just looking at dervatives {.scrollable}
+
+Knowing the stability can help you understand the dynamics of the system
+
+If we start with a Forest Carbon of 50 and low harvest rate what will happen
+
+If we start with a Forest Carbon of 50 and a high harvest rate what will happen
+
+Try it to find out if you are right
+
+```{r  check}
+tm <- seq(from = 1, to = 500)
+gps <- list(harv = lowHrate, K = 100, r = 0.05)
+Pinitial <- 50
+res <- ode(Pinitial, tm, dharvest, gps)
+colnames(res) <- c("time", "carbon")
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "low harvest rate")
+
+
+
+
+gps <- list(harv = highHrate, K = 100, r = 0.05)
+Pinitial <- 50
+res <- ode(Pinitial, tm, dharvest, gps)
+colnames(res) <- c("time", "carbon")
+ggplot(as.data.frame(res), aes(time, carbon)) +
+  geom_point() +
+  labs(y = "Forest Biomass (kgC)", x = "Year", title = "High Harvest Rate")
+```
+
+## For next class
+
+-   Burke et al., 2021
+
+-   Graup et al., 2022
+
+-   Pick on of the papers to focus on in more detail, for this paper do the following:
+
+-   In 2-3 sentences, describe how parameter uncertainty was used in the paper
+
+-   Ask one question - something you'd like to know that wasn't covered or wasn't clear in the paper
+
+-   If you had the same model set up available to you, what additional scenario could you run? why?
+
+-   Upload to Canvas before class - and we will finalize in class
+
+## Extra Credit Assignment {.scrollable}
+
+1.  Add a harvesting to your forest growth model from the previous assignment You can be as simple or complex as you want (e.g you could repeat what I did above by making harvesting proportional to biomass)
+
+2.  Perform some sensitivity analysis to assess how harvesting parameters interact with forest growth parameters to influence forest carbon at the end of the simulation time period (you can choose how long this is)
+
+3.  Write 2-3 sentences to comment on what you might learn from your sensitivity analysis
+
+## Assignment {.scrollable}
+
+Consider how you might add hunting of prey to the predator prey model that we've been using in class
+
+**Part 1**:
+
+Build this model (e.g add hunting to the lotvmodK.R),
+
+Some requirements/hints for your model
+
+You should make sure that you don't hunt more prey than exist.
+
+To ensure that you might also add a minimum prey population input that must be met before hunting is allowed.
+
+Note you can make this as simple or as complex as you would like. You could represent hunting in a way that is similar to "harvesting" in the last assignment. 
+
+**Part 2**
+
+Explore how different hunting levels and different minimum prey populations (before hunting is allowed) are likely to effect the stability of the populations of both predator and prey. A key challenge is how you might want to define stability? It is up to you but you will need to write a sentence to explain why you chose the measure that you did. It could be something as simple as maintaining a population above some value 50 years into the future.  
+
+Use this exploration to recommend a hunting target that will be sustainable (e.g leave you with a stable prey and predator population).
+
+It is up to you how you "explore" hunting  - you can simply try different values of the parameters in your hunting model or do it more formally by running your model across a range of values. You could think about parameter interactions
+
+You can assume the following are best guesses of key parameters
+
+rprey=0.95, alpha=0.01, eff=0.6,pmort=0.4, K=2000,
+
+Submit - the Quatro document with your analysis AND a pdf/html version, any R files This should include
+
+a)  your hunting model
+
+b)  your exploration (e.g how you tested different hunting levels and how you defined a stability metric
+
+c)  provides you estimated sustainable hunting level and brief explanation of why you chose the metric you did

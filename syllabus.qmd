@@ -95,29 +95,30 @@ Other studies show less accuracy...depends on the problem
 
 # Tentative schedule
 
-| Week      | Lecture topics                                    |
-|-----------|---------------------------------------------------|
-| April 1   | Into: What is a model                             |
-| April 3   | Conceptual Models                                 |
-| April 8   | Using models with data                            |
-| April 10  | Complex model Example                             |
-| April 15  | Informal Sensitivity Analysis (no formal lecture) |
-| April 18. | Informal Sensitivity Analysis (no formal lecture) |
-| April 22  | Sensitivity Analysis I                            |
-| April 24  | Sensitivity Analysis II                           |
-| April 29  | Dynamic Models - Analytical Solutions             |
-| May 1     | Dynamic Models - ODE Solver                       |
-| May 6     | Sensitivity with Dynamic Models                   |
-| May 8     | Stability with Dynamic Models                     |
-| May 13    | 2 Variable/Time Series Models                     |
-| May 15    | What Makes a Good Model                           |
-| May 20    | Calibration                                       |
-| May 20/22 | Make up - Calibration Exercise                    |
-| May 22    | Optimization                                      |
-| May 27    | Discrete Models                                   |
-| May 29    | Discrete Models 2                                 |
-| June 3    | Return to Big Picture                             |
-| June 5    | Wrap Up                                           |
+| Week# | Date     | Lecture topics                                |
+|-------|----------|-----------------------------------------------|
+| 1     | Jan 6    | Intro: What is a model                        |
+| 1     | Jan 8    | Conceptual Models                             |
+| 2     | Jan 13   | Building Models                               |
+| 2     | Jan 15   | Informal Sensitivity Analysis                 |
+| 3     | Jan 20   | Multiple Parameter Variation                  |
+| 3     | Jan 22   | Multi-Component Models - Example RHESSys      |
+| 4     | Jan 27   | Formal Sensitivity Analysis                   |
+| 4     | Jan 29   | Sensitivity Analysis Sobol                    |
+| 5     | Feb 3    | Dynamic Models - Analytical Solutions         |
+| 5     | Feb 5    | Dynamic Models - ODE Solver                   |
+| 6     | Feb 10   | Sensitivity with Dynamic Models               |
+| 6     | Feb 12   | Disturbance and Stability with Dynamic Models |
+| 7     | Feb 17   |  2 Variable/Time Series Models                |
+| 7     | Feb 19   | Guest Lecture (Cap)                           |
+| 8     | Feb 24   | 2 Variable and Stability                      |
+| 8     | Feb 26   | What makes a good model                       |
+| 9     | March 3  | Guest Lecture                                 |
+| 9     | March 5  | Calibration                                   |
+| 10    | March 10 | Calibration2                                  |
+| 10    | March 12 | Return to Big Picture                         |
+
+{tbl-colwidths="\[4,20,75\]"}
 
 # Assignments (Tentative Assign/Due Dates)
 

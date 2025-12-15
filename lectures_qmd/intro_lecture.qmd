@@ -89,7 +89,23 @@ Estimate of global temperatures over the next 100 years
 
 # Models for estimation
 
-[Estimate of energy savings from LED adoption](http://www.lightnowblog.com/2014/10/forecasted-energy-savings-from-led-lighting/)
+Intervention Model for Air Pollution (InMAP) - a model used to estimate contributions of sources to air quality (PM2.5 and others)
+
+[Attribution](img/InMAP2.jpg)
+
+::: {style="font-size: 0.6em"}
+[Jackson, C. M., Holloway, T., & Tessum, C. W. (2023). City-scale analysis of annual ambient PM2. 5 source contributions with the InMAP reduced-complexity air quality model: a case study of Madison, Wisconsin. Environmental Research: Infrastructure and Sustainability, 3(1), 015002](https://iopscience.iop.org/article/10.1088/2634-4505/acb0fa/meta)
+:::
+
+# Models for estimation and what if
+
+InMAP Estimate of impact of coal power plant retirement, or EV adoption on air quality
+
+[What if](img/InMAP1.jpg)
+
+::: {style="font-size: 0.6em"}
+[Jackson, C. M., Holloway, T., & Tessum, C. W. (2023). City-scale analysis of annual ambient PM2. 5 source contributions with the InMAP reduced-complexity air quality model: a case study of Madison, Wisconsin. Environmental Research: Infrastructure and Sustainability, 3(1), 015002](https://iopscience.iop.org/article/10.1088/2634-4505/acb0fa/meta)
+:::
 
 # Models can also be for communication
 
@@ -104,6 +120,8 @@ Goal: Help public understand why, even if temperature warms - glaciers might gro
 *Estimation/Scenario* (what might be the consequences of decisions we make about the environment)
 
 *Communication* - contribute to education and broader understanding
+
+Examples?
 
 # For Next Class
 
@@ -122,14 +140,14 @@ Think about what an inverse inference problem might be in the context of the env
 if you are interested you can learn [More about Lisa Felman Barrett](https://www.affective-science.org/lisa-feldman-barrett.shtml)
 
 # And complete coding check
+
 4.  Code a function
 
 In this course, we will work a lot with writing and applying functions; You've all been exposed to writing functions in previous courses - but just to make sure that everyone remembers the basic syntax in R, complete the following:
 
----
+------------------------------------------------------------------------
 
 Write a function that computes energy produced from a photovoltaic system if you know the average annual solar radiation. You can use the following formula:
-
 
 $E = A * r * H * PR$
 
@@ -139,12 +157,11 @@ $E = A * r * H * PR$
 -   PR is performance ratio (0-1) (accounting for site factors that impact efficiency usually around 0.75)
 -   H is annual average solar radiation (kWh)
 
----
+------------------------------------------------------------------------
 
-Write your function in R; make sure that you add documentation; include default values for *r* and *PR* in the function definition; save the function in a single file to upload to Canvas. 
+Write your function in R; make sure that you add documentation; include default values for *r* and *PR* in the function definition; save the function in a single file to upload to Canvas.
 
-
-# To summarize 
+# To summarize
 
 Submit on Canvas the following by 8am April 3th:
 

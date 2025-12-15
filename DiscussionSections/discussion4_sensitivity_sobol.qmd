@@ -1,0 +1,56 @@
+---
+title: "Discussion_sensitivity"
+format: revealjs
+editor: visual
+---
+
+## Recall our model of atmospheric conductance $$
+C_{at} = \frac{v_m}{6.25*{ln(\frac{z_m-z_d}{z_0})}^2}
+$$ $$
+z_d = k_d*h
+$$ $$
+z_0 = k_0*h
+$$
+
+$z_m$ is the height at which windspeed is measured - must be higher than the vegetation (cm), it is usually measured 200 cm above the vegetation
+
+$h$ is vegetation height (cm)
+
+$v$ is windspeed (cm/s)
+
+Typical values if $k_d$ and $k_o$ are 0.7 and 0.1 respectively (so use those as defaults)
+
+## Another example of sensitivity {.scrollable}
+
+Repeat the sensitivity analysis that we have been working on in class BUT lets assume that we are in a different locations - where windspeeds are substantially higher and more variable AND vegetation is shorter - See details below
+
+Consider the sensitivity of your estimate to uncertainty in the following parameters and inputs
+
+-   $height$
+
+-   $k_d$
+
+-   $k_0$
+
+-   $v$
+
+Windspeeds $v$ are normally distributed with a mean of 300 cm/s with a standard deviation of 50 cm/s
+
+For vegetation height assume that height is somewhere between 3.5 and 5.5 m (but any value in that range is equally likely)
+
+For the $k_d$ and $k_0$ parameters you can assume that they are normally distributed with standard deviation of 1% of their default values
+
+a)  Use the Sobel approach to generate parameter values for the 4 parameters
+b)  Run the atmospheric conductance model for these parameters
+c)  Plot conductance estimates in a way that accounts for parameter uncertainty
+d)  Plot conductance estimates against windspeed use the parameter that is 2nd in terms of total effect on response
+e)  Estimate the Sobel Indices for your output
+f)  Comment on what this tells you about how atmospheric conductance and its sensitivity to variation in windspeed differs in this setting as compared to the setting that we examined in class where windspeed was lower and less variable and vegetation was taller.
+
+# Lets put this in context -
+
+Lets use real wind data - from two climate models - compute mean atmospheric conductance -
+
+So wind now is an input...
+
+Uncertainty in parameters

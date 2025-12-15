@@ -1,0 +1,109 @@
+---
+title: "Discussion5_Summarizing Dynamic Model Output"
+format: revealjs
+theme: solarized
+resources: ["img/"]
+css: ["slides.css"]
+editor: visual
+---
+
+## Extracting information from space-time results {.scrollable}
+
+In class we've talking about summarizing results from dynamic models
+
+-   pictures can be hard to interpret
+
+-   summarizing over one of the dimensions (either space or time) can help
+
+-   looking at a single trajectory through time
+
+-   looking at spatial variation for one point in time
+
+-   looking at spatial variation for multiple points in time
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(deSolve)
+library(here)
+```
+
+## Extracting from our diffusion model {.scrollable}
+
+```{r}
+source(here("R/diffusion.R"))
+resfast_fixtime <- diff1(initialC = 100, nx = 10, dx = 0.5, nt = 100, dt = 0.5, D = 0.2, area = 1)
+
+
+filled.contour(resfast_fixtime$conc, xlab = "time", ylab = "Distance Along Path", main = "Concentration through time and space")
+```
+
+# Summarizing Model Output
+
+-   Summarize relative to what you care about
+
+Lets say this was a pollutant injected into a stream...
+
+-   lets say you have a vulnerable habit located 3 spatial units from the injection point
+
+-   lets see what its pollutant exposure looks like.\
+
+```{r one option}
+# View(resfast_fixtime$conc)
+
+
+# graph a single point in space through time
+# single column (time)
+plot(resfast_fixtime$conc[, 3], ylab = "Concentration for a location 2 spatial units from origin (1+2")
+```
+
+-   what if we were concerned about all locations
+
+```{r all locations}
+# plot all trajectories
+# add a time column to concentration data frame and transform for plotting
+resl <- as.data.frame(resfast_fixtime$conc) %>%
+  mutate(time = seq(from = 1, to = 100)) %>%
+  pivot_longer(-time, names_to = "distance", values_to = "conc")
+ggplot(resl, aes(time, conc, col = distance)) +
+  geom_line()
+
+# plot all places at each point in time
+ggplot(resl, aes(time, conc, group = time)) +
+  geom_boxplot()
+```
+
+# Spatial summaries
+
+-   interested in how quickly the pollutant evens out through space
+
+```{r spatial summaries}
+
+# use apply to calculate the spatial variation for each row (e.g for each time point)
+cvar <- resfast_fixtime$conc %>% apply(1, var)
+cmean <- resfast_fixtime$conc %>% apply(1, mean)
+
+spatial_aver <- cbind.data.frame(cvar, cmean, time = seq(from = 1, to = 100))
+length(cvar)
+# notice its the same as the number of time units (nt) used above
+
+# plot spatial variation through time
+ggplot(spatial_aver, aes(time, cvar)) +
+  geom_line() +
+  labs(y = "Spatial Variation")
+
+# plot coefficient of variation (so standard deviation divided by the mean)
+ggplot(spatial_aver, aes(time, 100 * sqrt(cvar) / cmean)) +
+  geom_line() +
+  labs(y = "COV (as percent")
+```
+
+## it is helpful to turn the summary into a function that you can apply to the dynamic models output
+
+## example
+
+## In class exerise {.scrollable}
+
+For the diffusion model that we've been working with
+
+-   Try to create a function that counts how many times (any where in the stream concentrations are above some threshold)

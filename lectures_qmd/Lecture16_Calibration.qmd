@@ -229,5 +229,3 @@ mean_august_obs = mean(subset(msagel_mth, month==8)$obs)
 ggplot(subset(msagel_mth, month==8), aes(accept, str))+geom_boxplot()+
   geom_hline(yintercept=mean_august_obs, col="red")+labs(y="Streamflow", x="Date")
 ```
-
-

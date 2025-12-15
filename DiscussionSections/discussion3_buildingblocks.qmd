@@ -1,0 +1,63 @@
+---
+title: "Discussion3_buildingblocks"
+format: revealjs
+editor: visual
+---
+
+## Profit Mode {.scrollable}
+
+Any questions from class
+
+## Todays goal
+
+Develop a profit model for your almond yield
+
+Lets brainstorm on what a profit model might look like
+
+Simpliest?
+
+More complex?
+
+## Profit Model Ideas {.scrollable}
+
+-   profit = revenue - costs
+
+-   revenue = price per unit \* yield
+
+-   costs = fixed costs + variable costs
+
+What might be fixed costs?
+
+What might be variable costs?
+
+Do you want price to be constant?
+
+## Build a profit function
+
+-   almond yield anomoly will be one input
+
+But profit would depend on actual yield right?
+
+Assume a baseline yield for your orchard (another input to your profit model)
+
+-   profit will be the output
+
+There may be other inputs depending on your profit model
+
+# Construct your profit model
+
+you can work in pairs or on your own
+
+# Now put them together
+
+-   there are many ways to combine the almond yield and profit functions; you can have the profit function "call"/use the almond yield function; or create a wrapper function that calls them in sequence (first the almond yield and then the profit function)
+
+# Now run your combined model and do some informal sensitivity analysis
+
+-   which parameters might you vary?
+
+-   graph how profit varies with your parameters
+
+# Ojas will share an example
+
+\`\`\`{r} source("R/compute_almond_yield_anomoly.R")

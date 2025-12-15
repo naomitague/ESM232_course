@@ -23,69 +23,6 @@ What if you wanted to take the same amount of carbon each year - what would the 
 
 Think about what you would need to do to make this realistic
 
-## Fixed Harvest Example {.scrollable}
-
-```{r fixed}
-source(here("R/dharvestfixed.R"))
-
-dharvestfixed
-```
-
-## Run the forest model {.scrollable}
-
--   harvest of 2kgC per year (fixed rate)
--   carrying capacity of 1000kg
--   growth rate of 0.05
--   minimum carbon before harvest is allowed 20kg
-
-## Run for 100 years {.scrollable}
-
-try it
-
-what happens?
-
-```{r try100}
-tm <- seq(from = 1, to = 100)
-Cinitial <- 30
-gps <- list(harv = 2, K = 1000, r = 0.05, mincarbon = 20)
-
-res <- ode(Cinitial, tm, dharvestfixed, gps)
-
-colnames(res) <- c("time", "carbon")
-head(res)
-tail(res)
-```
-
-## Numerical Integration Issues {.scrollable}
-
--   particularly happens if model is "stiff" (when system state reaches a threshold, behavior changes alot)
-
--   our minimum carbon is a threshold
-
-When that happens try another integration method See *ode* help for some options
-
-## example {.scrollable}
-
-```{r try2}
-# notice how it fails after a certain length of time
-# try another method
-res <- ode(Cinitial, tm, dharvestfixed, gps, method = "euler")
-colnames(res) <- c("time", "carbon")
-head(res)
-tail(res)
-
-ggplot(as.data.frame(res), aes(time, carbon)) +
-  geom_point() +
-  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
-
-
-ggplot(as.data.frame(res), aes(time, carbon)) +
-  geom_line() +
-  labs(y = "Forest Biomass (kgC)", x = "Year", title = "Fixed Harvest of 2kg/year\n Starting conditions 30kgC")
-
-# why this pattern
-```
-
 ## Stability {.scrollable}
 
 Stability analysis investigates how the system state changes, particularly focusing on where the system state 'ends up' over time and what happens when there are small perturbations to the system state
