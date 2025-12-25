@@ -1,6 +1,40 @@
 .Rproj.user
 .Rhistory
 .Rdata
+
+# Quarto output directories
+/_site/
+/_site_libs/
+/_site/           # (ok if duplicated; harmless)
+/.quarto/
+/.quarto-cache/
+/.quarto-work/
+
+# Rendered outputs
+*.html
+*.pdf
+*.docx
+*.pptx
+
+# Quarto + R knitr/cache artifacts
+*_files/
+*_cache/
+*.utf8.md
+*.knit.md
+*.log
+*.aux
+*.out
+*.toc
+*.synctex.gz
+
+# R session / history
+.Rhistory
+.RData
+.Ruserdata
+
+# OS / editor noise
+.DS_Store
+
 .httr-oauth
 .DS_Store
 .html
