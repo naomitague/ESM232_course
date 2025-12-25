@@ -6,14 +6,11 @@ editor: visual
 
 # Conceptual Models
 
-* What is the goal of your model? Understanding, prediction, communication) of what?
+-   What is the goal of your model? Understanding, prediction, communication) of what?
 
 Conceptual models guides
 
-* What variables, interactions between variables or processes in complex reality are your going to consider? why?
-
-
-
+-   What variables, interactions between variables or processes in complex reality are your going to consider? why?
 
 # Conceptual Models: Things to think about
 
@@ -30,17 +27,13 @@ Conceptual models guides
 -   What are some key assumptions?
 
 # Conceptual model as a figure
- 
-Pictorial representation your conceptual model 
-  * what are inputs
-  * what are outputs
-  * how do you get from inputs to outputs
-  * are there internal variables/processes
-  * are there interactions / relationships between variables 
-  
+
+Pictorial representation your conceptual model \* what are inputs \* what are outputs \* how do you get from inputs to outputs \* are there internal variables/processes \* are there interactions / relationships between variables
+
 Picture that shows what needs to be included in the model to answer your questions (or achieve your modelling goal)
 
 # Task 1
+
 -   Form groups of 3
 -   With your group, come up with a modeling goal
 -   Decide if the goal is understanding,prediction or communication
@@ -48,32 +41,28 @@ Picture that shows what needs to be included in the model to answer your questio
     -   inputs, parameters and outputs
     -   relationships/processes
     -   assumptions
-- Write it down and sketch (either on computer or on a piece of papers) 
+-   Write it down and sketch (either on computer or on a piece of papers)
 
 # Task 2
 
 Share your modeling goal and conceptual model with another group
 
-Provide feedback - did they miss anything? Does it make sense? 
-
+Provide feedback - did they miss anything? Does it make sense?
 
 # More formal diagrams
 
-
-\[Diagrams.net\]{[https://www.diagrams.net/}](https://www.diagrams.net/})
+\[Diagrams.net\]{<https://www.diagrams.net/%7D>
 
 # Task 3 Complete and Submit as Group Assignment 2 - Conceptual Model
-
 
 -   Write down the question that your model will answer
 -   List the key inputs, parameters and outputs (as precisely as possible, think about space and time)
 -   Sketch the underlying conceptual model that would relate inputs/parameters to the outputs
 -   Decide what "type" of model it is based on classification discussed in class
 
-Please submit as a pdf
-**Important** - have the diagram on its own page!
+Please submit as a pdf **Important** - have the diagram on its own page!
 
-- its up to you how you create the pdf
-  * note you can create this by rendering a quarto document - good practice - as we will do this for other assignments in the course
-  
+-   its up to you how you create the pdf
+    -   note you can create this by rendering a quarto document - good practice - as we will do this for other assignments in the course
+
 Submit as a Group Assignment on Canvas by Monday April 7th 5pm

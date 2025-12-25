@@ -9,7 +9,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Assignment 3
+# Assignment 4
 In your same groups - 
 
 + Develop a profit model for your almond yield (you can make this up - think about what the parameters would be) 

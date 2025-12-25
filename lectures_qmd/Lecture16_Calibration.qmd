@@ -9,61 +9,9 @@ css: ["slides.css"]
 editor: visual
 ---
 
-## Calibration and Optimization
-
--   Generate parameter sets (e.g., LHS)
--   Compute metrics for each
--   Pick the "best" parameter set?
-
-------------------------------------------------------------------------
-
-## Equifinality
-
--   Many parameter sets yield similar performance
--   Limits confidence in "best" calibration
-
-![Equifinality](img/dottyplots.png)
-
-## Issue with parameter selection \|
-
-Parameter selection will be effected by:
-
--   calibration period
--   observation/measurement error
--   poor identifiablity (equifinality)
-
-How can we be more robust in parameter selection?
-
-## Calibration - an alternative {.scrollable}
-
--   Generate parameter sets (e.g., LHS)
--   Compute metrics for each
--   Keep all acceptable parameter sets (or sample across them)
--   Show uncertainty in estimates due to variation across these parameter sets
--   If you need a single estimate
-    -   use an ensemble approach
-    -   average estimates from all parameters
-    -   weight estimate from each parameter by performance
-
-# Using Performance to Weight Estimate
-
-Mean weighted estimate (MWE) - Weighted average of outputs by performance - Produces MWE (Mean Weighted Estimate)
-
-![Equifinality](img/weights.png)
-
-## Example
-
-## ![Bayesiany](img/weightsummer.png)
-
-## Bayesian Framework
-
-![Bayesiany](img/bayes.png)
-
-[K. Beven and A. Binley, “The future of distributed models: model calibration and uncertainty prediction,” Hydrological Processes, vol. 6, no. 3, pp. 279–298, 1992.]{style="font-size:50%"}
-
 ## Approach Summary
 
--   Generate parameter sets (e.g., LHS)
+-   Generate parameter sets (e.g., Sobol)
 -   Compute metrics for each
 -   Reject poor performers
 -   Retain ALL acceptable sets
@@ -151,7 +99,7 @@ ggplot(msage, aes(as.Date(date), msage[,best_par]))+geom_line(col="red")+
 
 ```
 
-## try again with low flow metrics {.scrollable}
+## Try again with low flow metrics {.scrollable}
 
 a function that generates
 
@@ -184,6 +132,18 @@ ggplot(resultsl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="
 # how might you pick best parameter sets
 
 ```
+
+# Performance metrics matter
+
+-   similar to how we summarize results from space-time models
+
+-   what do you care about?
+
+-   test that your model captures behavior that you are interessted in
+
+# Design your own metric
+
+# Assignment
 
 ## One Option
 

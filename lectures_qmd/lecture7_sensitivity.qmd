@@ -18,82 +18,7 @@ library(purrr)
 library(here)
 ```
 
-## What you can know about sensitivity before informal/formal sensitivity analysis {.scrollable}
-
--   Parameter interactions are *evident* in the equations
-
-Recall our reservoir model
-
--   **Input**: Reservoir height and flow rate
-
--   **Output**: Instantaneous power generation (W/s)
-
--   **Parameters**: K (efficiency) , ρ (density of water), g (acceleration due to gravity)
-
-P = ρ \* h \* r \* g \* K
-
--   P is Power in watts,
--   ρ is the density of water (\~1000 kg/m3)
--   h is height in meters,
--   r is flow rate in cubic meters per second,
--   g is acceleration due to gravity of 9.8 m/s2,
--   K Efficiency is a coefficient of efficiency ranging from 0 to 1.
-
-<span style="color: blue;"> The "effect" of **K** (efficiency) will depend on the other parameters
-
-A 1% change in **K** will lead to a 1% change in Power
-
-<span style="color: blue;"> How much Power (magnitude) will change with an increase **K** will depend on value of other parameters and inputs
-
-So you could say that Power is more sensitive to efficiency for larger flow rates or larger heights, We know this because the are multiplied together!
-
-## Some code to convince you of this {.scrollable}
-
-```{r simplex}
-# lets look at the power generation function
-source(here("R/power_gen.R"))
-Power_K1 <- power_gen(height = 2, flow = 4, K = 0.1, g = 9.8)
-Power_K1
-Power_K2 <- power_gen(height = 2, flow = 4, K = 0.2, g = 9.8)
-Power_K2
-
-# if you double K, you will double power (linear response)
-# relative change in power
-0.1 * 2
-
-Power_K1 * 2
-
-Power_K2 / Power_K1
-```
-
-##  {.scrollable}
-
-*Because* the equation is just multiplying factors
-
--   Relative change is the same as the change in efficiency (K)
--   Absolute change in power with change in efficiency depends on other parameters
-
-So what happens to sensitivity if height is 3 instead of 2
-
-```{r simplex2}
-# absolute change in power depends on other parameters/inputs
-# absolute change in pawer or magnitude of the change in power with change in efficiency (difference)
-Power_K2 - Power_K1
-
-# if height is 3 instead of 2
-Power_K1 <- power_gen(height = 3, flow = 4, K = 0.1, g = 9.8)
-Power_K1
-Power_K2 <- power_gen(height = 3, flow = 4, K = 0.2, g = 9.8)
-Power_K2
-
-# Power still doubles (relative change is the same)
-Power_K1 * 2
-
-# But absolute change is greater
-Power_K2 - Power_K1
-```
-
-## What you can know about sensitivity before "sensitivity analysis" {.scrollable}
+## What you can know about sensitivity before experimenting {.scrollable}
 
 -   when transfer function is linear (equation *tells* you what the sensitivity is)
 
@@ -133,7 +58,11 @@ Regression equations are also models
 
 They are *linear* models
 
-The coefficients and standard error tell you about sensitivity - larger coefficients = output more sensitive to variation in the "variable" - smaller standard error = more confidence in coefficient
+The coefficients and standard error tell you about sensitivity
+
+\- larger coefficients = output more sensitive to variation in the "variable"
+
+\- smaller standard error = more confidence in coefficient
 
 ## When do we need to do sensitivity analysis {.scrollable}
 

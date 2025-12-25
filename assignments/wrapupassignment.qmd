@@ -1,0 +1,41 @@
+---
+title: "wrapup_assignment"
+format: pdf
+editor: visual
+---
+
+## Modelling Framework and Analysis Plan
+
+The goal of this assignment is to use what you've been learning in the course to develop a clear, well-structure plan for using a model in an environmental problem solving context. You won't actually implement and run the model but you will create a plan that would ensure that your modeling endeavor is credible and effective.
+
+## Steps
+
+### Modeling Question
+
+In 1 paragraph describe the overall goal of your environmental problem solving effort and how modeling will help you to achieve that goal. Include a specific modeling question that you would want to answer as part of the effort
+
+### Conceptual Model
+
+Given the question that you are asking with the model - describe you conceptual model - what are the key components of the system that you need to represent to answer your question. Draw a diagram to illustrate your conceptual model and include a brief description of the components and relationships in your model.
+
+### Model Design
+
+Create a list of inputs, parameter and outputs for your model - include units (or spatial-temporal scale) e.g a 30m digital elevation model, daily time series of precipitation for 3 locations in the watershed
+
+Identify what type of model you will use using the classification from class
+
+If you know of an existing off the shelf model that you would use - provide a citation.
+
+Describe what observations might be used to evaluate the model performance - what metric might you use in that evaluation? E.g RMSE between observed and modeled streamflow at daily time steps over a 5 year period
+
+### Analysis Plan
+
+Describe how you would use the model to answer your modeling question. What scenarios would you run? What are 2-3 key metrics that you would use to summarize model outputs to answer your question?
+
+Which parameters might you focus on in an uncertainty analysis? Provide details on how you would do this (e.g how would you sample the parameters, how would you estimate parameter ranges)
+
+What sensitivity analysis would you do help answer your research question - provide details (e.g use Sobol indicies to estimate whether precipitation or temperature has a larger influence on model on annual streamflow)
+
+### Assumptions
+
+List 2-3 assumptions that you would want to include in a summary of model findings

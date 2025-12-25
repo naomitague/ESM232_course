@@ -205,3 +205,47 @@ w8 = readRDS(here("Data/w8.RDS"))
 
 
 ```
+
+## Calibration and Optimization
+
+-   Generate parameter sets (e.g., LHS)
+-   Compute metrics for each
+-   Pick the "best" parameter set?
+
+------------------------------------------------------------------------
+
+## Equifinality
+
+-   Many parameter sets yield similar performance
+-   Limits confidence in "best" calibration
+
+![Equifinality](img/dottyplots.png){alt="Equifinality"}
+
+## Issue with parameter selection
+
+Parameter selection will be effected by:
+
+-   calibration period
+-   observation/measurement error
+-   poor identifiablity (equifinality)
+
+How can we be more robust in parameter selection?
+
+## Calibration - an alternative {.scrollable}
+
+-   Generate parameter sets
+-   Compute metrics for each
+-   Keep all acceptable parameter sets (or sample across them)
+-   Show uncertainty in estimates due to variation across these parameter sets
+-   If you need a single estimate
+    -   use an ensemble approach
+    -   average estimates from all parameters
+    -   weight estimate from each parameter by performance
+
+# Using Performance to Weight Estimate
+
+Mean weighted estimate (MWE) - Weighted average of outputs by performance - Produces MWE (Mean Weighted Estimate)
+
+![Equifinality](img/weights.png){alt="Equifinality"}
+
+## Example

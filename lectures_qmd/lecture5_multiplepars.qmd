@@ -18,7 +18,7 @@ library(ggpubr)
 library(here)
 ```
 
-## Combined sensivitivity analysis
+## Combined sensitivity analysis
 
 -   *eff*
 
@@ -35,9 +35,32 @@ Two possible approaches
 -   *for*
 -   *pmap* from purrr (when you want to vary more than one input to the model)
 
-## using *pmap* {.scrollable}
+## Ways of expressing variation/uncertainty {.scrollable}
+
+-   sometimes we think of uncertainty as a range of possible values (min, max), where possibility is defined by physics or expert knowledge\
+    e.g., snow albedo can't be greater than 1; can't have negative efficiency; solar arrays with efficiencies less than some value are not marketable
+
+-   sometimes we know something about the distribution because we have measurements\
+    e.g., efficiency of solar panels measured in lab or field tests; we can use mean and standard deviation to define a normal distribution
+
+-   sometimes we think of uncertainty as percent deviation from our best guess\
+    e.g., we think efficiency is 0.2 but could be ±15%
+
+## Example using *pmap* {.scrollable}
+
+Lets look at
+
+-   15% devidation in **ethresh**
+
+-   normal distribution for **eff**
 
 ```{r secondsensitivity, echo=TRUE}
+
+source(here("R/solarpv.R"))
+
+# read in R formatted data
+load(here("Data/sierraczosolar_clean.rda"))
+
 # generate samples for both parameters
 nsamples <- 300
 deviation <- 0.15
@@ -68,6 +91,17 @@ mean_elect <- map_df(results, `[`, c("mean"))
 # and we can add the parameter values for each run
 mean_elect <- cbind.data.frame(mean_elect, parms)
 
+
+
+```
+
+## Looking at results {.scrollable}
+
+Lets start with mean annual electricity
+
+We want to look at uncertainty due to both parameters but also see how each parameter influences the results
+
+```{r plot_sensitivity, echo=TRUE}
 # plot - pick one of the 2 parameter as a color
 # try switching which parameter used for color
 
@@ -80,7 +114,17 @@ p2 <- ggplot(mean_elect, aes(eff, mean, col = ethresh)) +
   geom_point(cex = 2) +
   labs(y = "Mean Annual Electricity W", x = "Efficiency")
 p2
+```
 
+What does looking at these graphs tell you?
+
+## Interannual Variation {.scrollable}
+
+There is **uncertainty** in annual electricity due to both parameters and variation across years **sensitivity** to climate
+
+So lets plot that
+
+```{r annual_uncertainty, echo=TRUE}
 
 # extract annual
 # plot total uncertainty due to both parameters
@@ -88,16 +132,18 @@ tmp <- map_df(results, `[`, c("annual"))
 solar_annual_elect <- as.data.frame(tmp$annual$year)
 colnames(solar_annual_elect) <- "year"
 solar_annual_elect$elect <- tmp$annual$elect
-
-ggplot(solar_annual_elect, aes(year, elect, group = year)) +
-  geom_boxplot() +
-  labs(y = "Electricity generated in W")
-
 # save this model output for next lecture
 save(solar_annual_elect, file = here("Data/annual_elect_solar.rda"))
+
+p1 = ggplot(solar_annual_elect, aes(year, elect, group = year)) +
+  geom_boxplot() +
+  labs(y = "Electricity generated in W")
+p1
 ```
 
-# Sensitivity to two different parameters
+Is variation due to years big or small relative to parameter uncertainty?
+
+## Sensitivity to two different parameters
 
 -   note how one parameter **eff** overshadows the response to *"ethresh*
 
@@ -107,7 +153,7 @@ save(solar_annual_elect, file = here("Data/annual_elect_solar.rda"))
 
 Using a *For* Loop for sensitivity analysis
 
-```{r}
+```{r yearsensitivity, echo=TRUE}
 # using a for loop
 # start by creating a data structures to hold results, separate
 # for scenario mean and annual values
@@ -150,14 +196,16 @@ ggplot(tmp, aes(as.factor(year), value)) +
 ggarrange(p1, p2)
 ```
 
-# Expanding on Sensitivity Analysis
+## Expanding on Sensitivity Analysis
 
 -   why this is useful
 -   two contexts
     -   variation in parameters is a scenario
     -   variation in parameter is uncertainty
 
-Real world examples Quiz Think of a research question, and imagine you are using a model to answer it - you don't have to know the details of the model - but think of a parameter that you might want to vary to see how it influences model outputs- Note if its due to uncertainty in that parameter or because you are exploring scenarios
+Real world examples Quiz:
+
+Think of a research question, and imagine you are using a model to answer it - you don't have to know the details of the model - but think of a parameter that you might want to vary to see how it influences model outputs- Note if its due to uncertainty in that parameter or because you are exploring scenarios - how might you define uncertainty
 
 # ASSIGNMENT 2 Almond Yields
 

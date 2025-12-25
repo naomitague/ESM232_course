@@ -9,6 +9,8 @@ css: ["slides.css"]
 editor: visual
 ---
 
+# Compare Class results
+
 ## Glue - generalized uncertainty analysis {.scrollable}
 
 What if we wanted to keep all of the 'good' parameters

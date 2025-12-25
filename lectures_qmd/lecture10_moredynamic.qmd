@@ -107,7 +107,7 @@ ggplot(both_p, aes(year, P, col = model)) +
 
 Remember we have 3 ways now to calculate population
 
--   analytical solution - based on integration (exppop.R) BEST
+-   analyitical solution - based on integration (exppop.R) BEST
 
 -   using an ode solver for numerical approximation (exppop_play.R)
 
@@ -321,13 +321,7 @@ filled.contour(resfast_fixtime$qin - resfast_fixtime$qout, xlab = "Time", ylab =
 
 ## Extracting meaning from time series output {.scrollable}
 
-Useful to brainstorm about what is important
-
-For example
-
--   time it takes to evenly diffuse?
-
-How would we implement that?
+Quiz - Suggest a metric (a single measure) for summarizing the results from the diffusion model
 
 ## Extracting information from space-time results {.scrollable}
 
@@ -382,12 +376,4 @@ ggplot(spatial_aver, aes(time, 100 * sqrt(cvar) / cmean)) +
   labs(y = "COV (as percent")
 ```
 
-## Extracting meaning from time series output {.scrollable}
-
-Useful to brainstorm about what is important
-
-For example
-
--   time it takes to evenly diffuse?
-
-How would we implement that?
+##  {.scrollable}

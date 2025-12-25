@@ -4,6 +4,17 @@ format: revealjs
 editor: visual
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+library(purrr)
+
+library(ggpubr)
+
+library(here)
+```
+
 ## Sensitivity Analysis with *ethresh* {.scrollable}
 
 There is a threshold radiation below which efficiency declines
@@ -23,6 +34,12 @@ There is a threshold radiation below which efficiency declines
 ## Result
 
 ```{r ethresh, echo=TRUE}
+
+
+source(here("R/solarpv.R"))
+# read in R formatted data
+load(here("Data/sierraczosolar_clean.rda"))
+
 # lets try sensitivity analysis again,
 # ethresh - is defaulted to 10000; lets try +- 15%
 # lets try 40 samples
@@ -88,3 +105,5 @@ ggarrange(p1, p2)
 ## Something to think about- what matters more uncertainty in *ethresh* or *eff*?
 
 learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+
+# Questions on Almond Assignment?

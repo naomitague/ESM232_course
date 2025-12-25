@@ -27,7 +27,7 @@ Pair-Share
 
 -   always start a modeling project by diagramming your conceptual model - how do you see the system;
 
-   -   from here you design or choose your 'actual' model
+-   from here you design or choose your 'actual' model
 
 -   in a project, it is critical to dialogue to agree on the conceptual model
 
@@ -38,7 +38,6 @@ Pair-Share
 -   Use that to decide what to include/exclude
 
 -   Define inputs and outputs
-
 
 # Some definitions
 
@@ -99,8 +98,6 @@ This is the **MOST** important step
 
 **Good questions for statistical and machine learning models - why?**
 
-
-
 # Things to think about
 
 -   Inverse Inference - what mechanisms, parameters, inputs leads to the response you are observing (understanding)
@@ -111,23 +108,25 @@ This is the **MOST** important step
 
 # Inverse Inference Example
 
-A city  health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state 
+A city health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state
 
-An amphibian (salamander or newt) population has declined in the Santa Monica Mountains 
+An amphibian (salamander or newt) population has declined in the Santa Monica Mountains
 
-Whats in your conceptual model - pick one and summarize in Quiz Inverse Inference on Canvas
+Pick one - Quickly summarize what comes to your mind as the in inverse inference (conceptual) model that leads to this finding. Write your answer in Quiz Inverse Inference on Canvas - you are brainstorming here - no need to "research"
+
+➡️ **Canvas Quiz** \
+[Inverse Inference Quiz](https://ucsb.instructure.com/courses/30595/assignments/420117?display=full_width_with_nav)
 
 # Whats in the box
 
 Often more complicated than a simple single equation - such as a multiple regression equation
 
-e.g 
-$Pop_newt = \beta_1 * \beta_2* precipitation + \beta_2*temperature +  \beta_2*presenceof predators + \beta_2*roaddensity + \beta_2*pollutionlevels$
+e.g $Pop_newt = \beta_1 * \beta_2* precipitation + \beta_2*temperature +  \beta_2*presenceof predators + \beta_2*roaddensity + \beta_2*pollutionlevels$
 
-So we need to think through relationships  - what is connected with what
+So we need to think through relationships - what is connected with what
 
-Example   
-If we think the asthma hospitalization rates are influenced by emission from  a new factory some distance away - we might have to consider relationship between the timing of emissions and prevailing wind patterns and how long particles stay in the air
+Example\
+If we think the asthma hospitalization rates are influenced by emission from a new factory some distance away - we might have to consider relationship between the timing of emissions and prevailing wind patterns and how long particles stay in the air
 
 Why?
 
@@ -171,7 +170,7 @@ There are many software tools available for generating conceptual models, I like
 
 -   What are some key assumptions?
 
-# Develop a Conceptual Model - Discussion Section   
+# Develop a Conceptual Model
 
 -   Form groups of 3
 -   With your group, come up with a modeling goal
@@ -180,8 +179,6 @@ There are many software tools available for generating conceptual models, I like
     -   inputs, parameters and outputs
     -   relationships/processes
     -   assumptions
-
-You will expand on this in next weeks discussion section
 
 # Types of Model
 
@@ -239,7 +236,7 @@ Modeling disease through time
 
 # Abstract - Physically/Process based
 
-**Abstract** - relationship between inputs and output depends on parameters that don’t necessarily have a physical meaning - machine learning models are good examples
+**Abstract** - relationship between inputs and output depends on parameters that don’t necessarily have a physical meaning - **machine learning models** are good examples
 
 **Physically based** - parameters do have a physical meaning (could be measured) - relationships derived from first principles (theory) of how things work
 
@@ -258,3 +255,6 @@ Think...simple bucket model
     -   analysis
     -   visualization
 
+# Assignment 2 - Due Jan 13th 8am
+
+[Assignment 2]("../assignments/Assignment2_ConceptualModel.qmd") 

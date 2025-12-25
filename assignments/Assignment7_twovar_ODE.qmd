@@ -1,0 +1,56 @@
+---
+title: "Assignment 7 - Two Variables ODE"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+------------------------------------------------------------------------
+
+## Assignment {.scrollable}
+
+Consider how you might add hunting of prey to the predator prey model that we've been using in class
+
+**Part 1**:
+
+Build this model (e.g add hunting to the lotvmodK.R),
+
+Some requirements/hints for your model
+
+You should make sure that you don't hunt more prey than exist.
+
+To ensure that you might also add a minimum prey population input that must be met before hunting is allowed.
+
+Note you can make this as simple or as complex as you would like. You could represent hunting in a way that is similar to "harvesting" in the last assignment. 
+
+**Part 2**
+
+Explore how different hunting levels and different minimum prey populations (before hunting is allowed) are likely to effect the stability of the populations of both predator and prey. A key challenge is how you might want to define stability? It is up to you but you will need to write a sentence to explain why you chose the measure that you did. It could be something as simple as maintaining a population above some value 50 years into the future.  
+
+Use this exploration to recommend a hunting target that will be sustainable (e.g leave you with a stable prey and predator population).
+
+It is up to you how you "explore" hunting  - you can simply try different values of the parameters in your hunting model or do it more formally by running your model across a range of values. You could think about parameter interactions
+
+You can assume the following are best guesses of key parameters
+
+rprey=0.95, alpha=0.01, eff=0.6,pmort=0.4, K=2000,
+
+Submit - the Quatro document with your analysis AND a pdf/html version, any R files This should include
+
+a)  your hunting model
+
+b)  your exploration (e.g how you tested different hunting levels and how you defined a stability metric
+
+c)  provides you estimated sustainable hunting level and brief explanation of why you chose the metric you did
+
+# Alternative Assignment
+
+Develop your own 2-vary dynanmic model of an enviromental process you are interested in
+
+Explore how parameters in your model impact the outcomes of your model. Include a measure of "stability" as one of the outcomes - you can define stability however you like
+
+Write a brief summary about what your model and sensitivity analysis tell you

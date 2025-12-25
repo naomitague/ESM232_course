@@ -1,0 +1,29 @@
+---
+title: "Assignment 2 - Conceptual Model"
+format: pdf
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Form groups of 3 With your group, come up with a modeling goal Decide if the goal is understanding,prediction or communication
+
+# To turn in
+
+1.State your modeling goal clearly and precisely and the type of goal (understanding, prediction or communication)
+
+1.  List the key inputs, parameters and outputs (as precisely as possible, think about space and time)
+
+2.  Sketch the underlying conceptual model that would relate inputs/parameters to the outputs
+
+Please submit as a **pdf** document
+
+**Important** - have the diagram on its own page!
+
+You can use diagrams.net or any other tool to create the diagram - just make sure its clear and easy to read
+
+You can create the *pdf* by rendering a quarto document - good practice as we will do this for other assignments in the course
+
+Submit as a Group Assignment for Assignment 2 on Canvas (https://ucsb.instructure.com/courses/30595) by Jan 13th 8am

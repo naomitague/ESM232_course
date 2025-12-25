@@ -142,7 +142,7 @@ Dynamic systems may lead to *unstable* or *stable* or *cyclic* states over time
 
 -   for the same dynamic systems whether you are stable can change with parameters and initial conditions
 
-## Partner Exercies
+## Partner Exercize
 
 Discuss examples of dynamic systems \* spatial interaction \* temporal interaction \* both
 

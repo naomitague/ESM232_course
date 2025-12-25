@@ -7,6 +7,10 @@ format:
 editor: visual
 ---
 
+# Conceptual Model Brainstorming
+
+-   Quiz results
+
 # How to start - what is my model
 
 -   Clearly define your goal
@@ -137,9 +141,9 @@ Can you use it to answer your question - can you change inputs/parameters that r
 
 ## Model Selection: Appropriate
 
-Lets consider two example questions involving tree water use (evapotranspiration) (physically based rather than statistical model)
+Lets consider an example questions
 
-Example Q1: Will a forest fire in the upper 1/2 of a watershed impact streamflow more than a similarly sized fire lower (nearer the stream) in the watershed?
+**Example Q1**: Will a forest fire in the upper 1/2 of a watershed impact streamflow more than a similarly sized fire lower (nearer the stream) in the watershed?
 
 Why might you need a physically based model rather than a statistical model?
 
@@ -203,7 +207,8 @@ Pick an example
 
 ## Model Selection
 
-\*\* is model structure appropriate (fits your conceptual model) \*\* is performance good enough (performance) to answer your question
+-   is model structure appropriate (fits your conceptual model)
+-   is performance good enough to answer your question
 
 ## Building your own model
 
@@ -363,7 +368,19 @@ site1$annual
 -   what issue jumps out - what might be the cause?
 -   how would you fix this?
 
-# Explore for next class
+Explore for next class
+
+# What we are learning so far
+
+How to find the "right" tool for the job
+
+-   The importance of establishing a goal and a conceptual model - because all models are simplifications of reality
+
+-   Identify model types - helps you to find the "right" tool for your question (we will expand on this)
+
+-   Two parts - does it answer your question (conceptual model fit) and does it perform well enough
+
+-   Basics of building your own model - modularity, functions, inputs/outputs/parameters - and why you might want to do that
 
 (fix is below)
 
@@ -372,10 +389,14 @@ site1$annual
 ```{r}
 # remove the first year from the dataset
 sierraczosolar <- sierraczosolar %>%
-  filter(year > 1944)
+  filter(year > 1944 & year < 1954)
 
 # now run the model again
 site1 <- solarpv(area = 0.1, 
           solar = sierraczosolar, clr = "green", eunit = "W", g = TRUE)
 
+# keep cleaned up data set for future use
+save(sierraczosolar, file="Data/sierraczosolar_clean.rda")
+
 ```
+

@@ -6,9 +6,7 @@ editor: visual
 
 # Teaching Approach
 
-Class will include a mix of lectures and in class hands-on examples, using students’ own computers.
-
-I will often provide a Quatro document for you to go through prior to class so you can learn at your own pace and
+Class will include a mix of lectures and in class hands-on examples, using students’ own computers. Discussion sections will elaborate on lecture topics and provide time for students to work on assignments with instructor and TA support.
 
 # Teaching team
 
@@ -21,16 +19,13 @@ I will often provide a Quatro document for you to go through prior to class so y
 **Teaching assistant:** Ojas Sarup
 
 -   **Office:** BH 4329 (Manzanita)
--   **Office hours:** Friday 10:30 to 12:30
+-   **Office hours:** Tuesday 2:00-4:00 PM
 -   **Email:** ojassarup\@ucsb.edu
 
 # Where we will be
 
--   **Lectures:** Tues, Thur 8:00am - 9:15 am (**BH 1414**)\
--   **Discussion Section 1** Tues 1:00pm-2:00pm (**BH 1510**)\
--   **Discussion Section 2** Tues 2:00pm-2:50pm (**BH 1510**)
-
-please attend discussion section where. you signed up
+-   **Lectures:** Tues, Thur 9:30-10:45 (**ES Seminar Room 4016**)\
+-   **Discussion Section Friday** 9:00-10:20 (**BH 1424**)\
 
 # Learning objectives
 
@@ -42,7 +37,6 @@ please attend discussion section where. you signed up
 
     -   input-output models
     -   basic dynamic models
-    -   matrix models
 
 -   Gain some basic skills that are useful in applying models including
 
@@ -56,7 +50,15 @@ please attend discussion section where. you signed up
 
 -   Many classes will be working classes so bring laptop to class
 
--   Some of the material (example functions and Quatro code) will also be available on *github* I will also provide this material on *canvas* but if you are familiar with *git* then it may be faster to clone and then update the repository. We will discuss this further when we get to this part of the course
+-   All of the class material (example functions, data, and Quatro presentations from lectures) will be available on the course *github* site. I will update the repository before each class- so make sure you pull before class so you have access to all of the materials.
+
+-   Remember that in *git* does not allow nested repositories - so *clone* the class site somewhere that it will not overlap with other repositories. I recommend that you *fork* the repository so you can modify it and add to it; but keep an upstream remote so you can regularly sync with the class repository.
+
+-   fork the course repo in your GitHub account
+
+-   clone your fork to your computer
+
+-   add upstream remote to original course repo
 
 # ChatGPT and other AI-tools
 
@@ -89,57 +91,85 @@ Other studies show less accuracy...depends on the problem
 
 # Attendance
 
--   you are expected to come to class - its part of the learning (pair-share)
+-   You are expected to come to class - its part of the learning (pair-share)
 
--   some assignments will be started and even completed in class
+-   We will regularly have in-class quizzes - These are not really "quizzes" where you answer is right or wrong. They are designed to help you think through the material and provide feedback to me as the instructor. For each quiz you will get full credit for attempting the question in class.
 
-# Tentative schedule
+-   If you have to miss class, let Ojas and myself know by email
 
-| Week# | Date     | Lecture topics                                |
-|-------|----------|-----------------------------------------------|
-| 1     | Jan 6    | Intro: What is a model                        |
-| 1     | Jan 8    | Conceptual Models                             |
-| 2     | Jan 13   | Building Models                               |
-| 2     | Jan 15   | Informal Sensitivity Analysis                 |
-| 3     | Jan 20   | Multiple Parameter Variation                  |
-| 3     | Jan 22   | Multi-Component Models - Example RHESSys      |
-| 4     | Jan 27   | Formal Sensitivity Analysis                   |
-| 4     | Jan 29   | Sensitivity Analysis Sobol                    |
-| 5     | Feb 3    | Dynamic Models - Analytical Solutions         |
-| 5     | Feb 5    | Dynamic Models - ODE Solver                   |
-| 6     | Feb 10   | Sensitivity with Dynamic Models               |
-| 6     | Feb 12   | Disturbance and Stability with Dynamic Models |
-| 7     | Feb 17   |  2 Variable/Time Series Models                |
-| 7     | Feb 19   | Guest Lecture (Cap)                           |
-| 8     | Feb 24   | 2 Variable and Stability                      |
-| 8     | Feb 26   | What makes a good model                       |
-| 9     | March 3  | Guest Lecture                                 |
-| 9     | March 5  | Calibration                                   |
-| 10    | March 10 | Calibration2                                  |
-| 10    | March 12 | Return to Big Picture                         |
+```{r, sch}
+#| echo: false
+#| message: false
+#| warning: false
 
-{tbl-colwidths="\[4,20,75\]"}
+library(knitr)
+library(kableExtra)
+
+schedule <- data.frame(
+`Week- Lecture#` = c("1-1","1-2","2-3","2-4","3-5","3-6","4-7","4-8","5-9","5-10","6-11","6-12","7-13","7-14","8-15","8-16","9-17","9-18","10-19","10-20"),
+Date = c("Jan 6","Jan 8","Jan 13","Jan 15","Jan 20","Jan 22","Jan 27","Jan 29","Feb 3","Feb 5","Feb 10","Feb 12","Feb 17","Feb 19","Feb 24","Feb 26","March 3","March 5","March 10","March 12"),
+`Lecture topics` = c(
+"Intro: What is a model",
+"Conceptual Models (no discussion)",
+"Building Models",
+"Informal Sensitivity Analysis",
+"Multiple Parameter Variation",
+"Multi-Component Models - Example RHESSys",
+"Formal Sensitivity Analysis",
+"Sensitivity Analysis Sobol (no discussion)",
+"Dynamic Models - Analytical Solutions",
+"Dynamic Models - ODE Solver",
+"Sensitivity with Dynamic Models",
+"Disturbance with Dynamic Models",
+"Using Copilot tools ",
+"Guest Lecture (Cap) (no discussion)",
+"2 Variable and Stability",
+"What makes a good model",
+"Guest Lecture",
+"Calibration",
+"Calibration2",
+"Return to Big Picture"
+),
+Discussion = c("","Free","","Informal Sen","","Building Blocks","","Free","","Sobol Sen","","Output Summary","","Free","","Two-var Stability","","Calibration","",""),
+check.names = FALSE
+)
+
+kable(
+schedule,
+format = "latex",
+booktabs = FALSE,
+align = c("l","l","l","l"),
+caption = "\textbf{Tentative Course Schedule}"
+) |>
+row_spec(0, bold = TRUE) |>
+kable_styling(latex_options = "hold_position")
+```
 
 # Assignments (Tentative Assign/Due Dates)
 
-There are 8 +1(short Q/A) assignments. Some assignments will be done in groups.
+There are 9 assignment + weekly (short) in class quizzes. Some assignments will be done in groups.
 
-| Assign/Due     | Assignment                        |
-|----------------|-----------------------------------|
-| April 1/3      | Getting to know you (Q/A)         |
-| April 5/7      | Conceptual Model                  |
-| April 8/14     | Almond Yield                      |
-| April 15/21    | Informal Sensitivity Analysis     |
-| April 24/1     | Sobel                             |
-| May 6/12       | ODE with Sobel                    |
-| May 13/2       | Two-variable Dynamics             |
-| May 20 or 22/2 | Model Calibration and Uncertainty |
-| May 29/3       | Final Assignment                  |
-|                |                                   |
+See Table Below
+
+| Assign / Due     | Assignment                        | \% of Grade |
+|------------------|-----------------------------------|-------------|
+| Jan 6 / 8        | Getting to know you (Q/A)         | 5           |
+| Jan 8 / 13       | Conceptual Model                  | 10          |
+| Jan 15 / 22      | Almond Yield                      | 10          |
+| Jan 22 / 27      | Almond Sensitivity                | 10          |
+| Jan 29 / Feb 10  | Sobol and Sensitivity             | 10          |
+| Feb 10 / 12      | Dynamic Model and Sensitivity     | 15          |
+| Feb 10 / March 9 | Final Assignment: Model Plan      | 15          |
+| Feb 24 / March 3 | Two-variable Dynamics             | 10          |
+| March 5 / 10     | Model Calibration and Uncertainty | 5           |
+| Throughout       | In-class Quizzes                  | 10          |
+|                  | **Total**                         | **100**     |
 
 Assignments will vary in length but most will be short coding assignments with a 1- paragraph write up.
 
 Assignments will be submitted on [Canvas](https://www.canvas.ucsb.edu/) *Canvas* provides grading rubrics that you may find helpful.
+
+[Here's the link to our courses Canvas site](https://ucsb.instructure.com/courses/30595) We will also use this for announcements
 
 # Protocols and Guidance
 

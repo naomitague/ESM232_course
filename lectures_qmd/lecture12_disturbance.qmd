@@ -398,8 +398,6 @@ sens_forest_C50$S
 
 What if you wanted to take the same amount of carbon each year - what would the model look like?
 
-Think about what you would need to do to make this realistic
-
 ## Fixed Harvest Example {.scrollable}
 
 ```{r fixed, echo=TRUE}
@@ -440,3 +438,7 @@ ggplot(as.data.frame(res), aes(time, carbon)) +
 
 # why this pattern
 ```
+
+Think about what you would need to do to make this realistic
+
+##  {.scrollable}

@@ -1,0 +1,80 @@
+---
+title: "example_cal1"
+format: html
+editor: visual
+---
+
+
+```{r, echo=TRUE, eval=TRUE}
+library(tidyverse)
+library(here)
+
+msage = readRDS(here("Data/msage.RDS"))
+#View(msage)
+
+# first rearrange so we can plot all results
+msagel = msage %>% gather(key="run",value="str", -date, -month, -day, -year, -wy,-obs)
+source(here("R/compute_lowflowmetrics.R"))
+
+# another example using our low flow statistics
+# use apply to compute for all the data
+res = msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% apply(2,FUN=compute_lowflowmetrics, o=msage$obs, month=msage$month, day=msage$day, year=msage$year, wy=msage$wy)
+
+# extract information from the list
+results = as.data.frame(matrix(unlist(res), byrow=T, ncol=4))
+colnames(results)=c("annual_min_err","annual_min_cor", "low_month_err",
+              "low_month_cor")
+
+# interesting to look at range of metrics - could use this to decide on
+# acceptable values
+summary(results)
+
+# graph range of performance measures
+resultsl = results %>% gather(key="metric",value="value")
+ggplot(resultsl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="free")
+
+# how might you pick best parameter sets
+
+```
+
+One option
+
+```{r, echo=TRUE, eval=TRUE}
+
+# pick parameter set with greater low flow month correlation
+
+best_par2 = which.max(results$low_month_cor)
+
+# is it the same as what we got with nse
+
+```
+
+Lets keep all parameters that give reasonable values
+
+```{r, echo=TRUE, eval=TRUE}
+
+# first we need to be able to identify parameter sets in results
+
+ID = msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>%  colnames()
+results$id = ID
+
+# now we can pick only good parameters
+accept_par = subset(results, annual_min_cor > 0.7 & low_month_cor > 0.7 & abs(annual_min_err < 0.2) & abs(low_month_err) < 5)
+nrow(accept_par)
+
+#  plot these to compare with all parameters
+msagel$accept = ifelse(msagel$run %in% accept_par$id, TRUE, FALSE)
+ggplot(subset(msagel, accept), aes(as.Date(date), str))+geom_line()
+
+# or with observed but focus on August flow
+msagel_mth = msagel %>% select(-date,-day) %>%  group_by(month, wy, run, accept) %>% summarise(str=mean(str, na.rm=T), obs=mean(obs, na.rm=T))
+
+# just august flow
+ggplot(subset(msagel_mth,  month==8 & accept),
+       aes(wy, str, group=wy))+geom_boxplot(position="dodge")+
+  geom_point(aes(wy, obs), col="red")+labs(y="Streamflow", x="Date")
+
+mean_august_obs = mean(subset(msagel_mth, month==8)$obs) 
+ggplot(subset(msagel_mth, month==8), aes(accept, str))+geom_boxplot()+
+  geom_hline(yintercept=mean_august_obs, col="red")+labs(y="Streamflow", x="Date")
+```
