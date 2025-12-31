@@ -9,6 +9,18 @@ css: ["slides.css"]
 editor: visual
 ---
 
+# Calibration
+
+choosing parameters based on performance
+
+will be sensitivity
+
+-   parameter sampling
+
+-   performance metric
+
+-   performance context (time period, space.., accuracy of measurements)
+
 ## Approach Summary
 
 -   Generate parameter sets (e.g., Sobol)
@@ -67,7 +79,7 @@ p1=ggplot(subset(msagel, wy == 1970), aes(as.Date(date), str, col=run))+geom_lin
 p1
 
 # lets add observed streamflow
-p1+geom_line(data=subset(msage, wy == 1970), aes(as.Date(date), obs), size=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
+p1+geom_line(data=subset(msage, wy == 1970), aes(as.Date(date), obs), linewidth=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
 
 
 # try another year
@@ -139,13 +151,17 @@ ggplot(resultsl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="
 
 -   what do you care about?
 
--   test that your model captures behavior that you are interessted in
+-   test that your model captures behavior that you are interested in
 
-# Design your own metric
+# Once your have performance
 
-# Assignment
+Standard - pick one set
 
-## One Option
+Issues
+* highly sensitivity to observation error
+* highly sensitivity to performance metric
+* highly sensitivity to observation context (e.g. time period)
+* equifinality (are performance difference really meaningful)
 
 ```{r, echo=TRUE, eval=TRUE}
 
@@ -158,7 +174,64 @@ best_par2 = which.max(results$low_month_cor)
 
 ```
 
-## Parameter Selection {.scrollable}
+## Alternative Create a combined performance measure {.scrollable}
+
+-   combine multiple performance measures into a single one
+
+-  we need to transform error based metrics into 0-1 scale, and make sure better performance is a higher value of the metric
+
+- fix
+    - errors : $L_{err} = 1 - \frac{|err|}{max(|err|)}$
+ 
+- create a general function that will work with any number of metrics   
+    
+```{r, echo=TRUE, eval=TRUE}
+
+comb_metrics = function(metrics, weights) {
+  # how many metrics
+  n_metrics = ncol(metrics)
+  new_metrics = metrics
+  # make sure weights sum to 1
+  if (sum(weights) != 1) {
+ #   return("weights must sum to 1")
+  }
+  #  if err based transform it to 0-1 where positive  is good performance
+  for (i in 1:n_metrics) {
+    if (grepl("err", colnames(metrics)[i])) {
+      # error based metric, transform it
+      new_metrics[,i] = 1 - (abs(metrics[,i]) / max(abs(metrics[,i])))
+    }
+    # else assume correlation based metric already 0-1
+  }
+  
+  # matrix multiplication to get weighted sum
+  combined_metric = as.vector(as.matrix(new_metrics) %*% as.matrix(weights))
+ 
+  # alternatively slower for loop
+#  combined_metric = rep(0, nrow(metrics))
+#  for (i in nrow(new_metrics)) {
+#    for (j in 1:n_metrics) {
+#      combined_metric[i] = combined_metric[i] + weights[j] *   new_metrics[i,j]
+#    }
+# }
+  
+  # return
+  return(combined_metric)
+}
+
+# apply to our results
+weights = c(0.25, 0.25, 0.25, 0.25)
+comb_results = comb_metrics(results[,1:4], weights)
+summary(comb_results)
+
+# for graphing might be useful to add to our results data frame
+results$combined = comb_results
+
+# you can get a sense of how different metrics contribute to combined metric
+ggplot(results, aes(combined, annual_min_cor))+geom_point()+labs(y="Annual Min Correlation", x="Combined Metric")
+```
+
+## Alterantive Parameter Selection {.scrollable}
 
 Lets keep all parameters that give reasonable values
 
@@ -189,3 +262,26 @@ mean_august_obs = mean(subset(msagel_mth, month==8)$obs)
 ggplot(subset(msagel_mth, month==8), aes(accept, str))+geom_boxplot()+
   geom_hline(yintercept=mean_august_obs, col="red")+labs(y="Streamflow", x="Date")
 ```
+
+# Alternatively we could just use our combined metric
+```{r, echo=TRUE, eval=TRUE}
+
+# pick acceptable parameters based on combined metric
+accept_par2 = subset(results, combined > 0.7)
+nrow(accept_par2)
+#  plot these to compare with all parameters
+msagel$accept2 = ifelse(msagel$run %in% accept_par2$id, TRUE, FALSE)
+ggplot(subset(msagel, accept2), aes(as.Date(date), str))+geom_line()
+# or with observed but focus on August flow
+msagel_mth2 = msagel %>% select(-date,-day) %
+%  group_by(month, wy, run, accept2) %>% summarise(str=mean(str, na.rm=T), obs=mean(obs, na.rm=T))
+# just august flow
+ggplot(subset(msagel_mth2,  month==8 & accept2),
+       aes(wy, str, group=wy))+geom_boxplot(position="dodge")
+  geom_point(aes(wy, obs), col="red")+labs(y="Streamflow", x="Date")
+mean_august_obs = mean(subset(msagel_mth2, month==8)$obs)
+ggplot(subset(msagel_mth2, month==8), aes(accept2, str))+geom_boxplot()+
+  geom_hline(yintercept=mean_august_obs, col="red")+labs(y="Streamflow", x="Date")
+```
+
+[Assignment](assignments/Assignment8_Calibration.qmd)

@@ -107,3 +107,5 @@ ggplot(spatial_aver, aes(time, 100 * sqrt(cvar) / cmean)) +
 For the diffusion model that we've been working with
 
 -   Try to create a function that counts how many times (any where in the stream concentrations are above some threshold)
+
+# Questions about dynamic sensitvity assignment?

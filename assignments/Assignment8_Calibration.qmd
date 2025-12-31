@@ -1,0 +1,29 @@
+---
+title: "Assignment 8 Calibration"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+------------------------------------------------------------------------
+
+## Assignment {.scrollable}
+
+For the Sagehen model output and observated streamflow data
+* create a performance metric that focuses on a feature of streamflow other than low flow metrics we looked at in class
+* code that metric as a function
+* apply the metric to the model output
+* pick the 'best' performing parameter set
+* graph the feature of streamflow that you are interested in for:
+  * observed data
+  * best performing parameter set
+  * all parameter sets (as a light grey lines in the background)
+  * all parameter sets whose performance is within 10% of the best performing parameter set (as darker lines in the background)
+
+Submit as pdf (rendered Quarto), R file with your metric function - AND add your parameter set selection this shared spreadsheet 
+
+

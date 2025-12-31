@@ -1,0 +1,13 @@
+---
+title: "discussion_section_stability"
+format: html
+editor: visual
+---
+
+## Thoughts on 2-variable dynamic model assignment
+
+maybe go through an example of correct assignment?
+
+# Calibration
+
+for the low flow metrics used in class - complete the assignment?

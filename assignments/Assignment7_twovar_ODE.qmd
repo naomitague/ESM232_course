@@ -39,7 +39,7 @@ You can assume the following are best guesses of key parameters
 
 rprey=0.95, alpha=0.01, eff=0.6,pmort=0.4, K=2000,
 
-Submit - the Quatro document with your analysis AND a pdf/html version, any R files This should include
+Submit - the Quato document with your analysis AND a pdf/html version, any R files This should include
 
 a)  your hunting model
 
