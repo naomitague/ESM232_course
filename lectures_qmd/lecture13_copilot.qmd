@@ -39,7 +39,6 @@ ggplot(as.data.frame(res), aes(time, carbon)) +
 
 # Adding complexity to your model
 
-
 Think about what you would need to do to make this realistic
 
 (practice playing with simple models)
@@ -50,27 +49,18 @@ Lets also slow harvest rates if forest carbon gets within a safety margin of the
 
 # Adding time-varing inputs to ODE
 
-Requires time varying input
-* no problem
-* make use of *Time* in differential equation function used by ODE
-
+Requires time varying input \* no problem \* make use of *Time* in differential equation function used by ODE
 
 # Case study - semi-arid tropical forest n N-E Brazil
 
+-   Tropical forest in brazil
+-   Fuel wood and charcoal harvesting is widespread
 
-* Tropical forest in brazil
-* Fuel wood and charcoal harvesting is widespread
-
-I downloaded precipitation data from CHIRPS
-(Climate Hazards Group InfraRed Precipitation with Station data)
-- uses a combination of satellite, gauge and model data to estimate precipitation
+I downloaded precipitation data from CHIRPS (Climate Hazards Group InfraRed Precipitation with Station data) - uses a combination of satellite, gauge and model data to estimate precipitation
 
 But to save time - we will just upload saved data set
 
 There are only 20 years - and we want to think about long term growth so we will repeat the data to make a longer time series
-
-
-
 
 ```{r, varyprecip}
 
@@ -114,7 +104,6 @@ ggplot(as.data.frame(res_alt), aes(time, carbon)) +
 # why this pattern
 ```
 
-
 ## Ways to use dynamic models {.scrollable}
 
 *Goal: To provide insight into environmental systems, and how they respond to intervention/disturbance/change..*
@@ -137,69 +126,68 @@ The **WHY** of stability
 
 But the real world is more complex - but we can learn by understanding simpler models
 
+## AI - and modelling
 
+In 2020, test CODEX scored 78% on intro to computing test, in 2023 it scored 98%
 
-## AI - and modellinng
+Other studies show less accuracy...depends on the problem
 
-- whose used Copilot to help me in this course?
+Should we use it? When? How? Why? Why not?
 
-- benefit/costs?
+-   whose used Copilot to help me in this course?
+
+-   benefit/costs?
 
 ## Some thoughful papers for further reading
 
-High level perspective 
+High level perspective
 
-- includes some thoughts on job market preparation 
+-   includes some thoughts on job market preparation
 
-[Communications of the ACM]("../papers/AIinComputingEducation.pdf")
+- [Communications of the ACM](%22../papers/AIinComputingEducation.pdf%22)
 
--  [practical overview/perspective]("../papers/perspectives_ai_coding.pdf")
+-   [Practical overview/perspective](%22../papers/perspectives_ai_coding.pdf%22)
 
-[Recent review on potential harmful consequenses]("../papers/review-of-harms-fromAIcodingedu.pdf")
-
-
-
+- [Recent review on potential harmful consequenses](%22../papers/review-of-harms-fromAIcodingedu.pdf%22)
 
 
 
 ## Example of using Co-pilot
 
-* keep yourself in the "driver's seat" 
+-   keep yourself in the "driver's seat"
 
-* remember that the conceptual map (inverse inference in your head) evolve as you learn 
-  - and some learning happens indirectly through practice
+-   remember that the conceptual map (inverse inference in your head) evolve as you learn
 
+    -   and some learning happens indirectly through practice
 
 # Workflow for Sensitivity Analysis
 
-implement (or identify pre-existing) dynamic model 
-  - function syntax
+implement (or identify pre-existing) dynamic model - function syntax
 
-obtain parameter sets (from sobel or LHS) 
-  - repeat sampling approach for different parameters
+obtain parameter sets (from sobel or LHS) - repeat sampling approach for different parameters
 
-build a function that will extract the information (metrics) you want from your dynamic model (output of the ode)
-  - quick design of the metric you decide on
+build a function that will extract the information (metrics) you want from your dynamic model (output of the ode) - quick design of the metric you decide on
 
-create a data structure to store the metrics for each parameter set 
-    - syntax for doing so
+create a data structure to store the metrics for each parameter set - syntax for doing so
 
 decide on initial conditions and time period over which you will run the model
 
 create a wrapper function
 
-    runs ODE
+```         
+runs ODE
 
-    extracts metrics
+extracts metrics
+```
 
 run wrapper function for each parameter sets
 
 send the metrics data structure back to the sensitivity analysis object (from sobel or LHS)
 
-plot and analyze results
-(syntax of ggplot)
+plot and analyze results (syntax of ggplot)
 
 # Example Develop using Copilot
+
 ```{r stableforestoutline}
 source(here("R/dharvestvary.R"))
 dharvestvary
@@ -346,7 +334,6 @@ sens_harvest_yearsbelowmin$T
 
 
 ```
-
 
 ## Stability {.scrollable}
 

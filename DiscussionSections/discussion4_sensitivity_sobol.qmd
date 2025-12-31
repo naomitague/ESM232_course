@@ -4,6 +4,12 @@ format: revealjs
 editor: visual
 ---
 
+# Give another sobol example
+
+maybe do Sobol for almond profit?
+
+# Guidance on Assignment
+
 ## Recall our model of atmospheric conductance $$
 C_{at} = \frac{v_m}{6.25*{ln(\frac{z_m-z_d}{z_0})}^2}
 $$ $$
@@ -50,6 +56,8 @@ f)  Comment on what this tells you about how atmospheric conductance and its sen
 # Lets put this in context -
 
 Lets use real wind data - from two climate models - compute mean atmospheric conductance -
+
+(need to get this)
 
 So wind now is an input...
 

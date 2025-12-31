@@ -4,6 +4,34 @@ format: revealjs
 editor: visual
 ---
 
+# Almond Yield Assignment
+
+-  
+
+-   here's an example of Almond Yield function
+
+```{r, almondanswer}
+library(tidyverse)
+library(here)
+source(here("R/compute_almond_yield.R"))
+
+# read in climate data
+clim = read.table(here("Data/clim.txt"), header=T)
+
+# run the model
+result = compute_almond_yield(clim)
+
+# look at results
+result
+
+# what does an anomoly mean
+
+
+```
+
+
+
+
 ## Profit Mode {.scrollable}
 
 Any questions from class
@@ -46,7 +74,7 @@ There may be other inputs depending on your profit model
 
 # Construct your profit model
 
-you can work in pairs or on your own
+Work with your partner
 
 # Now put them together
 
@@ -58,6 +86,4 @@ you can work in pairs or on your own
 
 -   graph how profit varies with your parameters
 
-# Ojas will share an example
 
-\`\`\`{r} source("R/compute_almond_yield_anomoly.R")

@@ -46,11 +46,11 @@ Class will include a mix of lectures and in class hands-on examples, using stude
 
 # Computing
 
--   I will assume that everyone has some basic R skills (from ESM 203, ESM 232, MEDS program courses or other courses), including how to use ggplot, and Quatro and build simple functions
+-   I will assume that everyone has some basic R skills (from ESM 203, ESM 232, MEDS program courses or other courses), including how to use git, ggplot, and Quarto and build simple functions
 
 -   Many classes will be working classes so bring laptop to class
 
--   All of the class material (example functions, data, and Quatro presentations from lectures) will be available on the course *github* site. I will update the repository before each class- so make sure you pull before class so you have access to all of the materials.
+-   All of the class material (example functions, data, and Quato presentations from lectures) will be available on the course *github* site. I will update the repository before each class- so make sure you pull before class so you have access to all of the materials.
 
 -   Remember that in *git* does not allow nested repositories - so *clone* the class site somewhere that it will not overlap with other repositories. I recommend that you *fork* the repository so you can modify it and add to it; but keep an upstream remote so you can regularly sync with the class repository.
 
@@ -62,32 +62,39 @@ Class will include a mix of lectures and in class hands-on examples, using stude
 
 # ChatGPT and other AI-tools
 
-[Interesting Paper on AI-tools in Computing Education](https://dl.acm.org/doi/pdf/10.1145/3624720)
+There are pro's and con's to using AI-tools while you are learning
+environmental modeling (coding in general)
+
+We will discuss and make use of these tools later in the course (mid-way)
 
 Tools
 
--   Github Copilot (most widely used by programmers)
+-   Github Copilot (widely used by programmers)
 -   ChatGPT
 
 (both built from CODEX by OpenAI)
 
-In 2020, test CODEX scored 78% on intro to computing test, in 2023 it scored 98%
 
-Other studies show less accuracy...depends on the problem
 
 # Using AI-tools in this course
 
 -   AI-tools great resources but effective use requires understanding how to ask good questions
 
--   Use this course to build that understanding, think about the meta concepts. Ask yourself - What are situations you might apply a technique/idea/concept;
+-   Use this course to build that understanding, think about the meta concepts. 
 
--   You gain skills by **Practicing**
+-  Ask yourself - What are situations you might apply a technique/idea/concept;
+
+-   You gain skills by **Practicing**, so start without AI-tools
 
 -   For assignments/practice
 
-    -   **Always** write the code yourself - but you use AI-tools to help find syntax
-    -   Use AI-tools to explain other peoples code (including class examples)
-    -   Use AI-tools to help interpret error messages
+    -   **Always** write the code yourself - 
+    -   How we will use AI - tools later in the course
+    -   Supportive ways to use AI-tools
+          - use AI-tools to help find syntax
+          - Use AI-tools to explain other peoples code (including class examples)
+          - Use AI-tools to help interpret error messages
+    
 
 # Attendance
 
@@ -117,15 +124,15 @@ Date = c("Jan 6","Jan 8","Jan 13","Jan 15","Jan 20","Jan 22","Jan 27","Jan 29","
 "Multi-Component Models - Example RHESSys",
 "Formal Sensitivity Analysis",
 "Sensitivity Analysis Sobol (no discussion)",
+"Guest Lecture",
 "Dynamic Models - Analytical Solutions",
 "Dynamic Models - ODE Solver",
 "Sensitivity with Dynamic Models",
 "Disturbance with Dynamic Models",
 "Using Copilot tools ",
-"Guest Lecture (Cap) (no discussion)",
 "2 Variable and Stability",
 "What makes a good model",
-"Guest Lecture",
+"Guest Lecture (Cap) (no discussion)",
 "Calibration",
 "Calibration2",
 "Return to Big Picture"
@@ -147,7 +154,7 @@ kable_styling(latex_options = "hold_position")
 
 # Assignments (Tentative Assign/Due Dates)
 
-There are 9 assignment + weekly (short) in class quizzes. Some assignments will be done in groups.
+There are 9 assignment + weekly in class quizzes. Some assignments will be done in groups.
 
 See Table Below
 
@@ -158,7 +165,7 @@ See Table Below
 | Jan 15 / 22      | Almond Yield                      | 10          |
 | Jan 22 / 27      | Almond Sensitivity                | 10          |
 | Jan 29 / Feb 10  | Sobol and Sensitivity             | 10          |
-| Feb 10 / 12      | Dynamic Model and Sensitivity     | 15          |
+| Feb 10 / 17      | Dynamic Model and Sensitivity     | 15          |
 | Feb 10 / March 9 | Final Assignment: Model Plan      | 15          |
 | Feb 24 / March 3 | Two-variable Dynamics             | 10          |
 | March 5 / 10     | Model Calibration and Uncertainty | 5           |

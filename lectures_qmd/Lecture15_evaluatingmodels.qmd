@@ -219,7 +219,7 @@ w8 = readRDS(here("Data/w8.RDS"))
 -   Many parameter sets yield similar performance
 -   Limits confidence in "best" calibration
 
-![Equifinality](img/dottyplots.png){alt="Equifinality"}
+![Equifinality](img/dottyplots.png)
 
 ## Issue with parameter selection
 
@@ -246,6 +246,6 @@ How can we be more robust in parameter selection?
 
 Mean weighted estimate (MWE) - Weighted average of outputs by performance - Produces MWE (Mean Weighted Estimate)
 
-![Equifinality](img/weights.png){alt="Equifinality"}
+![Equifinality](img/weights.png)
 
 ## Example
