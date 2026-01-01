@@ -62,8 +62,7 @@ Class will include a mix of lectures and in class hands-on examples, using stude
 
 # ChatGPT and other AI-tools
 
-There are pro's and con's to using AI-tools while you are learning
-environmental modeling (coding in general)
+There are pro's and con's to using AI-tools while you are learning environmental modeling (coding in general)
 
 We will discuss and make use of these tools later in the course (mid-way)
 
@@ -74,27 +73,24 @@ Tools
 
 (both built from CODEX by OpenAI)
 
-
-
 # Using AI-tools in this course
 
 -   AI-tools great resources but effective use requires understanding how to ask good questions
 
--   Use this course to build that understanding, think about the meta concepts. 
+-   Use this course to build that understanding, think about the meta concepts.
 
--  Ask yourself - What are situations you might apply a technique/idea/concept;
+-   Ask yourself - What are situations you might apply a technique/idea/concept;
 
 -   You gain skills by **Practicing**, so start without AI-tools
 
 -   For assignments/practice
 
-    -   **Always** write the code yourself - 
+    -   **Always** write the code yourself -
     -   How we will use AI - tools later in the course
     -   Supportive ways to use AI-tools
-          - use AI-tools to help find syntax
-          - Use AI-tools to explain other peoples code (including class examples)
-          - Use AI-tools to help interpret error messages
-    
+        -   use AI-tools to help find syntax
+        -   Use AI-tools to explain other peoples code (including class examples)
+        -   Use AI-tools to help interpret error messages
 
 # Attendance
 
@@ -132,7 +128,7 @@ Date = c("Jan 6","Jan 8","Jan 13","Jan 15","Jan 20","Jan 22","Jan 27","Jan 29","
 "Using Copilot tools ",
 "2 Variable and Stability",
 "What makes a good model",
-"Guest Lecture (Cap) (no discussion)",
+"Guest Lecture",
 "Calibration",
 "Calibration2",
 "Return to Big Picture"
