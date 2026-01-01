@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Assignment {.scrollable}
 
 For the Sagehen model output and observated streamflow data
+  [Data/msage.RDS]("../Data/msage.RDS")
 * create a performance metric that focuses on a feature of streamflow other than low flow metrics we looked at in class
 * code that metric as a function
 * apply the metric to the model output
