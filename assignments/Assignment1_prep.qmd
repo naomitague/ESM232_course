@@ -1,6 +1,6 @@
 ---
 title: "Assignment1 - Getting to know you"
-format: pdf
+format: html
 editor: visual
 ---
 

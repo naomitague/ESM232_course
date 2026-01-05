@@ -12,6 +12,9 @@ editor: visual
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# Elements of learning to model
+
+![Modeling Process](img/course-pieces.png)
 
 # Model Goals
 
@@ -19,7 +22,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 [*Estimation/Scenario*]{style="color: green;"} (what might be the consequences of decisions we make about the environment)
 
-[*Communication* ]{style="color: green;"}- contribute to education and broader understanding
+[*Communication*]{style="color: green;"}- contribute to education and broader understanding
 
 # Goals
 
