@@ -17,7 +17,7 @@ editor: visual
 
 You are doing this all the time - there are many reasons to make this process explicit (computer aided modeling)
 
-Thought on inverse inference?
+Inverse inference problem in the context of the environment
 
 Pair-Share
 
@@ -132,11 +132,17 @@ Pop_{\text{newt}} =\;& \beta_0 \\
 \end{aligned}
 \]
 
-# Relationships and Processes {.scrollable}
+## Relationships and Processes {.scrollable}
 
-Can be even more complex - what is connected with what and when
+* Can be even more complex - what is connected with what and when
 
-**Example**
+* What are some time-space relationships we might have to think about?
+
+
+Relationship between the timing of precipitation and newt lifecycle. 
+
+If there is a particular pollution source -  prevailing wind patterns and how long particles stay in the air
+
 \[
 \begin{aligned}
 Pop_{\text{newt}} =\;& \beta_0 \\
@@ -147,12 +153,6 @@ Pop_{\text{newt}} =\;& \beta_0 \\
 &+ \beta_5\,\text{Pollution}
 \end{aligned}
 \]
-
-* What are some time-space relationships we might have to think about?
-
-
-we might have to consider relationship between the timing of precipitation and newt lifecycle. Our if there is a particular pollution source -  prevailing wind patterns and how long particles stay in the air
-
 
 # Composing Diagrams
 
@@ -180,7 +180,7 @@ There are many software tools available for generating conceptual models, I like
 
 ![](img/cmseri.png)
 
-# Conceptual Models: Things to think about {.scrollable}
+## Conceptual Models: Things to think about {.scrollable}
 
 -   What inputs/parameters will influence how a process/mechanism leads to the outputs you are interested in
 
@@ -220,7 +220,7 @@ Useful because the *type* of model will have implications for how you *build* an
 
 # Stochastic - Deterministic
 
-![](img/cm_hydro.gif)
+![stochastic-deterministic](img/cm_hydro.gif)
 
 # Lumped …Spatially distributed
 
