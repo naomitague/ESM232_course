@@ -108,9 +108,9 @@ This is the **MOST** important step
 
 # Inverse Inference Example
 
-A city health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state
+1.A city health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state
 
-An amphibian (salamander or newt) population has declined in the Santa Monica Mountains
+2. An amphibian (salamander or newt) population has declined in the Santa Monica Mountains
 
 Pick one - Quickly summarize what comes to your mind as the in inverse inference (conceptual) model that leads to this finding. Write your answer in Quiz Inverse Inference on Canvas - you are brainstorming here - no need to "research"
 
@@ -132,7 +132,7 @@ Pop_{\text{newt}} =\;& \beta_0 \\
 \end{aligned}
 \]
 
-# Relationships and Processes
+# Relationships and Processes {.scrollable}
 
 Can be even more complex - what is connected with what and when
 
@@ -148,10 +148,8 @@ Pop_{\text{newt}} =\;& \beta_0 \\
 \end{aligned}
 \]
 
-
 * What are some time-space relationships we might have to think about?
 
-# Example answer
 
 we might have to consider relationship between the timing of precipitation and newt lifecycle. Our if there is a particular pollution source -  prevailing wind patterns and how long particles stay in the air
 
@@ -182,7 +180,7 @@ There are many software tools available for generating conceptual models, I like
 
 ![](img/cmseri.png)
 
-# Conceptual Models: Things to think about
+# Conceptual Models: Things to think about {.scrollable}
 
 -   What inputs/parameters will influence how a process/mechanism leads to the outputs you are interested in
 
