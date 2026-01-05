@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Intro
 
-1.  Fill out *Help us get to know you* survey on [Canvas](https://ucsb.instructure.com/courses/19594)
+1.  Fill out *Help us get to know you* survey on Canvas
 
 2.  Listen to *only* timestap 26:27 to 31:22 (basically 5 minutes) of the following blog by Lisa Felman Barrett - a highly cited psychologist
 
