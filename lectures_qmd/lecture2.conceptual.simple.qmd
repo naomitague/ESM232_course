@@ -17,7 +17,7 @@ editor: visual
 
 You are doing this all the time - there are many reasons to make this process explicit (computer aided modeling)
 
-Thought on inverse inference?
+Inverse inference problem in the context of the environment
 
 Pair-Share
 
@@ -108,27 +108,51 @@ This is the **MOST** important step
 
 # Inverse Inference Example
 
-A city health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state
+1.A city health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state
 
-An amphibian (salamander or newt) population has declined in the Santa Monica Mountains
+2. An amphibian (salamander or newt) population has declined in the Santa Monica Mountains
 
 Pick one - Quickly summarize what comes to your mind as the in inverse inference (conceptual) model that leads to this finding. Write your answer in Quiz Inverse Inference on Canvas - you are brainstorming here - no need to "research"
 
-➡️ **Canvas Quiz** \
+➡️ **Canvas Quiz**\
 [Inverse Inference Quiz](https://ucsb.instructure.com/courses/30595/assignments/420117?display=full_width_with_nav)
 
 # Whats in the box
 
 Often more complicated than a simple single equation - such as a multiple regression equation
 
-e.g $Pop_newt = \beta_1 * \beta_2* precipitation + \beta_2*temperature +  \beta_2*presenceof predators + \beta_2*roaddensity + \beta_2*pollutionlevels$
+\[
+\begin{aligned}
+Pop_{\text{newt}} =\;& \beta_0 \\
+&+ \beta_1\,\text{Precipitation} \\
+&+ \beta_2\,\text{Temperature} \\
+&+ \beta_3\,\text{PredatorPresence} \\
+&+ \beta_4\,\text{RoadDensity} \\
+&+ \beta_5\,\text{Pollution}
+\end{aligned}
+\]
 
-So we need to think through relationships - what is connected with what
+## Relationships and Processes {.scrollable}
 
-Example\
-If we think the asthma hospitalization rates are influenced by emission from a new factory some distance away - we might have to consider relationship between the timing of emissions and prevailing wind patterns and how long particles stay in the air
+* Can be even more complex - what is connected with what and when
 
-Why?
+* What are some time-space relationships we might have to think about?
+
+
+Relationship between the timing of precipitation and newt lifecycle. 
+
+If there is a particular pollution source -  prevailing wind patterns and how long particles stay in the air
+
+\[
+\begin{aligned}
+Pop_{\text{newt}} =\;& \beta_0 \\
+&+ \beta_1\,\text{Precipitation} \\
+&+ \beta_2\,\text{Temperature} \\
+&+ \beta_3\,\text{PredatorPresence} \\
+&+ \beta_4\,\text{RoadDensity} \\
+&+ \beta_5\,\text{Pollution}
+\end{aligned}
+\]
 
 # Composing Diagrams
 
@@ -156,7 +180,7 @@ There are many software tools available for generating conceptual models, I like
 
 ![](img/cmseri.png)
 
-# Conceptual Models: Things to think about
+## Conceptual Models: Things to think about {.scrollable}
 
 -   What inputs/parameters will influence how a process/mechanism leads to the outputs you are interested in
 
@@ -196,7 +220,7 @@ Useful because the *type* of model will have implications for how you *build* an
 
 # Stochastic - Deterministic
 
-![](img/cm_hydro.gif)
+![stochastic-deterministic](img/cm_hydro.gif)
 
 # Lumped …Spatially distributed
 
@@ -257,4 +281,4 @@ Think...simple bucket model
 
 # Assignment 2 - Due Jan 13th 8am
 
-[Assignment 2]("../assignments/Assignment2_ConceptualModel.qmd") 
+[Assignment 2]("../assignments/Assignment2_ConceptualModel.html")

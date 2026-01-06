@@ -3,10 +3,17 @@ title: "What is a model?"
 format: 
   revealjs:
     theme: solarized
+    html: true
 editor: visual
 ---
 
+# Elements of learning to model
+
+![Modeling Process](img/course-pieces.png)
+
 # What is a model?
+
+lets start with conceptualization....
 
 The world is complex - models simplify it...so
 
@@ -47,9 +54,22 @@ $P = ET + ΔS + Q$
 
 You are using models all the time - you just don't know it!
 
-# Key challenge what simplification is useful
+## Key challenge: what simplification is useful? {.scrollable}
 
-<img src="img/river_swiss.jpg" width="75%"/> <img src="images/image2-01.png" width="25%"/>
+<div style="display: flex; align-items: center; gap: 1em;">
+
+<div style="flex: 3;">
+<img src="img/river_swiss.jpg" style="width:100%;"/>
+</div>
+
+<div style="flex: 2;">
+<img src="images/image2-01.png" style="width:100%;"/>
+</div>
+
+</div>
+
+Beyond a simple model:  
+**What controls how much water is in this stream?**
 
 # Model Goals
 
@@ -85,7 +105,7 @@ At what times of year, would N-export matter?
 
 ![Example](../lectures/intro_lecture/assets/img/image3.png)
 
-[US EPA Source](http://www.newworldencyclopedia.org/entry/File:Eutrophication.jpg)
+[US EPA Source](http://www.newworldencyclopedia.org/entry/File:Eutrophication.jpg) (hosted by New World Encyclopedia)
 
 # Models for estimation and what if scenarios
 
@@ -131,6 +151,6 @@ Examples?
 
 # For Next Class
 
-[Assignment 1](%22../assignments/Assignment1_prep.qmd%22)
+[Assignment 1]("../assignments/Assignment1_prep.html")
 
 You can find this on Canvas or on Course Github

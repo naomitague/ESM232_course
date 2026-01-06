@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2 - Conceptual Model"
-format: pdf
+format: html
 editor: visual
 ---
 
@@ -8,7 +8,11 @@ editor: visual
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Form groups of 3 With your group, come up with a modeling goal Decide if the goal is understanding,prediction or communication
+Form groups of 3
+
+With your group, come up with a modeling goal
+
+Decide if the goal is understanding,prediction or communication
 
 # To turn in
 
@@ -26,4 +30,4 @@ You can use diagrams.net or any other tool to create the diagram - just make sur
 
 You can create the *pdf* by rendering a quarto document - good practice as we will do this for other assignments in the course
 
-Submit as a Group Assignment for Assignment 2 on Canvas (https://ucsb.instructure.com/courses/30595) by Jan 13th 8am
+Submit as a Group Assignment for Assignment 2 on Canvas by Jan 13th 8am

@@ -54,6 +54,7 @@ Class will include a mix of lectures and in class hands-on examples, using stude
 
 -   Here's the repo "<https://github.com/naomitague/EDS-230-ESM-232-W26.git>"
 
+
 -   Remember that in *git* does not allow nested repositories - so *clone* the class site somewhere that it will not overlap with other repositories. I recommend that you *fork* the repository so you can modify it and add to it; but keep an upstream remote so you can regularly sync with the class repository.
 
 -   fork the course repo in your GitHub account
@@ -203,3 +204,8 @@ Assignments will be submitted on [Canvas](https://www.canvas.ucsb.edu/) *Canvas*
 -   informative variable and function names
 
 -   graphs that are easy to understand (labels, legends, strategic use of color)
+
+-   R code commenting
+
+    - see "papers/comments-guildelines-EDS220.pdf", for recommended practices 
+    
