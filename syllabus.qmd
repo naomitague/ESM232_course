@@ -50,7 +50,9 @@ Class will include a mix of lectures and in class hands-on examples, using stude
 
 -   Many classes will be working classes so bring laptop to class
 
--   All of the class material (example functions, data, and Quato presentations from lectures) will be available on the course *github* site. I will update the repository before each class- so make sure you pull before class so you have access to all of the materials.
+-   All of the class material (example functions, data, and Quarto presentations from lectures) will be available on the course *github* site. I will update the repository before each class- so make sure you pull before class so you have access to all of the materials.
+
+-   Here's the repo "<https://github.com/naomitague/EDS-230-ESM-232-W26.git>"
 
 -   Remember that in *git* does not allow nested repositories - so *clone* the class site somewhere that it will not overlap with other repositories. I recommend that you *fork* the repository so you can modify it and add to it; but keep an upstream remote so you can regularly sync with the class repository.
 
