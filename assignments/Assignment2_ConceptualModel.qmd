@@ -16,11 +16,9 @@ Decide if the goal is understanding,prediction or communication
 
 # To turn in
 
-1.State your modeling goal clearly and precisely and the type of goal (understanding, prediction or communication)
-
-1.  List the key inputs, parameters and outputs (as precisely as possible, think about space and time)
-
-2.  Sketch the underlying conceptual model that would relate inputs/parameters to the outputs
+1.  State your modeling goal clearly and precisely and the type of goal (understanding, prediction or communication)
+2.  List the key inputs, parameters and outputs (as precisely as possible, think about space and time)
+3.  Sketch the underlying conceptual model that would relate inputs/parameters to the outputs
 
 Please submit as a **pdf** document
 

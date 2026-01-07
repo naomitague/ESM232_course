@@ -106,13 +106,15 @@ This is the **MOST** important step
 
 -   How do you "show" what influences an observation/prediction (communication)
 
-# Inverse Inference Example
+# Inverse Inference Example {.scrollable}
 
-1.A city health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state
+1. A city health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state
 
 2. An amphibian (salamander or newt) population has declined in the Santa Monica Mountains
 
-Pick one - Quickly summarize what comes to your mind as the in inverse inference (conceptual) model that leads to this finding. Write your answer in Quiz Inverse Inference on Canvas - you are brainstorming here - no need to "research"
+**Pick one** - Quickly summarize what comes to your mind as the in inverse inference (conceptual) model that leads to this finding. 
+
+Write your answer in Quiz Inverse Inference on Canvas - you are brainstorming here - no need to "research"
 
 ➡️ **Canvas Quiz**\
 [Inverse Inference Quiz](https://ucsb.instructure.com/courses/30595/assignments/420117?display=full_width_with_nav)
@@ -121,7 +123,7 @@ Pick one - Quickly summarize what comes to your mind as the in inverse inference
 
 Often more complicated than a simple single equation - such as a multiple regression equation
 
-\[
+\
 \begin{aligned}
 Pop_{\text{newt}} =\;& \beta_0 \\
 &+ \beta_1\,\text{Precipitation} \\
@@ -130,20 +132,21 @@ Pop_{\text{newt}} =\;& \beta_0 \\
 &+ \beta_4\,\text{RoadDensity} \\
 &+ \beta_5\,\text{Pollution}
 \end{aligned}
-\]
+\
 
-## Relationships and Processes {.scrollable}
-
+## Relationships and Processes 
 * Can be even more complex - what is connected with what and when
 
 * What are some time-space relationships we might have to think about?
+
+## Some possible extensions to conceptual model {.scrollable}
 
 
 Relationship between the timing of precipitation and newt lifecycle. 
 
 If there is a particular pollution source -  prevailing wind patterns and how long particles stay in the air
 
-\[
+\
 \begin{aligned}
 Pop_{\text{newt}} =\;& \beta_0 \\
 &+ \beta_1\,\text{Precipitation} \\
@@ -152,7 +155,17 @@ Pop_{\text{newt}} =\;& \beta_0 \\
 &+ \beta_4\,\text{RoadDensity} \\
 &+ \beta_5\,\text{Pollution}
 \end{aligned}
-\]
+\
+
++ pollution at time lag t-1 weighted by wind direction and speed
+(model of pollution transport)
+
++ $\beta_5$ vulnerability to pollution varies with newt life stage (eggs more vulnerable than adults)
+
++ population age structure (Pop_newt_eggs, Pop_newt_juvenile, Pop_newt_adult) - all varying through time
+
+
+
 
 # Composing Diagrams
 
@@ -160,19 +173,19 @@ Pictorial representation your model and what needs to be included in the model t
 
 There are many software tools available for generating conceptual models, I like
 
-\[Diagrams.net\]{https://www.diagrams.net/}
+[Diagrams.net](https://www.diagrams.net/)
 
-# Example
+# Example of a hydrology model (conceptual diagram)
 
 ![](img/cmhydro.png)
 
 *PhD of Norman Crawford under supervision of Ray K Linsley at Stanford University in 1962*
 
-# Example of a model to classify something
+# Example of a model to classify harzard risk
 
 ![](img/cmclassify.png)
 
-# SERI-Fire
+# Example more complex model - Fire Regime Model
 
 -   More complex model couple sub-models ( may be a loose coupling where users connects submodels)
 
@@ -188,7 +201,7 @@ There are many software tools available for generating conceptual models, I like
 
 -   Are there features of the environment that influence the relationship between input/parameter and output?
 
--   Are there inputs/parameters that you want to include to develop scenarios (things you'd want to 'change')
+-   Are there inputs/parameters that you want to vary across cenarios (things you'd want to 'change')
 
 -   Time and Space (are you looking at a short or long terms behavior? do you care about spatial patterns? at what scale?)
 
@@ -212,13 +225,13 @@ A *useful* classification looks at how models deal with space, time, and process
 
 Useful because the *type* of model will have implications for how you *build* and *use/run* the model
 
-# Stochastic - Deterministic
+## Stochastic - Deterministic
 
 **Stochastic**: Model output is the probability of flood events of a magnitude greater than 500 m3/sec given rainfall probability distribution (artificial or generated from data) for a 100km2 watershed
 
 **Deterministic**: Model output is the depth of flood given a rainfall event of 10cm over a 100km2 watershed
 
-# Stochastic - Deterministic
+## Stochastic - Deterministic
 
 ![stochastic-deterministic](img/cm_hydro.gif)
 
@@ -228,13 +241,12 @@ Useful because the *type* of model will have implications for how you *build* an
 
 **Spatially distributed** - model is applied to different “patches” in space
 
--   spatial units are independent
-
--   spatial units interact with each other
+  * spatial units are independent
+  * spatial units interact with each other
 
 ![](img/spatial.001.png)
 
-# Climate models are good examples
+# Climate models are good examples of spatially distributed models
 
 [source](http://eo.ucar.edu/staff/rrussell/climate/modeling/climate_model_resolution.html)
 
