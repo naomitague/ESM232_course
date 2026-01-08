@@ -56,19 +56,17 @@ You are using models all the time - you just don't know it!
 
 ## Key challenge: what simplification is useful? {.scrollable}
 
-<div style="display: flex; align-items: center; gap: 1em;">
-
-<div style="flex: 3;">
+::::: {style="display: flex; align-items: center; gap: 1em;"}
+::: {style="flex: 3;"}
 <img src="img/river_swiss.jpg" style="width:100%;"/>
-</div>
+:::
 
-<div style="flex: 2;">
+::: {style="flex: 2;"}
 <img src="images/image2-01.png" style="width:100%;"/>
-</div>
+:::
+:::::
 
-</div>
-
-Beyond a simple model:  
+Beyond a simple model:\
 **What controls how much water is in this stream?**
 
 # Model Goals
@@ -151,6 +149,6 @@ Examples?
 
 # For Next Class
 
-[Assignment 1]("../assignments/Assignment1_prep.html")
+[Assignment 1](%22../assignments/Assignment1_prep.html%22)
 
 You can find this on Canvas or on Course Github
