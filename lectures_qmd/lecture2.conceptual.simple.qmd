@@ -108,11 +108,11 @@ This is the **MOST** important step
 
 # Inverse Inference Example {.scrollable}
 
-1. A city health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state
+1.  A city health department observe asthma hospitalization rates in a specific neighborhood hospital are twice as high as average rates in that state
 
-2. An amphibian (salamander or newt) population has declined in the Santa Monica Mountains
+2.  An amphibian (salamander or newt) population has declined in the Santa Monica Mountains
 
-**Pick one** - Quickly summarize what comes to your mind as the in inverse inference (conceptual) model that leads to this finding. 
+**Pick one** - Quickly summarize what comes to your mind as the in inverse inference (conceptual) model that leads to this finding.
 
 Write your answer in Quiz Inverse Inference on Canvas - you are brainstorming here - no need to "research"
 
@@ -124,6 +124,7 @@ Write your answer in Quiz Inverse Inference on Canvas - you are brainstorming he
 Often more complicated than a simple single equation - such as a multiple regression equation
 
 \
+
 \begin{aligned}
 Pop_{\text{newt}} =\;& \beta_0 \\
 &+ \beta_1\,\text{Precipitation} \\
@@ -132,21 +133,23 @@ Pop_{\text{newt}} =\;& \beta_0 \\
 &+ \beta_4\,\text{RoadDensity} \\
 &+ \beta_5\,\text{Pollution}
 \end{aligned}
+
 \
 
-## Relationships and Processes 
-* Can be even more complex - what is connected with what and when
+## Relationships and Processes
 
-* What are some time-space relationships we might have to think about?
+-   Can be even more complex - what is connected with what and when
+
+-   What are some time-space relationships we might have to think about?
 
 ## Some possible extensions to conceptual model {.scrollable}
 
+Relationship between the timing of precipitation and newt lifecycle.
 
-Relationship between the timing of precipitation and newt lifecycle. 
-
-If there is a particular pollution source -  prevailing wind patterns and how long particles stay in the air
+If there is a particular pollution source - prevailing wind patterns and how long particles stay in the air
 
 \
+
 \begin{aligned}
 Pop_{\text{newt}} =\;& \beta_0 \\
 &+ \beta_1\,\text{Precipitation} \\
@@ -155,17 +158,14 @@ Pop_{\text{newt}} =\;& \beta_0 \\
 &+ \beta_4\,\text{RoadDensity} \\
 &+ \beta_5\,\text{Pollution}
 \end{aligned}
+
 \
 
-+ pollution at time lag t-1 weighted by wind direction and speed
-(model of pollution transport)
+-   pollution at time lag t-1 weighted by wind direction and speed (model of pollution transport)
 
-+ $\beta_5$ vulnerability to pollution varies with newt life stage (eggs more vulnerable than adults)
+-   $\beta_5$ vulnerability to pollution varies with newt life stage (eggs more vulnerable than adults)
 
-+ population age structure (Pop_newt_eggs, Pop_newt_juvenile, Pop_newt_adult) - all varying through time
-
-
-
+-   population age structure (Pop_newt_eggs, Pop_newt_juvenile, Pop_newt_adult) - all varying through time
 
 # Composing Diagrams
 
@@ -193,6 +193,10 @@ There are many software tools available for generating conceptual models, I like
 
 ![](img/cmseri.png)
 
+# expansion on one of theh 'boxes'
+
+![](img/RHESSys.png)
+
 ## Conceptual Models: Things to think about {.scrollable}
 
 -   What inputs/parameters will influence how a process/mechanism leads to the outputs you are interested in
@@ -207,15 +211,6 @@ There are many software tools available for generating conceptual models, I like
 
 -   What are some key assumptions?
 
-# Develop a Conceptual Model
-
--   Form groups of 3
--   With your group, come up with a modeling goal
--   Decide if the goal is understanding,prediction or communication
--   Brainstorm on important
-    -   inputs, parameters and outputs
-    -   relationships/processes
-    -   assumptions
 
 # Types of Model
 
@@ -241,8 +236,8 @@ Useful because the *type* of model will have implications for how you *build* an
 
 **Spatially distributed** - model is applied to different “patches” in space
 
-  * spatial units are independent
-  * spatial units interact with each other
+-   spatial units are independent
+-   spatial units interact with each other
 
 ![](img/spatial.001.png)
 
@@ -293,4 +288,15 @@ Think...simple bucket model
 
 # Assignment 2 - Due Jan 13th 8am
 
-[Assignment 2]("../assignments/Assignment2_ConceptualModel.html")
+[Assignment 2](../assignments/Assignment2_ConceptualModel.html)
+
+# Develop a Conceptual Model
+
+-   Form groups of 3
+-   With your group, come up with a modeling goal
+-   Decide if the goal is understanding,prediction or communication
+-   Brainstorm on important
+    -   inputs, parameters and outputs
+    -   relationships/processes
+    -   assumptions
+
