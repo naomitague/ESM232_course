@@ -9,9 +9,9 @@ editor: visual
 
 # Conceptual Model Brainstorming
 
--   Quiz results
+-   Some Results
 
-# How to start - what is my model
+## How to start - what is my model {.scrollable}
 
 -   Clearly define your goal
 
@@ -55,7 +55,7 @@ Estimate the power generated from a reservoir ...
 
 -   **Parameters**: K Efficiency , ρ (density of water), g (acceleration due to gravity)
 
-# Mathematical model (Transfer Function)
+## Mathematical model (Transfer Function) {.scrollable}
 
 P = ρ \* h \* r \* g \* K Efficiency;
 
@@ -68,7 +68,7 @@ P = ρ \* h \* r \* g \* K Efficiency;
 
 Type of model?
 
-# What type of model is this?
+## What type of model is this? {.scrollable}
 
 # Answer:
 
@@ -290,9 +290,68 @@ Place each function in its own file (x.R), and put all functions for a given pro
 
 Some of these options such as whether to plot determine outputs from the function
 
-AND the type of array to determine whether it uses diffuse radiation, these parameters change how the function/model works
+AND the type of array to determine whether it uses diffuse radiation, these parameters change how the function/model works (slightly more complex than homework)
 
-# Solar function example as code
+## Solar function  {.scrollable}
+
+The energy produced by a solar panel system is given by
+
+$$
+E = \sum{A \cdot eff_{adjusted} \cdot solar \cdot PR}
+$$
+
+where:
+
+-   $E$ is the energy produced (kJ/yr),
+-   $A$ is the solar panel area (m$^2$),
+-   $eff_{adjusted}$ submodel - depends on energy
+-   $PR$ is the performance ratio (dimensionless, 0–1), accounting for site-specific losses (typically $\sim 0.75$),
+-   $solar$ is daily solar radiation (kJm$^{-2}/year$).
+
+
+$$
+\mathrm{eff}_{\text{adjusted}} =
+\begin{cases}
+\mathrm{eff}, & \text{if } \mathrm{solar} > e_{\text{thresh}} \\[6pt]
+\mathrm{eff}\, * \max\!\left(0,\dfrac{\mathrm{solar}}{e_{\text{thresh}}}\right),
+& \text{if } \mathrm{solar} \le e_{\text{thresh}}
+\end{cases}
+$$
+
+- $ethresh$ Threshold solar radiation below which energy produced declines
+
+Other parameters that impact model transfer function 
+
+ *  $etype$ what type of radiation can be used, *direct*, or *both*
+
+Models can also have formating options 
+
+  * type of output desired
+  * units
+  * graphs/data structures/data types
+
+## I/O {.scrollable}
+
+*Inputs*
+
+ -  $solar$ - data frame with columns $Kdown_{direct}$, and optionally $Kdown_{diffuse}$ ((kJ m$^{-2}/day$))
+-   $A$ is the solar panel area (m$^2$),
+-   $eff$ efficiency when radiation is above threshold (default 0.8)
+-   $ethresh$ threshold radiation below which efficiency declines linearly (10000 (kWh m$^{-2}$))
+-   $eunits$ desired units for output default "J" Joules, option "W" for Watts
+-   $PR$ is the performance ratio (dimensionless, 0–1), accounting for site-specific losses (typically $\sim 0.75$)
+
+*Formatting inputs*
+
+-  $g$ TRUE/FALSE - True if you want to graph
+-  $clr$ color of line on graph
+
+*Outputs*
+
+-  annual energy produced (kJ/yr or kWhr/year),
+-  optional graphs of energy produced by year
+
+## Solar function example as code  {.scrollable}
 
 Model Code
 
@@ -370,7 +429,7 @@ site1$annual
 
 Explore for next class
 
-# What we are learning so far
+## What we are learning so far {.scrollable}
 
 How to find the "right" tool for the job
 
@@ -380,12 +439,12 @@ How to find the "right" tool for the job
 
 -   Two parts - does it answer your question (conceptual model fit) and does it perform well enough
 
--   Basics of building your own model - modularity, functions, inputs/outputs/parameters - and why you might want to do that
+-   Basics of building your own model - modular, functions, inputs/outputs/parameters 
+    * some parameters impact model transfer function, other I/O formatting
 
-(fix is below)
 
-# Fix
 
+# Answer to visual check {.scrollable}
 ```{r}
 # remove the first year from the dataset
 sierraczosolar <- sierraczosolar %>%
@@ -393,10 +452,9 @@ sierraczosolar <- sierraczosolar %>%
 
 # now run the model again
 site1 <- solarpv(area = 0.1, 
-          solar = sierraczosolar, clr = "green", eunit = "W", g = TRUE)
+          solar = sierraczosolar, clr = "green", eunit = "kW", g = TRUE)
 
 # keep cleaned up data set for future use
-save(sierraczosolar, file="Data/sierraczosolar_clean.rda")
+save(sierraczosolar, file=here("Data/sierraczosolar_clean.rda"))
 
 ```
-

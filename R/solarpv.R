@@ -9,11 +9,11 @@
 #' @param ethresh threshold radiation (kJ/m2) below which efficiency fall to 0
 #' @param g TRUE/FALSE  graph results default=TRUE
 #' @param clr colour of grph default "blue"
-#' @param etype "both" uses both direct and diffuse, "direct' direct only, "diffuse" diffuse only default="both"
+#' @param etype "both" uses both direct and diffuse, "direct' direct only,  only default="both"
 #' @author Naomi
 #' @return annual (power for each year), avg (average power) (see eunits for units)
 
-solarpv <- function(area, eff = 0.8, PR = 0.75, solar, clr = "blue", eunits = "J", etype = "both", g = TRUE, ethresh = 10000) {
+solarpv <- function(area, eff = 0.8, PR = 0.75, solar, clr = "blue", eunits = "kJ", etype = "both", g = TRUE, ethresh = 10000) {
   # calculate total daily energy - depending on whether array can use diffuse
   if (etype == "diffuse") {
     solar$total <- solar$Kdown_diffuse
@@ -28,13 +28,13 @@ solarpv <- function(area, eff = 0.8, PR = 0.75, solar, clr = "blue", eunits = "J
   # array efficiency declines linearly when solar is below a threshold
   # make an internal function to adjust efficiency based on this
 
-  adjusteff <- function(x, ethresh, eff) {
+  effadjusted <- function(x, ethresh, eff) {
     result <- ifelse((x > ethresh), eff * x, x * eff * (max(0, x / ethresh)))
     return(result)
   }
 
   # apply the efficiency function to the solar radiation data
-  solar <- solar %>% mutate(Kadj = adjusteff(total, ethresh = ethresh, eff = eff))
+  solar <- solar %>% mutate(Kadj = effadjusted(total, ethresh = ethresh, eff = eff))
 
 
   # aggregate by year to get annual radiation totals
@@ -45,12 +45,18 @@ solarpv <- function(area, eff = 0.8, PR = 0.75, solar, clr = "blue", eunits = "J
 
   # compute electricity based on annual radiation
   annualsolar$elect <- area * PR * annualsolar$Kadj
-
+  # create a string for the axis label for graphs
   ylbs <- "kJ/yr"
   # unit conversion if needed
-  if (eunits == "W") {
-    annualsolar$elect <- annualsolar$elect * 0.278
-    ylbs <- "Wh/yr"
+  if (eunits == "kWhr") {
+    # recall that a W is a J/s so to go from kJ to kWhr to divide by seconds in hour
+
+    annualsolar$elect <- annualsolar$elect / (3600)  # 3600 seconds in an hour
+    # now we have kWhr but need to get per year */
+    # then to get to kWhr we need to divide by hours in year (24 * 365*/
+    annualsolar$elect <- annualsolar$elect/(24 * 365)
+    # recreate a string for the axis label
+    ylbs <- "kWh/yr"
   }
 
   # plot if users requested
