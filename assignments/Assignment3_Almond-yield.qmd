@@ -8,7 +8,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-#  ASSIGNMENT 2 Almond Yields
+#  ASSIGNMENT 3 Almond Yields
 
 
 Lobell et al., 2006 used data to build models of tree crop yield for California that captured how
@@ -25,7 +25,7 @@ Assumptions...as you work think about what these are...
 # Assignment
 
 
- For this assignment you will work in *pairs*
+For this assignment you will work in *pairs*
 
 Your goal is to implement a simple model of almond yield anomaly response to climate
 
@@ -90,7 +90,7 @@ I will tell you that
 
 #  Notes
 
-We will build on this in next Thursday's class 
+
 
 * There are always multiple ways to code something in R;
 
@@ -105,9 +105,10 @@ We will build on this in next Thursday's class
 Two separate files (or a link to a repository with these files)
 
 1. a R file that has your function definition
-2. a Rmarkdown file that includes your conceptual model (embed as picture) and
+2. a pdf that includes your conceptual model (embed as picture), your workflow for running the model and
 shows how you applied the function to the test climate data (*clim.txt*)
 
+Due January 22 8am50
 # Grading Rubric
 
 Conceptual model (20 pts)

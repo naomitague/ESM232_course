@@ -3,3 +3,30 @@ h1 { color: #0072B2; }  /* Dark Blue */
 h2 { color: #D55E00; }  /* Vermilion */
 h3 { color: #009E73; }  /* Dark Green */
 h4, h5, h6 { color: grey; }
+
+
+.reveal .concept-box {
+  background-color: #eee8d5;      /* base2 */
+  border-left: 6px solid #268bd2; /* blue */
+  color: #586e75;                 /* base01 */
+  padding: 0.8em 1em;
+  margin-bottom: 1em;
+  border-radius: 6px;
+  font-size: 0.95em;
+  line-height: 1.35;
+}
+
+/* Emphasize labels but keep Solarized subtle */
+.reveal .concept-box strong {
+  color: #073642;                 /* base02 */
+}
+
+/* Lists inside the box */
+.reveal .concept-box ul {
+  margin-top: 0.4em;
+}
+
+/* Optional: slightly different tone for scrollable slides */
+.reveal .scrollable .concept-box {
+  background-color: #fdf6e3;      /* base3 */
+}

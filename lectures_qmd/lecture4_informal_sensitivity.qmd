@@ -4,6 +4,7 @@ format:
   revealjs:
     theme: solarized
     resources: ["img/"]
+    css: lecture.css
 editor: visual
 ---
 
@@ -18,9 +19,62 @@ library(ggpubr)
 library(here)
 ```
 
-# Questions?
 
-# Solar PV Model Review
+
+## What we are learning so far {.scrollable}
+
+How to find the "right" tool for the job
+
+-   The importance of establishing a goal and a conceptual model - because all models are simplifications of reality
+
+-   Identify model types - helps you to find the "right" tool for your question (we will expand on this)
+
+-   Two parts - does it answer your question (conceptual model fit) and does it perform well enough
+
+-   Basics of building your own model - modular, functions, inputs/outputs/parameters
+
+    -   some parameters impact model transfer function, other I/O formatting
+
+# Answer to visual check 
+
+# My code to find issue and clean data {.scrollable}
+
+```{r}
+
+library(tidyverse)
+library(here)
+
+source(here("R/solarpv.R"))
+
+
+# Read in some data
+# read in R formatted data
+load(here("Data/sierraczosolar.rda"))
+
+# run model and plot
+solarpv(area = 0.1, solar = sierraczosolar, 
+        clr = "green", eunit = "kWhr", g=TRUE)
+
+# notice very low power in the first year
+# check input data
+head(sierraczosolar)
+
+# remove the first parital year from the dataset
+sierraczosolar <- sierraczosolar %>%
+  filter(year > 1944 & year < 1954)
+
+# now run the model again
+site1 <- solarpv(area = 0.1, 
+          solar = sierraczosolar, clr = "green", eunit = "kW", g = TRUE)
+
+# keep cleaned up data set for future use
+save(sierraczosolar, file=here("Data/sierraczosolar_clean.rda"))
+
+```
+
+## Solar PV Model Review {.scrollable}
+
+Any questions about the function
 
 ```{r solar, echo=TRUE}
 
@@ -32,11 +86,12 @@ load(here("Data/sierraczosolar_clean.rda"))
 
 
 # run the model to check that everything works
-site1 <- solarpv(area = 0.1, solar = sierraczosolar, clr = "green", eunit = "W")
+site1 <- solarpv(area = 0.1, solar = sierraczosolar)
 ```
 
-# Playing with models {.scrollable}
+## Playing with models {.scrollable}
 
+::: {.concept-box}
 We often build models to try different options
 
 **Model inputs**: solar radiation (daily direct and diffuse)
@@ -44,25 +99,38 @@ We often build models to try different options
 **Model outputs**: power generated each year and average power over time
 
 **Parameters**: panel efficiency, system performance, units, type of array (uses diffuse or not), plot Y/N
+:::
+
+How would a lower efficiency impact mean power generated?
+
+*eff* – 0.6 instead of default 0.8  
+
+try it
+
+## Code - Try a different parameter set {.scrollable}
 
 ```{r, echo=TRUE}
-# consider a different PV array that only uses
-# diffuse and has non standard efficiency (0.6)
+# consider a different PV array has a non standard efficiency (0.6)
 site2 <- solarpv(area = 0.1, 
-        solar = sierraczosolar, clr = "green", 
-        eunit = "W", g = FALSE, eff = 0.6, etype = "direct")
+        solar = sierraczosolar, g = FALSE, eff = 0.6)
 site2$mean
 
 # Compare with previous site
 site1$mean
 site2$mean
+
+# relative difference
+(site2$mean-site1$mean)/site1$mean * 100
+
+# relative difference in parameter
+(0.6-0.8)/0.8 * 100
 ```
 
-Try changing an input and see what you get!
 
-# Informal Sensitivity Analysis {.scrollable}
+## Informal Sensitivity Analysis {.scrollable}
 
 What happens when we vary parameters?
+  * Not always obvious when transfer function is non-linear or multi-part
 
 **Informal** - just try varying parameters
 
@@ -103,12 +171,14 @@ How important is this parameter to the results?
 
 How we do this depends on what we know about efficiency
 
--   manufacturer reports mean and standard deviation\*
+-   manufacturer reports mean and standard deviation
 -   manufacturer provides a range
 
 Mean 0.6 standard deviation of 0.1
 
-# R code
+## R code {.scrollable}
+
+Lets do this together
 
 ```{r sen1, eval=T, echo=TRUE}
 library(tidyverse)
@@ -124,7 +194,7 @@ eff <- rnorm(mean = 0.6, sd = 0.1, n = 20)
 
 site2 <- eff %>% map(~ solarpv(area = 0.1, 
   solar = sierraczosolar, clr = "green", 
-  eunit = "W", g = FALSE, etype = "direct", eff = .x))
+  eunit = "kWhr", g = FALSE, etype = "direct", eff = .x))
 
 head(site2)
 ```
@@ -138,12 +208,13 @@ head(site2)
 -   R often returns lists - but not so easy for organization
 
 -   ask yourself what you want to do with the data, then put in a structure that will make this easy
+  -  a data frame is often the best structure for graphing
 
 -   e.g two different data frames
 
     -   plot variation in mean annual electricity by *eff*
     -   plot variation in each year due to variation in *eff*
-    -   a data frame is often the best structure for graphing
+   
 
 ```{r sen1b, eval=T}
 
@@ -152,6 +223,7 @@ head(str(site2))
 # just the annual data (not the mean annual time series), and then reformat as a data frame with nice column names
 tmp <- map_dfr(site2, `[`, c("annual"))
 
+# convert from tibble to a data frame
 site2df <- data.frame(year = tmp$annual$year, elect = tmp$annual$elect)
 head(site2df)
 ```
@@ -181,14 +253,20 @@ WHY: If you want the one number that is the "best guess" given uncertainty
 # now we could plot
 ggplot(site2df, aes(year, elect, group = year)) +
   geom_boxplot() +
-  labs(y = "Electricity generated in W")
+  labs(y = "Electricity generated in kWhr")
 ```
 
-## Add an average line
+## Add an average or median line
 
-Why?
+**Why?**
 
-```{r sen2b, eval=T, echo=TRUE}
+- Summarizes parameter uncertainty  
+- Highlights interannual trends  
+- Easier comparison across years
+
+## Plot {.scrollable}
+
+```{r sen2b,  eval=TRUE, echo=TRUE}
 # we also might want an average across parameter uncertainty
 site2_average <- site2df %>%
   group_by(year) %>%
@@ -198,7 +276,7 @@ site2_average <- site2df %>%
 ggplot(site2df, aes(year, elect, group = year)) +
   geom_boxplot() +
   labs(y = "Electricity in W") +
-  geom_line(data = site2_average, aes(year, elect, group = 1), col = "orange")
+  geom_line(data = site2_average, aes(year, elect, group = 1), col = "orange", lwd=2)
 ```
 
 ## How does efficiency impact mean annual electricity estimate {.scrollable}
@@ -226,13 +304,13 @@ site2_mean <- data.frame(eff = eff, elect = tmp)
 
 ```{r sene2, eval=T, echo=TRUE}
 ggplot(site2_mean, aes(y = mean)) +
-  geom_boxplot() +
-  labs(x = "Electricity in W")
+  geom_boxplot(fill="yellow") +
+  labs(y = "Electricity in kWhr")
 
 # or to see what the sensitivity looks like
 ggplot(site2_mean, aes(eff, mean)) +
-  geom_point() +
-  labs(y = "Electricity in W", x = "Solar Efficiency")
+  geom_point(size=2, col="orange") +
+  labs(y = "Electricity in kWhr", x = "Solar Efficiency")
 
 # my best guess
 mean(site2_mean$mean)
