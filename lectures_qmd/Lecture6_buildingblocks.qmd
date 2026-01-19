@@ -51,6 +51,7 @@ Whats nice about boxes
 Full picture of power options
 
 -   run *compute_profit_frompower* for both hydro and solar power
+    - (loosely coupled models)
 
 -   include informal parameter uncertainty analysis
 
@@ -71,6 +72,12 @@ Notice that we can 're-use' our functions such as *compute_profit_frompower* for
 Lets generate some example output for our reservoir model
 
 In "real" application we'd have flow and height measurement here we will generate by sampling (think of it as test data)
+
+* we have measurements that tell us heights normally distributed with mean 10m and standard deviation 0.1m
+
+* we have measurements that tell us flow rates uniformly distributed between 0.1 and 0.3 m3/s
+
+* reserovir efficiency varies uniformly from 0.4 to 0.7
 
 ## Code {.scrollable}
 
@@ -99,13 +106,13 @@ reservoir_model_res <- as.data.frame(matrix(nrow = number_years, ncol = 3))
 colnames(reservoir_model_res) <- c("height", "flow", "power")
 
 # Step 2 - generate heights and flow rates
-reservoir_model_res$height <- rnorm(mean = 10, sd = 1, n = number_years)
+reservoir_model_res$height <- rnorm(mean = 15, sd = 3.5, n = number_years)
 
-reservoir_model_res$flow <- runif(min = 0.1, max = 1, n = number_years)
+reservoir_model_res$flow <- runif(min = 0.001, max = 0.3, n = number_years)
 
 # Step 3 - generate uncertainty due to reservoir efficiency, lets assume that
 # we know its somewhere between 0.4 and 0.7
-Keff <- runif(min = 0.4, max = 0.7, n = 20)
+Keff <- runif(min = 0.5, max = 0.7, n = 20)
 
 # Step 3 - apply model to get power for each height, flow rate (each year), across
 # uncertainty in efficiency
@@ -125,9 +132,24 @@ reservoir$year <- profit_solar$year
 # reorganize for easier analysis
 reservoirg <- as.data.frame(reservoir) %>% pivot_longer(!year, names_to = "Keff", values_to = "power")
 head(reservoirg)
+```
+
+# Now like we did for solar....
+
+```{r powerprofit, echo=TRUE}
+
+source(here("R/compute_NPV.R"))
+source(here("R/compute_profit_frompower.R"))
+
+best_guess_price <- 0.3  # $/kWh
+best_guess_discount <- 0.04  # 4%
+
+compute_profit_frompower
+
 
 # create profit from hydro
-profit_hydro <- compute_profit_frompower(energy = reservoirg$power, year = reservoirg$year, price = 30, discount = 0.04)
+profit_hydro <- compute_profit_frompower(energy = reservoirg$power, year = reservoirg$year, price = best_guess_price, discount =best_guess_discount)
+compute_NPV
 
 names(profit_hydro)
 ```
@@ -139,11 +161,23 @@ names(profit_hydro)
 ggplot(profit_hydro, aes(as.factor(year), netpre, group = year)) +
   geom_boxplot() +
   labs(y = "Net Present Value of Power in 1945 Dollars", x = "Year")
+
+
 ```
 
 ## Compare Profit from hydro/reservoir with solar {.scrollable}
 
-we now have profit_hydro and profit_solar
+
+```{r quicksum}
+
+mean(profit_hydro$netpre)
+mean(profit_solar$netpre)
+
+```
+
+Hydro wins? Right?
+
+# Comparison taking into account uncertainty
 
 ```{r power2, echo=TRUE}
 
@@ -171,6 +205,26 @@ ggplot(tmp, aes(as.factor(year), netpre, fill = etype)) +
   scale_fill_manual(values = c("blue", "orange"))
 ```
 
+## How might we quantify uncertainty
+
+-   look at spread of net present values 
+
+## What we discovered
+
+While hydro profits are higher - they are more uncertain
+
+What would you chose?
+
+What would a manager chose?
+
+
+Note - we considered uncertainty in just a few parameters
+Would accounting for uncertainty in price change our analysis? How?
+
+If we wanted to reduce uncertainty in hydro profits - what measurements would we make?
+(or what parameter might we focus on?) How would we figure that out?
+(something to think about)
+
 # Summary {.scrollable}
 
 -   we built a multi component model to compare profit from two different power sources
@@ -179,80 +233,8 @@ ggplot(tmp, aes(as.factor(year), netpre, fill = etype)) +
 
 -   we included parameter uncertainty analysis to see how that impacted our profit estimates
 
-## What you can know about sensitivity before informal/formal sensitivity analysis {.scrollable}
+- we saw how data organization is an important part of informal sensitivity analysis to make it easier to graph and analyze results
 
--   Parameter interactions are *evident* in the equations
-
-Recall our reservoir model
-
--   **Input**: Reservoir height and flow rate
-
--   **Output**: Instantaneous power generation (W/s)
-
--   **Parameters**: K (efficiency) , ρ (density of water), g (acceleration due to gravity)
-
-P = ρ \* h \* r \* g \* K
-
--   P is Power in watts,
--   ρ is the density of water (\~1000 kg/m3)
--   h is height in meters,
--   r is flow rate in cubic meters per second,
--   g is acceleration due to gravity of 9.8 m/s2,
--   K Efficiency is a coefficient of efficiency ranging from 0 to 1.
-
-<span style="color: blue;"> The "effect" of **K** (efficiency) will depend on the other parameters
-
-A 1% change in **K** will lead to a 1% change in Power
-
-<span style="color: blue;"> How much Power (magnitude) will change with an increase **K** will depend on value of other parameters and inputs
-
-So you could say that Power is more sensitive to efficiency for larger flow rates or larger heights, We know this because the are multiplied together!
-
-## Some code to convince you of this {.scrollable}
-
-```{r simplex}
-# lets look at the power generation function
-source(here("R/power_gen.R"))
-Power_K1 <- power_gen(height = 2, flow = 4, K = 0.1, g = 9.8)
-Power_K1
-Power_K2 <- power_gen(height = 2, flow = 4, K = 0.2, g = 9.8)
-Power_K2
-
-# if you double K, you will double power (linear response)
-# relative change in power
-0.1 * 2
-
-Power_K1 * 2
-
-Power_K2 / Power_K1
-```
-
-##  {.scrollable}
-
-*Because* the equation is just multiplying factors
-
--   Relative change is the same as the change in efficiency (K)
--   Absolute change in power with change in efficiency depends on other parameters
-
-So what happens to sensitivity if height is 3 instead of 2
-
-```{r simplex2}
-# absolute change in power depends on other parameters/inputs
-# absolute change in pawer or magnitude of the change in power with change in efficiency (difference)
-Power_K2 - Power_K1
-
-# if height is 3 instead of 2
-Power_K1 <- power_gen(height = 3, flow = 4, K = 0.1, g = 9.8)
-Power_K1
-Power_K2 <- power_gen(height = 3, flow = 4, K = 0.2, g = 9.8)
-Power_K2
-
-# Power still doubles (relative change is the same)
-Power_K1 * 2
-
-# But absolute change is greater
-Power_K2 - Power_K1
-```
 
 ##  {.scrollable}
 
