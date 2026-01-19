@@ -53,8 +53,6 @@ solarpv <- function(area, eff = 0.8, PR = 0.75, solar, clr = "blue", eunits = "k
 
     annualsolar$elect <- annualsolar$elect / (3600)  # 3600 seconds in an hour
     # now we have kWhr but need to get per year */
-    # then to get to kWhr we need to divide by hours in year (24 * 365*/
-    annualsolar$elect <- annualsolar$elect/(24 * 365)
     # recreate a string for the axis label
     ylbs <- "kWh/yr"
   }

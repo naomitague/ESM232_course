@@ -18,6 +18,13 @@ library(ggpubr)
 library(here)
 ```
 
+
+## This week 
+
+* before we get to formal sensitivity anbalysis
+
+  * a bit more practice on data manipulation as part of sensitivity analysis
+  * making slightly more complex models by adding 'boxes' or submodels
 ## Combined sensitivity analysis
 
 -   *eff*
@@ -64,7 +71,7 @@ load(here("Data/sierraczosolar_clean.rda"))
 # generate samples for both parameters
 nsamples <- 300
 deviation <- 0.15
-base_thresh <- 10000
+base_thresh <- 20000
 ethresh <- runif(
   min = base_thresh - deviation * base_thresh,
   max = base_thresh + deviation * base_thresh, n = nsamples
@@ -122,26 +129,72 @@ What does looking at these graphs tell you?
 
 There is **uncertainty** in annual electricity due to both parameters and variation across years **sensitivity** to climate
 
-So lets plot that
+For complex model outputs and multiple parameters, data structures for analysis and visualization can be tricky - two useful options
+  1. Reduce output dimensionality - summarize output
+      e.g mean annual electricity - one value per parameter set
+  2. To deal with multiple parameter, add a "key" to identify parameter set - e.g. run number
+      .e.g we will use a parameter id to do this
+  
 
 ```{r annual_uncertainty, echo=TRUE}
 
 # extract annual
 # plot total uncertainty due to both parameters
-tmp <- map_df(results, `[`, c("annual"))
-solar_annual_elect <- as.data.frame(tmp$annual$year)
-colnames(solar_annual_elect) <- "year"
-solar_annual_elect$elect <- tmp$annual$elect
-# save this model output for next lecture
-save(solar_annual_elect, file = here("Data/annual_elect_solar.rda"))
+tmp <- map_df(results, `[`, c("annual"), .id ="parm_id")
+head(tmp)
+
+# turn into a data frame and clean up column names
+solar_annual_elect <- tmp %>% unnest(annual) %>% mutate(
+      year = as.numeric(year),
+  elect = as.numeric(elect),
+  parm_id = parm_id
+)
+ 
 
 p1 = ggplot(solar_annual_elect, aes(year, elect, group = year)) +
   geom_boxplot() +
-  labs(y = "Electricity generated in W")
+  labs(y = "Electricity generated in kWhr", x = "Year")
 p1
+
+# now we can link with parameters, 
+head(parms)
+
+# add the id - remember that pmap would have used the order in parms
+# lets make it character so it matches data type of solar_annual_elect$parm_id
+parms$parm_id = as.character(1:nrow(parms))
+
+
+# now we can join
+solar_annual_elect2 <- solar_annual_elect %>%
+  left_join(parms, by = "parm_id")
+
+
+# plot sensitivity to one parameter across years
+p2 = ggplot(solar_annual_elect2, aes(year, elect, col=eff)) +
+  geom_point() +
+  labs(y = "Electricity generated in kWHr", x = "Year")
+p2
+# or look at each year
+p3 = ggplot(solar_annual_elect2, aes(eff, elect, col=ethresh)) +
+  geom_point() + facet_wrap(~year) +
+  labs(y = "Electricity generated in kWHr", x = "Efficiency")
+p3
+
+# save this model output for next lecture
+save(solar_annual_elect, file = here("Data/annual_elect_solar.rda"))
+
 ```
 
 Is variation due to years big or small relative to parameter uncertainty?
+
+# Data structure and Data Manipulation
+
+being able to create data structures to do what you want with model output
+
+
+
+  
+  
 
 ## Sensitivity to two different parameters
 
@@ -152,6 +205,7 @@ Is variation due to years big or small relative to parameter uncertainty?
 ## Additional notes {.scrollable}
 
 Using a *For* Loop for sensitivity analysis
+
 
 ```{r yearsensitivity, echo=TRUE}
 # using a for loop
@@ -207,102 +261,89 @@ Real world examples Quiz:
 
 Think of a research question, and imagine you are using a model to answer it - you don't have to know the details of the model - but think of a parameter that you might want to vary to see how it influences model outputs- Note if its due to uncertainty in that parameter or because you are exploring scenarios - how might you define uncertainty
 
-# ASSIGNMENT 2 Almond Yields
 
-Lobell et al., 2006 used data to build models of tree crop yield for California that captured how climate variation (place and time) might influence yield
 
--   Yield anomaly
+# Building models with blocks
 
--   Climate variables
+Functions can always embed other functions - and in models the output of one model may be the input to another
 
-Assumptions...as you work think about what these are...
+-   loosely coupled models - output from one becomes input the other, but this step is necessarily automatic
+-   fully coupled - models exchange input and outputs (feedback systems) inside a larger wrapper model (think of it as the *meta* model)
 
-# Assignment
+## Example of a loosely coupled model
 
-For this assignment you will work in *pairs*
+Generating profit from power generation
 
-Your goal is to implement a simple model of almond yield anomaly response to climate
+Will allow us to compare profits from solar and reservoir power generation
 
--   Inputs: daily times series of minimum, maximum daily temperatures and precipitation
+First step: diagram of our model
 
--   Outputs: maximum, minimum and mean yield anomoly for a input time series
+```{r  out.width="75%", out.height="75%", echo=FALSE }
+library(knitr)
+include_graphics(here("lectures_qmd/img/power_comparison_figure.jpeg" ))
+```
 
-The Lobell et al. 2006 paper will be the source for the transfer function that you will use in your model; specifically look at the equations in table 2.
+## Defining our boxes/submodels {.scrollable}
 
-# What you will do - Model Set Up
+To start - lets create what we need to compute net present value of profit from power generated for multiple years
 
-1.  Draw diagram to represent your model - how it will translate inputs to outputs, with parameters that shape the relationship between inputs an outputs - on your diagram list what your inputs, parameters and outputs are with units
+We can re-use this to compute profit for power from either source
 
-2.  Implement your diagram as an R function
+-   compute_profit_frompower.R
 
-Here are some ideas to think though. The climate data is going to need to be processed (e.g note that the model uses climate data from a particular month - you have ALL of the climate as daily data). Here are two possible model outlines to follow
+The profit function also 'calls' another function to compute net present value
 
-● Almond_model \<- function(clim_var1, clim_var2, parameters){……}
+-   compute_NPV
 
-● Almond_model \<- function(clim, parameters){……}
+    -   inputs: value, time, discount rate
 
-The first example is where the climate variables are separately input into the function - climate data is processed beforehand as part of model set up
+    -   output net present value of input value provide as some time in the future
 
-The second is where a climate data frame is the input to the function and you extract the useful data from it as part of the model.
+-   compute_profit_frompower
 
-You can pick which option you prefer (or try both) If you want a coding challenge, you could create a model that works for any crop
+    -   inputs: energy, year (energy was produced in) price, discount rate
+    -   outputs: single dataframe with columns for
+        -   energy
+        -   year
+        -   net (profit from energy in that year)
+        -   netpre (net present value of that profit)
 
-# Run the model
+```{r valuep, echo=TRUE}
+source(here("R/compute_NPV.R"))
+source(here("R/compute_profit_frompower.R"))
 
-3.  Run your model for the **clim.txt** data that is posted on Canvas,
+compute_profit_frompower
 
-**clim.txt** has the following columns
+compute_NPV
 
-these 4 columns tell you when climate observations were made
+# use output from our solar model as input to profit
+# See previous lecture4_informal_sensitivity.qmd  or informal_sensitivity.qmd
+load(here("Data/annual_elect_solar.rda"))
+head(solar_annual_elect)
 
--   *day*
--   *month*
--   *year*
--   *wy* (water year)
+profit_solar <- compute_profit_frompower(
+  energy = solar_annual_elect$elect,
+  year = solar_annual_elect$year,
+  price = 30, discount = 0.04
+)
 
-the next 3 columns are the climate observations
+head(profit_solar)
 
--   maximum (*tmax_c*) daily temperature
--   minimum (*tmin_c*) daily temperature
--   precipitation (*precip*) on that day in mm
+profit_solar <- subset(profit_solar, year > 1944)
 
-# check your work
+ggplot(profit_solar, aes(as.factor(year), netpre, group = year)) +
+  geom_boxplot() +
+  labs(y = "Profit in current $", x = "Year")
+```
 
-I will tell you that
+# Look at some of the building blocks
 
--   the maximum almond yield anomaly should be approximately 1920 ton/acre
--   the lowest almond yield anomaly should be approximately -0.027 ton/acre
--   the mean almond yield anomaly should be approximately 182 ton/acre
+-   read through compute_NPV.R
+-   read through compute_profit_frompower.R
 
-# Notes
+Notice that compute_profit_frompower uses compute_NPV (so you need to carry over parameters)
 
-We will build on this in next Thursday's class
+What if price increased by a % each year? How would you modify **compute_profit_frompower** to account for that? Or alternatively - what if you wanted to input a different price for each year?
 
--   There are always multiple ways to code something in R;
+With a partner try it...
 
--   Remember that we want to strive for our code being as simple and streamline as possible.
-
--   Style counts.
-
-    -   Make sure you choose meaningful variable names and add comments.
-    -   Include comments at the top of the function to tell the user what the inputs/outputs are and their units and format.
-
-# What to hand in on Canvas
-
-Two separate files (or a link to a repository with these files)
-
-1.  a R file that has your function definition
-2.  a Rmarkdown file that includes your conceptual model (embed as picture) and shows how you applied the function to the test climate data (*clim.txt*)
-
-# Grading Rubric
-
-Conceptual model (20 pts)
-
--   a clear diagram that corresponds with your R function (10 pts)
--   inputs and output and parameters shown on the diagram (10 pts)
-
-R Implementation (30 pts)
-
--   correct function implementation (\*.R file) (10 pts)
--   application of the function to **clim.txt** (in Rmarkdown file) (10 pts)
--   coding practices (clear documentation, informative variables names) (10 pts)

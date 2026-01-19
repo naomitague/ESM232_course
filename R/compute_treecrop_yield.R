@@ -17,7 +17,12 @@
 compute_treecrop_yield <- function(clim, Tmin_month_coeff, Tmax_month_coeff, Precip_month_coeff, Precip_month_coeff2, Intercept, crop = "Almond") {
   # extracted required climate variables
 
-  crop_index <- case_when(crop)
+  crop_index <- case_when(crop) {
+    crop == "Almond" ~ 1.0
+    crop == "Walnut" ~ 0.8
+    crop == "Pistachio" ~ 0.6
+    TRUE ~ 1.0
+  }
 
   clim_month_allyears <- clim %>%
     group_by(month, year) %>%

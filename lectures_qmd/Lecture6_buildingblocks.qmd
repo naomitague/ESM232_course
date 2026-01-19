@@ -20,10 +20,6 @@ library(here)
 
 # Building models with blocks
 
-Functions can always embed other functions - and in models the output of one model may be the input to another
-
--   loosely coupled models - output from one becomes input the other, but this step is necessarily automatic
--   fully coupled - models exchange input and outputs (feedback systems) inside a larger wrapper model (think of it as the *meta* model)
 
 ## Example of a loosely coupled model
 
@@ -31,76 +27,24 @@ Generating profit from power generation
 
 Will allow us to compare profits from solar and reservoir power generation
 
-First step: diagram of our model
+Recall diagram of our model
 
 ```{r  out.width="75%", out.height="75%", echo=FALSE }
 library(knitr)
 include_graphics(here("lectures_qmd/img/power_comparison_figure.jpeg" ))
 ```
 
-## Defining our boxes/submodels {.scrollable}
+## Our submodels {.scrollable}
 
-To start - lets create what we need to compute net present value of profit from power generated for multiple years
-
-We can re-use this to compute profit for power from either source
-
--   compute_profit_frompower.R
-
-The profit function also 'calls' another function to compute net present value
-
--   compute_NPV
-
-    -   inputs: value, time, discount rate
-
-    -   output net present value of input value provide as some time in the future
-
--   compute_profit_frompower
-
-    -   inputs: energy, year (energy was produced in) price, discount rate
-    -   outputs: single dataframe with columns for
-        -   energy
-        -   year
-        -   net (profit from energy in that year)
-        -   netpre (net present value of that profit)
-
-```{r valuep, echo=TRUE}
-source(here("R/compute_NPV.R"))
-source(here("R/compute_profit_frompower.R"))
-
-compute_profit_frompower
-
-compute_NPV
-
-# use output from our solar model as input to profit
-# See previous lecture4_informal_sensitivity.qmd  or informal_sensitivity.qmd
-load(here("Data/annual_elect_solar.rda"))
-head(solar_annual_elect)
-
-profit_solar <- compute_profit_frompower(
-  energy = solar_annual_elect$elect,
-  year = solar_annual_elect$year,
-  price = 30, discount = 0.04
-)
-
-head(profit_solar)
-
-profit_solar <- subset(profit_solar, year > 1944)
-
-ggplot(profit_solar, aes(as.factor(year), netpre, group = year)) +
-  geom_boxplot() +
-  labs(y = "Profit in current $", x = "Year")
-```
-
-# Look at some of the building blocks
-
--   read through compute_NPV.R
--   read through compute_profit_frompower.R
-
-Notice that compute_profit_frompower uses compute_NPV (so you need to carry over parameters)
-
-What if price increased by a % each year? How would you modify **compute_profit_frompower** to account for that? Or alternatively - what if you wanted to input a different price for each year?
-
-With a partner try it...
+* Power generation from solar radiation (solarpv.R)
+* Power generation from reservoir height and flow rate (power_gen.R))
+* Profit from power generation (compute_profit_frompower.R)
+  (net present value)   (compute_NPV.R)
+  
+Whats nice about boxes
+  * can re-use them
+  * can swap them out
+  * different team members can work on different boxes
 
 ## Putting it all together {.scrollable}
 
