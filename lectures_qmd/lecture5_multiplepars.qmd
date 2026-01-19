@@ -61,6 +61,8 @@ Lets look at
 
 -   normal distribution for **eff**
 
+Lets look at a larger array 1000 m2
+
 ```{r secondsensitivity, echo=TRUE}
 
 source(here("R/solarpv.R"))
@@ -85,9 +87,9 @@ parms <- cbind.data.frame(eff, ethresh)
 # use pmap
 # takes function name and then names of all parameters that don't change
 results <- parms %>% pmap(solarpv,
-  area = 0.1,
+  area = 20,
   solar = sierraczosolar, clr = "green",
-  eunit = "W", g = FALSE, etype = "direct"
+  eunit = "kWhr", g = FALSE, etype = "direct"
 )
 
 results[[1]]
@@ -114,12 +116,12 @@ We want to look at uncertainty due to both parameters but also see how each para
 
 p1 <- ggplot(mean_elect, aes(ethresh, mean, col = eff)) +
   geom_point(cex = 2) +
-  labs(y = "Mean Annual Electricity W", x = "Threshold Radiation (kJ/m2)  \n above which energy production is more efficient")
+  labs(y = "Mean Annual Electricity kWhr/yr", x = "Threshold Radiation (kJ/m2)  \n above which energy production is more efficient")
 p1
 
 p2 <- ggplot(mean_elect, aes(eff, mean, col = ethresh)) +
   geom_point(cex = 2) +
-  labs(y = "Mean Annual Electricity W", x = "Efficiency")
+  labs(y = "Mean Annual Electricity kWhr/yr", x = "Efficiency")
 p2
 ```
 
@@ -153,7 +155,7 @@ solar_annual_elect <- tmp %>% unnest(annual) %>% mutate(
 
 p1 = ggplot(solar_annual_elect, aes(year, elect, group = year)) +
   geom_boxplot() +
-  labs(y = "Electricity generated in kWhr", x = "Year")
+  labs(y = "Electricity generated in kWhr/yr", x = "Year")
 p1
 
 # now we can link with parameters, 
@@ -220,8 +222,8 @@ annual_elect_for$year <- years
 
 for (i in 1:nsamples) {
   res <- solarpv(
-    area = 0.1, solar = sierraczosolar,
-    clr = "green", eunit = "W", g = FALSE, etype = "direct",
+    area = 20, solar = sierraczosolar,
+    clr = "green", eunit = "kWhr", g = FALSE, etype = "direct",
     ethresh = parms$ethresh[i],
     eff = parms$eff[i]
   )
@@ -239,11 +241,10 @@ ggplot(me, aes(eff, mean, col = ethresh)) +
 tmp <- annual_elect_for %>% pivot_longer(cols = -c(year))
 
 # get rid of that pesky first year
-tmp <- subset(tmp, tmp$year > 1944)
 
 ggplot(tmp, aes(as.factor(year), value)) +
   geom_boxplot() +
-  labs(y = "Mean Annual Electricity W", x = "Year")
+  labs(y = "Mean Annual Electricity kWhr/year", x = "Year")
 ```
 
 ```{r}
@@ -307,10 +308,17 @@ The profit function also 'calls' another function to compute net present value
         -   year
         -   net (profit from energy in that year)
         -   netpre (net present value of that profit)
+        
+        
+  Lets assume current price per er unit of energy is $0.3 /kWh, discount rate is 4%
+  - keep these are variables so we can carry them through  
 
 ```{r valuep, echo=TRUE}
 source(here("R/compute_NPV.R"))
 source(here("R/compute_profit_frompower.R"))
+
+best_guess_price <- 0.3  # $/kWh
+best_guess_discount <- 0.04  # 4%
 
 compute_profit_frompower
 
@@ -324,16 +332,19 @@ head(solar_annual_elect)
 profit_solar <- compute_profit_frompower(
   energy = solar_annual_elect$elect,
   year = solar_annual_elect$year,
-  price = 30, discount = 0.04
+  price = best_guess_price, discount = best_guess_discount
 )
 
 head(profit_solar)
 
-profit_solar <- subset(profit_solar, year > 1944)
+
 
 ggplot(profit_solar, aes(as.factor(year), netpre, group = year)) +
   geom_boxplot() +
   labs(y = "Profit in current $", x = "Year")
+
+#save profit_solar for use next class
+save(profit_solar, file = here("Data/profit_solar.rda"))
 ```
 
 # Look at some of the building blocks
