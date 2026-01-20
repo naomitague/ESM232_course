@@ -1,5 +1,5 @@
 ---
-title: "Informal Sensitvity2"
+title: "Informal Sensitvity Continued"
 format:
   revealjs:
     theme: solarized
@@ -18,14 +18,26 @@ library(ggpubr)
 library(here)
 ```
 
+## This week
 
-## This week 
+-   before we get to formal sensitivity anbalysis
 
-* before we get to formal sensitivity anbalysis
-
-  * a bit more practice on data manipulation as part of sensitivity analysis
-  * making slightly more complex models by adding 'boxes' or submodels
+    -   a bit more practice on data manipulation as part of sensitivity analysis
+    -   building models - making slightly more complex models by adding 'boxes' or submodels 
+    
 ## Combined sensitivity analysis
+
+
+Two main classes of sensitivity analysis
+
+<span style="color:orange;">global:</span>
+simultaneously vary all parameters over possible ranges
+
+<span style="color:orange;">local  one at a time:</span>hold all other parameters content and then vary one parameter at a time
+
+Global is preferred where possible because it accounts for parameter interactions
+
+## Combined sensitivity analysis - example
 
 -   *eff*
 
@@ -44,24 +56,28 @@ Two possible approaches
 
 ## Ways of expressing variation/uncertainty {.scrollable}
 
--   sometimes we think of uncertainty as a range of possible values (min, max), where possibility is defined by physics or expert knowledge\
-    e.g., snow albedo can't be greater than 1; can't have negative efficiency; solar arrays with efficiencies less than some value are not marketable
+-   sometimes we think of uncertainty as a range of possible values (min, max), where possibility is defined by physics or expert knowledge
 
--   sometimes we know something about the distribution because we have measurements\
+* snow albedo can't be greater than 1; 
+* can't have negative efficiency; 
+* tree height limited by hydraulics
+* solar arrays with efficiency less than some value are not marketable
+
+-   sometimes we know something about the distribution because we have measurements
     e.g., efficiency of solar panels measured in lab or field tests; we can use mean and standard deviation to define a normal distribution
 
--   sometimes we think of uncertainty as percent deviation from our best guess\
+-   sometimes we think of uncertainty as percent deviation from our best guess
     e.g., we think efficiency is 0.2 but could be ±15%
 
 ## Example using *pmap* {.scrollable}
 
 Lets look at
 
--   15% devidation in **ethresh**
+-   15% deviation in **ethresh**
 
 -   normal distribution for **eff**
 
-Lets look at a larger array 1000 m2
+Lets look at a larger array 20 m2
 
 ```{r secondsensitivity, echo=TRUE}
 
@@ -108,7 +124,10 @@ mean_elect <- cbind.data.frame(mean_elect, parms)
 
 Lets start with mean annual electricity
 
-We want to look at uncertainty due to both parameters but also see how each parameter influences the results
+We want to look at:
+
+1) uncertainty in output due to both parameters 
+2) how each parameter influences the results
 
 ```{r plot_sensitivity, echo=TRUE}
 # plot - pick one of the 2 parameter as a color
@@ -127,21 +146,23 @@ p2
 
 What does looking at these graphs tell you?
 
+Is variation due to years big or small relative to parameter uncertainty?
+
 ## Interannual Variation {.scrollable}
 
 There is **uncertainty** in annual electricity due to both parameters and variation across years **sensitivity** to climate
 
-For complex model outputs and multiple parameters, data structures for analysis and visualization can be tricky - two useful options
-  1. Reduce output dimensionality - summarize output
-      e.g mean annual electricity - one value per parameter set
-  2. To deal with multiple parameter, add a "key" to identify parameter set - e.g. run number
-      .e.g we will use a parameter id to do this
-  
+For complex model outputs and multiple parameters, data structures for analysis and visualization can be tricky - two useful options 
+
+1. Reduce output dimensionality - summarize output e.g mean annual electricity - one value per parameter set 
+
+2. To deal with multiple parameter, add a "key" to identify parameter set - e.g. run number .e.g we will use a parameter id to do this
 
 ```{r annual_uncertainty, echo=TRUE}
 
 # extract annual
 # plot total uncertainty due to both parameters
+# note use of .id to create parm_id so we can link back to parameters
 tmp <- map_df(results, `[`, c("annual"), .id ="parm_id")
 head(tmp)
 
@@ -187,27 +208,21 @@ save(solar_annual_elect, file = here("Data/annual_elect_solar.rda"))
 
 ```
 
-Is variation due to years big or small relative to parameter uncertainty?
+
 
 # Data structure and Data Manipulation
 
 being able to create data structures to do what you want with model output
 
-
-
-  
-  
-
 ## Sensitivity to two different parameters
 
--   note how one parameter **eff** overshadows the response to *"ethresh*
+-   note how one parameter *eff* overshadows the response to *ethresh*
 
 -   note the linear response to *eff*
 
 ## Additional notes {.scrollable}
 
 Using a *For* Loop for sensitivity analysis
-
 
 ```{r yearsensitivity, echo=TRUE}
 # using a for loop
@@ -251,7 +266,7 @@ ggplot(tmp, aes(as.factor(year), value)) +
 ggarrange(p1, p2)
 ```
 
-## Expanding on Sensitivity Analysis
+## Expanding on Sensitivity Analysis {.scrollable}
 
 -   why this is useful
 -   two contexts
@@ -261,8 +276,6 @@ ggarrange(p1, p2)
 Real world examples Quiz:
 
 Think of a research question, and imagine you are using a model to answer it - you don't have to know the details of the model - but think of a parameter that you might want to vary to see how it influences model outputs- Note if its due to uncertainty in that parameter or because you are exploring scenarios - how might you define uncertainty
-
-
 
 # Building models with blocks
 
@@ -308,10 +321,8 @@ The profit function also 'calls' another function to compute net present value
         -   year
         -   net (profit from energy in that year)
         -   netpre (net present value of that profit)
-        
-        
-  Lets assume current price per er unit of energy is $0.3 /kWh, discount rate is 4%
-  - keep these are variables so we can carry them through  
+
+Lets assume current price per er unit of energy is \$0.3 /kWh, discount rate is 4% - keep these are variables so we can carry them through
 
 ```{r valuep, echo=TRUE}
 source(here("R/compute_NPV.R"))
@@ -339,10 +350,10 @@ head(profit_solar)
 
 
 
-ggplot(profit_solar, aes(as.factor(year), netpre, group = year)) +
+p1=ggplot(profit_solar, aes(as.factor(year), netpre, group = year)) +
   geom_boxplot() +
   labs(y = "Profit in current $", x = "Year")
-
+p1
 #save profit_solar for use next class
 save(profit_solar, file = here("Data/profit_solar.rda"))
 ```
@@ -357,4 +368,3 @@ Notice that compute_profit_frompower uses compute_NPV (so you need to carry over
 What if price increased by a % each year? How would you modify **compute_profit_frompower** to account for that? Or alternatively - what if you wanted to input a different price for each year?
 
 With a partner try it...
-
