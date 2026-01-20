@@ -9,6 +9,8 @@ css: ["slides.css"]
 editor: visual
 ---
 
+#Return to Quiz 3 - Evaluating model - show some examples
+
 ## Comparing Model with Observations
 
 Why?

@@ -211,7 +211,6 @@ There are many software tools available for generating conceptual models, I like
 
 -   What are some key assumptions?
 
-
 # Types of Model
 
 There are many different ways to classify models
@@ -299,4 +298,3 @@ Think...simple bucket model
     -   inputs, parameters and outputs
     -   relationships/processes
     -   assumptions
-
