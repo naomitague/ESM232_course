@@ -23,17 +23,15 @@ library(here)
 -   before we get to formal sensitivity anbalysis
 
     -   a bit more practice on data manipulation as part of sensitivity analysis
-    -   building models - making slightly more complex models by adding 'boxes' or submodels 
-    
-## Combined sensitivity analysis
+    -   building models - making slightly more complex models by adding 'boxes' or submodels
 
+## Combined sensitivity analysis
 
 Two main classes of sensitivity analysis
 
-<span style="color:orange;">global:</span>
-simultaneously vary all parameters over possible ranges
+[global:]{style="color:orange;"} simultaneously vary all parameters over possible ranges
 
-<span style="color:orange;">local  one at a time:</span>hold all other parameters content and then vary one parameter at a time
+[local one at a time:]{style="color:orange;"}hold all other parameters content and then vary one parameter at a time
 
 Global is preferred where possible because it accounts for parameter interactions
 
@@ -58,16 +56,17 @@ Two possible approaches
 
 -   sometimes we think of uncertainty as a range of possible values (min, max), where possibility is defined by physics or expert knowledge
 
-* snow albedo can't be greater than 1; 
-* can't have negative efficiency; 
-* tree height limited by hydraulics
-* solar arrays with efficiency less than some value are not marketable
+-   snow albedo can't be greater than 1;
 
--   sometimes we know something about the distribution because we have measurements
-    e.g., efficiency of solar panels measured in lab or field tests; we can use mean and standard deviation to define a normal distribution
+-   can't have negative efficiency;
 
--   sometimes we think of uncertainty as percent deviation from our best guess
-    e.g., we think efficiency is 0.2 but could be ±15%
+-   tree height limited by hydraulics
+
+-   solar arrays with efficiency less than some value are not marketable
+
+-   sometimes we know something about the distribution because we have measurements e.g., efficiency of solar panels measured in lab or field tests; we can use mean and standard deviation to define a normal distribution
+
+-   sometimes we think of uncertainty as percent deviation from our best guess e.g., we think efficiency is 0.2 but could be ±15%
 
 ## Example using *pmap* {.scrollable}
 
@@ -126,8 +125,8 @@ Lets start with mean annual electricity
 
 We want to look at:
 
-1) uncertainty in output due to both parameters 
-2) how each parameter influences the results
+1)  uncertainty in output due to both parameters
+2)  how each parameter influences the results
 
 ```{r plot_sensitivity, echo=TRUE}
 # plot - pick one of the 2 parameter as a color
@@ -152,11 +151,11 @@ Is variation due to years big or small relative to parameter uncertainty?
 
 There is **uncertainty** in annual electricity due to both parameters and variation across years **sensitivity** to climate
 
-For complex model outputs and multiple parameters, data structures for analysis and visualization can be tricky - two useful options 
+For complex model outputs and multiple parameters, data structures for analysis and visualization can be tricky - two useful options
 
-1. Reduce output dimensionality - summarize output e.g mean annual electricity - one value per parameter set 
+1.  Reduce output dimensionality - summarize output e.g mean annual electricity - one value per parameter set
 
-2. To deal with multiple parameter, add a "key" to identify parameter set - e.g. run number .e.g we will use a parameter id to do this
+2.  To deal with multiple parameter, add a "key" to identify parameter set - e.g. run number .e.g we will use a parameter id to do this
 
 ```{r annual_uncertainty, echo=TRUE}
 
@@ -207,8 +206,6 @@ p3
 save(solar_annual_elect, file = here("Data/annual_elect_solar.rda"))
 
 ```
-
-
 
 # Data structure and Data Manipulation
 

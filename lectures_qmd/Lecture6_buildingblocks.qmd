@@ -18,8 +18,55 @@ library(ggpubr)
 library(here)
 ```
 
-# Building models with blocks
+## Answer to challenge from last class {.scrollable}
 
+```{r valuep, echo=TRUE}
+source(here("R/compute_NPV.R"))
+source(here("R/compute_profit_frompower_priceV.R"))
+source(here("R/compute_profit_frompower.R"))
+
+best_guess_price <- 0.3  # $/kWh
+best_guess_discount <- 0.04  # 4%
+price_inflation <- 0.02  # 2% per year
+
+# use output from our solar model as input to profit
+# See previous lecture4_informal_sensitivity.qmd  or informal_sensitivity.qmd
+load(here("Data/annual_elect_solar.rda"))
+head(solar_annual_elect)
+
+profit_solar <- compute_profit_frompower(
+  energy = solar_annual_elect$elect,
+  year = solar_annual_elect$year,
+  price = best_guess_price, discount = best_guess_discount
+)
+
+profit_solar_alt1 <- compute_profit_frompower_priceV(
+  energy = solar_annual_elect$elect,
+  year = solar_annual_elect$year,
+  price = best_guess_price, price_inflation=price_inflation,discount = best_guess_discount
+)
+
+best_guess_price_vector <- runif(min = 0.2, max = 0.4, n = nrow(solar_annual_elect))
+profit_solar_random <- compute_profit_frompower_priceV(
+  energy = solar_annual_elect$elect,
+  year = solar_annual_elect$year,
+  price = best_guess_price_vector, price_inflation=price_inflation,discount = best_guess_discount
+)
+
+# aggregate to compare
+  combine_profit <- rbind.data.frame(
+  profit_solar %>% mutate(scenario = "constant price", price = best_guess_price),
+  profit_solar_alt1 %>% mutate(scenario = "inflation"),
+  profit_solar_random %>% mutate(scenario = "random price"))
+
+    
+
+p1 = ggplot(combine_profit, aes(as.factor(year), netpre, fill = scenario)) +
+  geom_boxplot() +
+  labs(y = "Net Present Value of Power in 1945 Dollars", x = "Year", fill = "Price Scenario") +
+  scale_fill_manual(values = c("blue", "orange", "green"))
+
+```
 
 ## Example of a loosely coupled model
 
@@ -36,23 +83,17 @@ include_graphics(here("lectures_qmd/img/power_comparison_figure.jpeg" ))
 
 ## Our submodels {.scrollable}
 
-* Power generation from solar radiation (solarpv.R)
-* Power generation from reservoir height and flow rate (power_gen.R))
-* Profit from power generation (compute_profit_frompower.R)
-  (net present value)   (compute_NPV.R)
-  
-Whats nice about boxes
-  * can re-use them
-  * can swap them out
-  * different team members can work on different boxes
+-   Power generation from solar radiation (solarpv.R)
+-   Power generation from reservoir height and flow rate (power_gen.R))
+-   Profit from power generation (compute_profit_frompower.R) (net present value) (compute_NPV.R)
+
 
 ## Putting it all together {.scrollable}
 
 Full picture of power options
 
 -   run *compute_profit_frompower* for both hydro and solar power
-    - (loosely coupled models)
-
+    -   (loosely coupled models)
 -   include informal parameter uncertainty analysis
 
 Notice that we can 're-use' our functions such as *compute_profit_frompower* for both sources of power (such as our reservoir power model) to build out our complete picture
@@ -73,11 +114,11 @@ Lets generate some example output for our reservoir model
 
 In "real" application we'd have flow and height measurement here we will generate by sampling (think of it as test data)
 
-* we have measurements that tell us heights normally distributed with mean 10m and standard deviation 0.1m
+-   we have measurements that tell us heights normally distributed with mean 10m and standard deviation 0.1m
 
-* we have measurements that tell us flow rates uniformly distributed between 0.1 and 0.3 m3/s
+-   we have measurements that tell us flow rates uniformly distributed between 0.1 and 0.3 m3/s
 
-* reserovir efficiency varies uniformly from 0.4 to 0.7
+-   reserovir efficiency varies uniformly from 0.4 to 0.7
 
 ## Code {.scrollable}
 
@@ -167,7 +208,6 @@ ggplot(profit_hydro, aes(as.factor(year), netpre, group = year)) +
 
 ## Compare Profit from hydro/reservoir with solar {.scrollable}
 
-
 ```{r quicksum}
 
 mean(profit_hydro$netpre)
@@ -177,7 +217,7 @@ mean(profit_solar$netpre)
 
 Hydro wins? Right?
 
-# Comparison taking into account uncertainty
+## Comparison taking into account uncertainty. {.scrollable}
 
 ```{r power2, echo=TRUE}
 
@@ -207,7 +247,15 @@ ggplot(tmp, aes(as.factor(year), netpre, fill = etype)) +
 
 ## How might we quantify uncertainty
 
--   look at spread of net present values 
+-   look at spread of net present values
+
+```{r quicksd}
+
+sd(profit_hydro$netpre)
+sd(profit_solar$netpre)
+
+```
+
 
 ## What we discovered
 
@@ -217,14 +265,24 @@ What would you chose?
 
 What would a manager chose?
 
+Note - we considered uncertainty in just a few parameters Would accounting for uncertainty in price change our analysis? How?
 
-Note - we considered uncertainty in just a few parameters
-Would accounting for uncertainty in price change our analysis? How?
+If we wanted to reduce uncertainty in hydro profits - what measurements would we make? (or what parameter might we focus on?) How would we figure that out? (something to think about)
 
-If we wanted to reduce uncertainty in hydro profits - what measurements would we make?
-(or what parameter might we focus on?) How would we figure that out?
-(something to think about)
+# Workflow ideas
 
+ * start with submodel sensitivity analysis 
+  * hydro - eff, height, flow rate
+  * solar - eff, radiation, PR, area
+ * build multi component model
+  * additional sensitivity analysis (price, discount rate)
+  
+  Could build a wrapper to do this
+  
+  Models will often have a data structure (or file) that parameter values to explore
+  * could build a function to read this in and run the model for each parameter set
+  
+  
 # Summary {.scrollable}
 
 -   we built a multi component model to compare profit from two different power sources
@@ -233,9 +291,64 @@ If we wanted to reduce uncertainty in hydro profits - what measurements would we
 
 -   we included parameter uncertainty analysis to see how that impacted our profit estimates
 
-- we saw how data organization is an important part of informal sensitivity analysis to make it easier to graph and analyze results
+-   we saw how data organization is an important part of informal sensitivity analysis to make it easier to graph and analyze results
 
+## What you can know about sensitivity before experimenting {.scrollable}
 
-##  {.scrollable}
+-   when transfer function is linear (equation *tells* you what the sensitivity is)
+
+-   Imagine that habitat suitability for parrot can be modelled with the following equations, where
+
+$$
+ PS = k_P * P + k_T * T
+$$
+
+-   **PS** probability that parrots will be found in a given location
+
+-   **P** is mean annual precipitation
+
+-   **T** is mean annual temperature
+
+-   $k_P$ and $k_T$ are empirically derived coefficients
+
+<span style="color: blue;"> Sensitivity to $k_P$ and $k_T$ will be linear
+
+if $k_P$ is 0.002 and $k_T$ is 0.01 does that mean parrot suitability is more sensitive to temperature than precipitation?
+
+Quiz...type yes or no
+
+# Sensitivity of the output
+
+Coefficient values - depends on what range in **T** and **P** so its hard to tell just from the coefficients
+
+<span style="color: blue;"> *IF* **P** and **T** were in the same units (e.g percent deviation from a mean value), then you could use the coefficients to tell you if parrot suitability would be more sensitive to a 10% change in precipitation versus a 10% change in temperature
+
+$$
+ PS = k_P * (P-Pavg)/Pavg + k_T * (T-Tavg)/Tavg
+$$
+
+## Statistics
+
+Regression equations are also models
+
+They are *linear* models
+
+The coefficients and standard error tell you about sensitivity
+
+- larger coefficients = output more sensitive to variation in the "variable"
+
+- smaller standard error = more confidence in coefficient
+
+## When do we need to do sensitivity analysis {.scrollable}
+
+-   Looking at the form of the equations in the box (transfer function) often tells you something about sensitivity
+
+-   The first derivative of the equation with respect to the parameter IS the sensitivity; so if you can take the derivative you can *know* something about the sensitivity
+
+-   BUT if you don't know what's in the box (transfer function) or if it has multiple boxes its difficult to tell
+
+-   any equation/transfer function with thresholds (if's, max, min's) hard to tell (you can't differentiate), sometimes parameters may matter sometimes they will not
+
+What do we do then...explore...and
 
 # Assignment 4 {.scrollable}
