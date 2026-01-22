@@ -20,7 +20,6 @@ library(here)
 
 # Building models with blocks
 
-
 ## Example of a loosely coupled model
 
 Generating profit from power generation
@@ -36,23 +35,18 @@ include_graphics(here("lectures_qmd/img/power_comparison_figure.jpeg" ))
 
 ## Our submodels {.scrollable}
 
-* Power generation from solar radiation (solarpv.R)
-* Power generation from reservoir height and flow rate (power_gen.R))
-* Profit from power generation (compute_profit_frompower.R)
-  (net present value)   (compute_NPV.R)
-  
-Whats nice about boxes
-  * can re-use them
-  * can swap them out
-  * different team members can work on different boxes
+-   Power generation from solar radiation (solarpv.R)
+-   Power generation from reservoir height and flow rate (power_gen.R))
+-   Profit from power generation (compute_profit_frompower.R) (net present value) (compute_NPV.R)
+
+Whats nice about boxes \* can re-use them \* can swap them out \* different team members can work on different boxes
 
 ## Putting it all together {.scrollable}
 
 Full picture of power options
 
 -   run *compute_profit_frompower* for both hydro and solar power
-    - (loosely coupled models)
-
+    -   (loosely coupled models)
 -   include informal parameter uncertainty analysis
 
 Notice that we can 're-use' our functions such as *compute_profit_frompower* for both sources of power (such as our reservoir power model) to build out our complete picture
@@ -73,11 +67,11 @@ Lets generate some example output for our reservoir model
 
 In "real" application we'd have flow and height measurement here we will generate by sampling (think of it as test data)
 
-* we have measurements that tell us heights normally distributed with mean 10m and standard deviation 0.1m
+-   we have measurements that tell us heights normally distributed with mean 10m and standard deviation 0.1m
 
-* we have measurements that tell us flow rates uniformly distributed between 0.1 and 0.3 m3/s
+-   we have measurements that tell us flow rates uniformly distributed between 0.1 and 0.3 m3/s
 
-* reserovir efficiency varies uniformly from 0.4 to 0.7
+-   reserovir efficiency varies uniformly from 0.4 to 0.7
 
 ## Code {.scrollable}
 
@@ -167,7 +161,6 @@ ggplot(profit_hydro, aes(as.factor(year), netpre, group = year)) +
 
 ## Compare Profit from hydro/reservoir with solar {.scrollable}
 
-
 ```{r quicksum}
 
 mean(profit_hydro$netpre)
@@ -207,7 +200,7 @@ ggplot(tmp, aes(as.factor(year), netpre, fill = etype)) +
 
 ## How might we quantify uncertainty
 
--   look at spread of net present values 
+-   look at spread of net present values
 
 ## What we discovered
 
@@ -217,13 +210,9 @@ What would you chose?
 
 What would a manager chose?
 
+Note - we considered uncertainty in just a few parameters Would accounting for uncertainty in price change our analysis? How?
 
-Note - we considered uncertainty in just a few parameters
-Would accounting for uncertainty in price change our analysis? How?
-
-If we wanted to reduce uncertainty in hydro profits - what measurements would we make?
-(or what parameter might we focus on?) How would we figure that out?
-(something to think about)
+If we wanted to reduce uncertainty in hydro profits - what measurements would we make? (or what parameter might we focus on?) How would we figure that out? (something to think about)
 
 # Summary {.scrollable}
 
@@ -233,8 +222,7 @@ If we wanted to reduce uncertainty in hydro profits - what measurements would we
 
 -   we included parameter uncertainty analysis to see how that impacted our profit estimates
 
-- we saw how data organization is an important part of informal sensitivity analysis to make it easier to graph and analyze results
-
+-   we saw how data organization is an important part of informal sensitivity analysis to make it easier to graph and analyze results
 
 ##  {.scrollable}
 
