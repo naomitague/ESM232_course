@@ -1,14 +1,12 @@
 ---
-title: "Discussion3_buildingblocks"
+title: "Discussion3: Building Blocks"
 format: revealjs
 editor: visual
 ---
 
 # Almond Yield Assignment
 
--  
-
--   here's an example of Almond Yield function
+-   Here's an example of Almond Yield function
 
 ```{r, almondanswer}
 library(tidyverse)
@@ -62,13 +60,13 @@ Do you want price to be constant?
 
 ## Build a profit function
 
--   almond yield anomoly will be one input
+-   Almond yield anomaly will be one input
 
 But profit would depend on actual yield right?
 
 Assume a baseline yield for your orchard (another input to your profit model)
 
--   profit will be the output
+-   Profit will be the output
 
 There may be other inputs depending on your profit model
 
@@ -78,12 +76,12 @@ Work with your partner
 
 # Now put them together
 
--   there are many ways to combine the almond yield and profit functions; you can have the profit function "call"/use the almond yield function; or create a wrapper function that calls them in sequence (first the almond yield and then the profit function)
+-   There are many ways to combine the almond yield and profit functions
+-   You can have the profit function "call"/use the almond yield function; or
+-   Create a wrapper function that calls them in sequence (first the almond yield and then the profit function)
 
 # Now run your combined model and do some informal sensitivity analysis
 
--   which parameters might you vary?
+-   Which parameters might you vary?
 
--   graph how profit varies with your parameters
-
-
+-   Graph how profit varies with your parameters
