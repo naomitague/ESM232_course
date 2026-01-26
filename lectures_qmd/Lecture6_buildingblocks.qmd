@@ -1,5 +1,5 @@
 ---
-title: "Lecture6_Multi-Component Models "
+title: "Lecture6 Multi-Component Models "
 format:
   revealjs:
     theme: solarized
@@ -60,13 +60,15 @@ profit_solar_random <- compute_profit_frompower_priceV(
   profit_solar_alt1 %>% mutate(scenario = "inflation"),
   profit_solar_random %>% mutate(scenario = "random price"))
 
+```
     
-
+## Plot
+```{r solarprofit, echo=TRUE}
 p1 = ggplot(combine_profit, aes(as.factor(year), netpre, fill = scenario)) +
   geom_boxplot() +
   labs(y = "Net Present Value of Power in 1945 Dollars", x = "Year", fill = "Price Scenario") +
   scale_fill_manual(values = c("blue", "orange", "green"))
-
+p1
 ```
 
 ## Example of a loosely coupled model
@@ -88,7 +90,7 @@ include_graphics(here("lectures_qmd/img/power_comparison_figure.jpeg" ))
 -   Power generation from reservoir height and flow rate (power_gen.R))
 -   Profit from power generation (compute_profit_frompower.R) (net present value) (compute_NPV.R)
 
-Whats nice about boxes 
+ 
 
 ## Putting it all together {.scrollable}
 
@@ -177,7 +179,7 @@ reservoirg <- as.data.frame(reservoir) %>% pivot_longer(!year, names_to = "Keff"
 head(reservoirg)
 ```
 
-# Now like we did for solar....
+# Now compute profit ( like we did for solar)....
 
 ```{r powerprofit, echo=TRUE}
 
@@ -186,9 +188,6 @@ source(here("R/compute_profit_frompower.R"))
 
 best_guess_price <- 0.3  # $/kWh
 best_guess_discount <- 0.04  # 4%
-
-compute_profit_frompower
-
 
 # create profit from hydro
 profit_hydro <- compute_profit_frompower(energy = reservoirg$power, year = reservoirg$year, price = best_guess_price, discount =best_guess_discount)
@@ -230,14 +229,13 @@ b <- ggplot(profit_solar, aes(year, netpre, group = year)) +
   geom_boxplot() +
   labs(title = "Solar", y = "Net Present Values in 1945 Dollars", x = "Year")
 ggarrange(a, b)
+```
 
+## Better comparison - same graph
+
+```{r powergraph, echo=TRUE}
 # put on one graph
-ggplot(profit_hydro, aes(year, netpre, group = year)) +
-  geom_boxplot() +
-  labs(y = "Net Present Values in 1945 Dollars", x = "Year", title = "Both") +
-  geom_boxplot(data = profit_solar, aes(year, netpre, group = year), fill = "orange")
-
-# or do get a nice legend
+# combine to get a nice legend
 profit_hydro$etype <- "Hydro"
 profit_solar$etype <- "Solar"
 tmp <- rbind.data.frame(profit_hydro, profit_solar)
@@ -250,8 +248,6 @@ ggplot(tmp, aes(as.factor(year), netpre, fill = etype)) +
 ## How might we quantify uncertainty
 
 -   look at spread of net present values
-<<<<<<< HEAD
-=======
 
 ```{r quicksd}
 
@@ -279,8 +275,8 @@ If we wanted to reduce uncertainty in hydro profits - what measurements would we
 
 
  * start with submodel sensitivity analysis 
-  * hydro - eff, height, flow rate
-  * solar - eff, radiation, PR, area
+  * hydro - *eff, height, flow rate*
+  * solar - *eff, ethresh, solar, PR, area*
  * build multi component model
   * additional sensitivity analysis (price, discount rate)
   
@@ -323,13 +319,13 @@ $$
 
 if $k_P$ is 0.002 and $k_T$ is 0.01 does that mean parrot suitability is more sensitive to temperature than precipitation?
 
-Quiz...type yes or no
+*Yes or No?*
 
 # Sensitivity of the output
 
 Coefficient values - depends on what range in **T** and **P** so its hard to tell just from the coefficients
 
-<span style="color: blue;"> *IF* **P** and **T** were in the same units (e.g percent deviation from a mean value), then you could use the coefficients to tell you if parrot suitability would be more sensitive to a 10% change in precipitation versus a 10% change in temperature
+<span style="color: blue;"> *IF* </span> **P** and **T** were in the same units (e.g percent deviation from a mean value), then you could use the coefficients to tell you if parrot suitability would be more sensitive to a 10% change in precipitation versus a 10% change in temperature
 
 $$
  PS = k_P * (P-Pavg)/Pavg + k_T * (T-Tavg)/Tavg

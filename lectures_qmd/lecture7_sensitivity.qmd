@@ -18,63 +18,6 @@ library(purrr)
 library(here)
 ```
 
-## What you can know about sensitivity before experimenting {.scrollable}
-
--   when transfer function is linear (equation *tells* you what the sensitivity is)
-
--   Imagine that habitat suitability for parrot can be modelled with the following equations, where
-
-$$
- PS = k_P * P + k_T * T
-$$
-
--   **PS** probability that parrots will be found in a given location
-
--   **P** is mean annual precipitation
-
--   **T** is mean annual temperature
-
--   $k_P$ and $k_T$ are empirically derived coefficients
-
-<span style="color: blue;"> Sensitivity to $k_P$ and $k_T$ will be linear
-
-if $k_P$ is 0.002 and $k_T$ is 0.01 does that mean parrot suitability is more sensitive to temperature than precipitation?
-
-Quiz...type yes or no
-
-# Sensitivity of the output
-
-Coefficient values - depends on what range in **T** and **P** so its hard to tell just from the coefficients
-
-<span style="color: blue;"> *IF* **P** and **T** were in the same units (e.g percent deviation from a mean value), then you could use the coefficients to tell you if parrot suitability would be more sensitive to a 10% change in precipitation versus a 10% change in temperature
-
-$$
- PS = k_P * (P-Pavg)/Pavg + k_T * (T-Tavg)/Tavg
-$$
-
-## Statistics
-
-Regression equations are also models
-
-They are *linear* models
-
-The coefficients and standard error tell you about sensitivity
-
-\- larger coefficients = output more sensitive to variation in the "variable"
-
-\- smaller standard error = more confidence in coefficient
-
-## When do we need to do sensitivity analysis {.scrollable}
-
--   Looking at the form of the equations in the box (transfer function) often tells you something about sensitivity
-
--   The first derivative of the equation with respect to the parameter IS the sensitivity; so if you can take the derivative you can *know* something about the sensitivity
-
--   BUT if you don't know what's in the box (transfer function) or if it has multiple boxes its difficult to tell
-
--   any equation/transfer function with thresholds (if's, max, min's) hard to tell (you can't differentiate), sometimes parameters may matter sometimes they will not
-
-What do we do then...explore...and
 
 ## Formal Sensitivity Analysis {.scrollable}
 
@@ -90,19 +33,6 @@ Challenge is sampling parameter uncertainty space and balancing this against com
 
 Optimization - special type of sensitivity analysis
 
-## Single Parameter Sensitivity {.scrollable}
-
-Vary one parameter but hold the others constant
-
-Useful for focused analysis but..
-
--   sensitivity to a parameter may change as a function of other parameters
-
-Consider the sensitivity of a seasonal snow accumulation and melt model to both temperature and radiation
-
--   for high temperatures, radiation may not impact rates substantially since there is less snow
-
--   for lower temperature, radiation may matter much more - so temperatures related to radiation absorption (e.g albedo) will have a greater impact on output
 
 ## Steps in Sensitivity Analysis {.scrollable}
 
@@ -116,17 +46,79 @@ Consider the sensitivity of a seasonal snow accumulation and melt model to both 
 
 -Quantify sensitivity
 
-# Sensitivity Analysis: What ranges should I vary my parameters over {.scrollable}
+# What ranges should I vary my parameters over {.scrollable}
 
 -   range (min, max, middle values)
 
 -   pdf (probability density function)
 
--   If parameters are physically based this can come from literature (e.g range of snow albedo’s, range of hydraulic conductivity in a soil )
+-   If parameters are physically based this can come from literature or measurement (e.g range of snow albedo’s, range of hydraulic conductivity in a soil )
 
 -   If parameter’s are estimated (e.g a regression slope, coefficients from another model) then statistics such as confidence bounds can help you to define the ranges
 
-## Approaches to sampling parameter space
+BUT will I get enough samples to "see" the sensitivity of my output to rarer parameters?
+
+## Example - Toy Erosion model
+
+Erosion can be a threshold-driven process where runoff only occurs when rainfall intensity exceeds the soil infiltration capacity. 
+Erosion then
+scales nonlinearly with runoff.
+
+### Runoff generation {.scrollable}
+
+Let  
+- \( I \) = rainfall intensity  
+- \( f \) = soil infiltration capacity  
+
+Runoff \( Q \) occurs only when rainfall exceeds infiltration:
+
+\[
+Q =
+\begin{cases}
+0, & I \le f \\
+(I - f)^k, & I > f
+\end{cases}
+\]
+
+where \( k \ge 1 \) controls how sharply runoff increases beyond the threshold.
+
+### Erosion model as code {.scrollable}
+
+Lets assume f is normally distributed with mean 5 mm/hr and sd - 1 mm/hr
+
+Lets say with a  rainfall intensity of 2 mm/hr
+
+```{r}
+# simple erosion model
+source(here("R/simple_erosion.R"))
+
+# first run iwth best guess of infiltration capacity
+simple_erosion(I = 2, f = 4, k = 2, a = 3)
+
+# try sampling across infiltration uncertainty
+f = rnorm(10, mean = 5, sd = 2)    # soil infiltration capacity (mm/hr)
+f
+
+# apply the erosion model 
+estimate = map(f, ~ erosion(I = 2, f = .x)) %>%
+  unlist()
+
+estimate
+# look at range of values
+summary(estimate)
+
+
+# but what about rarer infiltration values
+pnorm(1.9, mean = 5, sd = 2)
+simple_erosion(I = 2, f = 1.9)
+
+pnorm(0.5, mean = 5, sd = 2) rm
+simple_erosion(I = 2, f = 0.5)
+
+```
+
+
+## More Formal Approaches to efficiently sampling parameter space
 
 -   Random - Monte Carlo
 
@@ -134,11 +126,13 @@ Consider the sensitivity of a seasonal snow accumulation and melt model to both 
 
 -   Latin Hypercube
 
--   Sobel
+-   Sobol
 
 Difference is in how you sample parameter space
 
 Trade-offs with efficiency, likelihood of capturing responses from rarer parameters
+
+Approaches like Sobol also help you quantify sensitivity
 
 ## Latin Hyper Cube
 
