@@ -18,7 +18,6 @@ library(purrr)
 library(here)
 ```
 
-
 ## Formal Sensitivity Analysis {.scrollable}
 
 Many approaches (entire text books)
@@ -32,7 +31,6 @@ Two main classes
 Challenge is sampling parameter uncertainty space and balancing this against computational limits
 
 Optimization - special type of sensitivity analysis
-
 
 ## Steps in Sensitivity Analysis {.scrollable}
 
@@ -60,25 +58,22 @@ BUT will I get enough samples to "see" the sensitivity of my output to rarer par
 
 ## Example - Toy Erosion model
 
-Erosion can be a threshold-driven process where runoff only occurs when rainfall intensity exceeds the soil infiltration capacity. 
-Erosion then
-scales nonlinearly with runoff.
+Erosion can be a threshold-driven process where runoff only occurs when rainfall intensity exceeds the soil infiltration capacity. Erosion then scales nonlinearly with runoff.
 
 ## Runoff generation {.scrollable}
 
-Let  
-- *I* = rainfall intensity  
-- *f* = soil infiltration capacity  
+Let\
+- *I* = rainfall intensity\
+- *f* = soil infiltration capacity
 
 Runoff *Q* occurs only when rainfall exceeds infiltration:
 
-
 Q =
+
 \begin{cases}
 0, & I \le f \\
 (I - f)^k, & I > f
 \end{cases}
-
 
 where *k* controls how sharply runoff increases beyond the threshold.
 
@@ -86,7 +81,7 @@ where *k* controls how sharply runoff increases beyond the threshold.
 
 Lets assume f is normally distributed with mean 5 mm/hr and sd - 1 mm/hr
 
-Lets say with a  rainfall intensity of 2 mm/hr
+Lets say with a rainfall intensity of 2 mm/hr
 
 ```{r}
 # simple erosion model
@@ -116,7 +111,6 @@ pnorm(0.5, mean = 5, sd = 2)
 simple_erosion(I = 2, f = 0.5)
 
 ```
-
 
 ## More Formal Approaches to more effectively sample parameter space
 
