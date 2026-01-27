@@ -29,18 +29,21 @@ Submit as a group: pdf of rendered quarto including graph, your R files for almo
 # Grading Rubric
 
 Profit model 
+
   * computes profit based on almond yield anomoly (1 pts)
   * implementation in R as a function with parameters (2 pts)
   * code runs without errors and is well documented (1 pt)
   
 
 Workflow
+
   * models coupled - either a wrapper or workflow showing how yield/profit linked (1pt)
   * sensitivity analysis of at least 2 parameters 
-      * sensitivity analysis includes sampling from distributions (or other source) for 2 parameters (1 pts)
+      * sensitivity analysis includes sampling from distributions (or other source) for 2 parameters (2 pts)
       * clear well documented code (1 pt)
       
 Graph
+
   * single graph showing sensitivity analysis results (1 pt)
   * graph is clearly labeled and easy to interpret (1 pt)
   
