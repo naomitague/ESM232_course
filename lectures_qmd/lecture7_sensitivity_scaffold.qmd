@@ -18,7 +18,6 @@ library(purrr)
 library(here)
 ```
 
-
 ## Formal Sensitivity Analysis {.scrollable}
 
 Many approaches (entire text books)
@@ -32,7 +31,6 @@ Two main classes
 Challenge is sampling parameter uncertainty space and balancing this against computational limits
 
 Optimization - special type of sensitivity analysis
-
 
 ## Steps in Sensitivity Analysis {.scrollable}
 
@@ -60,25 +58,22 @@ BUT will I get enough samples to "see" the sensitivity of my output to rarer par
 
 ## Example - Toy Erosion model
 
-Erosion can be a threshold-driven process where runoff only occurs when rainfall intensity exceeds the soil infiltration capacity. 
-Erosion then
-scales nonlinearly with runoff.
+Erosion can be a threshold-driven process where runoff only occurs when rainfall intensity exceeds the soil infiltration capacity. Erosion then scales nonlinearly with runoff.
 
 ## Runoff generation {.scrollable}
 
-Let  
-- *I* = rainfall intensity  
-- *f* = soil infiltration capacity  
+Let\
+- *I* = rainfall intensity\
+- *f* = soil infiltration capacity
 
 Runoff *Q* occurs only when rainfall exceeds infiltration:
 
-
 Q =
+
 \begin{cases}
 0, & I \le f \\
 (I - f)^k, & I > f
 \end{cases}
-
 
 where *k* controls how sharply runoff increases beyond the threshold.
 
@@ -86,37 +81,33 @@ where *k* controls how sharply runoff increases beyond the threshold.
 
 Lets assume f is normally distributed with mean 5 mm/hr and sd - 1 mm/hr
 
-Lets say with a  rainfall intensity of 2 mm/hr
+Lets say with a rainfall intensity of 2 mm/hr
 
 ```{r}
 # simple erosion model
 source(here("R/simple_erosion.R"))
 
-# first run iwth best guess of infiltration capacity
-simple_erosion(I = 2, f = 4, k = 4)
+# first run iwth best guess of infiltration capacity of 2 mm/hr
+
 
 # try sampling across infiltration uncertainty
-f = rnorm(10, mean = 5, sd = 2)    # soil infiltration capacity (mm/hr)
-f
+  # soil infiltration capacity mean 5 (mm/hr),  sd 2 normally distributed
 
-# apply the erosion model 
-estimate = map(f, ~ simple_erosion(I = 2, f = .x)) %>%
-  unlist()
 
-estimate
+# apply the erosion model using map and unlist
+
 # look at range of values
-summary(estimate)
+
 
 
 # but what about rarer infiltration values
 pnorm(1.5, mean = 5, sd = 2)
 simple_erosion(I = 2, f = 1.9)
 
-pnorm(0.5, mean = 5, sd = 2) 
-simple_erosion(I = 2, f = 0.5)
+# how about even rarer 0.5
+
 
 ```
-
 
 ## More Formal Approaches to more effectively sample parameter space
 
@@ -178,17 +169,18 @@ source(here("R/compute_almond_yield.R"))
 # set a random seed to make things 'random'
 set.seed(1)
 
-# which parameters
-pnames <- c("Tmincoeff1", "Tmincoeff2", "Pcoeff1", "Pcoeff2", "intercep")
+# which parameters are we going to vary - make a vector of all the names
+
 
 # how many parameters
-npar <- length(pnames)
+
 # how many samples
-nsample <- 100
+
 
 # create our latin hyper cube of quantiles for each parameter
-parm_quant <- randomLHS(nsample, npar)
-colnames(parm_quant) <- pnames
+
+# add column names to our quantile matrix
+
 
 
 
@@ -196,27 +188,24 @@ colnames(parm_quant) <- pnames
 # what you know about the likely range of variation
 # then use our random samples to pick the quantiles
 
-# first set up a data frame to hold the samples for each parameter
-parm <- as.data.frame(matrix(nrow = nrow(parm_quant), ncol = ncol(parm_quant)))
-colnames(parm) <- pnames
+# first set up a data frame to hold the samples for each parameter a row for each sample, column for each parameter
+
+# again add column names
 # for each parameter pick samples based on lhs quantiles
-# I'm using several examples normal distribution (with 10% standard deviation) and uniform with +- 10%
-# in reality I should pick distribution from knowledge about uncertainty in parameters
+# Lets use several examples normal distribution (with 10% standard deviation) and uniform with +- 10%
+# in reality we should pick distribution from knowledge about uncertainty in parameters
 
 # to make it easy to change i'm setting standard deviation / range variation to a variable
-pvar <- 10
+
 
 parm[, "Tmincoeff1"] <- qnorm(parm_quant[, "Tmincoeff1"], mean = -0.015, sd = 0.015 / pvar)
-parm[, "Tmincoeff2"] <- qnorm(parm_quant[, "Tmincoeff2"], mean = -0.0046, sd = 0.0046 / pvar)
+# repeat for all parameters
 
-# for uniform I'm using +- 10%
-parm[, "Pcoeff1"] <- qunif(parm_quant[, "Pcoeff1"], min = -0.07 - 0.07 / pvar, max = -0.07 + 0.07 / pvar)
-parm[, "Pcoeff2"] <- qunif(parm_quant[, "Pcoeff2"], min = -0.0043 - 0.0043 / pvar, max = -0.0043 + 0.0043 / pvar)
 
-parm[, "intercep"] <- qnorm(parm_quant[, "intercep"], mean = 0.28, sd = 0.28 / pvar)
 # note I could also index by column number by names keep things more clear, fewer mistakes
 # parm[,5] = qnorm(parm_quant[,5], mean=0.28, sd=0.28/pvar)
 
+# check that it looks right
 head(parm)
 ```
 
@@ -273,20 +262,18 @@ compute_almond_yield
 
 ```{r almondsens2}
 # read in the input data
-clim <- read.table(here("data/clim.txt"), header = T)
 
 
 
 # lets now run our model for all of the parameters generated by LHS
 # pmap is useful here - it is a map function that uses the actual names of input parameters
 
-yields <- parm %>% pmap(compute_almond_yield, clim = clim)
 
 # notice that what pmap returns is a list
 head(yields)
 
 # turn results in to a dataframe for easy display/analysis
-yieldsd <- yields %>% map_dfr(`[`, c("maxyield", "minyield", "meanyield"))
+
 ```
 
 ## Plotting {.scrollable}
@@ -305,31 +292,28 @@ Plot relationship between parameter and output to understand how uncertainty in 
 
 ```{r senplot}
 # add uncertainty bounds on our estimates
-tmp <- yieldsd %>% gather(value = "value", key = "yield")
-ggplot(tmp, aes(yield, value, col = yield)) +
-  geom_boxplot() +
-  labs(y = "Yield (as anomoly)")
+# reshape data for easy plotting by gathering across yield type 
 
-# note that you don't see the ranges because of the scale (min yield anomoly much smaller than max) - here's a more informative way to graph
-ggplot(tmp, aes(yield, value, col = yield)) +
-  geom_boxplot() +
-  labs(y = "Yield (as anomoly)") +
-  facet_wrap(~yield, scales = "free")
+# use ggplot to create a boxplot for each yield type, across parameter uncertainty
+
+# note that you don't see the ranges because of the scale (min yield anomoly much smaller than max) - here's a more informative way to graph - scales = "free"
 
 
-# cumulative distribution
-ggplot(yieldsd, aes(maxyield)) +
-  stat_ecdf()
+# cumulative distribution is stat_ecdf in ggplot
 
 
 # plot parameter sensitivity
 # a bit tricky but nice way to make it easy to plot all parameters against all values
+
+# first combine parameter sets with output
 tmp <- cbind.data.frame(yieldsd, parm)
-tmp2 <- tmp %>% gather(maxyield, minyield, meanyield, value = "yvalue", key = "yieldtype")
-tmp3 <- tmp2 %>% gather(-yvalue, -yieldtype, key = "parm", value = "parmvalue")
-ggplot(tmp3, aes(parmvalue, yvalue, col = yieldtype)) +
-  geom_point() +
-  facet_wrap(~ yieldtype * parm, scales = "free", ncol = 5)
+
+# gather across yield type
+
+# gather across parameters (but not including yields)
+
+# now plot using facets for each yield type, parameter combination
+
 ```
 
 ## Quantifying Sensitivity {.scrollable}
