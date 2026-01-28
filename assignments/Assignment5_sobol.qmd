@@ -6,9 +6,10 @@ output:
 ---
 
 
-Assignment Part I
+*Assignment Part I*
 
-Choose one of the 3 papers below that provide an example of sensitivity analysis of model parameters. (Or find another paper that uses model sensitivity analysis as part of understanding an enviromental topic)
+Choose one of the 3 papers below that provide an example of sensitivity analysis of model parameters.
+*Or* find another paper that uses model sensitivity analysis as part of understanding an enviromental topic
 
 After going through the paper, write a paragraph describing how results of the sensitivity analysis reported on in the paper might contribute to understanding (or prediction) within an environmental problem solving or management context.
 
@@ -18,7 +19,7 @@ Building Cooling Energy Mdoel
 
 Uranium in Groundwater Model
 
-Assignment Part 2
+*Assignment Part 2*
 
 Recall our model of atmospheric conductance $$
 C_{at} = \frac{v_m}{6.25*{ln(\frac{z_m-z_d}{z_0})}^2}
@@ -71,37 +72,37 @@ Comment on what this tells you about how atmospheric conductance and its sensiti
 Submit a pdf or html document with your code, graphs, and answers to the questions on Canvas
 Due 
 
-Grading Rubric
+*Grading Rubric*. Total points 80. (normalized to 10 for Canvas)
 
-PART I (Paper Examples)
+**PART I (Paper Examples)**
 
-Discussion of the implication of parameter uncertainty from example paper (20pts)
+* Discussion of the implication of parameter uncertainty from example paper 
 
-*explanation directly relates to a specific parameter (10pts)
+  * explanation directly relates to a specific parameter (10pts)
 
-*explanation explores how parameter uncertainty might meaningfully impact results (10pts)
+  * explanation explores how parameter uncertainty might meaningfully impact results (10pts)
 
-PART II (Atmospheric Conductance)
+**PART II (Atmospheric Conductance and Sobol)**
 
-Generation of parameter values using Sobol (10pts)
+* Generation of parameter values using Sobol (10pts)
 
-Running model for the parameters (10pts)
+* Running model for the parameters (10pts)
 
-Graph of uncertainty of the response variable
+* Graph of uncertainty of the response variable
 
-meaningful graph (5pts)
+  * meaningful graph (5pts)
 
-graphing style (axis labels, legibility) (5 pts)
+  * graphing style (axis labels, legibility) (5 pts)
 
-Graph of relationship between output and windspeed
+* Graph of relationship between output and windspeed
 
-choice of color (see instructions) (5pts)
+  * choice of color (see instructions) (5pts)
 
-graphing style (axis labels, legibility) (5 pts)
+  * graphing style (axis labels, legibility) (5 pts)
 
-Computing Sobol Indicators (10 pts)
+* Computing Sobol Indicators (10 pts)
 
-Discussion (10pts)
+* Discussion 
 
-correctly identifying how sensitivity to windspeed changed with setting (5pts)
+  * correctly identifying how sensitivity to windspeed changed with setting (10pts)
 
