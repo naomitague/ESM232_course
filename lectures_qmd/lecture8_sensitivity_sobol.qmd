@@ -36,9 +36,9 @@ Generate Summary Statistics and graph
 
 Nice papers on sensitivity analysis for environmental modeling
 
- * Saltelli, Andrea, and Paola Annoni. "How to avoid a perfunctory sensitivity analysis." Environmental Modelling & Software 25, no. 12 (2010): 1508-1517
+-   Saltelli, Andrea, and Paola Annoni. "How to avoid a perfunctory sensitivity analysis." Environmental Modelling & Software 25, no. 12 (2010): 1508-1517
 
- * Tarantola, Stefano, Federico Ferretti, Samuele Lo Piano, Mariia Kozlova, Alessio Lachi, Rossana Rosati, Arnald Puy et al. "An annotated timeline of sensitivity analysis." Environmental Modelling & Software 174 (2024): 105977.
+-   Tarantola, Stefano, Federico Ferretti, Samuele Lo Piano, Mariia Kozlova, Alessio Lachi, Rossana Rosati, Arnald Puy et al. "An annotated timeline of sensitivity analysis." Environmental Modelling & Software 174 (2024): 105977.
 
 ------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ Run the model for each sample
 
 Graph the results
 
-Quantify sensitivity -  we used *pcc*
+Quantify sensitivity - we used *pcc*
 
 ------------------------------------------------------------------------
 
@@ -100,8 +100,6 @@ Several Indices
 
 -   R help pages for *Sensitivity* provide many good references
 
-
-
 ## Sobol - how to {.scrollable}
 
 -   run Sobol to get parameter sets in a sensitivity analysis object
@@ -127,17 +125,13 @@ I've provided a function to compute atmospheric conductance $C_{at}$ (how easily
 
 ## Atmospheric conductance (simple model) {.scrollable}
 
-So that you know what it does - here's some background on the function 
-$$
+So that you know what it does - here's some background on the function $$
 C_{at} = \frac{v_m}{6.25*{ln(\frac{z_m-z_d}{z_0})}^2}
-$$ 
-$$
+$$ $$
 z_d = k_d*h
-$$ 
-$$
+$$ $$
 z_0 = k_0*h
 $$
-
 
 $z_m$ is the height at which windspeed is measured - must be higher than the vegetation (cm), it is usually measured 200 cm above the vegetation
 
@@ -178,9 +172,9 @@ z_d = k_d h,\;
 z_0 = k_0 h
 $$
 
-- $k_0, k_d$: Normal, SD = 10% of mean  
-- $v$: Normal ($\mu=250$, $\sigma=30$)  
-- $h$: Uniform (9.5–10.5)
+-   $k_0, k_d$: Normal, SD = 10% of mean\
+-   $v$: Normal ($\mu=250$, $\sigma=30$)\
+-   $h$: Uniform (9.5–10.5)
 
 ## Steps: Generate Parameters {.scrollable}
 
@@ -188,8 +182,6 @@ First we need to generate parameter sets for the Sobol analysis
 
 -   2 sets of samples of all of the parameters, we will make these up by sampling from expected distributions
 -   use *sobolSalt* to generate the parameter sets
-
-
 
 ```{r sobolpar}
 source(here("R/Catm.R"))
@@ -224,7 +216,6 @@ sens_Catm_Sobol <- sobolSalt(model = NULL, X1, X2, nboot = 100)
 ## Steps: Compute Sobol Indices {.scrollable}
 
 now run model for Sobol generated parameter sets and compute indices
-
 
 ```{r sobolrun}
 # run model for all parameter sets
@@ -265,7 +256,7 @@ TIP: a useful plotting strategy is to plot model output against parameter with t
 
 -   uncertainty in the output
 
--  parameter-output variation for the most sensitive parameters
+-   parameter-output variation for the most sensitive parameters
 
 ```{r sobolplot}
 # graph two most sensitive parameters

@@ -5,6 +5,8 @@ theme: solarized
 resources: ["img/"]
 css: ["slides.css"]
 editor: visual
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -125,14 +127,11 @@ I've provided a function to compute atmospheric conductance $C_{at}$ (how easily
 
 ## Atmospheric conductance (simple model) {.scrollable}
 
-So that you know what it does - here's some background on the function 
-$$
+So that you know what it does - here's some background on the function $$
 C_{at} = \frac{v_m}{6.25*{ln(\frac{z_m-z_d}{z_0})}^2}
-$$
-$$
+$$ $$
 z_d = k_d*h
-$$
-$$
+$$ $$
 z_0 = k_0*h
 $$
 
@@ -186,7 +185,6 @@ First we need to generate parameter sets for the Sobol analysis
 -   2 sets of samples of all of the parameters, we will make these up by sampling from expected distributions
 -   use *sobolSalt* to generate the parameter sets
 
-
 ```{r sobolpar}
 source(here("R/Catm.R"))
 
@@ -218,24 +216,44 @@ now run model for Sobol generated parameter sets and compute indices
 # run model for all parameter sets
 # so some formatting first 
 # turn into data frame 
+np <- 1000
+k_o <- rnorm(mean = 0.1, sd = 0.1 * 0.1, n = np)
+k_d <- rnorm(mean = 0.7, sd = 0.7 * 0.1, n = np)
+v <- rnorm(mean = 250, sd = 30, n = np)
+height <- runif(min = 9.5, max = 10.5, n = np)
+X1 = cbind.data.frame(k_o,k_d, v, height)
 
+k_o <- rnorm(mean = 0.1, sd = 0.1 * 0.1, n = np)
+k_d <- rnorm(mean = 0.7, sd = 0.7 * 0.1, n = np)
+v <- rnorm(mean = 250, sd = 30, n = np)
+height <- runif(min = 9.5, max = 10.5, n = np)
+X2 = cbind.data.frame(k_o,k_d, v, height)
 
+sens_Catm_sobol = sobolSalt(model=NULL, X1,X2, nboot=100)
 # give parameters names
-
-
+parms =as.data.frame(sens_Catm_sobol$X)
+colnames(parms) = colnames(X1)
 # run the Catm model for all parmeter sets and save results
+res = pmap_dbl(parms, Catm)
 #(use pmap_dbl from purrr)
+
+a = 4+5*8
+
 
 
 # now tell our orginal Sobol object about the results.   
 
+sens_Catm_sobol = sensitivity::tell(sens_Catm_sobol, res, res.names="gs")
 # look at results
 # main effect (S):  partitions variance (main effect without co-variance) - sums approximately to one
-
+sens_Catm_sobol$S
+row.names(sens_Catm_sobol$S) = colnames(parms)
+sens_Catm_sobol$S
 # useful to add names (by row)
 
 # total effect (T) - accounts for parameter interactions
-
+row.names(sens_Catm_sobol$T) = colnames(parms)
+sens_Catm_sobol$T
 # Both the main effect and total effect can tell us something about how the parameter influences results
 
 
@@ -259,13 +277,14 @@ TIP: a useful plotting strategy is to plot model output against parameter with t
 ```{r sobolplot}
 
 # first combine parameters and output  
-
+both = cbind.data.frame(parms, gs=sens_Catm_sobol$y)
 # look at overall gs sensitivity to all parameter variation
-
+ggplot(both, aes(x=gs))+geom_histogram()
 
 # look at response of conductance to the two most important variables choose 
 # second 'most important" as color
 
+ggplot(both, aes(k_o, gs, col=v))+geom_point()
 # use second most sensitive parameter (using most important as color)
 
 ```

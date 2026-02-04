@@ -15,140 +15,7 @@ library(deSolve)
 library(here)
 ```
 
-## Return to big picture {.scrollable}
-
--   the question that you want your model to answer determines the type of model you need
-
-## Model Types {.scrollable}
-
-Conceptual.............Mathematical
-
-Stochastic.............Deterministic
-
-Lumped.............Spatially Distributed: *SPACE*
-
-Static.............Dynamic : *TIME*
-
-Abstract.............Physically/Process Based
-
-## Dynamic Models {.scrollable}
-
-Example of a time varying (dynamic) model
-
-Modeling disease through time
-
-[source](http://www.econometricsbysimulation.com/2013/05/sir-model-flue-season-dynamic.html)
-
-![](img/disease_time.png)
-
-## Spatial models that interact - similar to dynamic {.scrollable}
-
--   Key idea is dependency from one point in time/space to the next!
-
--   This implies a differential/difference equation to describe the process/transfer function
-
-**Spatially distributed** - model is applied to different “patches” in space
-
--   spatial units are independent
-
-## Spatial models that interact - similar to dynamic {.scrollable}
-
-![](img/spatial.001.png)
-
-## Dynamic modeling {.scrollable}
-
-Dynamic modeling is common in environmental problems solving
-
--   Similar issues: what happens at one place, depends on neighbors;
--   what happens at one time; depends on previous time -
-
-Space - two way; Time is usually one-way
-
-Dynamic system modeling - quickly becomes complex (Engineering degrees spend a lot of time on this; there are books, entire journals etc on this topic)
-
-## Why you should care {.scrollable}
-
-Many environmental problems and questions can be related to
-
--   Diffusion
--   Population
-
-Both often require dynamics models; and both often require thinking about dynamics in space and in time
-
-## Vocab {.scrollable}
-
-Some useful terminology
-
--   **stocks** - variables that evolve over time
--   **flows** - transfers between variables or from the system
--   **parameters** - values that controls the relationship between stocks and flows
--   **sink** - something that absorbs flows
--   **source** - something that generates flows
-
-## More terminology {.scrollable}
-
--   **System state**: value of all variables need to describe the "entity that evolves through time" at a particular point in time
-    -   usually think of these as stores (soil moisture, bank account balance, number of individuals in a particular age class)
--   **State-space**: description of the entity may require multiple variables - for a watershed this could be soil moisture, water currently in dam and water stored in trees, and for each "grid" in a watershed)
--   **State-space trajectories**: how the system state evolves through time
--   **Initial conditions**: values to describe the system state at the beginning
-
-## Examples - note the feedback loops (time dependency) {.scrollable}
-
-![](img/simplerabbit.jpg)
-
-## Human engineering example {.scrollable}
-
-![](img/engineerexample.jpg)
-
-## Feekback is a key feature of dynamic models {.scrollable}
-
--   dynamic systems often have *feedback* loops
-    -   positive
-    -   negative
--   feedbacks often lead to non-linear responses
-    -   think "runaway" growth
-
-## Discrete vs Continuous models {.scrollable}
-
--   do we break time/space in to "chunks" *discrete*
-
--   or think of time/space as a stream. *continuous*
-
-**Discrete** might be modeling something that occurs once every period; water withdrawls, tax revenues
-
-**Continuous** would be things like pollution, water that are always changing in time
-
-Discrete models for dynamic processes use *difference* equations Continuous models for dynamic processes use *differential* equations
-
-Often it depends on how you look at the system -
-
-## Dynamic System {.scrollable}
-
-Initial conditions
-
--   to model how something evolves over space and time
-    -   you need to know where it starts from
-
-    -   setting initial conditions is usually part of dynamic modellinng
-
-Boundary Value Problems
-
--   especially for spatial dynamic models sometimes initial conditions are provided values at "end points"
-
-## Stability {.scrollable}
-
-Dynamic systems may lead to *unstable* or *stable* or *cyclic* states over time
-
--   **stable**...output converges to a particular over time, or for *cyclic* a repeated patterns of values
-
--   **unstable** ...grows to infinity
-
--   *chaotic* ..highly sensitive to initial conditions
-
--   for the same dynamic systems whether you are stable can change with parameters and initial conditions
-
-## Partner Exercize
+## Partner Exercise
 
 Discuss examples of dynamic systems \* spatial interaction \* temporal interaction \* both
 
@@ -193,19 +60,17 @@ exppop
 
 # lets look at how this models population over time
 # create a variable (years) to track time
-years <- seq(from = 1, to = 100, by = 2)
+
 
 # use map_dbl to run our model for all years
 # assume some initial conditions of 20 individuals and growth rate 0.01
-Ptime <- years %>% map_dbl(~ exppop(P0 = 20, r = 0.01, T = .x))
+
 
 # keep track of what times we ran by adding years to data.frame
-Ptime <- data.frame(P = Ptime, years = years)
+
 
 # plot
-ggplot(Ptime, aes(years, P)) +
-  geom_point() +
-  labs(x = "years", y = "Rabbit Population")
+
 ```
 
 ## Integration, or Solving Differential Equations {.scrollable}
@@ -236,22 +101,21 @@ source(here("R/dexppop.R"))
 dexppop
 
 # see how it works - run with population of 20, growth rate 0.01
-dexppop(P = 20, r = 0.01)
+
 
 
 # what is this?
 
 # notices that it doesn't matter what you use for t 
 # this is just how R works with derivatives
-dexppop(t = 100, P = 20, r = 0.01)
+
 
 # lets look at this for a range of initial populations (1 to 100)
 # create population sequence
-pops <- seq(from = 1, to = 100)
+
 
 # compute rate of change of population (growth) for each population value
-tmp <- pops %>% map(~ dexppop(time = 0, r = 0.01, P = .x))
-pchange <- unlist(tmp)
+
 ```
 
 ## plotting the derivative (rate of change) {.scrollable}
@@ -259,28 +123,26 @@ pchange <- unlist(tmp)
 ```{r, plotderivatives, echo=TRUE}
 
 # plot rate of change by population
-pdyn <- data.frame(pops, pchange)
-ggplot(pdyn, aes(pops, pchange)) +
-  geom_point(col = "green", size = 1.5)
+
 ```
 
 -   why is this a straight line?
 -   how many new individuals are born at each population level
 
-
 ## Integration {.scrollable}
 
 What if we wanted to look at population in 20 years given an initial condition
 
-Two options 
+Two options
 
-1) explicit solution to differential equation is known; e.g. you can integrate both sides of the equation! 
-  -   we did this above -   $P = PO * exp(rt)$ coded in *exppop.R*
-  -   you can get the answer exactly and quickly this way
+1)  explicit solution to differential equation is known; e.g. you can integrate both sides of the equation!
 
-2) not integrable
+-   we did this above - $P = PO * exp(rt)$ coded in *exppop.R*
+-   you can get the answer exactly and quickly this way
+
+2)  not integrable
+
 -   must be solved by iteration; this is what we do when we can't integrate both sides
-
 
 # Example {.scrollable}
 
@@ -315,15 +177,13 @@ discrete_logistic_pop
 
 # how many rabbits after 50 years given a growth of 0.05
 # starting with 1 rabbit - but a carrying capcity of200
-discrete_logistic_pop(P0 = 1, r = 0.05, T = 50)
+
 
 # save results
-discrete_result <- discrete_logistic_pop(P0 = 1, r = 0.05, T = 50)
+
 
 # lets also keep the parameters for use later
-P0 <- 1
-r <- 0.05
-T <- 50
+
 ```
 
 ## Compare discrete and analytic results {.scrollable}
@@ -336,22 +196,18 @@ Save the results from both to compare
 source(here("R/exppop.R"))
 
 # run exppopK for P0, r, K, T (same conditions as discrete)
-analytic_result <- exppop(P0 = P0, r = r, T = T)
 
-analytic_result
-discrete_result
+# compare values (endpoints)
 
 # why are they different
 # look at trajectories for each point in time from 1 to 100
 
 # create a dataframe to store results with time as first column
-growth_result <- data.frame(time = seq(from = 1, to = 100))
 
 # add a column using analytical growth model
-growth_result$Panalytic <- growth_result$time %>% map_dbl(~ exppop(P0 = 1, r = 0.05, T = .x))
 
 # add a column using discrete growth model
-growth_result$Pdiscrete <- growth_result$time %>% map_dbl(~ discrete_logistic_pop(P0 = 1, r = 0.05, T = .x))
+
 ```
 
 ## Graph
@@ -359,11 +215,9 @@ growth_result$Pdiscrete <- growth_result$time %>% map_dbl(~ discrete_logistic_po
 ```{r, graph2, eval=TRUE, echo=TRUE}
 
 # gather both model results using a key called "Ptype", value "P"
-tmp <- growth_result %>% gather(key = "Ptype", value = "P", -time)
 
 # plot with model type as color
-ggplot(tmp, aes(time, P, col = Ptype)) +
-  geom_point()
+
 
 # try running them for longer time periods to see what happens
 # change the value of r, K , P0 - see how it effects the results
@@ -424,23 +278,19 @@ dexppop
 library(deSolve)
 
 # create initial conditions 20 rabbits
-initialrabbits <- 20
+
 # create a vector of years that you want results for - we can skip years (by 2)
-years <- seq(from = 1, to = 100, by = 2)
+
 
 # run the ode solver
-Ptime <- ode(y = initialrabbits, times = years, func = dexppop, parms = c(0.01))
-head(Ptime)
-colnames(Ptime) <- c("year", "P")
+
+# added column names
+
 
 # notice (by using attributes) that there are additional pieces of information including the method used for integration
-attributes(Ptime)
 
 # this also means you need to extract just the data frame for plotting
 # make results a data frame
-ggplot(as.data.frame(Ptime), aes(year, P)) +
-  geom_point() +
-  labs(y = "Population", "years")
 
 # you can also run ode with function inputs in order but better to use names
 Ptime <- ode(initialrabbits, years, dexppop, 0.01)
@@ -455,55 +305,52 @@ ggplot(as.data.frame(Ptime), aes(year, P)) +
 
 ## Comparing approaches {.scrollable}
 
-* analytical
-* numerical integration by hand
-* using an ODE solver to do the numerical integration
+-   analytical
+-   numerical integration by hand
+-   using an ODE solver to do the numerical integration
 
 ```{r, all, echo=TRUE }
+# set r
+
 # create a dataframe to store results with time as first column
-r = 0.05
-growth_result <- data.frame(time = seq(from = 1, to = 100))
+
 
 # add a column using analytical growth model
-growth_result$Panalytic <- growth_result$time %>% map_dbl(~ exppop(P0 = 1, r = r, T = .x))
+
 
 # add a column using discrete growth model
-growth_result$Pdiscrete <- growth_result$time %>% map_dbl(~ discrete_logistic_pop(P0 = 1, r = r, T = .x))
 
-tmp <- ode(y=1, times=growth_result$time, dexppop, parms=c(r))
-growth_result$ode = tmp[,2]
+
+# add a column using ode
+
 
 # gather both model results using a key called "Ptype", value "P"
-tmp <- growth_result %>% gather(key = "Ptype", value = "P", -time)
 
 # plot with model type as color
-p=ggplot(tmp, aes(time, P, col = Ptype)) +
-  geom_point()
-p
+
 
 ```
 
-
-* try running them for longer time periods to see what happens
-* change the value of r,  P0 - see how it effects the results
+-   try running them for longer time periods to see what happens
+-   change the value of r, P0 - see how it effects the results
 
 ## Add carrying capacity
+
 try this - add a carrying capacity
 
-$ dP/dt = 0, P >= carryingcapacity) $
+\$ dP/dt = 0, P \>= carryingcapacity) \$
 
-$ dP/dt = r, P < carryingcapacity) $
+\$ dP/dt = r, P \< carryingcapacity) \$
 
 or alternatively
 
-$ dP/dt =  r* max(0, (1-P/K))$
+\$ dP/dt = r\* max(0, (1-P/K))\$
 
 ## Explicit Solution is available {.scrollable}
 
-Even with carrying capacity there is an analytical solution, depending on how you think about carrying capacity 
+Even with carrying capacity there is an analytical solution, depending on how you think about carrying capacity
 
-Will use a "hard" threshold (no decline in growth rate until carrying capacity is reached)
--  you can still use the same equation, and just add a limit
+Will use a "hard" threshold (no decline in growth rate until carrying capacity is reached) - you can still use the same equation, and just add a limit
 
 ```{r explicit}
 source(here("R/exppopK.R"))
