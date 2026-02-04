@@ -148,7 +148,7 @@ Dynamic systems may lead to *unstable* or *stable* or *cyclic* states over time
 
 -   for the same dynamic systems whether you are stable can change with parameters and initial conditions
 
-## Partner Exercize
+## Partner Exercise
 
 Discuss examples of dynamic systems \* spatial interaction \* temporal interaction \* both
 
@@ -267,20 +267,20 @@ ggplot(pdyn, aes(pops, pchange)) +
 -   why is this a straight line?
 -   how many new individuals are born at each population level
 
-
 ## Integration {.scrollable}
 
 What if we wanted to look at population in 20 years given an initial condition
 
-Two options 
+Two options
 
-1) explicit solution to differential equation is known; e.g. you can integrate both sides of the equation! 
-  -   we did this above -   $P = PO * exp(rt)$ coded in *exppop.R*
-  -   you can get the answer exactly and quickly this way
+1)  explicit solution to differential equation is known; e.g. you can integrate both sides of the equation!
 
-2) not integrable
+-   we did this above - $P = PO * exp(rt)$ coded in *exppop.R*
+-   you can get the answer exactly and quickly this way
+
+2)  not integrable
+
 -   must be solved by iteration; this is what we do when we can't integrate both sides
-
 
 # Example {.scrollable}
 
@@ -455,9 +455,9 @@ ggplot(as.data.frame(Ptime), aes(year, P)) +
 
 ## Comparing approaches {.scrollable}
 
-* analytical
-* numerical integration by hand
-* using an ODE solver to do the numerical integration
+-   analytical
+-   numerical integration by hand
+-   using an ODE solver to do the numerical integration
 
 ```{r, all, echo=TRUE }
 # create a dataframe to store results with time as first column
@@ -483,27 +483,32 @@ p
 
 ```
 
-
-* try running them for longer time periods to see what happens
-* change the value of r,  P0 - see how it effects the results
+-   try running them for longer time periods to see what happens
+-   change the value of r, P0 - see how it effects the results
 
 ## Add carrying capacity
+
 try this - add a carrying capacity
 
-$ dP/dt = 0, P >= carryingcapacity) $
+$$
+\frac{dP}{dt} =
+\begin{cases}
+0, & P \ge K \\
+r, & P < K
+\end{cases}
+$$
 
-$ dP/dt = r, P < carryingcapacity) $
+alternative
 
-or alternatively
-
-$ dP/dt =  r* max(0, (1-P/K))$
+$$
+\frac{dP}{dt} = r \, \max\!\left(0, 1 - \frac{P}{K}\right)
+$$
 
 ## Explicit Solution is available {.scrollable}
 
-Even with carrying capacity there is an analytical solution, depending on how you think about carrying capacity 
+Even with carrying capacity there is an analytical solution, depending on how you think about carrying capacity
 
-Will use a "hard" threshold (no decline in growth rate until carrying capacity is reached)
--  you can still use the same equation, and just add a limit
+Will use a "hard" threshold (no decline in growth rate until carrying capacity is reached) - you can still use the same equation, and just add a limit
 
 ```{r explicit}
 source(here("R/exppopK.R"))

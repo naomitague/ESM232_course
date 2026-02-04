@@ -338,13 +338,19 @@ ggplot(as.data.frame(Ptime), aes(year, P)) +
 
 try this - add a carrying capacity
 
-\$ dP/dt = 0, P \>= carryingcapacity) \$
+$$
+\frac{dP}{dt} =
+\begin{cases}
+0, & P \ge K \\
+r, & P < K
+\end{cases}
+$$
 
-\$ dP/dt = r, P \< carryingcapacity) \$
+alternative
 
-or alternatively
-
-\$ dP/dt = r\* max(0, (1-P/K))\$
+$$
+\frac{dP}{dt} = r \, \max\!\left(0, 1 - \frac{P}{K}\right)
+$$
 
 ## Explicit Solution is available {.scrollable}
 
