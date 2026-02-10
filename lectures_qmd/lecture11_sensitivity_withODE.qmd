@@ -15,6 +15,105 @@ library(deSolve)
 library(here)
 library(sensitivity)
 ```
+## Extracting meaning from time series output {.scrollable}
+
+Quiz - Suggest a metric (a single measure) for summarizing the results from the diffusion model
+
+## Extracting information from space-time results {.scrollable}
+
+-   pictures can be hard to interpret
+
+-   summarizing over one of the dimensions (either space or time) can help
+
+-   looking at a single trajectory through time
+
+-   looking at spatial variation for one point in time
+
+-   looking at spatial variation for multiple points in time
+
+## Try it {.scrollable}
+
+```{r one option}
+# View(resfast_fixtime$conc)
+
+
+# graph a single point in space through time
+# single column (time)
+plot(resfast_fixtime$conc[, 3], ylab = "Concentration for a location 2 spatial units from origin (1+2")
+
+# plot all trajectories
+# add a time column to concentration data frame and transform for plotting
+resl <- as.data.frame(resfast_fixtime$conc) %>%
+  mutate(time = seq(from = 1, to = 100)) %>%
+  pivot_longer(-time, names_to = "distance", values_to = "conc")
+ggplot(resl, aes(time, conc, col = distance)) +
+  geom_line()
+
+# plot all places at each point in time
+ggplot(resl, aes(time, conc, group = time)) +
+  geom_boxplot()
+
+# use apply to calculate the spatial variation for each row (e.g for each time point)
+cvar <- resfast_fixtime$conc %>% apply(1, var)
+cmean <- resfast_fixtime$conc %>% apply(1, mean)
+
+spatial_aver <- cbind.data.frame(cvar, cmean, time = seq(from = 1, to = 100))
+length(cvar)
+# notice its the same as the number of time units (nt) used above
+
+# plot spatial variation through time
+ggplot(spatial_aver, aes(time, cvar)) +
+  geom_line() +
+  labs(y = "Spatial Variation")
+
+# plot coefficient of variation (so standard deviation divided by the mean)
+ggplot(spatial_aver, aes(time, 100 * sqrt(cvar) / cmean)) +
+  geom_line() +
+  labs(y = "COV (as percent")
+```
+
+##  {.scrollable}
+
+```{r one option}
+# View(resfast_fixtime$conc)
+
+
+# graph a single point in space through time
+# single column (time)
+plot(resfast_fixtime$conc[, 3], ylab = "Concentration for a location 2 spatial units from origin (1+2")
+
+# plot all trajectories
+# add a time column to concentration data frame and transform for plotting
+resl <- as.data.frame(resfast_fixtime$conc) %>%
+  mutate(time = seq(from = 1, to = 100)) %>%
+  pivot_longer(-time, names_to = "distance", values_to = "conc")
+ggplot(resl, aes(time, conc, col = distance)) +
+  geom_line()
+
+# plot all places at each point in time
+ggplot(resl, aes(time, conc, group = time)) +
+  geom_boxplot()
+
+# use apply to calculate the spatial variation for each row (e.g for each time point)
+cvar <- resfast_fixtime$conc %>% apply(1, var)
+cmean <- resfast_fixtime$conc %>% apply(1, mean)
+
+spatial_aver <- cbind.data.frame(cvar, cmean, time = seq(from = 1, to = 100))
+length(cvar)
+# notice its the same as the number of time units (nt) used above
+
+# plot spatial variation through time
+ggplot(spatial_aver, aes(time, cvar)) +
+  geom_line() +
+  labs(y = "Spatial Variation")
+
+# plot coefficient of variation (so standard deviation divided by the mean)
+ggplot(spatial_aver, aes(time, 100 * sqrt(cvar) / cmean)) +
+  geom_line() +
+  labs(y = "COV (as percent")
+```
+
+##  {.scrollable}
 
 ## Dynamic models {.scrollable}
 
@@ -27,6 +126,9 @@ library(sensitivity)
     -   derivative is first order
     -   (e.g $dy/dt$ = ; not $d^2y/dt$+dy/dy = f(y,t))
     -   there also solvers for high order and partial differential equations
+
+
+
 
 ## Sensitivity Analysis of a Differential Equation {.scrollable}
 
