@@ -15,14 +15,12 @@ library(deSolve)
 library(here)
 ```
 
-
 ## What are dynamic models {.scrollable}
-
 
 Dynamic model use differential equations to describe how a system is changing
 
-* state-variables - the variables that the model is tracking/estimating over time (e.g population size)
-* parameters/inputs - the values that determine how the system changes (e.g growth rate)
+-   state-variables - the variables that the model is tracking/estimating over time (e.g population size)
+-   parameters/inputs - the values that determine how the system changes (e.g growth rate)
 
 how the state variables evolve described by differential equations
 
@@ -30,51 +28,42 @@ how the state variables evolve described by differential equations
 
 For all state variables you would have a derivative
 
-* wolf population growth 
-  - state variables (wolf, deer, vegetation)
-  - parameters (growth rates, carrying capacity, climate)
-
-* snowpack 
-  - state variable - (amount of snow)
-  - parameters/inputs (sunlight, temperature, precipitation, wind)
-
-* dams emissions of CO2 
-  - state variable (sediment, bioaccumulation, dissolved CO2) (maybe water temperature, water level)
-  - parameters inputs (sediment inputs, temperature, precipitation, dam operations)
-
-* wildfire smoke impacts on drinking water 
-  - state variable  (contaminant concentration in air, water)
-  - parameters/inputs  (wildfire size, wind, precipitation, water flow, biomass lost in fire)
-(really complicated as a dynamic model, versus simple statistical model of smoke impacts on water quality)
-
-* groundwater 
-  - state variable (groundwater level, contaminant concentration)
-  - parameters/inputs  (precipitation, pumping, recharge, geology)
-
-
+-   wolf population growth
+    -   state variables (wolf, deer, vegetation)
+    -   parameters (growth rates, carrying capacity, climate)
+-   snowpack
+    -   state variable - (amount of snow)
+    -   parameters/inputs (sunlight, temperature, precipitation, wind)
+-   dams emissions of CO2
+    -   state variable (sediment, bioaccumulation, dissolved CO2) (maybe water temperature, water level)
+    -   parameters inputs (sediment inputs, temperature, precipitation, dam operations)
+-   wildfire smoke impacts on drinking water
+    -   state variable (contaminant concentration in air, water)
+    -   parameters/inputs (wildfire size, wind, precipitation, water flow, biomass lost in fire) (really complicated as a dynamic model, versus simple statistical model of smoke impacts on water quality)
+-   groundwater
+    -   state variable (groundwater level, contaminant concentration)
+    -   parameters/inputs (precipitation, pumping, recharge, geology)
 
 ## Integration of state variables to evolve the system through time (or space) {.scrollable}
 
 Two options
 
+[ 1) explicit solution to differential equation is known; ]{style="color: blue;"}
 
-<span style="color: blue;"> 1)  explicit solution to differential equation is known;  </span>
-
--  this means you can integrate by 'math' - analytical solution
--   we did this  - $P = PO * exp(rt)$ coded in *exppop.R*
+-   this means you can integrate by 'math' - analytical solution
+-   we did this - $P = PO * exp(rt)$ coded in *exppop.R*
 -   you can get the answer exactly and quickly this way
 
-<span style="color: blue;"> 2)  not integrable </span>
+[ 2) not integrable ]{style="color: blue;"}
 
--   must be solved by iteration; 
+-   must be solved by iteration;
 -   add the derivative value to current state (time t), to create state at time t + 1
 -   re-calculate rate of change (e.g value of differential equation for state at time t+1)
 -   keep doing this
 
 Key questions is how much of a "jump" in t do we do
 
-If we use whole number jumps = e.g t, t+1, t+2 - we are doing a "discrete" approximation to the continuous change
-(difference equations)
+If we use whole number jumps = e.g t, t+1, t+2 - we are doing a "discrete" approximation to the continuous change (difference equations)
 
 ## Solving by thinking of problem as a difference equations {.scrollable}
 
@@ -150,7 +139,7 @@ ggplot(tmp, aes(time, P, col = Ptype)) +
 
 -   *discrete_logistic_pop* - integrating by stepping through time
 
--   *dexppop* - the derivative (would need to be integrated to get populations over time),  
+-   *dexppop* - the derivative (would need to be integrated to get populations over time),
 
 ## Solving using numeric integration {.scrollable}
 
@@ -168,7 +157,7 @@ Implement the differential equation as a function that
 
 -   returns: the derivative (as a list)
 
--   inputs:  time, the variable(s) and a parameter list
+-   inputs: time, the variable(s) and a parameter list
 
 (it needs time even though you don’t use it)
 
@@ -258,13 +247,11 @@ p
 ```
 
 # Try it
+
 -   try running them for longer time periods to see what happens
 -   change the value of r, P0 - see how it effects the results
 
 In discussion section we will go through an example of using an ODE solver to solve a population model with a carrying capacity (logistic growth) and compare to the analytical solution and the difference equation solution
-
-
-
 
 ## Differential Equation, Difference (Iteration by hand) comparison {.scrollable}
 
@@ -275,8 +262,6 @@ Remember we have 3 ways now to calculate population
 -   using an ode solver for numerical approximation (exppop_play.R)
 
 -   numerical integration using in discrete steps (discrete_logistic_pop.R)
-
-
 
 ## Lets look at something a bit more complicated {.scrollable}
 
@@ -289,17 +274,13 @@ Remember we have 3 ways now to calculate population
 
 ## Modeling Diffusion {.scrollable}
 
-Diffusion in 4 dimensions (x,y,z,t) can be modelled using partial differential equations
-  - time and space! it gets much more tricky ...beyond this course
+Diffusion in 4 dimensions (x,y,z,t) can be modelled using partial differential equations - time and space! it gets much more tricky ...beyond this course
 
 Complicated to solve - but there are tool in R for specific types of partial differential equations [Reactive Transport Example](https://cran.r-project.org/web/packages/ReacTran/index.html)
 
 More info on differential equations in R [online book differential equation in R](http://www-labs.iro.umontreal.ca/~mignotte/IFT2425/Documents/Solving_Differential_Equations_In_R_Soetaert_K.pdf)
 
-More info on differential equations in Python
-- [scipy](https://docs.scipy.org/doc/scipy/reference/integrate.html#module-scipy.in has solvers for ordinary and partial differential equations
-- [Solving Ordinary DIfferential Equations in Python] (https://link.springer.com/book/10.1007/978-3-031-46768-4) 
-
+More info on differential equations in Python - \[scipy\](https://docs.scipy.org/doc/scipy/reference/integrate.html#module-scipy.in has solvers for ordinary and partial differential equations - \[Solving Ordinary DIfferential Equations in Python\] (https://link.springer.com/book/10.1007/978-3-031-46768-4)
 
 ## Diffusion in 1 dimension {.scrollable}
 
@@ -341,17 +322,11 @@ filled.contour(result$qin, xlab = "Time", ylab = "Distance")
 
 ```
 
-
-
-
 ## Change parameters (diffusivity D, and space and time steps (dx, dt)) {.scrollable}
 
 Play on your own or with a partner
 
-
 Try running the diffusion model with different time steps, space steps and parameters
-
-
 
 ## Some examples with different parameters and space/time steps {.scrollable}
 
@@ -432,4 +407,3 @@ filled.contour(resfast_fixtime$conc, xlab = "time", ylab = "Distance Along Path"
 filled.contour(resfast_fixtime$qin, xlab = "Time", ylab = "Distance", main = "Qin")
 filled.contour(resfast_fixtime$qin - resfast_fixtime$qout, xlab = "Time", ylab = "Distance", main = "Net Transport")
 ```
-

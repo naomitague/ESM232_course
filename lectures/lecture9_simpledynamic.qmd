@@ -17,7 +17,7 @@ library(here)
 
 ## Return to big picture {.scrollable}
 
--   the question that you want your model to answer, and the conceptual model of what needs to be included, determines the type of model you need
+-   the question that you want your model to answer determines the type of model you need
 
 ## Model Types {.scrollable}
 
@@ -166,7 +166,7 @@ Add your answer to the Quiz
 
 Exponential Growth - Simple Dynamic System
 
--   *r* rate of growth(change) 
+-   rate of growth(change) *r*
 -   *P* population(density)
 
 Differential equation - $dP$ / $dt$ = $rP$

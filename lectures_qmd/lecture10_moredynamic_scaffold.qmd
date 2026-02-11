@@ -48,13 +48,13 @@ For all state variables you would have a derivative
 
 Two options
 
-[ 1) explicit solution to differential equation is known; ]{style="color: blue;"}
+[1) explicit solution to differential equation is known;]{style="color: blue;"}
 
 -   this means you can integrate by 'math' - analytical solution
 -   we did this - $P = PO * exp(rt)$ coded in *exppop.R*
 -   you can get the answer exactly and quickly this way
 
-[ 2) not integrable ]{style="color: blue;"}
+[2) not integrable]{style="color: blue;"}
 
 -   must be solved by iteration;
 -   add the derivative value to current state (time t), to create state at time t + 1
@@ -188,20 +188,22 @@ library(deSolve)
 
 
 # create initial conditions 20 rabbits
-
+initialrabbits  = 20
 # create a vector of years that you want results for - we can skip years (by 2)
-
+microperiods = c(5,50, 200)
 
 # run the ode solver, using r = 0.05 (as defined above)
-
-
+Ptime = ode(y=initialrabbits, times=microperiods, func=dexppop, parms=c(0.01))
+colnames(Ptime)= c("year","Pop")
  # add column names to results
 
 
 # notice (by using attributes) that there are additional pieces of information including the method used for integration
+attributes(Ptime)
 
 # this also means you need to extract just the data frame for plotting
 # make results a data frame
+ggplot(as.data.frame(Ptime), aes(year, P))+geom_point()+labs(y="Pop",x="Years")
 
 # plot population against years
 
@@ -217,18 +219,28 @@ library(deSolve)
 -   using an ODE solver to do the numerical integration
 
 ```{r, all, echo=TRUE }
+
+r=0.05
+P0=1
 # create a dataframe (growth_result) to store results with time as first column, and make r a value
+growth_result = data.frame(time=seq(from=1, to=100))
 
 # add a column using analytical growth model (exppop applied over time using map_dbl)
-
+growth_result$Panalytic = growth_result$time %>% map_dbl(~exppop(P0=P0, r=r, T=.x))
 # add a column using discrete growth model (discrete_logistic_pop applied over time using map_dbl)
 
-
+growth_result$Pdiscrete = growth_result$time %>% map_dbl(~discrete_logistic_pop(P0=P0, r=r, T=.x))
 # add a column for ODE result - two steps
 
+tmp = ode(y=P0, times=growth_result$time, dexppop, parms=c(r))
+growth_result$Pode = tmp[,2]
 # gather both model results using a key called "Ptype", value "P"
 
+grnice = growth_result %>%  gather(key="method", value="P", -time)
 # plot with model type as color
+
+ggplot(grnice, aes(time, P, col=method))+geom_point()
+
 
 ```
 
@@ -285,6 +297,8 @@ More info on differential equations in Python - \[scipy\](https://docs.scipy.org
 Lets do simple numerical integration with discrete steps
 
 Look through *diffusion.R*
+
+source(here("R/diffusion.R"))
 
 ```{r}
 source(here("R/diffusion.R"))
