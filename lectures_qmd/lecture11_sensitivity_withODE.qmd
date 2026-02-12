@@ -7,113 +7,6 @@ css: ["slides.css"]
 editor: visual
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-library(tidyverse)
-library(deSolve)
-library(here)
-library(sensitivity)
-```
-## Extracting meaning from time series output {.scrollable}
-
-Quiz - Suggest a metric (a single measure) for summarizing the results from the diffusion model
-
-## Extracting information from space-time results {.scrollable}
-
--   pictures can be hard to interpret
-
--   summarizing over one of the dimensions (either space or time) can help
-
--   looking at a single trajectory through time
-
--   looking at spatial variation for one point in time
-
--   looking at spatial variation for multiple points in time
-
-## Try it {.scrollable}
-
-```{r one option}
-# View(resfast_fixtime$conc)
-
-
-# graph a single point in space through time
-# single column (time)
-plot(resfast_fixtime$conc[, 3], ylab = "Concentration for a location 2 spatial units from origin (1+2")
-
-# plot all trajectories
-# add a time column to concentration data frame and transform for plotting
-resl <- as.data.frame(resfast_fixtime$conc) %>%
-  mutate(time = seq(from = 1, to = 100)) %>%
-  pivot_longer(-time, names_to = "distance", values_to = "conc")
-ggplot(resl, aes(time, conc, col = distance)) +
-  geom_line()
-
-# plot all places at each point in time
-ggplot(resl, aes(time, conc, group = time)) +
-  geom_boxplot()
-
-# use apply to calculate the spatial variation for each row (e.g for each time point)
-cvar <- resfast_fixtime$conc %>% apply(1, var)
-cmean <- resfast_fixtime$conc %>% apply(1, mean)
-
-spatial_aver <- cbind.data.frame(cvar, cmean, time = seq(from = 1, to = 100))
-length(cvar)
-# notice its the same as the number of time units (nt) used above
-
-# plot spatial variation through time
-ggplot(spatial_aver, aes(time, cvar)) +
-  geom_line() +
-  labs(y = "Spatial Variation")
-
-# plot coefficient of variation (so standard deviation divided by the mean)
-ggplot(spatial_aver, aes(time, 100 * sqrt(cvar) / cmean)) +
-  geom_line() +
-  labs(y = "COV (as percent")
-```
-
-##  {.scrollable}
-
-```{r one option}
-# View(resfast_fixtime$conc)
-
-
-# graph a single point in space through time
-# single column (time)
-plot(resfast_fixtime$conc[, 3], ylab = "Concentration for a location 2 spatial units from origin (1+2")
-
-# plot all trajectories
-# add a time column to concentration data frame and transform for plotting
-resl <- as.data.frame(resfast_fixtime$conc) %>%
-  mutate(time = seq(from = 1, to = 100)) %>%
-  pivot_longer(-time, names_to = "distance", values_to = "conc")
-ggplot(resl, aes(time, conc, col = distance)) +
-  geom_line()
-
-# plot all places at each point in time
-ggplot(resl, aes(time, conc, group = time)) +
-  geom_boxplot()
-
-# use apply to calculate the spatial variation for each row (e.g for each time point)
-cvar <- resfast_fixtime$conc %>% apply(1, var)
-cmean <- resfast_fixtime$conc %>% apply(1, mean)
-
-spatial_aver <- cbind.data.frame(cvar, cmean, time = seq(from = 1, to = 100))
-length(cvar)
-# notice its the same as the number of time units (nt) used above
-
-# plot spatial variation through time
-ggplot(spatial_aver, aes(time, cvar)) +
-  geom_line() +
-  labs(y = "Spatial Variation")
-
-# plot coefficient of variation (so standard deviation divided by the mean)
-ggplot(spatial_aver, aes(time, 100 * sqrt(cvar) / cmean)) +
-  geom_line() +
-  labs(y = "COV (as percent")
-```
-
-##  {.scrollable}
 
 ## Dynamic models {.scrollable}
 
@@ -126,9 +19,6 @@ ggplot(spatial_aver, aes(time, 100 * sqrt(cvar) / cmean)) +
     -   derivative is first order
     -   (e.g $dy/dt$ = ; not $d^2y/dt$+dy/dy = f(y,t))
     -   there also solvers for high order and partial differential equations
-
-
-
 
 ## Sensitivity Analysis of a Differential Equation {.scrollable}
 
@@ -160,30 +50,32 @@ Its useful to turn that summarizing workflow into a function
 
 ## Workflow for Sensitivity Analysis {.scrollable}
 
--   implement (or identify pre-existing) dynamic model
+1)  implement (or identify pre-existing) dynamic model
 
--   obtain parameter sets (from sobel or LHS)
+2)  obtain samples of parameter sets (from sobel or LHS)
 
--   build a function that will extract the information (metrics) you want from your dynamic model (output of the ode)
+3)  build a function that will extract the information (metrics) you want from your dynamic model (output of the ode)
 
--   create a data structure to store the metrics for each parameter set - in my example I call it metrics (but could be anything)
+4)  create a data structure to store the metrics for each parameter set - in my example I call it metrics (but could be anything)
 
--   decide on initial conditions and time period over which you will run the model
+5)  decide on initial conditions and time period over which you will run the model
 
--   run ODE for each parameter sets to fill in this metrics data structure
+6)  run ODE for each parameter sets to fill in this metrics data structure
 
     -   its usually helpful to create a wrapper function
         -   runs ODE
         -   extracts metrics
     -   run wrapper function for each parameter sets
 
--   send the metrics data structure back to the sensitivity analysis object (from sobel or LHS)
+7)  send the metrics  back to the sensitivity analysis object (from sobel or LHS)
 
--   plot and analyze results
+8)  plot and analyze results
 
-## Example with our population ODE {.scrollable}
+## Example ODE sensitivity with a population model  {.scrollable}
 
-Lets first generate parameter sets and figure out how to run across uncertainty in just one those parameter sets
+This one includes a carying capacity
+
+Step 1 and 2 with population model
 
 Always a good practice to "try" you model on one parameter set *before* trying to run for all parameters
 
@@ -242,6 +134,7 @@ A couple of options
 -   how many year to get to some pre-determined threshold
 
 For illustration lets look at running just one parameter sets and summarizing results
+
 
 ```{r runone}
 sens_P$X[1, ]
@@ -304,12 +197,6 @@ ggplot(result, aes(time, P)) +
   labs(y = "Population", title = "When do we get to 50%\nof carrying capacity")
 ```
 
-## Make a different metric or ODE {.scrollable}
-
--   try a metric that gives you the population at year 5
-
--   change the way carrying capacity is used
-
 ## Try it running ODE for *all* parameters {.scrollable}
 
 One issue is the volume of output! you have a time series for *each* parameter set
@@ -331,6 +218,8 @@ Lets create two additional functions that will help us
     -   how to compute metrics (function name)
 
 -   always test to make sure it works (good coding practice)
+
+Step 3-6 in workflow
 
 ```{r sen2}
 # turn computing our metrics into a function
@@ -395,6 +284,8 @@ ggplot(tmp, aes(metric, value, col = metric)) +
 
 -   look at total effect and first order sensitivity
 
+-  Step 7 in workflow
+
 ```{r sen3}
 # sobol can only handle one output at a time  - so we will need to do them separately
 
@@ -450,49 +341,4 @@ Suggest that the solver (numerical integration) had issues
 
 ## [Assignment]{style="color:orange"} {.scrollable}
 
-# The model
-
-Consider the following model of forest growth (where forest size in measured in units of carbon (C))
-
--   $dC/dt  = r*C$ for forests where C is below a threshold canopy closure
-
--   $dC/dt = g*(1- C/K)$ for forests where carbon is at or above the threshold canopy closure
-
--   and $K$ is a carrying capacity in units of carbon
-
-The size of the forest ($C$), Canopy closure threshold and carrying capacity are all in units of carbon
-
-You could think of the canopy closure threshold as the size of the forest at which growth rates change from exponential to linear You can think of $r$, as early exponential growth rate and $g$ as the linear growth rate once canopy closure has been reached
-
-## [Your task]{style="color:orange"} {.scrollable}
-
-1.  Implement this model in R (as a differential equation)
-
-2.  Run the model for 300 years (using the ODE solver) starting with an initial forest size of 10 kg/C, and using the following parameters:
-
--   canopy closure threshold of 50 kgC
--   $K$ = 250 kg C (carrying capacity)
--   $r$= 0.01 (exponential growth rate before before canopy closure)
--   $g$ = 2 kg/year (linear growth rate after canopy closure)
-
-3.  Graph the results. Here you are graphing the trajectory with the parameters as given (e.g no uncertainty)
-
-4.  Run a sobol global (vary all parameters at the same time) sensitivity analysis that explores how the estimated **maximum forest size** (e.g maximum of $C$ 300 years, varies with these parameters
-
--   pre canopy closure growth rate ($r$)
--   post-canopy closure growth rate ($g$)
--   canopy closure threshold and carrying capacity($K$)
-
-Assume that parameters are all normally distributed with means as given above and standard deviation of 10% of mean value
-
-5.  Graph the results of the sensitivity analysis as a box plot of maximum forest size and record the two Sobol indices (**S** and **T**).
-
-6.  In 2-3 sentences, discuss what the results of your simulation might mean. (For example think about how what parameters climate change might influence).
-
-Submit R markdown with model implementation, graphs and sensitivity analysis and R file with your model
-
-You can work in groups or individually
-
-## Extra Credit
-
-Compute Sobol indices for a second metric: forest size after a 100 years
+Assignment6 - Using Sobol with an ODE

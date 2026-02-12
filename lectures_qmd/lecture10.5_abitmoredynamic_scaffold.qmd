@@ -1,0 +1,215 @@
+---
+title: "Continuing with dynamic models"
+format: revealjs
+theme: solarized
+resources: ["img/"]
+css: ["slides.css"]
+editor: visual
+---
+
+
+
+# Application of diffusion model
+
+```{r, rundiffusion}
+source(here("R/diffusion.R"))
+
+# run our diffusion model (iterative difference equation) with initial concentration of 10, for 8 timestep (size 1m), and 10 space steps (size 1s)
+# using diffusion parameters 0.5 s/m2, 10 m2
+
+# take a look at the list  returned with our 3 data frames for concentration (conc), qin and qout
+
+
+# used filled contour to plot results
+
+# or if you prefer this orientation (Distance on x axis)
+
+# you can also plot how much material is moving in to each cell at each time step
+
+```
+
+## Change parameters (diffusivity D, and space and time steps (dx, dt)) {.scrollable}
+
+Play on your own or with a partner
+
+Try running the diffusion model with different time steps, space steps and parameters
+
+## Example {.scrollable}
+
+```{r, alternativediffusion}
+# what if we increase diffusivity
+resfast <- diff1(initialC = 100, nx = 10, dx = 0.5, nt = 10, dt = 10, D = 0.08, area = 1)
+filled.contour(resfast$conc, xlab = "Time", ylab = "Distance", main = "Concentration through time and space")
+filled.contour(resfast$qin, xlab = "Time", ylab = "Distance", main = "Qin")
+```
+
+## Fixing the problem {.scrollable}
+
+-   difference equations as an approximation (and the challenges that methods for numerical integration try to overcome)
+-   if things are changing quickly we need to use:
+    -   much smaller time,
+    -   much smaller space steps to avoid overshoot and instability
+
+## Solution {.scrollable}
+
+```{r, fixed}
+# so lets cut our step size by 10 (dt=1) (but then  multiply number of steps (nx=10) to cover the same distance)
+# initialC is still 100, diffusivity D is still 0.08, area is still 1
+
+# run the model with these parameters and plot results
+
+# use filled contour to plot concentration
+filled.contour(resfast_fixtime$conc, xlab = "time", ylab = "Distance Along Path", main = "Concentration through time and space")
+
+# use filled contour to plot qin and qout
+
+# how would you plot net transport?
+
+```
+
+## Dynamics Models {.scrollable}
+
+-   Diffusion example illustrates the challenge of numerical integration
+
+-   We see evidence of "overshoot"
+
+-   Correct by reducing the time step (but then we have to increase the number of time steps to cover the same period)
+
+-   This is a common issue with numerical integration of dynamic models (models with feedbacks)
+
+-   Many methods to try to overcome this issue \* Euler \* Runge-Kutta, \* Adams-Bashforth-Moulton
+
+-   When you run solvers (like *ode*) they use these methods
+
+## Extracting information from space-time results {.scrollable}
+
+-   pictures/maps can be hard to interpret
+
+-   summarizing over one of the dimensions (either space or time) can help
+
+    -   looking at a single trajectory through time
+
+    -   looking at spatial variation for one point in time
+
+    -   looking at spatial variation for multiple points in time
+
+## Examples from diffusion {.scrollable}
+
+```{r option}
+# View(resfast_fixtime$conc)
+
+
+# graph a single point in space through time
+# single column (time)
+
+# plot all trajectories
+# add a time column to concentration data frame and transform for plotting
+
+# use apply to calculate the spatial variation for each row (e.g for each time point)
+
+# combine into a data frame for plotting
+
+# notice its the same as the number of time units (nt) used above
+
+# plot spatial variation through time
+
+# plot coefficient of variation (so standard deviation divided by the mean)
+
+```
+
+## Extracting meaning from time series output {.scrollable}
+
+Ok these graphs help but what if we need a single metric to summarize results from diffusion model - would depend on the application
+
+Quiz - Suggest a metric (a single measure)
+
+## Summary Measures
+
+-   time it takes for concentration to reach a certain threshold at a particular location
+-   time it takes for all cells to have a value less than a threshold
+-   maximum concentration at a particular location
+-   time it takes for the mean concentration across all cells be less than some threshold
+
+## One example
+
+time for all cells to be less than a threshold
+
+lets say a dangerous threshold is 21
+
+```{r summarydynamic}
+# recall we have a data frame with concentration for each cell at each time point
+
+
+# find the first time point where all cells are less than 21
+
+
+# as percent of simulation time
+
+```
+
+## Dynamic models {.scrollable}
+
+-   models that have feedbacks (conditions evolve through time)
+
+-   numerical integration - usually done with a solver
+
+    -   only one independent variable ordinary differential equation (e.g just time)
+    -   we can use the ODE solver
+    -   derivative is first order
+    -   (e.g $dy/dt$ = ; not $d^2y/dt$+dy/dy = f(y,t))
+    -   there also solvers for high order and partial differential equations
+
+## Sensitivity Analysis of a Differential Equation {.scrollable}
+
+We can apply sensitivity analysis to a differential equation
+
+A key issue where is sensitivity of what?
+
+Dynamic models often give you many many outputs
+
+-   time series (streamflow every day for a year, population for 30 years)
+-   or output over space (spatially averaged concentration after 10 days?)
+
+So if we are asking 'sensitivity of what' we need to summarize results in some way (reduce their dimensionality )
+
+## Some options for reducing output dimensionality (summarizing output) {.scrollable}
+
+Depends on what is important for your model application
+
+-   max
+-   mean
+-   min
+-   total
+-   variation
+-   time it takes for something to happen
+
+So a key step in sensitivity analysis with a dynamics model is summarizing results into a few key measures
+
+Its useful to turn that summarizing workflow into a function
+
+## Practice
+
+write a function that extracts a summary metric from diffusion model output
+
+## Workflow for Sensitivity Analysis {.scrollable}
+
+1)  implement (or identify pre-existing) dynamic model
+
+2)  obtain samples of parameter sets (from sobel or LHS)
+
+3)  build a function that will extract the information (metrics) you want from your dynamic model (output of the ode)
+
+4)  create a data structure to store the metrics for each parameter set - in my example I call it metrics (but could be anything)
+
+5)  decide on initial conditions and time period over which you will run the model
+
+6)  run ODE for each parameter sets to fill in this metrics data structure
+
+    -   its usually helpful to create a wrapper function
+        -   runs ODE
+        -   extracts metrics
+    -   run wrapper function for each parameter sets
+
+7)  send the metrics back to the sensitivity analysis object (from sobel or LHS)
+
+8)  plot and analyze results

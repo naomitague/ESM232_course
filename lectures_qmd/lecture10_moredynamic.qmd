@@ -48,13 +48,13 @@ For all state variables you would have a derivative
 
 Two options
 
-[ 1) explicit solution to differential equation is known; ]{style="color: blue;"}
+[1) explicit solution to differential equation is known;]{style="color: blue;"}
 
 -   this means you can integrate by 'math' - analytical solution
 -   we did this - $P = PO * exp(rt)$ coded in *exppop.R*
 -   you can get the answer exactly and quickly this way
 
-[ 2) not integrable ]{style="color: blue;"}
+[2) not integrable]{style="color: blue;"}
 
 -   must be solved by iteration;
 -   add the derivative value to current state (time t), to create state at time t + 1
