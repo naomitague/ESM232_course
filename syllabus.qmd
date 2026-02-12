@@ -54,7 +54,6 @@ Class will include a mix of lectures and in class hands-on examples, using stude
 
 -   Here's the repo "<https://github.com/naomitague/EDS-230-ESM-232-W26.git>"
 
-
 -   Remember that in *git* does not allow nested repositories - so *clone* the class site somewhere that it will not overlap with other repositories.
 
 I recommend that you *fork* the repository so you can modify it and add to it; but keep an upstream remote so you can regularly sync with the class repository.
@@ -128,12 +127,12 @@ Date = c("Jan 6","Jan 8","Jan 13","Jan 15","Jan 20","Jan 22","Jan 27","Jan 29","
 "Guest Lecture",
 "Dynamic Models - Analytical Solutions",
 "Dynamic Models - ODE Solver",
+"More on Dynamic Models",
 "Sensitivity with Dynamic Models",
-"Disturbance with Dynamic Models",
-"Using Copilot tools ",
+"Disturbance and Using Copilot tools ",
 "2 Variable and Stability",
-"What makes a good model",
 "Guest Lecture",
+"What makes a good model",
 "Calibration",
 "Calibration2",
 "Return to Big Picture"
@@ -166,8 +165,8 @@ See Table Below
 | Jan 15 / 22      | Almond Yield                      | 10          |
 | Jan 22 / 27      | Almond Sensitivity                | 10          |
 | Jan 29 / Feb 10  | Sobol and Sensitivity             | 10          |
-| Feb 10 / 17      | Dynamic Model and Sensitivity     | 15          |
-| Feb 10 / March 9 | Final Assignment: Model Plan      | 15          |
+| Feb 17 / 24      | Dynamic Model and Sensitivity     | 15          |
+| Feb 17 / March 9 | Final Assignment: Model Plan      | 15          |
 | Feb 24 / March 3 | Two-variable Dynamics             | 10          |
 | March 5 / 10     | Model Calibration and Uncertainty | 5           |
 | Throughout       | In-class Quizzes                  | 10          |
@@ -209,5 +208,4 @@ Assignments will be submitted on [Canvas](https://www.canvas.ucsb.edu/) *Canvas*
 
 -   R code commenting
 
-    - see "papers/comments-guildelines-EDS220.pdf", for recommended practices 
-    
+    -   see "papers/comments-guildelines-EDS220.pdf", for recommended practices
