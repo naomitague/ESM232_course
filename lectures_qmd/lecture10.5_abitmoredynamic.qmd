@@ -218,7 +218,6 @@ Its useful to turn that summarizing workflow into a function
 
 write a function that extracts a summary metric from diffusion model output
 
-
 ## Workflow for Sensitivity Analysis {.scrollable}
 
 1)  implement (or identify pre-existing) dynamic model
@@ -241,4 +240,3 @@ write a function that extracts a summary metric from diffusion model output
 7)  send the metrics back to the sensitivity analysis object (from sobel or LHS)
 
 8)  plot and analyze results
-
