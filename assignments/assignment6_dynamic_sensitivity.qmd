@@ -56,6 +56,7 @@ Compute Sobol indices for a second metric: forest size after a 100 years
 
 ## Grading Rubric
 
+
 ```{r, rubric, echo=FALSE}
 library(knitr)
 library(kableExtra)
@@ -95,3 +96,4 @@ kable(rubric, booktabs = TRUE, longtable = TRUE) %>%
   column_spec(3, width = "2cm")
 
 ```
+

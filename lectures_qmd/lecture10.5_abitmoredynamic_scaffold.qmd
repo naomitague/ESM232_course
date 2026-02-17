@@ -7,25 +7,26 @@ css: ["slides.css"]
 editor: visual
 ---
 
-
-
 # Application of diffusion model
 
 ```{r, rundiffusion}
 source(here("R/diffusion.R"))
 
 # run our diffusion model (iterative difference equation) with initial concentration of 10, for 8 timestep (size 1m), and 10 space steps (size 1s)
+result = diff1(initialC = 10, nx=10, dx=1, nt=8, dt=1, D=0.5, area=10)
+str(result)
+head(result$conc)
 # using diffusion parameters 0.5 s/m2, 10 m2
 
 # take a look at the list  returned with our 3 data frames for concentration (conc), qin and qout
-
-
+filled.contour(result$conc, xlab="Time", ylab="Distance")
+filled.contour(t(result$conc), ylab="Time", xlab="Distance")
 # used filled contour to plot results
 
 # or if you prefer this orientation (Distance on x axis)
 
 # you can also plot how much material is moving in to each cell at each time step
-
+filled.contour(result$qin, xlab="Time",ylab="Distance")
 ```
 
 ## Change parameters (diffusivity D, and space and time steps (dx, dt)) {.scrollable}
@@ -55,7 +56,7 @@ filled.contour(resfast$qin, xlab = "Time", ylab = "Distance", main = "Qin")
 ```{r, fixed}
 # so lets cut our step size by 10 (dt=1) (but then  multiply number of steps (nx=10) to cover the same distance)
 # initialC is still 100, diffusivity D is still 0.08, area is still 1
-
+resfast_fixtime = diff1(initialC=100, nx=10, dx=0.5, nt=100, dt=1, D=0.08, area=1)
 # run the model with these parameters and plot results
 
 # use filled contour to plot concentration
@@ -101,17 +102,24 @@ filled.contour(resfast_fixtime$conc, xlab = "time", ylab = "Distance Along Path"
 
 # graph a single point in space through time
 # single column (time)
-
+plot(resfast_fixtime$conc[,3], ylab="Concentration for location 3", xlab="Time")
 # plot all trajectories
 # add a time column to concentration data frame and transform for plotting
-
+resl = as.data.frame(resfast_fixtime$conc)
+resl = resl %>% mutate(time=seq(from=1, to=100)) %>% 
+  pivot_longer(-time, names_to = "distance", values_to="conc")
+ggplot(resl, aes(time, conc, col=distance))+geom_line()
 # use apply to calculate the spatial variation for each row (e.g for each time point)
 
+cvar = resfast_fixtime$conc %>% apply(1, var)
+cmean = resfast_fixtime$conc %>% apply(1, mean)
 # combine into a data frame for plotting
 
+spatial_metrics = cbind.data.frame(cvar, cmean, time=seq(from=1, to=100))
 # notice its the same as the number of time units (nt) used above
 
 # plot spatial variation through time
+ggplot(spatial_metrics, aes(time, cvar))+geom_line() + labs(y="Spatial Variation")
 
 # plot coefficient of variation (so standard deviation divided by the mean)
 
