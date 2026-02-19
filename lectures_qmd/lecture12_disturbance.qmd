@@ -222,27 +222,32 @@ Compute trajectories of forest biomass (or carbon) over time - given different h
 ```{r harvest2, echo=TRUE}
 # what if we harvest a a much greater rates
 # lets vary the harvest rates from 0.0 to 0.4
-
+harvestr <- seq(from = 0.0, to = 0.4, by = 0.025)
 # save all of the trajectories
 # use a wrapper function to just return the carbon trajectories from ODE output
 getcarbon <- function(Cinitial, tm, harv, K, r, hfunc) {
   # create parameter list for ODE
-  
-  # run ode
- 
-  # clean up output
+  gps <- list(harv = harv, K = K, r = r)
+   # run ode
+  res <- ode(Cinitial, tm, hfunc, gps)
+ # clean up output
+  colnames(res) <- c("time", "carbon")
+   res <- as.data.frame(res)
+  # return just the carbon trajectory 
+  return(carbon = res$carbon)
 
-  # return just the carbon trajectory
 
 }
 
 # apply this function to all harvest values
-
+res <- harvestr %>% map_dfc(~ getcarbon(Cinitial = Cinitial, tm = tm, K = 100, r = 0.2, hfun = dharvest, harv = .x))
 # rows are time, columns are carbon for each harvest scenario
-
+colnames(res) <- harvestr
 # add names based on harvest
-
+res <- as.data.frame(res)
 # add time
+
+res$time <- tm
 
 ```
 
@@ -254,8 +259,12 @@ getcarbon <- function(Cinitial, tm, harv, K, r, hfunc) {
 ```{r harvest2plot, echo=TRUE}
 # put in to a form where we can plot
 
-
+	
+resl <- res %>% pivot_longer(names_to = "harvestr", values_to = "carbon", cols = -time)
 # graph
+
+ggplot(resl, aes(time, carbon, col = harvestr)) +
+  geom_line()
 
 
 # notice that stable forest value changes with harvest rates
@@ -263,7 +272,8 @@ getcarbon <- function(Cinitial, tm, harv, K, r, hfunc) {
 # notes that some forests are not stable - (or forest size goes to zero)
 
 # see this at the beginning - plot the first 10 years
-
+ggplot(subset(resl, time < 10), aes(time, carbon, col = harvestr)) +
+  geom_line()
 ```
 
 ## Stability
@@ -296,6 +306,7 @@ Try different combination of growth, carrying capacity and harvest rates...
 -   What does stability mean -
 -   Can you find parameter sets that lead to a stable non-zero forest
 
+
 ## Sensitivity Analysis {.scrollable}
 
 We could do some sensitivity analysis to see how harvest rate, and growth rate interact
@@ -304,7 +315,33 @@ Sensitivity of what? What do we care about?
 
 -   where forest ends up after 10 years and 50 years (short and long planning horizons)
 
-We will design a function to compute metrics and a wrapper to make this easy
+
+## Workflow for Sensitivity Analysis {.scrollable}
+
+1)  implement (or identify pre-existing) dynamic model
+
+2)  obtain samples of parameter sets (from sobel or LHS)
+
+3)  build a function that will extract the information (metrics) you want from your dynamic model (output of the ode)
+
+4)  create a data structure to store the metrics for each parameter set - in my example I call it metrics (but could be anything)
+
+5)  decide on initial conditions and time period over which you will run the model
+
+6)  run ODE for each parameter sets to fill in this metrics data structure
+
+    -   its usually helpful to create a wrapper function
+        -   runs ODE
+        -   extracts metrics
+    -   run wrapper function for each parameter sets
+
+7)  send the metrics back to the sensitivity analysis object (from sobel or LHS)
+
+8)  plot and analyze results
+
+## Code {.scrollable}
+
+Metric functions -  where forest ends up after 10 years and 50 years (short and long planning horizons)
 
 ```{r harvestsend, echo=TRUE}
 # fixed amount per year

@@ -304,7 +304,33 @@ Sensitivity of what? What do we care about?
 
 -   where forest ends up after 10 years and 50 years (short and long planning horizons)
 
-We will design a function to compute metrics and a wrapper to make this easy
+
+## Workflow for Sensitivity Analysis {.scrollable}
+
+1)  implement (or identify pre-existing) dynamic model
+
+2)  obtain samples of parameter sets (from sobel or LHS)
+
+3)  build a function that will extract the information (metrics) you want from your dynamic model (output of the ode)
+
+4)  create a data structure to store the metrics for each parameter set - in my example I call it metrics (but could be anything)
+
+5)  decide on initial conditions and time period over which you will run the model
+
+6)  run ODE for each parameter sets to fill in this metrics data structure
+
+    -   its usually helpful to create a wrapper function
+        -   runs ODE
+        -   extracts metrics
+    -   run wrapper function for each parameter sets
+
+7)  send the metrics back to the sensitivity analysis object (from sobel or LHS)
+
+8)  plot and analyze results
+
+## Code {.scrollable}
+
+Metric functions -  where forest ends up after 10 years and 50 years (short and long planning horizons)
 
 ```{r harvestsend, echo=TRUE}
 # fixed amount per year
