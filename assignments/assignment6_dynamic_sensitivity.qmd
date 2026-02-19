@@ -1,14 +1,13 @@
 ---
 title: 'Assignment: Using Sobol with an ODE'
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
 
 Consider the following model of forest growth (where forest size in measured in units of carbon (C))
 
@@ -57,4 +56,44 @@ Compute Sobol indices for a second metric: forest size after a 100 years
 
 ## Grading Rubric
 
+
+```{r, rubric, echo=FALSE}
+library(knitr)
+library(kableExtra)
+
+rubric <- data.frame(
+  `Learning Outcome` = c(
+    "Implementation of the differential equation in R",
+    "Running model for initial parameters and graphing",
+    "Parameter sampling for Sobol",
+    "Created a wrapper function",
+    "Sensitivity analysis",
+    "Graph of uncertainty in maximum forest size",
+    "Sobol indices",
+    "Analysis (2–3 sentences)",
+    "Total"
+  ),
+  Criteria = c(
+    "Correct inputs; correct output; correct coding of equation",
+    "Graph of forest size for 300 years matches expected trajectory",
+    "Sampled parameters and created a Sobol-generated parameter set",
+    "Function runs ODE for a parameter set and extracts maximum forest size",
+    "Ran wrapper for Sobol parameter sets and returned maximum forest size for each",
+    "Boxplot of maximum forest size",
+    "Reported (shown in Quarto) Sobol indices for the 3 parameters",
+    "Interpret how parameter uncertainty impacts forest growth estimates (or future growth)",
+    ""
+  ),
+  `Full Marks` = c(
+    "2 pts", "1 pt", "1 pt", "2 pts", "2 pts", "2 pts", "2 pts", "3 pts", "15 pts"
+  )
+)
+
+kable(rubric, booktabs = TRUE, longtable = TRUE) %>%
+  kable_styling(latex_options = c("hold_position", "repeat_header")) %>%
+  column_spec(1, width = "4cm") %>%
+  column_spec(2, width = "7cm") %>%
+  column_spec(3, width = "2cm")
+
+```
 
