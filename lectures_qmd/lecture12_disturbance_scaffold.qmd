@@ -121,6 +121,19 @@ We can actually re-use our model - if we assume forest growth follows a logistic
 
 Let's consider harvesting as **exogenous** first - simply change the starting condition
 
+
+
+## Lets consider forest growth using our simple growth model {.scrollable}
+
+Modeling carbon growth in a forest
+
+-   r is growth rate
+-   K is maximum carbon capacity of the forest
+
+We can actually re-use our model - if we assume forest growth follows a logistic growth curve (e.g exponential growth towards a carrying capacity)
+
+Let's consider harvesting as **exogenous** first - simply change the starting condition
+
 ## Exogeneous model {.scrollable}
 
 ```{r forest, echo=TRUE}
@@ -209,24 +222,27 @@ Compute trajectories of forest biomass (or carbon) over time - given different h
 ```{r harvest2, echo=TRUE}
 # what if we harvest a a much greater rates
 # lets vary the harvest rates from 0.0 to 0.4
-harvestr <- seq(from = 0.0, to = 0.4, by = 0.025)
 
 # save all of the trajectories
 # use a wrapper function to just return the carbon trajectories from ODE output
 getcarbon <- function(Cinitial, tm, harv, K, r, hfunc) {
-  gps <- list(harv = harv, K = K, r = r)
-  res <- ode(Cinitial, tm, hfunc, gps)
-  colnames(res) <- c("time", "carbon")
-  res <- as.data.frame(res)
-  return(carbon = res$carbon)
+  # create parameter list for ODE
+  
+  # run ode
+ 
+  # clean up output
+
+  # return just the carbon trajectory
+
 }
 
 # apply this function to all harvest values
-res <- harvestr %>% map_dfc(~ getcarbon(Cinitial = Cinitial, tm = tm, K = 100, r = 0.2, hfun = dharvest, harv = .x))
+
 # rows are time, columns are carbon for each harvest scenario
-colnames(res) <- harvestr
-res <- as.data.frame(res)
-res$time <- tm
+
+# add names based on harvest
+
+# add time
 
 ```
 
@@ -237,9 +253,9 @@ res$time <- tm
 
 ```{r harvest2plot, echo=TRUE}
 # put in to a form where we can plot
-resl <- res %>% pivot_longer(names_to = "harvestr", values_to = "carbon", cols = -time)
-ggplot(resl, aes(time, carbon, col = harvestr)) +
-  geom_line()
+
+
+# graph
 
 
 # notice that stable forest value changes with harvest rates
@@ -247,8 +263,7 @@ ggplot(resl, aes(time, carbon, col = harvestr)) +
 # notes that some forests are not stable - (or forest size goes to zero)
 
 # see this at the beginning - plot the first 10 years
-ggplot(subset(resl, time < 10), aes(time, carbon, col = harvestr)) +
-  geom_line()
+
 ```
 
 ## Stability
@@ -358,6 +373,7 @@ p_wrapper <- function(r, harv, K, Cinitial, simtimes, odefunc, metricfunc) {
   return(metrics)
 }
 
+
 # try it out
 tm <- seq(from = 1, to = 50)
 Cinitial <- 30
@@ -390,7 +406,6 @@ notice how we can see the impact of harvesting - and how growth rates reduce the
 
 Try it
 
-
 ## Compute Sobol Indices {.scrollable}
 
 ```{r sobol2, echo=TRUE}
@@ -402,7 +417,7 @@ rownames(sens_forest_C50$S) <- c("r", "harv","K")
 sens_forest_C50$S
 ```
 
-## Graph impact of harvest rate on growth accounting for uncertainty 
+## Graph impact of harvest rate on growth accounting for uncertainty
 
 Use parameter that has the most impact on the output to color the points
 
@@ -416,18 +431,15 @@ ggplot(allresp, aes(harv * 100, Clong, col = K)) +
 
 ```
 
-## Adding complexity  {.scrollable}
+## Adding complexity {.scrollable}
 
-
-what if we wanted to make this model more complex and realistic? 
+what if we wanted to make this model more complex and realistic?
 
 *Differential Equations describe/codify our conceptual model of how the world works*
 
 what would the model look like if we wanted to include the fact that harvest rates are lower for small trees?
 
 what would the model look like it we wanted to account for the impact of precipitation on growth rates?
-
-
 
 ## Examples {.scrollable}
 
@@ -443,17 +455,16 @@ $$
 \end{aligned}
 $$
 
-
 ## Harvest Adjustment
 
-$$ harv_{adjustment} = \frac{biomass}{biomass+biomass_{H50}} $$
-$biomass_{H50}$ is the biomass at which harvest is reduced by 50%
+$$ harv_{adjustment} = \frac{biomass}{biomass+biomass_{H50}} $$ $biomass_{H50}$ is the biomass at which harvest is reduced by 50%
 
 harvest rate is less for young small trees
 
-lets say that harvest is reduced by 50% when biomass is 20 kgC 
+lets say that harvest is reduced by 50% when biomass is 20 kgC
 
 # Curve {.scrollable}
+
 ```{r, harvadjust, echo=TRUE}
 
 biomass = seq(from=0, to=1000, by=1)
@@ -467,16 +478,16 @@ ggplot(tmp, aes(biomass, harvadjust)) +
 
 ```
 
-## What about precipitation  {.scrollable}
+## What about precipitation {.scrollable}
 
 $$ P_{adjustment} = \exp{\frac{(Precip-P_{optimal})^2}{\sigma_{p}^2}} $$
 
-$P_{optimal}$ is precipitation for optimal growth 
+$P_{optimal}$ is precipitation for optimal growth
 
 $\sigma_p$ is a parameter that controls how quickly growth declines as precipitation moves away from optimal
 
-
 ## Curve {.scrollable}
+
 ```{r, precipjust, echo=TRUE}
 
 precip = seq(from=0, to=2000, by=10)
@@ -501,9 +512,7 @@ $$
   &\quad - \text{harv} \cdot 
      \text{harv}_{\text{adjustment}} \cdot \text{biomass}
 \end{aligned}
-$$
-$$ P_{adjustment} = \exp{\frac{(Precip-P_{optimal})^2}{\sigma_{p}^2}} $$
-$$ harv_{adjustment} = \frac{biomass}{biomass+biomass_{H50}} $$
+$$ $$ P_{adjustment} = \exp{\frac{(Precip-P_{optimal})^2}{\sigma_{p}^2}} $$ $$ harv_{adjustment} = \frac{biomass}{biomass+biomass_{H50}} $$
 
 Parameters are:
 
@@ -514,27 +523,25 @@ Parameters are:
 -   $P_{optimal}$ - precipitation for optimal growth
 -   $\sigma_p$ - parameter that controls how quickly growth declines as precipitation moves away from
 
-
-
-
 ## Fixed Harvest {.scrollable}
 
 What if you wanted to take the same amount of carbon each year - what would the model look like?
 
 ## What we've learned {.scrollable}
 
-For understanding, estimating, communicating how a system responds to change, dynamic models are a powerful tool
--   they can be used to predict how something we care about will change over space and/or time (*system evolution*)
+For understanding, estimating, communicating how a system responds to change, dynamic models are a powerful tool - they can be used to predict how something we care about will change over space and/or time (*system evolution*)
 
-- things that evolve over time/space are often represented as differential equations
-  - the differential equation describes the "theory" of how the system evolves
-  
-- even complex differential equations can be put into models through numerical intergration
+-   things that evolve over time/space are often represented as differential equations
+
+    -   the differential equation describes the "theory" of how the system evolves
+
+-   even complex differential equations can be put into models through numerical intergration
 
 -   they can be used to do sensitivity analysis of output
+
     -   output response to variation in inputs/parameters
     -   quantifying how summary measures respond to variation in inputs/parameters
-    -  they can be used to explore how disturbance (or intervention) interacts with the properties of the system
+    -   they can be used to explore how disturbance (or intervention) interacts with the properties of the system
 
 ## Fixed Harvest Example {.scrollable}
 
