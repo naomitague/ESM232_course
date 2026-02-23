@@ -113,7 +113,7 @@ $$  \frac{\partial C}{\partial t} = r*biomass*(1-\frac{biomass}{K})-harv*biomass
 
 $$  0 = r*biomass*(1-\frac{biomass}{K})-harv*biomass $$
 
-$$   biomass = K*\frac{r-h}{r} $$
+$$   biomass = K*\frac{r-harv}{r} $$
 
 $$ biomass = 1000 * (0.05-0.04)/0.05 = 200 $$
 
