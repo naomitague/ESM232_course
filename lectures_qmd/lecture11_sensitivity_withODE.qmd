@@ -328,14 +328,6 @@ Suggest that the solver (numerical integration) had issues
 
 -   "stiff" problems are harder for numerical integration to solve - (small changes have big impacts); a threshold carrying capacity does that \## Ways to use dynamic models {.scrollable}
 
-Goal: To provide insight into environmental systems, and how they respond to intervention/disturbance/change
-
--   predict how something we care above will change over space and/or time (*system evolution*)
-
--   sensitivity analysis of output
-
-    -   output response to variation in inputs/parameters
-    -   quantifying how summary measures respond to variation in inputs/parameters
 
 
 ## [Assignment]{style="color:orange"} {.scrollable}

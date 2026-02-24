@@ -23,9 +23,9 @@ library(ggpubr)
 
 ## Dynamic models
 
-- differential equations used for prediction, mechanistic understanding, and decision/management support
+-   differential equations used for prediction, mechanistic understanding, and decision/management support
 
-- we have focused on models with one dependent variable (e.g population size, or concentration of a pollutant)
+-   we have focused on models with one dependent variable (e.g population size, or concentration of a pollutant)
 
 ## Systems of equations {.scrollable}
 
@@ -40,8 +40,6 @@ What if we have more than one variable that is evolving through time and space?
 -   household consumption and savings through time (when consumption depends on savings and vice versa)
 
 These require several differential equations that have to be solved simultaneously
-
-
 
 ## Systems of equations {.scrollable}
 
@@ -124,16 +122,13 @@ lotvmod
 
 # note the use of with
 # initial conditions
-currpop <- c(prey = 10, pred = 1)
 
 # time points to see results
-days <- seq(from = 1, to = 100, by = 1)
 
 # set parameters
-pars <- c(rprey = 0.5, alpha = 0.3, eff = 0.2, pmort = 0.2, K = 100)
 
 # run the model
-res <- ode(func = lotvmod, y = currpop, times = days, parms = pars)
+
 ```
 
 ## Run this model - how would you visualize results?
@@ -157,25 +152,13 @@ res <- ode(func = lotvmod, y = currpop, times = days, parms = pars)
 # graph the results
 head(res)
 # rearrange for easy plotting
-resl <- as.data.frame(res) %>% pivot_longer(-time, names_to = "animal", values_to = "pop")
-p1 <- ggplot(resl, aes(time, pop, col = animal)) +
-  geom_line()
 
-p1
+# first plot against time - use color for pred vs prey
+
+# plot interactions x-y (pred vs prey) - use color for time)
 
 
-p2 <- ggplot(as.data.frame(res), aes(pred, prey)) +
-  geom_point() +
-  labs(y = "Prey", x = "Predators")
-p2
-
-# To make this easier to understand - maybe
-p2b <- ggplot(as.data.frame(res), aes(pred, prey, col = time)) +
-  geom_point() +
-  labs(y = "Prey", x = "Predators")
-p2b
-
-ggarrange(p1, p2b)
+# plot side by side with ggarrange
 ```
 
 # Try other parameters {.scrollable}
@@ -329,53 +312,24 @@ library(sensitivity)
 # want to learn about sensitivity to growth rate (r) and carrying capacity
 # set the number of parameters
 np <- 200
-K <- rnorm(mean = 150, sd = 20, n = np)
-rprey <- runif(min = 0.01, max = 0.3, n = np)
-alpha <- runif(min = 0.1, max = 0.4, n = np)
-eff <- rnorm(mean = 0.3, sd = 0.01, n = np)
-pmort <- runif(min = 0.01, max = 0.45, n = np)
+# then sample parameters for both sets of samples
 
-X1 <- cbind.data.frame(rprey = rprey, K = K, alpha = alpha, eff = eff, pmort = pmort)
 
 # repeat to get our second set of samples
-np <- 200
-K <- rnorm(mean = 150, sd = 20, n = np)
-rprey <- runif(min = 0.01, max = 0.3, n = np)
-alpha <- runif(min = 0.1, max = 0.4, n = np)
-eff <- rnorm(mean = 0.3, sd = 0.01, n = np)
-pmort <- runif(min = 0.01, max = 0.45, n = np)
 
-X2 <- cbind.data.frame(rprey = rprey, K = K, alpha = alpha, eff = eff, pmort = pmort)
 
 
 # create our sobel object and get sets ofparameters for running the model
-sens_PP <- sobolSalt(model = NULL, X1, X2, nboot = 300)
 
 # name parameter sets...
-colnames(sens_PP$X) <- c("rprey", "K", "alpha", "eff", "pmort")
 
 # our metrics
 # lets say we  want the maximum and minimum  of both predictor and prey
 
-compute_metrics <- function(result) {
-  maxprey <- max(result$prey)
-  maxpred <- max(result$pred)
-  minprey <- min(result$prey)
-  minpred <- min(result$pred)
-  return(list(maxprey = maxprey, minprey = minprey, maxpred = maxpred, minpred = minpred))
-}
-
 # build a wrapper function
 
 
-p_wrapper <- function(rprey, alpha, eff, pmort, K, currpop, days, func) {
-  parms <- list(rprey = rprey, alpha = alpha, eff = eff, pmort = pmort, K = K)
-  result <- ode(y = currpop, times = days, func = func, parms = parms)
-  colnames(result) <- c("time", "prey", "pred")
-  # get metrics
-  metrics <- compute_metrics(as.data.frame(result))
-  return(metrics)
-}
+
 
 ```
 
