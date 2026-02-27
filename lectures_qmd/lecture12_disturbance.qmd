@@ -13,6 +13,7 @@ library(deSolve)
 library(here)
 library(sensitivity)
 ```
+
 ## Negative sobol first order indices {.scrollable}
 
 if confidence interval includes zero - not a problem
@@ -43,9 +44,7 @@ Suggest that the solver (numerical integration) had issues
     *result = ode(y=Pinitial, times=simtimes, func=func, parms=parms, method="daspk")*
     ```
 
--   "stiff" problems are harder for numerical integration to solve - (small changes have big impacts); a threshold carrying capacity does that \
-
-
+-   "stiff" problems are harder for numerical integration to solve - (small changes have big impacts); a threshold carrying capacity does that\
 
 ## Ways to use dynamic models {.scrollable}
 
@@ -83,8 +82,6 @@ Disturbance is integrated into the model [**endogenous**]{style="color:orange"}
 -   do you have a model of the disturbance
     -   could you integrate this model into your existing dynamic model
 
-
-
 ## Tradeoffs {.scrollable}
 
 Exogenous is easier to implement; and may allow you to use output from another model even if there are feedbacks it might still be useful to see what happens after a disturbance
@@ -96,7 +93,6 @@ Endogenous allows for a more complete integration of the disturbance
 What would a model of forest growth look like if we harvest a forest on a regular basis
 
 Some possible options
-
 
 3.  Disturbance is **exogenous** (outside of the model)
 
@@ -120,8 +116,6 @@ Modeling carbon growth in a forest
 We can actually re-use our model - if we assume forest growth follows a logistic growth curve (e.g exponential growth towards a carrying capacity)
 
 Let's consider harvesting as **exogenous** first - simply change the starting condition
-
-
 
 ## Lets consider forest growth using our simple growth model {.scrollable}
 
