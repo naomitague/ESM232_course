@@ -144,13 +144,11 @@ High level perspective
 
 -   includes some thoughts on job market preparation
 
-- [Communications of the ACM](%22../papers/AIinComputingEducation.pdf%22)
+-   [Communications of the ACM](%22../papers/AIinComputingEducation.pdf%22)
 
 -   [Practical overview/perspective](%22../papers/perspectives_ai_coding.pdf%22)
 
-- [Recent review on potential harmful consequenses](%22../papers/review-of-harms-fromAIcodingedu.pdf%22)
-
-
+-   [Recent review on potential harmful consequenses](%22../papers/review-of-harms-fromAIcodingedu.pdf%22)
 
 ## Example of using Co-pilot
 
