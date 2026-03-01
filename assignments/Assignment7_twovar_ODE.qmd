@@ -27,7 +27,6 @@ To ensure that you might also add a minimum prey population input that must be m
 
 Note you can make this as simple or as complex as you would like. You could represent hunting in a way that is similar to "harvesting" in the last assignment - or you could make hunting an exogenous process - so a time based input to your model
 
-
 **Part 2**
 
 Explore how different hunting levels and uncertainty/variation in parameters in your model are likely to effect the stability of the populations of both predator and prey. A key challenge is how you might want to define stability? It is up to you but you will need to write a sentence to explain why you chose the measure that you did. It could be something as simple as maintaining a population above some value 50 years into the future. 
@@ -56,17 +55,15 @@ Explore how parameters in your model impact the outcomes of your model. Include 
 
 Write a brief summary about what your model and sensitivity analysis tell you
 
+# Grading
 
-# Grading 
-
-Your grade will be based on the following criteria
-(note for alternative assignment breakdown will be adapted to fit model)
+Your grade will be based on the following criteria (note for alternative assignment breakdown will be adapted to fit model)
 
 | Criteria | Full Marks | No Marks | Points |
-|----------|------------|----------|--------|
-| **Adding hunting to pred-prey differential equation**  <br> - Correct implementation (including adding parameters and modifying the equation)  <br> - Includes a parameter to restrict hunting if prey falls below some value | 3 pts | 0 pts | 3 pts |
-| **Developed a metric to quantify stability**  <br> - The metric captures some aspect of stability  <br> - The metric is implemented as a function that can be applied to a time series (or multiple time series) | 3 pts | 0 pts | 3 pts |
-| **Exploration of stability**  <br> - Compared the stability metric across different values of parameters used to define hunting  <br> - Comparison is explicit in the Rmarkdown (graph or table) showing how hunting levels influence stability | 4 pts | 0 pts | 4 pts |
-| **Using results to make conclusions**  <br> - 1–2 sentences that justify a decision or policy about the level of hunting that clearly arise from the exploration of stability | 3 pts | 0 pts | 3 pts |
-| **Style**  <br> - Graphs have clear labels and legends (if needed) and clearly communicate the intended message  <br> - Rmarkdown includes text explaining each step leading to the final conclusion about hunting levels | 2 pts | 0 pts | 2 pts |
+|----|----|----|----|
+| **Adding hunting to pred-prey differential equation** <br> - Correct implementation (including adding parameters and modifying the equation) <br> - Includes a parameter to restrict hunting if prey falls below some value | 3 pts | 0 pts | 3 pts |
+| **Developed a metric to quantify stability** <br> - The metric captures some aspect of stability <br> - The metric is implemented as a function that can be applied to a time series (or multiple time series) | 3 pts | 0 pts | 3 pts |
+| **Exploration of stability** <br> - Compared the stability metric across different values of parameters used to define hunting <br> - Comparison is explicit in the Rmarkdown (graph or table) showing how hunting levels influence stability | 4 pts | 0 pts | 4 pts |
+| **Using results to make conclusions** <br> - 1–2 sentences that justify a decision or policy about the level of hunting that clearly arise from the exploration of stability | 3 pts | 0 pts | 3 pts |
+| **Style** <br> - Graphs have clear labels and legends (if needed) and clearly communicate the intended message <br> - Rmarkdown includes text explaining each step leading to the final conclusion about hunting levels | 2 pts | 0 pts | 2 pts |
 |  |  | **Total Points** | **15 pts** |

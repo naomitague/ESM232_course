@@ -23,9 +23,9 @@ library(ggpubr)
 
 ## Dynamic models
 
-- differential equations used for prediction, mechanistic understanding, and decision/management support
+-   differential equations used for prediction, mechanistic understanding, and decision/management support
 
-- we have focused on models with one dependent variable (e.g population size, or concentration of a pollutant)
+-   we have focused on models with one dependent variable (e.g population size, or concentration of a pollutant)
 
 ## Systems of equations {.scrollable}
 
@@ -40,8 +40,6 @@ What if we have more than one variable that is evolving through time and space?
 -   household consumption and savings through time (when consumption depends on savings and vice versa)
 
 These require several differential equations that have to be solved simultaneously
-
-
 
 ## Systems of equations {.scrollable}
 

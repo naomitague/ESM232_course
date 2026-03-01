@@ -122,13 +122,16 @@ lotvmod
 
 # note the use of with
 # initial conditions
+currpop = c(prey=10, pred=1)
 
 # time points to see results
-
+days = seq(from=1, to=100, by=1)
 # set parameters
 
+pars = c(rprey=0.5, alpha=0.3, eff=0.2, pmort=0.2)
 # run the model
 
+res = ode(func=lotvmod, y=currpop, times=days, parms = pars)
 ```
 
 ## Run this model - how would you visualize results?
@@ -153,10 +156,14 @@ lotvmod
 head(res)
 # rearrange for easy plotting
 
+resl = as.data.frame(res) %>% pivot_longer(-time, names_to="animal", values_to="pop")
 # first plot against time - use color for pred vs prey
 
+p1 = ggplot(as.data.frame(res), aes(pred, prey))+geom_point()
+labs(y="Prey",x="Pred")
 # plot interactions x-y (pred vs prey) - use color for time)
-
+p2 = ggplot(resl, aes(time, pop, col=animal))+geom_line()+
+  labs(y="pop",x="time")
 
 # plot side by side with ggarrange
 ```
