@@ -327,6 +327,7 @@ library(sensitivity)
 # want to learn about sensitivity to growth rate (r) and carrying capacity
 # set the number of parameters
 np <- 200
+# then sample parameters for both sets of samples
 K <- rnorm(mean = 150, sd = 20, n = np)
 rprey <- runif(min = 0.01, max = 0.3, n = np)
 alpha <- runif(min = 0.1, max = 0.4, n = np)
@@ -554,24 +555,22 @@ res <- ode(func = lotvmodKvar, y = currpop, times = days, parms = pars)
 # graph the results
 head(res)
 # rearrange for easy plotting
+
 resl <- as.data.frame(res) %>% pivot_longer(-time, names_to = "animal", values_to = "pop")
+# first plot against time - use color for pred vs prey
+
 p1 <- ggplot(resl, aes(time, pop, col = animal)) +
   geom_line()
 
 p1
 
-
-p2 <- ggplot(as.data.frame(res), aes(pred, prey)) +
-  geom_point() +
-  labs(y = "Prey", x = "Predators")
-p2
-
+# plot interactions x-y (pred vs prey) - use color for time)
 # To make this easier to understand - maybe
 p2b <- ggplot(as.data.frame(res), aes(pred, prey, col = time)) +
   geom_point() +
   labs(y = "Prey", x = "Predators")
 p2b
-
+# plot side by side with ggarrange
 ggarrange(p1, p2b)
 ```
 
