@@ -1,5 +1,5 @@
 ---
-title: "Lecture15 ebvaluating models"
+title: "Lecture16 evaluating models"
 format: revealjs
 execute: 
   echo: TRUE
@@ -9,9 +9,7 @@ css: ["slides.css"]
 editor: visual
 ---
 
-![](img/modeling_pipeline_two_row.svg){width=100%}
-
-
+![](img/modeling_pipeline_two_row.svg){width="100%"}
 
 ## Comparing Model with Observations
 
@@ -20,35 +18,31 @@ Why?
 -   to make a "case" for why you selected this model for your project
 -   reduce parameter uncertainty - **Calibration**
 
-## Quantifying Model Performance {.scrollable}
 
--   Depends on type of model output
 
-    -   single value (mean energy production from a solar panel)
-    -   time series (streamflow, PM10, monthly energy production )
-    -   spatial pattern (population, income level)
-    -   space-time (pollution in different cites over time, forest biomass growth across different forests)
+## Return to Quiz 3 - Evaluating model {.scrollable}
 
--   Depends on observations
+-   Kelp abundance forecasts (Santa Barbara Channel surveys) Compare predicted kelp biomass to observed survey data using MAE, RMSE, and MSE.
 
-# Return to Quiz 3 - Evaluating model {.scrollable}
- * Kelp abundance forecasts (Santa Barbara Channel surveys)
-Compare predicted kelp biomass to observed survey data using MAE, RMSE, and MSE.
+-   Salinity model (Nueces Bay freshwater flow impacts) Compare competing models using AIC based on observed salinity measurements.
 
-* Salinity model (Nueces Bay freshwater flow impacts)
-Compare competing models using AIC based on observed salinity measurements.
+-   Coral community (reef transect data) Compare predicted percent coral cover to observed field data using statistical goodness-of-fit testing.
 
-*  Coral community  (reef transect data)
-Compare predicted percent coral cover to observed field data using statistical goodness-of-fit testing.
+-   Monsoon simulation (observed precipitation and windspeed records) Compare simulated storm outputs to observed meteorological station data using prediction error metrics (e.g., RMSE).
 
- * Monsoon simulation (observed precipitation and windspeed records)
-Compare simulated storm outputs to observed meteorological station data using prediction error metrics (e.g., RMSE).
+-   Dam impact classification model (observed ecological damage records) Evaluate predicted impact class (low/medium/high) using classification accuracy against observed outcomes.
 
-* Dam impact classification model (observed ecological damage records)
-Evaluate predicted impact class (low/medium/high) using classification accuracy against observed outcomes.
+-   Rainfall prediction model (observed precipitation totals) Compare predicted rainfall to observed rainfall using error metrics and unit consistency checks.
 
-* Rainfall prediction model (observed precipitation totals)
-Compare predicted rainfall to observed rainfall using error metrics and unit consistency checks.
+## Calibration and Optimization
+
+What we've already been doing in sensitivity analysis 
+
+- Generate parameter sets (e.g., LHS, sobol) 
+- Compute metrics for each results (metrics function)
+- Use sensitivity metrics to find which parameters contribute most to output variation
+
+Calibration - Pick the "best" parameter set - Or pick only parameter sets that perform well
 
 ## Quantifying Model Performance {.scrollable}
 
@@ -62,8 +56,6 @@ Compare predicted rainfall to observed rainfall using error metrics and unit con
 -   Depends on observations
 
     -   often not as "dense" as model output (e.g samples)
-    -   sometimes you have a time series (e.g. streamflow, PM10)
-    -   sometimes you have a spatial pattern (e.g. population, income level)
     -   often you are sampling (e.g mean PM10, mean streamflow) so there is also error/uncertainty in the observation
 
 ## Metrics
@@ -92,21 +84,8 @@ But you can code your own
 
 -   make them an R function for utility
 
-## NSE
 
-$NSE = \frac{\sum((m_i - o_i)^2)}{\sum((o_i - mean(o))^2}$
-
-``` r
-nse = function(m, o) {
-  err = m - o
-  meanobs = mean(o)
-  mse = sum(err^2)
-  ovar = sum((o - meanobs)^2)
-  return(1 - mse / ovar)
-}
-```
-
-## Percent Error
+## Percent Error (Relative Bias)
 
 Useful to see if over whole time series you have a bias
 
@@ -119,8 +98,22 @@ relerr = function(m, o) {
   return(mean(err) / meanobs)
 }
 ```
+## NSE Nash-Sutcliffe Efficiency
 
-------------------------------------------------------------------------
+* commonly used in hydrology 
+* likes a mean squared error but normalized by the variance of the observations
+
+$NSE = \frac{\sum((m_i - o_i)^2)}{\sum((o_i - mean(o))^2}$
+
+``` r
+nse = function(m, o) {
+  err = m - o
+  meanobs = mean(o)
+  mse = sum(err^2)
+  ovar = sum((o - meanobs)^2)
+  return(1 - mse / ovar)
+}
+```
 
 ## Soft Metrics: Fuzzy Evaluation
 
@@ -139,7 +132,49 @@ $perf(x) = \begin{cases}
 
 [Seibert, J., and J. J. McDonnell, On the dialog between experimentalist and modeler in catchment hydrology: Use of soft data for multicriteria model calibration, Water Resour. Res., 38(11), 1241, doi:10.1029/2001WR000978, 2002]{style="font-size:50%"}
 
-# Example application {.scrollable}
+## Fuzzy Metric as a Plot
+![Fuzzy Metric](img/fuzzy_metric.png)
+
+## Example application {.scrollable}
+
+Lets say our model predicts forest biomass for a 200 year old Ponderosa pine forests in the western US for many
+sites
+
+Estimating forest biomass is hard and there is a lot of uncertainty in the observations
+and we don't have estimates for our specific forest - but we know from forest service databases
+
+* biomass is usually between 100 and 200 Mg/ha (for most Ponderosa pine forests)
+* occasionally it can be as low as 50 Mg/ha 
+* occasionally as high as 300 Mg/ha
+
+```{r, setup}
+library(tidyverse)
+library(here)
+library(ggpubr)
+library(purrr)
+```
+## Here's how we might use our metric
+
+```{r}
+
+# use our literature review to define our limits for the fuzzy metric
+a1=50
+a2=100
+a3=200
+a4=400
+
+
+source(here("R/fuzzy_perf.R"))
+# lets say our model predicts 150 Mg/ha
+fuzzy_perf(150, a1,a2,a3,a4)
+# lets say our model predicts 50 Mg/ha
+fuzzy_perf(50, a1,a2,a3,a4)
+# lets say our model predicts 75 Mg/ha
+fuzzy_perf(75, a1,a2,a3,a4)
+
+```
+
+## Example application a bit more complex{.scrollable}
 
 For a given year, we just know whether the water manager reported a drought
 
@@ -153,19 +188,22 @@ But all we know is the report for each year
 
 Can we evaluate our model performance given this uncertainty?
 
-Two Conditions \* drought a1=0, a2=0, a3=800, a4=1000 \* OK upper bound just pick really large numbers \* a1=800, a2=1000, a3=10000, a4=10000
+## Code
 
-```{r, setup}
-library(tidyverse)
-library(here)
-library(ggpubr)
-```
+Two Conditions
+
+* there is a drought 
+  * a1=0, a2=0, a3=800, a4=1000  
+* there is not a drought (for upper bound just pick really large numbers )
+  * a1=800, a2=1000, a3=10000, a4=10000
 
 
 ```{r}
 source(here("R/fuzzy_perf.R"))
 source(here("R/nse.R"))
 w8_wy = readRDS(here("Data/w8_wy.RDS"))
+
+head(w8_wy)
 
 # first year 
 w8_wy[1,"report"]
@@ -183,7 +221,7 @@ for (i in 1:nrow(w8_wy)) {
 tmp = w8_wy %>% pivot_longer(cols=c("model","obs"), names_to="source",values_to="flow")
 a=ggplot(tmp, aes(wy, flow, fill=source))+geom_col(position="dodge")+labs(y="Flow",x="Year")
 b=ggplot(w8_wy, aes(wy, perf))+geom_point()+labs(y="Performance",x="year")
-ggarrange(a,b, col=1)
+ggarrange(a,b,ncol=1)
 
 # compare metrics
 mean(w8_wy$perf)
@@ -191,23 +229,13 @@ nse(w8_wy$model, w8_wy$obs)
 cor(w8_wy$model, w8_wy$obs)
 ```
 
-
-
-
-
-
 ## Calibration and Optimization
 
-What we've already been doing in sensitivity analysis
--   Generate parameter sets (e.g., LHS, soboel)
--   Compute metrics for each results (metrics function)
-
-Calibration
--   Pick the "best" parameter set
--  Or pick only parameter sets that perform well
+1. Generate parameter sets (e.g., LHS, sobol) 
+2. Compute metrics for each results (metrics function)
+3. Calibration - Pick the "best" parameter set - Or pick only parameter sets that perform well
 
 How important is the metric?
-
 
 ## Hydrologic model example
 
@@ -264,14 +292,14 @@ p1+geom_line(data=subset(msage, wy == 1970), aes(as.Date(date), obs), linewidth=
 
 -   NSE
 
-
 ```{r, echo=TRUE, eval=TRUE}
 
 source(here("R/nse.R"))
 nse
 
 # compute nse for each parameter set
-res = msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% apply(2,nse, o=msage$obs)
+
+res = msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% map_dbl(nse, o=msage$obs)
 head(res)
 summary(res)
 
@@ -286,12 +314,12 @@ ggplot(msage, aes(as.Date(date), msage[,best_par]))+geom_line(col="red")+
 
 ```
 
-
-
 ## Our class experiment
 
-## Sagehen Data
+- code your own metric function - pick something that you think is important for an application of a model that predicts streamflow
+- consider subseting to a specific season (e.g. summer) or specific flow conditions (e.g. low flow) and compute your metric for that subset of the data
 
+- add the quiz the column number of your metric
 
 ## Equifinality
 
@@ -307,15 +335,17 @@ Parameter selection will be effected by:
 -   calibration period
 -   observation/measurement error
 -   poor identifiablity (equifinality)
+-   choice of performance metric
 
 How can we be more robust in parameter selection?
 
 ## Calibration - an alternative {.scrollable}
 
 -   Generate parameter sets
--   Compute metrics for each
+-   Run model and compute metrics for each set
 -   Keep all acceptable parameter sets (or sample across them)
--   Show uncertainty in estimates due to variation across these parameter sets
+-   Show uncertainty in estimates due to variation across acceptable parameter sets
+
 -   If you need a single estimate
     -   use an ensemble approach
     -   average estimates from all parameters
@@ -327,4 +357,3 @@ Mean weighted estimate (MWE) - Weighted average of outputs by performance - Prod
 
 ![Equifinality](img/weights.png)
 
-## Example
