@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="700" viewBox="0 0 1400 700">
+<rect x="0" y="0" width="1400" height="700" fill="#ffffff"/>
+
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="10" markerHeight="10" orient="auto">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
+  </marker>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.15"/>
+  </filter>
+</defs>
+
+
+<text x="700.0" y="90" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="34" font-weight="800" fill="#111827">
+  Modeling Workflow
+</text>
+
+<line x1="400.0" y1="275.0" x2="520.0" y2="275.0" stroke="#1f2937" stroke-width="4" marker-end="url(#arrow)"/>
+<line x1="880.0" y1="275.0" x2="1000.0" y2="275.0" stroke="#1f2937" stroke-width="4" marker-end="url(#arrow)"/>
+<line x1="1180.0" y1="350" x2="220.0" y2="490" stroke="#1f2937" stroke-width="4" marker-end="url(#arrow)"/>
+<line x1="400.0" y1="565.0" x2="520.0" y2="565.0" stroke="#1f2937" stroke-width="4" marker-end="url(#arrow)"/>
+<line x1="880.0" y1="565.0" x2="1000.0" y2="565.0" stroke="#1f2937" stroke-width="4" marker-end="url(#arrow)"/>
+
+<g filter="url(#shadow)">
+  <rect x="40.0" y="200" width="360" height="150" rx="26" ry="26"
+        fill="#e0f2f1" stroke="#00695c" stroke-width="4"/>
+</g>
+
+
+<text x="220.0" y="260" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#003d33">
+  1. Define objective
+</text>
+
+
+<text x="220.0" y="300" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#003d33" opacity="0.9">
+  Prediction • Understanding • Communication
+</text>
+
+
+<g filter="url(#shadow)">
+  <rect x="520.0" y="200" width="360" height="150" rx="26" ry="26"
+        fill="#e3f2fd" stroke="#1565c0" stroke-width="4"/>
+</g>
+
+
+<text x="700.0" y="260" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#0d2a4d">
+  2. Conceptual model
+</text>
+
+
+<text x="700.0" y="300" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#0d2a4d" opacity="0.9">
+  Environmental phenomenon
+</text>
+
+
+<g filter="url(#shadow)">
+  <rect x="1000.0" y="200" width="360" height="150" rx="26" ry="26"
+        fill="#e0f7fa" stroke="#00838f" stroke-width="4"/>
+</g>
+
+
+<text x="1180.0" y="260" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#00363a">
+  3. Choose model type
+</text>
+
+
+<text x="1180.0" y="300" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#00363a" opacity="0.9">
+  Input–output • Dynamic • Process-based vs Black box
+</text>
+
+
+<g filter="url(#shadow)">
+  <rect x="40.0" y="490" width="360" height="150" rx="26" ry="26"
+        fill="#f1f8e9" stroke="#2e7d32" stroke-width="4"/>
+</g>
+
+
+<text x="220.0" y="550" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#1b3d1b">
+  4. Implement / choose model
+</text>
+
+
+<text x="220.0" y="590" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1b3d1b" opacity="0.9">
+  Code • Data • Parameters
+</text>
+
+
+<g filter="url(#shadow)">
+  <rect x="520.0" y="490" width="360" height="150" rx="26" ry="26"
+        fill="#e1f5fe" stroke="#0277bd" stroke-width="4"/>
+</g>
+
+
+<text x="700.0" y="550" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#01354d">
+  5. Parameter sensitivity
+</text>
+
+
+<text x="700.0" y="590" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#01354d" opacity="0.9">
+  Explore key drivers
+</text>
+
+
+<g filter="url(#shadow)">
+  <rect x="1000.0" y="490" width="360" height="150" rx="26" ry="26"
+        fill="#e8f5e9" stroke="#1b5e20" stroke-width="4"/>
+</g>
+
+
+<text x="1180.0" y="550" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#102e12">
+  6. Explore outputs
+</text>
+
+
+<text x="1180.0" y="590" text-anchor="middle"
+      font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#102e12" opacity="0.9">
+  Diagnostics • Scenarios • Interpretation
+</text>
+
+</svg>

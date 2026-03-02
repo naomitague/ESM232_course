@@ -9,16 +9,16 @@ css: ["slides.css"]
 editor: visual
 ---
 
-#Return to Quiz 3 - Evaluating model - show some examples
+![](img/modeling_pipeline_two_row.svg){width=100%}
+
+
 
 ## Comparing Model with Observations
 
 Why?
 
 -   to make a "case" for why you selected this model for your project
--   to quantify uncertainty in your model outputs
--   to choose parameters that make the model perform well
-    -   reduce parameter uncertainty
+-   reduce parameter uncertainty - **Calibration**
 
 ## Quantifying Model Performance {.scrollable}
 
@@ -31,9 +31,26 @@ Why?
 
 -   Depends on observations
 
-=======
+# Return to Quiz 3 - Evaluating model {.scrollable}
+ * Kelp abundance forecasts (Santa Barbara Channel surveys)
+Compare predicted kelp biomass to observed survey data using MAE, RMSE, and MSE.
 
-## Qantifying Model Performance {.scrollable}
+* Salinity model (Nueces Bay freshwater flow impacts)
+Compare competing models using AIC based on observed salinity measurements.
+
+*  Coral community  (reef transect data)
+Compare predicted percent coral cover to observed field data using statistical goodness-of-fit testing.
+
+ * Monsoon simulation (observed precipitation and windspeed records)
+Compare simulated storm outputs to observed meteorological station data using prediction error metrics (e.g., RMSE).
+
+* Dam impact classification model (observed ecological damage records)
+Evaluate predicted impact class (low/medium/high) using classification accuracy against observed outcomes.
+
+* Rainfall prediction model (observed precipitation totals)
+Compare predicted rainfall to observed rainfall using error metrics and unit consistency checks.
+
+## Quantifying Model Performance {.scrollable}
 
 -   Depends on type of model output
 
@@ -89,8 +106,6 @@ nse = function(m, o) {
 }
 ```
 
-------------------------------------------------------------------------
-
 ## Percent Error
 
 Useful to see if over whole time series you have a bias
@@ -140,10 +155,16 @@ Can we evaluate our model performance given this uncertainty?
 
 Two Conditions \* drought a1=0, a2=0, a3=800, a4=1000 \* OK upper bound just pick really large numbers \* a1=800, a2=1000, a3=10000, a4=10000
 
-```{r}
+```{r, setup}
 library(tidyverse)
 library(here)
+library(ggpubr)
+```
+
+
+```{r}
 source(here("R/fuzzy_perf.R"))
+source(here("R/nse.R"))
 w8_wy = readRDS(here("Data/w8_wy.RDS"))
 
 # first year 
@@ -159,62 +180,118 @@ for (i in 1:nrow(w8_wy)) {
     fuzzy_perf(w8_wy$model[i], 800, 1000, 10000, 10000))
 }
 
+tmp = w8_wy %>% pivot_longer(cols=c("model","obs"), names_to="source",values_to="flow")
+a=ggplot(tmp, aes(wy, flow, fill=source))+geom_col(position="dodge")+labs(y="Flow",x="Year")
+b=ggplot(w8_wy, aes(wy, perf))+geom_point()+labs(y="Performance",x="year")
+ggarrange(a,b, col=1)
 
-
+# compare metrics
+mean(w8_wy$perf)
+nse(w8_wy$model, w8_wy$obs)
+cor(w8_wy$model, w8_wy$obs)
 ```
 
-## Combining Metrics
-
--   Normalize metrics (0-1)
--   Make all increase with performance
--   Weighted sum or multiplicative approach
-
-$Metric_A * Metric_B * Metric_C$
-
-$Metric_A * weight_A + Metric_B * weight_B + Metric_C * weight_C$ where $weight_A + weight_B + weight_C = 1$
-
-## Normalizing
-
-SSE = $1/n*\sum((m_i - o_i)^2)$
-
-How do I make this 0-1? and increasing values give better performance
-
-## solution options
-
-$L = (SSE)^{-n}$
-
-$L = exp(-n * SSE)$
-
-$L = (max(SSE) - SSE) / max(SSE)$
-
-where $max(SSE)$ is the maximum value of SSE across all models or sometimes
-
-$L = (SSE - min(SSE)) / (max(SSE) - min(SSE))$
-
-## Combined Performance
-
-Example R function
-
-Lets go back to daily streamflow data
-
-```{r, echo=TRUE}
-
-source(here("R/nse.R"))
-source(here("R/relerr.R"))
-source(here("R/cper.R"))
-
-w8 = readRDS(here("Data/w8.RDS"))
 
 
-```
+
+
 
 ## Calibration and Optimization
 
--   Generate parameter sets (e.g., LHS)
--   Compute metrics for each
--   Pick the "best" parameter set?
+What we've already been doing in sensitivity analysis
+-   Generate parameter sets (e.g., LHS, soboel)
+-   Compute metrics for each results (metrics function)
 
-------------------------------------------------------------------------
+Calibration
+-   Pick the "best" parameter set
+-  Or pick only parameter sets that perform well
+
+How important is the metric?
+
+
+## Hydrologic model example
+
+![Sagehen](img/Sagehenpic.png)
+
+## RHESSys
+
+![RHESSys](img/RHESSys.png)
+
+## RHESSys {.scrollable}
+
+-   run for 101 parameter sets
+
+Each parameter set
+
+-   Water year 1966 to 1990
+-   Streamflow each day
+-   Table organized each run in a column
+
+And we have observed data
+
+-   Which parameter sets are acceptable?
+-   What if we just pick the best one?
+
+## Load the data {.scrollable}
+
+```{r echo=TRUE, eval=TRUE}
+library(tidyverse)
+library(here)
+
+msage = readRDS(here("Data/msage.RDS"))
+#View(msage)
+
+# first rearrange so we can plot all results
+msagel <- msage %>%
+  pivot_longer(
+    cols = -c(date, month, day, year, wy, obs),
+    names_to = "run",
+    values_to = "str"
+  )
+
+# now plot
+p1=ggplot(subset(msagel, wy == 1970), aes(as.Date(date), str, col=run))+geom_line()+theme(legend.position = "none")
+p1
+
+# lets add observed streamflow
+p1+geom_line(data=subset(msage, wy == 1970), aes(as.Date(date), obs), linewidth=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
+
+
+# try another year
+```
+
+## Calibration metrics for each parameter set {.scrollable}
+
+-   NSE
+
+
+```{r, echo=TRUE, eval=TRUE}
+
+source(here("R/nse.R"))
+nse
+
+# compute nse for each parameter set
+res = msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% apply(2,nse, o=msage$obs)
+head(res)
+summary(res)
+
+# basic calibration would be picking a single parameters set
+best_par = which.max(res)
+# lets plot the best parameter set
+
+ggplot(msage, aes(as.Date(date), msage[,best_par]))+geom_line(col="red")+
+  geom_line(data=msage, aes(as.Date(date), obs), col="black", linetype=2)+labs(y="Streamflow", x="Date")
+
+# what would be acceptable?
+
+```
+
+
+
+## Our class experiment
+
+## Sagehen Data
+
 
 ## Equifinality
 

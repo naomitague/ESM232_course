@@ -111,6 +111,50 @@ ggplot(msage, aes(as.Date(date), msage[,best_par]))+geom_line(col="red")+
 
 ```
 
+## Combining Metrics
+
+-   Normalize metrics (0-1)
+-   Make all increase with performance
+-   Weighted sum or multiplicative approach
+
+$Metric_A * Metric_B * Metric_C$
+
+$Metric_A * weight_A + Metric_B * weight_B + Metric_C * weight_C$ where $weight_A + weight_B + weight_C = 1$
+
+## Normalizing
+
+SSE = $1/n*\sum((m_i - o_i)^2)$
+
+How do I make this 0-1? and increasing values give better performance
+
+## solution options
+
+$L = (SSE)^{-n}$
+
+$L = exp(-n * SSE)$
+
+$L = (max(SSE) - SSE) / max(SSE)$
+
+where $max(SSE)$ is the maximum value of SSE across all models or sometimes
+
+$L = (SSE - min(SSE)) / (max(SSE) - min(SSE))$
+
+## Combined Performance
+
+Example R function
+
+Lets go back to daily streamflow data
+
+```{r, echo=TRUE}
+
+source(here("R/nse.R"))
+source(here("R/relerr.R"))
+source(here("R/cper.R"))
+
+w8 = readRDS(here("Data/w8.RDS"))
+
+
+```
 ## Try again with low flow metrics {.scrollable}
 
 a function that generates
@@ -157,11 +201,7 @@ ggplot(resultsl, aes(metric, value))+geom_boxplot()+facet_wrap(~metric, scales="
 
 Standard - pick one set
 
-Issues
-* highly sensitivity to observation error
-* highly sensitivity to performance metric
-* highly sensitivity to observation context (e.g. time period)
-* equifinality (are performance difference really meaningful)
+Issues \* highly sensitivity to observation error \* highly sensitivity to performance metric \* highly sensitivity to observation context (e.g. time period) \* equifinality (are performance difference really meaningful)
 
 ```{r, echo=TRUE, eval=TRUE}
 
@@ -178,13 +218,14 @@ best_par2 = which.max(results$low_month_cor)
 
 -   combine multiple performance measures into a single one
 
--  we need to transform error based metrics into 0-1 scale, and make sure better performance is a higher value of the metric
+-   we need to transform error based metrics into 0-1 scale, and make sure better performance is a higher value of the metric
 
-- fix
-    - errors : $L_{err} = 1 - \frac{|err|}{max(|err|)}$
- 
-- create a general function that will work with any number of metrics   
-    
+-   fix
+
+    -   errors : $L_{err} = 1 - \frac{|err|}{max(|err|)}$
+
+-   create a general function that will work with any number of metrics
+
 ```{r, echo=TRUE, eval=TRUE}
 
 comb_metrics = function(metrics, weights) {
@@ -264,6 +305,7 @@ ggplot(subset(msagel_mth, month==8), aes(accept, str))+geom_boxplot()+
 ```
 
 # Alternatively we could just use our combined metric
+
 ```{r, echo=TRUE, eval=TRUE}
 
 # pick acceptable parameters based on combined metric
