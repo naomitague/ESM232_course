@@ -9,7 +9,8 @@ css: ["slides.css"]
 editor: visual
 ---
 
-## SOme insightful comments from quest lectures
+## Some insightful comments from quest lectures {.scrollable}
+
 It's okay to make assumptions, assumptions are in every model.
 
 most models are a great way to describe a system that is fairly unexplained, with the caveat that because it is so underresearched the models developed will have many assumptions. Ultimately, they are still good estimations and starting points to describing a system.
@@ -22,17 +23,15 @@ One insight I gained is that modelling really ecologically complex systems can b
 
 Know your units and how your system works because the system can be broken down into more handle-able sections in which you can quantify and more easily model.
 
- it's helpful to compare your model with existing frameworks & experts to see whether it aligns or improves on existing models (to compare efficacy). Diagramming each important concept before including into the general model can help provide a sense of uncertainty for each component for considering total variation. Start with existing models and switch out components as necessary (otherwise, you may be connecting many broken pieces instead of starting from the current state of knowledge).s
+it's helpful to compare your model with existing frameworks & experts to see whether it aligns or improves on existing models (to compare efficacy). Diagramming each important concept before including into the general model can help provide a sense of uncertainty for each component for considering total variation. Start with existing models and switch out components as necessary (otherwise, you may be connecting many broken pieces instead of starting from the current state of knowledge).s
 
-While simulations use mathemtical framework patterns from 'what-if' scenarios under theoretical conditons, data-driven models extract patterns from historical evidence to forecast future outcomes. 
+While simulations use mathemtical framework patterns from 'what-if' scenarios under theoretical conditons, data-driven models extract patterns from historical evidence to forecast future outcomes.
 
-Graded
-One key insight is that models are most valuable when used alongside field data and not in isolation
+Graded One key insight is that models are most valuable when used alongside field data and not in isolation
 
- each component alone is incomplete, and examining the internals makes clear this isn't the real system. But the model is constructed so that, viewed through the lens of the right question or particular conditions, it is representative of a system's behavior.
+each component alone is incomplete, and examining the internals makes clear this isn't the real system. But the model is constructed so that, viewed through the lens of the right question or particular conditions, it is representative of a system's behavior.
 
-You could build the perfect model that predicts outcomes without any error, but if you're not able to explain how it works or why it was built the way it was built, it's not useful at all.
-Dr. Loheide had almost no equations in his presentation. He explained the entirety of the concept of the model without the granularity.
+You could build the perfect model that predicts outcomes without any error, but if you're not able to explain how it works or why it was built the way it was built, it's not useful at all. Dr. Loheide had almost no equations in his presentation. He explained the entirety of the concept of the model without the granularity.
 
 ![](img/modeling_pipeline_two_row.svg){width="100%"}
 
@@ -292,19 +291,11 @@ msage = readRDS(here("Data/msage.RDS"))
 #View(msage)
 
 # first rearrange so we can plot all results
-msagel <- msage %>%
-  pivot_longer(
-    cols = -c(date, month, day, year, wy, obs),
-    names_to = "run",
-    values_to = "str"
-  )
 
 # now plot
-p1=ggplot(subset(msagel, wy == 1970), aes(as.Date(date), str, col=run))+geom_line()+theme(legend.position = "none")
-p1
+
 
 # lets add observed streamflow
-p1+geom_line(data=subset(msage, wy == 1970), aes(as.Date(date), obs), linewidth=2, col="black", linetype=2)+labs(y="Streamflow", x="Date")
 
 
 # try another year
@@ -321,16 +312,12 @@ nse
 
 # compute nse for each parameter set
 
-res = msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% map_dbl(nse, o=msage$obs)
-head(res)
-summary(res)
+
 
 # basic calibration would be picking a single parameters set
-best_par = which.max(res)
+
 # lets plot the best parameter set
 
-ggplot(msage, aes(as.Date(date), msage[,best_par]))+geom_line(col="red")+
-  geom_line(data=msage, aes(as.Date(date), obs), col="black", linetype=2)+labs(y="Streamflow", x="Date")
 
 # what would be acceptable?
 
