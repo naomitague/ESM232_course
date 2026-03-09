@@ -10,8 +10,71 @@ editor: visual
 ---
 
 # Compare Class results
+```{r}
+library(tidyverse)
+library(here)
 
-## Glue - generalized uncertainty analysis {.scrollable}
+answers = c(15,
+32,
+49,
+32,
+32,
+15,
+49,
+78,
+32,
+49,
+8,
+49,
+87,
+32,
+49,
+99,
+53,
+32,
+68,
+32,
+17,
+2,
+32,
+10,
+77,
+10,
+15,
+89,
+32)
+
+answers_df = data.frame(student=1:29, answer=answers, answercat = as.factor(answers))
+n = length(unique(answers_df$answercat))
+ggplot(answers_df, aes(x = answercat, fill = answercat)) +
+  geom_bar() + scale_fill_manual(values = grDevices::hcl.colors(n, "Dynamic")) +
+  labs(x = "Parameter Set", y = "Count of students") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+## Calibration - an alternative {.scrollable}
+
+-   Generate parameter sets
+
+-   Run model and compute metrics for each set
+
+-   Keep all acceptable parameter sets (or sample across them)
+
+-   Show uncertainty in estimates due to variation across acceptable parameter sets
+
+-   If you need a single estimate
+
+    -   use an ensemble approach
+    -   average estimates from all parameters
+    -   weight estimate from each parameter by performance
+
+# Using Performance to Weight Estimate
+
+Mean weighted estimate (MWE) - Weighted average of outputs by performance - Produces MWE (Mean Weighted Estimate)
+
+![Equifinality](img/weights.png)## Glue - generalized uncertainty analysis {.scrollable}
 
 What if we wanted to keep all of the 'good' parameters
 
@@ -20,17 +83,19 @@ What if we wanted to keep all of the 'good' parameters
 
 Either way we can graph and come up with 'best' prediction accounting for uncertainty
 
+## Combining multiple metrics
+
 Create a single measure of accuracy
 
 -   *compute_lowflowmetrics_all* added a summary measures
 
--   relative error in annual minimum flow estimate
+  -   relative error in annual minimum flow estimate
 
--   relative error in monthly flow during low flow period
+  -   relative error in monthly flow during low flow period
 
--   correlation between observed and modelled annual minimum flow
+  -   correlation between observed and modelled annual minimum flow
 
--   correlation between observed and modelled flow during the low flow period
+  -   correlation between observed and modelled flow during the low flow period
 
 Updates (from *compute_lowflowmetrics*)
 
@@ -39,8 +104,6 @@ Updates (from *compute_lowflowmetrics*)
 
 ```{r startup}
 
-library(tidyverse)
-library(here)
 
 # read metric function
 source(here("R/compute_lowflowmetrics_all.R"))
@@ -59,6 +122,7 @@ results = as.data.frame(matrix(unlist(res), byrow=T, ncol=5))
 colnames(results)=c("annual_min_err","annual_min_cor", "low_month_err", "low_month_cor", "combined")
 results$sim <- msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% colnames()
 
+results[which.max(results$combined),"sim"]
 ```
 
 ## Use the accuracy measure {.scrollable}
@@ -182,6 +246,14 @@ ggplot(subset(aver_flowl, wy == wycheck), aes(x = date, y = str, col=type)) +  l
 
 # Monthly flow with MLE {.scrollable}
 
+What if all we care about is streamflow in August
+(lets say fish are particularly sensitive to August flow when air temperature are warm)
+
+What are our maximum likelihood estimates of august flow ?
+
+Lets also compare, calibration using all metrics from class
+and low flow calibration
+
 ```{r mlemonth, echo=TRUE}
 # we could also calculate mse for august flow
 # get monthly flow
@@ -212,6 +284,7 @@ mse_flow_all = left_join(mse_flow_all, mse_flow, by = c("wy", "month"), suffix =
 
 # see the impact of calibration
 tmp = mse_flow_all %>% subset(month==8) 
+
 cor(tmp$str_mse_all, tmp$obs)
 cor(tmp$str_mse_mse, tmp$obs)
 
@@ -244,9 +317,9 @@ msagel_month_avg <- msagel_month %>%
 msagel_month_avg = msagel_month_avg %>% mutate(accept = ifelse(sim %in% results_acc$sim, "Accept", "Not"))
 
 # read in the results from last class
-goodpar = c(40, 42,29, 68,9,20, 12,32, 10,77)
+goodpar = answers 
 other_cal_parms = paste0("V",goodpar)
-msagel_month_avg$othercal = ifelse(msagel_month_avg$sim %in% other_cal_parms, "Accept B", "Not B")
+msagel_month_avg$othercal = ifelse(msagel_month_avg$sim %in% other_cal_parms, "Accept Class", "Not By Class")
 
 # compute average august flow in observed
 mean_august_obs = mean(subset(msagel_month_avg, month==8)$obs)
@@ -261,42 +334,6 @@ p2 = ggplot(subset(msagel_month_avg, month==8), aes(x=accept, y=str))+geom_boxpl
 p2
 ```
 
-## Try a different month {.scrollable}
 
-```{r different_month, echo=TRUE}
 
-# compute average december flow in observed
-mean_dec_obs = mean(subset(msagel_month_avg, month==12)$obs)
-
-p3 = ggplot(subset(msagel_month_avg, month==12), aes(x=accept, y=str))+geom_boxplot()+geom_hline(yintercept=mean_dec_obs, col="red")+geom_boxplot(aes(x=othercal, y=str))  + labs(y = "Mean Streamflow \nDecember", x = "Parameter set") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-p3
-```
-
-## Annual Total or Minimumm Flow {.scrollable}
-
-```{r annual_total, echo=TRUE}
-# calculate annual total streamflow
-msagel_annual <- msagel %>%
-  group_by(wy, sim) %>%
-  dplyr::summarize(str = sum(str), obs = sum(obs), minstr=min(str), minobs=min(obs))
-
-# added a column to indicate if the parameter set is acceptable
-msagel_annual = msagel_annual %>% mutate(accept = ifelse(sim %in% results_acc$sim, "Accept", "Not"))
-
-# also add a column for class good parameters
-msagel_annual$othercal = ifelse(msagel_annual$sim %in% other_cal_parms, "Accept B", "Not B")
-
-```
-
-## Plot
-
-```{r annual_total_plot, echo=TRUE}
-# plot annual total streamflow
-  p4 = ggplot(msagel_annual, aes(x=factor(wy), y=minstr, 
-  fill=interaction(accept, othercal))) +
-               geom_boxplot(position = position_dodge(width = 0.75)) + labs(x = "Water Year", y = "Streamflow (mm)", fill = "Accept × OtherCal") +
-  theme_minimal() + geom_point(aes(x=factor(wy), y=minobs), col="red")
-  p4
-```
+## Final Assignment

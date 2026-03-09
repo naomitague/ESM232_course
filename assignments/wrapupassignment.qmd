@@ -30,12 +30,22 @@ Describe what observations might be used to evaluate the model performance - wha
 
 ### Analysis Plan
 
-Describe how you would use the model to answer your modeling question. What scenarios would you run? What are 2-3 key metrics that you would use to summarize model outputs to answer your question?
+Describe how you would use the model to answer your modeling question. What scenarios would you run in order to answer your question? What are 2-3 key metrics that you would use to summarize model outputs to answer your question?
 
-Which parameters might you focus on in an uncertainty analysis? Provide details on how you would do this (e.g how would you sample the parameters, how would you estimate parameter ranges)
+Which parameters might you focus on in an uncertainty analysis? Provide details on how you would do this (e.g how would you sample the parameters, how would you estimate parameter ranges, how might you visualize and/or quantify the results of the uncertainty analysis)
 
-What sensitivity analysis would you do help answer your research question - provide details (e.g use Sobol indicies to estimate whether precipitation or temperature has a larger influence on model on annual streamflow)
 
 ### Assumptions
 
 List 2-3 assumptions that you would want to include in a summary of model findings
+
+## Grading
+
+1. Model goal is clearly articulated (5pts) and the modeling question (5pts) is specific and related to the goal (total 10 points)
+2. Conceptual model is clearly described (5pts) and the diagram (5pts) effectively illustrates the key components and relationships (total 10 points)
+3. Model design includes a list of inputs/parameters (10pts), and outputs (10pts) with appropriate units (20 points total) 
+4. Model type is correctly identified and an appropriate existing model is cited if applicable (10 points)
+5. Evaluation plan includes meaningful observations (10pts) and appropriate metrics (10pts) for assessing model performance (total 20 points)
+6. Analysis plan includes clear scenarios (10pts), key metrics (10pts), and  plans
+for uncertainty/sensitivity analyses (10pts) (total 30 points)
+7. Assumptions are relevant to the modeling effort, at least 2 assumptions listed (10 points)
