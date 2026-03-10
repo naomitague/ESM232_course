@@ -367,11 +367,7 @@ source(here("R/compute_profit.R"))
 source(here("R/compute_yield.R"))
 source(here("R/compute_NPV.R"))
 
-compute_profit
-
-compute_yield
-
-compute_NPV
+# set up parameters
 crop_pars <- c(ts = 0.4, tp = 0.5, base.yield = 500, Topt = 25, max.water = 800)
 precip = c(250,144,100)
 temp = c(20,30,25)
@@ -380,11 +376,10 @@ crop_price = 50
 water_price = 150
 discount = 0.01
 
-optimize(compute_profit, lower = 0, upper = 400, T = temp, P = precip, discount =discount, price = crop_price, cost = water_price, crop.pars = crop_pars, maximum = TRUE)
+# run optimization
 
-water_price = 25
+
 # try with cheaper water
-optimize(compute_profit, lower = 0, upper = 400, T = temp, P = precip, discount =discount, price = crop_price, cost = water_price, crop.pars = crop_pars, maximum = TRUE)
 
 ```
 
@@ -404,20 +399,17 @@ You can run your optimization for a range of water prices
 # try for a sequence of water prices
 water_price <- seq(from = 1, to = 50, by = 0.5)
 
-# use map to run optimization for different water prices
+# use map_df to run optimization for different water prices
 # lets also broaden our irrigation range
-result <- water_price %>% map_df(~ optimize(compute_profit, lower = 0, upper = 1000, T =temp, P = precip, discount = discount, price = crop_price, cost = .x, crop.pars = crop_pars, maximum = TRUE))
 
 # add water price to result
-result$water_price <- water_price
+
 ```
 
 ## Water price vs optimal irrigation
 
 ```{r optrangegraph}
 # graph the results
-ggplot(result, aes(water_price, maximum)) +
-  geom_point(col = "green", size = 2)+labs(y = "Optimal Irrigation (mm)", x = "Water Price ($/mm)") 
 
 # how could you do this for a range of prices for crops
 # bring in Sobol?
