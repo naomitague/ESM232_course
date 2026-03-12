@@ -14,9 +14,40 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 library(sensitivity)
+library(purrr)
 ```
 
-## Optimization in R - a more complex example
+## new AI tools - and modelling
+
+Should we use it? When? How? Why? Why not?
+
+-   used Copilot to help me in this course?
+
+-   benefit/costs?
+
+## Some thoughful papers for further reading
+
+High level perspective
+
+-   includes some thoughts on job market preparation
+
+-   [Communications of the ACM](%22../papers/AIinComputingEducation.pdf%22)
+
+-   [Practical overview/perspective](%22../papers/perspectives_ai_coding.pdf%22)
+
+-   [Recent review on potential harmful consequenses](%22../papers/review-of-harms-fromAIcodingedu.pdf%22)
+
+## Using Co-pilot
+
+- activate CoPilot on github, in Rstudio add to global options
+
+-   keep yourself in the "driver's seat"
+
+-   remember that the conceptual map (inverse inference in your head) evolve as you learn
+
+    -   and some learning happens indirectly through practice
+
+## Optimization in R - an example
 
 Lets say we have an option to purchase irrigation water;
 
@@ -120,55 +151,63 @@ You can run your optimization for a range of water prices
 -   Informal Sensitivity
 -   Sobol
 
-
 ## Water price vs optimal irrigation
-
 
 ## Sobol with some help with copilot
 
-Helps to do it in steps 
+Helps to do it in steps
 
-* model code
-* wrapper function 
-* parameter samplinng using sobol 
-* run wrapper function 
-* send results back to sobol object \* analyze sensitvity
+-   model code
+-   wrapper function
+-   parameter samplinng using sobol
+-   run wrapper function
+-   send results back to sobol object \* analyze sensitvity
 
 ```{r, testing}
 
 optimize(compute_profit, lower = 0, upper = 400, T = temp, P = precip, discount =discount, price = crop_price, cost = water_price, crop.pars = crop_pars, maximum = TRUE) 
 # write a function that takes as input all the parameters for compute_profit, runs the optimization and returns the optimal irrigation and profit 
 optimize_profit <- function(T, P, discount, price, cost, ts, tp, base.yield, Topt, max.water) {
-  crop_pars <- c(ts = ts, tp = tp, base.yield = base.yield, Topt = Topt, max.water = max.water)
-  opt <- optimize(compute_profit, lower = 0, upper = 400, T = T, P = P, discount =discount, price = price, cost = cost, crop.pars = crop_pars, maximum = TRUE)
+   crop_pars <- c(
+    ts = unname(ts),
+    tp = unname(tp),
+    base.yield = unname(base.yield),
+    Topt = unname(Topt),
+    max.water = unname(max.water)
+  )
+  opt <- optimize(function(irr){compute_profit(T = T, P = P, discount =discount, price = price, cost = cost, crop.pars = crop_pars, irr=irr)},  lower = 0, upper = 400,maximum = TRUE)
   return(list(opt_irrigation = opt$maximum, opt_profit = opt$objective))
 }
 
 # test the above function with the same parameters as before use R code
+
 optimize_profit(T = temp, P = precip, discount =discount, price = crop_price, cost = water_price, ts = crop_pars["ts"], tp = crop_pars["tp"], base.yield = crop_pars["base.yield"], Topt = crop_pars["Topt"], max.water = crop_pars["max.water"])
 
 
 
-
-
-
-
-## now use sobol to see how optimal irrigation changes with different parameters, assume a 10% variation in all parameters
-
+# now use sobol to see how optimal irrigation changes with different parameters, assume a 10% variation in all parameters
 # first create X1 by assuming all parameters are normally distributed with a mean of the value we used before and a standard deviation of 10% of that value
 
-X1 \<- data.frame(T = rnorm(1000, mean = temp, sd = 0.1*temp), P = rnorm(1000, mean = precip, sd = 0.1*precip), discount = rnorm(1000, mean = discount, sd = 0.1*discount), price = rnorm(1000, mean = crop_price, sd = 0.1*crop_price), cost = rnorm(1000, mean = water_price, sd = 0.1*water_price), ts = rnorm(1000, mean = crop_pars\["ts"\], sd = 0.1*crop_pars\["ts"\]), tp = rnorm(1000, mean = crop_pars\["tp"\], sd = 0.1*crop_pars\["tp"\]), base.yield = rnorm(1000, mean = crop_pars\["base.yield"\], sd = 0.1*crop_pars\["base.yield"\]), Topt = rnorm(1000, mean = crop_pars\["Topt"\], sd = 0.1*crop_pars\["Topt"\]), max.water = rnorm(1000, mean = crop_pars\["max.water"\], sd = 0.1*crop_pars\["max.water"\]))
 
 # Repeat for X2
 
-X2 \<- data.frame(T = rnorm(1000, mean = temp, sd = 0.1*temp), P = rnorm(1000, mean = precip, sd = 0.1*precip), discount = rnorm(1000, mean = discount, sd = 0.1*discount), price = rnorm(1000, mean = crop_price, sd = 0.1*crop_price), cost = rnorm(1000, mean = water_price, sd = 0.1*water_price), ts = rnorm(1000, mean = crop_pars\["ts"\], sd = 0.1*crop_pars\["ts"\]), tp = rnorm(1000, mean = crop_pars\["tp"\], sd = 0.1*crop_pars\["tp"\]), base.yield = rnorm(1000, mean = crop_pars\["base.yield"\], sd = 0.1*crop_pars\["base.yield"\]), Topt = rnorm(1000, mean = crop_pars\["Topt"\], sd = 0.1*crop_pars\["Topt"\]), max.water = rnorm(1000, mean = crop_pars\["max.water"\], sd = 0.1*crop_pars\["max.water"\]))
 
-# create sobol object
+# create sobol object using SobolSalt method, with 200 bootstrap samples, using X1 and X2 - I'll add in model later
 
-sobol_opt \<- sobolSalt(model = NULL, X1, X2, nboot=200) \# name the parameters colnames(sobol_opt$X) <- c("T", "P", "discount", "price", "cost", "ts", "tp", "base.yield", "T", "max.water")
-# run optimization for each parameter set
-opt_results <- list(sobol_opt$X) %\>% pmap(optimize_profit) \# extract optimal irrigation and profit from results opt_irrigation \<- opt_results %\>% map_dbl(\~ .x$minimum)
-opt_profit <- opt_results %>% map_dbl(~ .x$objective) \# add to sobol object sobol_opt = tell(sobol_opt, opt_irrigation) sobol_opt\$S
+# add column names to X from sobol_obj 
+
+# now run optimize profit model for all X use a purrr command to do it 
+
+
+# extract optimal irrigation from results  using a purr command
+
+
+
+
+
+
+
+
+
 
 ```
-

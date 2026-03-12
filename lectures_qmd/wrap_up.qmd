@@ -29,7 +29,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The [goal]{style="color: green;"} will help you to define the core pieces of a model
 
-Often helpful to start at the end: Outputs - what do you want
+
+Often helpful to start at the end: 
+  * Outputs - what do you want
 
 ## Conceptual Models
 
@@ -42,9 +44,6 @@ Often helpful to start at the end: Outputs - what do you want
 -   in a project, dialogue it is critical to dialogue to agree on the conceptual model
 
 -   ["all models are wrong but some are useful"]{style="color: blue;"} - British Statistician George Box
-
-
-
 
 ## Types of Models {.scrollable}
 
@@ -82,9 +81,9 @@ but biggest differences may often be the degree specific processes/parameters ar
 
 ## Some examples of more complex models
 
--   RHESSys applications to fire 
+-   RHESSys applications to fire
 -   Hydrologic models that couple snowmelt and groundwater
--   Fish population models 
+-   Fish population models
 
 ## Techniques {.scrollable}
 
