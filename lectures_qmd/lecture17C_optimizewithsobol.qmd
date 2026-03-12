@@ -31,15 +31,15 @@ High level perspective
 
 -   includes some thoughts on job market preparation
 
--   [Communications of the ACM](%22../papers/AIinComputingEducation.pdf%22)
+-   [Communications of the ACM]("papers/AIinComputingEducation.pdf")
 
--   [Practical overview/perspective](%22../papers/perspectives_ai_coding.pdf%22)
+-   [Practical overview/perspective]("papers/perspectives_ai_coding.pdf")
 
--   [Recent review on potential harmful consequenses](%22../papers/review-of-harms-fromAIcodingedu.pdf%22)
+-   [Recent review on potential harmful consequenses]("papers/review-of-harms-fromAIcodingedu.pdf")
 
 ## Using Co-pilot
 
-- activate CoPilot on github, in Rstudio add to global options
+-   activate CoPilot on github, in Rstudio add to global options
 
 -   keep yourself in the "driver's seat"
 
@@ -47,7 +47,7 @@ High level perspective
 
     -   and some learning happens indirectly through practice
 
-## Optimization in R - an example
+## Optimization in R - an example {.scrollable}
 
 Lets say we have an option to purchase irrigation water;
 
@@ -56,7 +56,7 @@ Lets say we have an option to purchase irrigation water;
 
 ![](img/optorchard.jpeg)
 
-## Optimization in R
+## Optimization in R {.scrollable}
 
 What we have
 
@@ -142,7 +142,7 @@ optimize(compute_profit, lower = 0, upper = 400, T = temp, P = precip, discount 
 
 ```
 
-## Sensitivity analysis AND optimization?
+## Sensitivity analysis AND optimization? {.scrollable}
 
 Why not?
 
@@ -151,9 +151,8 @@ You can run your optimization for a range of water prices
 -   Informal Sensitivity
 -   Sobol
 
-## Water price vs optimal irrigation
 
-## Sobol with some help with copilot
+## Sobol with some help with copilot {.scrollable}
 
 Helps to do it in steps
 
