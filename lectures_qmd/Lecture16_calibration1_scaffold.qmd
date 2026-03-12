@@ -291,6 +291,8 @@ msage = readRDS(here("Data/msage.RDS"))
 #View(msage)
 
 # first rearrange so we can plot all results
+msagel = msage %>% pivot_longer(cols=-c("date","obs","wy","day","month","year"),
+                                names_to="run", values_to="str")
 
 # now plot
 
@@ -311,11 +313,12 @@ source(here("R/nse.R"))
 nse
 
 # compute nse for each parameter set
+res  = msage %>% select(-date,-month, -day,-year,-wy,-obs) %>% map_dbl(nse, o=msage$obs)
 
-
+best_par = which.max(res)
 
 # basic calibration would be picking a single parameters set
-
+ggplot(msage, aes(msage$obs, msage[,best_par]))+geom_point()
 # lets plot the best parameter set
 
 

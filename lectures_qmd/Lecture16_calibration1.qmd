@@ -11,13 +11,21 @@ editor: visual
 
 ## Some insightful comments from quest lectures {.scrollable}
 
+*Models and assumptions*
+
 It's okay to make assumptions, assumptions are in every model.
 
 most models are a great way to describe a system that is fairly unexplained, with the caveat that because it is so underresearched the models developed will have many assumptions. Ultimately, they are still good estimations and starting points to describing a system.
 
 model doesn’t need to be perfect to be useful
 
+*Why Model*
+
 Sometimes the model will show you results which contradict what your prior expections would lead you to think.
+
+each component alone is incomplete, and examining the internals makes clear this isn't the real system. But the model is constructed so that, viewed through the lens of the right question or particular conditions, it is representative of a system's behavior.
+
+*How to build a model*
 
 One insight I gained is that modelling really ecologically complex systems can be broken down into pretty simple but still very meaningful parts.
 
@@ -27,11 +35,11 @@ it's helpful to compare your model with existing frameworks & experts to see whe
 
 While simulations use mathemtical framework patterns from 'what-if' scenarios under theoretical conditons, data-driven models extract patterns from historical evidence to forecast future outcomes.
 
-Graded One key insight is that models are most valuable when used alongside field data and not in isolation
-
-each component alone is incomplete, and examining the internals makes clear this isn't the real system. But the model is constructed so that, viewed through the lens of the right question or particular conditions, it is representative of a system's behavior.
+One key insight is that models are most valuable when used alongside field data and not in isolation
 
 You could build the perfect model that predicts outcomes without any error, but if you're not able to explain how it works or why it was built the way it was built, it's not useful at all. Dr. Loheide had almost no equations in his presentation. He explained the entirety of the concept of the model without the granularity.
+
+## next
 
 ![](img/modeling_pipeline_two_row.svg){width="100%"}
 
@@ -320,7 +328,7 @@ nse
 
 # compute nse for each parameter set
 
-res = msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% map_dbl(nse, o=msage$obs)
+res = msage %>% select(-date, -month, -day, -year, -wy, -obs ) %>% map_dbl(cor, y=msage$obs)
 head(res)
 summary(res)
 

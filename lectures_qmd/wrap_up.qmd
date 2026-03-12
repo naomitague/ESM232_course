@@ -12,11 +12,12 @@ editor: visual
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-# Elements of learning to model
+
+## Elements of learning to model
 
 ![Modeling Process](img/course-pieces.png)
 
-# Model Goals
+## Model Goals
 
 [*Understanding*]{style="color: green;"} (how does something work, what are key drivers of responses, how do different drivers interact)
 
@@ -24,13 +25,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 [*Communication*]{style="color: green;"}- contribute to education and broader understanding
 
-# Goals
+## Goals
 
 The [goal]{style="color: green;"} will help you to define the core pieces of a model
 
 Often helpful to start at the end: Outputs - what do you want
 
-# Conceptual Models
+## Conceptual Models
 
 -   models are **always** simplifications of reality - they help us to make sense of reality by focusing on specific aspects that are most relevant to your goal
 
@@ -42,7 +43,10 @@ Often helpful to start at the end: Outputs - what do you want
 
 -   ["all models are wrong but some are useful"]{style="color: blue;"} - British Statistician George Box
 
-# Types of Models {.scrollable}
+
+
+
+## Types of Models {.scrollable}
 
 Conceptual.............Mathematical
 
@@ -56,14 +60,14 @@ Abstract.............Physically/Process Based
 
 but biggest differences may often be the degree specific processes/parameters are accounted for
 
-# Implementing or Choosing - what fits
+## Implementing or Choosing - what fits
 
 -   simple input-output (functions)
 -   coupled models (wrappers)
 -   dynamic models (differential equations)
--   discrete dynamic (difference equations)
+-   **discrete dynamic** (difference equations)
 
-# Models in time and space {.scrollable}
+## Models in time and space {.scrollable}
 
 -   challenges in running models over space / time
 
@@ -76,11 +80,13 @@ but biggest differences may often be the degree specific processes/parameters ar
     -   stability
     -   disturbance
 
-# Some examples of more complex models
+## Some examples of more complex models
 
--   RHESSys applications to fire and water
+-   RHESSys applications to fire 
+-   Hydrologic models that couple snowmelt and groundwater
+-   Fish population models 
 
-# Techniques {.scrollable}
+## Techniques {.scrollable}
 
 [Workflow]{style="color: orange;"}
 
@@ -112,7 +118,7 @@ but biggest differences may often be the degree specific processes/parameters ar
 
 -   Summarize how output answers the question asked
 
-# Sensitivity Analysis {.scrollable}
+## Sensitivity Analysis {.scrollable}
 
 -   defining variation or uncertainty in parameters
 
@@ -130,7 +136,7 @@ but biggest differences may often be the degree specific processes/parameters ar
     -   can help you choose what to graph
     -   can help focus on where uncertainty reduction is needed
 
-# Calibration {.scrollable}
+## Calibration {.scrollable}
 
 -   choosing metrics to define performance
 
@@ -139,7 +145,7 @@ but biggest differences may often be the degree specific processes/parameters ar
 
 -   continuing to use multiple "good" parameter sets so that model results are more robust to the limits of calibration
 
-# Optimization
+## Optimization
 
 -   similar to calibration where you are trying to find a single "good" parameter set
 
@@ -147,7 +153,7 @@ but biggest differences may often be the degree specific processes/parameters ar
 
 -   sensitivity analysis still matters
 
-# Thank you!
+## Thank you!
 
 -   feel free to reach out to me with questions / thoughts on modeling
 

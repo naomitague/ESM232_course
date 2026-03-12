@@ -424,3 +424,7 @@ ggplot(result, aes(water_price, maximum)) +
 ```
 
 # Final Assignment
+
+and reminder to do course evaluations
+
+https://my-ucsb.bluera.com/
