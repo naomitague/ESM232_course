@@ -39,6 +39,8 @@ High level perspective
 
 ## Using Co-pilot
 
+- activate CoPilot on github, in Rstudio add to global options
+
 -   keep yourself in the "driver's seat"
 
 -   remember that the conceptual map (inverse inference in your head) evolve as you learn
