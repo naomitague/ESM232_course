@@ -23,29 +23,29 @@ library(ggpubr)
 
 ## Dynamic models
 
--   differential equations used for prediction, mechanistic understanding, and decision/management support
+- differential equations used for prediction, mechanistic understanding, and decision/management support
 
--   we have focused on models with one dependent variable (e.g population size, or concentration of a pollutant)
+- we have focused on models with one dependent variable (e.g population size, or concentration of a pollutant)
 
 ## Systems of equations {.scrollable}
 
 What if we have more than one variable that is evolving through time and space?
 
--   populations of two species that are changing through time, and interact with each other
+- populations of two species that are changing through time, and interact with each other
 
--   pollutant concentrations in a diffusion-advection model where the two pollutants also interact with each other (or microbes populations with pollutants)
+- pollutant concentrations in a diffusion-advection model where the two pollutants also interact with each other (or microbes populations with pollutants)
 
--   growth of above-ground and below-ground carbon and nitrogen in a forest
+- growth of above-ground and below-ground carbon and nitrogen in a forest
 
--   household consumption and savings through time (when consumption depends on savings and vice versa)
+- household consumption and savings through time (when consumption depends on savings and vice versa)
 
 These require several differential equations that have to be solved simultaneously
 
 ## Systems of equations {.scrollable}
 
--   can be ordinary (differentiating with respect to one variable (time or space))
+- can be ordinary (differentiating with respect to one variable (time or space))
 
--   partial if differentiating with respect to multiple variables (x,y,z, time)
+- partial if differentiating with respect to multiple variables (x,y,z, time)
 
 We can estimate trajectories of systems of equations in much the same way that we used numerical integration for our ODE's
 
@@ -55,13 +55,13 @@ Call your engineering/math when you run into issues!
 
 ## Dynamics of two (or more) variables
 
--   two variable dynamic models that have feedbacks between variables can create cyclical dynamics (and more complex )
+- two variable dynamic models that have feedbacks between variables can create cyclical dynamics (and more complex )
 
--   Two ways to look at results
+- Two ways to look at results
 
-    -   time series of each state variable
+  - time series of each state variable
 
-    -   how state variables interact with each other
+  - how state variables interact with each other
 
 ## Predator-Prey Models
 
@@ -69,10 +69,10 @@ Predator-Prey models
 
 A simple approach that assumes prey grow exponentially, with a fixed intrinsic growth rate
 
--   a fixed mortality rate of predators
--   a fixed rate of consumption/predation rate of prey by predators
--   a fixed conversion rate (ingestion rate) that determines how many “new” predators you get with predation
--   no environmental effects (e.g no carrying capacity)
+- a fixed mortality rate of predators
+- a fixed rate of consumption/predation rate of prey by predators
+- a fixed conversion rate (ingestion rate) that determines how many “new” predators you get with predation
+- no environmental effects (e.g no carrying capacity)
 
 ------------------------------------------------------------------------
 
@@ -82,37 +82,37 @@ Analogs
 
 As with diffusion, the basic form/ideas in this model can be applied elsewhere
 
--   economics
+- economics
 
--   infectious disease spread
+- infectious disease spread
 
--   combustion
+- combustion
 
 ------------------------------------------------------------------------
 
 ## Differential equations for a Predator-Prey Model
 
--   Prey
+- Prey
 
 $\frac{\partial prey}{\partial t} = r_{prey} * prey - \alpha * prey * pred$
 
--   Predator
+- Predator
 
 $\frac{\partial pred}{\partial t} = eff * \alpha * pred * prey - mort * pred$
 
 ## Predator Prey - Implementation in R {.scrollable}
 
--   Ordinary Differential Equation with two dependent variables
+- Ordinary Differential Equation with two dependent variables
 
--   Still use **ODE** solve in R
+- Still use **ODE** solve in R
 
--   Still code the derivative as a function
+- Still code the derivative as a function
 
--   Use lists or vectors to bring in initial conditions for all dependent variables; (similar how we bring in multiple parameters to derivative definition function)
+- Use lists or vectors to bring in initial conditions for all dependent variables; (similar how we bring in multiple parameters to derivative definition function)
 
--   use *with* can help make it easier to code the use of parameters within the derivative definition function (see example below)
+- use *with* can help make it easier to code the use of parameters within the derivative definition function (see example below)
 
--   use lists to output derivatives for all dependent variable
+- use lists to output derivatives for all dependent variable
 
 ## Example implementation
 
@@ -138,16 +138,16 @@ res <- ode(func = lotvmod, y = currpop, times = days, parms = pars)
 
 ## Visualizing results
 
--   two variable dynamic models that have feedbacks between variables can create cyclical dynamics (and more complex )
+- two variable dynamic models that have feedbacks between variables can create cyclical dynamics (and more complex )
 
--   Two ways to look at results
+- Two ways to look at results
 
-    -   time series of each state variable (pred and prey)
+  - time series of each state variable (pred and prey)
 
-    -   how state variables interact with each other
+  - how state variables interact with each other
 
-        -   interactions through time
-        -   x versus y colored by time
+    - interactions through time
+    - x versus y colored by time
 
 ## Relationship between populations {.scrollable}
 
@@ -178,19 +178,19 @@ ggarrange(p1, p2b)
 
 # Try other parameters {.scrollable}
 
--   try to bring relative size of predators (versus prey) higher
+- try to bring relative size of predators (versus prey) higher
 
--   what if you increase the predation rates (what might that look like in reality)
+- what if you increase the predation rates (what might that look like in reality)
 
--   how might you add a carrying capacity
+- how might you add a carrying capacity
 
 ## Other illustations
 
--   Prey
+- Prey
 
 $\frac{\partial prey}{\partial t} = r_{prey} * prey - \alpha * prey * pred$
 
--   Predator
+- Predator
 
 $\frac{\partial pred}{\partial t} = eff * \alpha * pred * prey - mort * pred$
 
@@ -200,11 +200,11 @@ How would you code that?
 
 ## With Carrying Capacity
 
--   Prey
+- Prey
 
 $\frac{\partial prey}{\partial t} = r_{prey} * (1-\frac{prey}{K})*prey - \alpha * prey * pred$
 
--   Predator
+- Predator
 
 $\frac{\partial pred}{\partial t} = eff * \alpha * pred * prey - mort * pred$
 
@@ -259,8 +259,8 @@ Species 2 (or Company 2)
 
 $\frac{\partial s_2}{\partial t} = r_{2} * s_2 * (1-(\frac{s_2+\alpha_{21} * s_1}{K_2}))$
 
--   How might you explain what this is doing?
--   What do the coefficients "mean"
+- How might you explain what this is doing?
+- What do the coefficients "mean"
 
 ## Competition {.scrollable}
 
@@ -272,10 +272,10 @@ Species 2 (or Company 2)
 
 $\frac{\partial s_2}{\partial t} = r_{2} * s_2 * (1-(\frac{s_2+\alpha_{21} * s_1}{K_2}))$
 
--   $s_1, s_2$ are species populations
--   $r_1, r_2$ are growth rates of each species
--   $K_1, K_2$ are carrying capacities; could be the same for both species but maybe not?
--   $\alpha_{12}, \alpha_{21}$ are competitive effect of the other species; could be the same for both species
+- $s_1, s_2$ are species populations
+- $r_1, r_2$ are growth rates of each species
+- $K_1, K_2$ are carrying capacities; could be the same for both species but maybe not?
+- $\alpha_{12}, \alpha_{21}$ are competitive effect of the other species; could be the same for both species
 
 ## Sensitivity analysis
 
@@ -283,40 +283,40 @@ Consider pred-prey BUT what will be the output - if we want to 'quantify sensiti
 
 For example
 
--   Max Prey/Predator Population
--   Min Prey/Predator Population
--   Populations at the end of the time period
--   Number of time periods where a population is below a threshold
+- Max Prey/Predator Population
+- Min Prey/Predator Population
+- Populations at the end of the time period
+- Number of time periods where a population is below a threshold
 
 ## Sensitivity Analysis steps
 
--   Generate parameters (LHS, Sobol)
--   Metrics function
--   Wrapper Function
--   Run wrapper function to get metrics for all parameter sets
--   Graph and compute sensitivity statistics
+- Generate parameters (LHS, Sobol)
+- Metrics function
+- Wrapper Function
+- Run wrapper function to get metrics for all parameter sets
+- Graph and compute sensitivity statistics
 
 ## Example Sensitivity Analysis {.scrollable}
 
 Given a Predator Prey model with the possible values for parameters
 
--   $K$ - mean of 150, standard deviation 20
--   $r_{prey}$ - some where between 0.01 and 0.3
--   $\alpha$ - somewhere between 0.1 and 0.4
--   $eff$ - mean 0.3 standard deviation 0.01
--   $pmort$ - somewhere between 0.01 and 0.45
--   Initial Conditions: start with 1 predator and 1 prey
--   Look at output for 500 time steps
+- $K$ - mean of 150, standard deviation 20
+- $r_{prey}$ - some where between 0.01 and 0.3
+- $\alpha$ - somewhere between 0.1 and 0.4
+- $eff$ - mean 0.3 standard deviation 0.01
+- $pmort$ - somewhere between 0.01 and 0.45
+- Initial Conditions: start with 1 predator and 1 prey
+- Look at output for 500 time steps
 
 Questions sensitivity analysis might answer
 
--   Does uncertainty in parameter impact our estimates?
--   Which are the more/most important parameters in controlling population dynamics?
+- Does uncertainty in parameter impact our estimates?
+- Which are the more/most important parameters in controlling population dynamics?
 
 # Set up Sobol Sensitivity {.scrollable}
 
--   parameter samples
--   metric and wrapper function
+- parameter samples
+- metric and wrapper function
 
 ```{r odesen}
 source(here("R/lotvmodK.R"))
@@ -380,8 +380,8 @@ p_wrapper <- function(rprey, alpha, eff, pmort, K, currpop, days, func) {
 
 ## Now run wrapper for all parameters {.scrollable}
 
--   graph
--   sobol indices
+- graph
+- sobol indices
 
 ```{r odesen2}
 # run our model for all parameters and extract the results
@@ -424,12 +424,12 @@ sens_PP_maxprey$T
 
 ## Interpretation of Sobol Indices
 
--   what are the most important parameters
-    -   maximum prey
--   What about other metrics
-    -   minimum prey
-    -   maximum predator
-    -   minimum predator
+- what are the most important parameters
+  - maximum prey
+- What about other metrics
+  - minimum prey
+  - maximum predator
+  - minimum predator
 
 What is the most important parameter, Which parameters don't matter
 
@@ -474,53 +474,53 @@ sobol_sumS
 
 # Stablity {.scrollable}
 
--   simple mathematical definition - when derivatives are zero
+- simple mathematical definition - when derivatives are zero
 
-    -   algerbra
-    -   plotting
+  - algerbra
+  - plotting
 
--   more complex definitions - think of metrics that looks at ranges, cycling, return to a population above some threshold after disturbance
+- more complex definitions - think of metrics that looks at ranges, cycling, return to a population above some threshold after disturbance
 
--   for more complex definitions of stability you'd need to do the integration (e.g run the ode solver) and then compute a metric of stability
+- for more complex definitions of stability you'd need to do the integration (e.g run the ode solver) and then compute a metric of stability
 
-    -   min or max always above or below a threshold
-    -   long term values (e.g after X years)
+  - min or max always above or below a threshold
+  - long term values (e.g after X years)
 
 ## Adding More Complex Inputs {.scrollable}
 
--   What if carrying capacity varied with air temperature
+- What if carrying capacity varied with air temperature
 
 Conceptual Model
 
--   There is a known optimal carrying capacity (*Kopt*)
+- There is a known optimal carrying capacity (*Kopt*)
 
-    -   *Kopt* when ecosystem is at optimal temperature (*Topt*)
-    -   As temperature increases or decreases from *Topt*, carrying capacity decreases
-    -   *Ksen* is a sensitivity coefficient that describes how much carrying capacity changes with temperature \`
+  - *Kopt* when ecosystem is at optimal temperature (*Topt*)
+  - As temperature increases or decreases from *Topt*, carrying capacity decreases
+  - *Ksen* is a sensitivity coefficient that describes how much carrying capacity changes with temperature \`
 
--   Carrying capacity is a function of temperature $K = K_{opt} * (1 - K{sen} * (airT(t) - T_{opt}))$
+- Carrying capacity is a function of temperature $K = K_{opt} * (1 - K{sen} * (airT(t) - T_{opt}))$
 
-    -   airT(t) is the air temperature at time t
+  - airT(t) is the air temperature at time t
 
 # Implementation Details
 
--   We would also need a model of carrying capacity (K)
-    -   determistic (not-dynamic) submodel
-    -   needs a time series of air temperature as input
+- We would also need a model of carrying capacity (K)
+  - determistic (not-dynamic) submodel
+  - needs a time series of air temperature as input
 
 How do you combine these different types of inputs/parameters and different types of models together
 
 ## Dynamic Carrying Capacity Example
 
--   Carrying Capacity
+- Carrying Capacity
 
 $K = K_{opt} * (1 - K{sen} * (airT(t) - T_{opt}))$
 
--   Prey
+- Prey
 
 $\frac{\partial prey}{\partial t} = r_{prey} * (1-\frac{prey}{K})*prey - \alpha * prey * pred$
 
--   Predator
+- Predator
 
 $\frac{\partial pred}{\partial t} = eff * \alpha * pred * prey - mort * pred$
 

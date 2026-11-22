@@ -33,10 +33,10 @@ Useful when there is something you need to **know** in order to solve the proble
 
 Answer to a question
 
--   What if?
--   How Much?
--   Which Alternative?
--   Why is this happening?
+- What if?
+- How Much?
+- Which Alternative?
+- Why is this happening?
 
 Test a Hypothesis
 
@@ -77,11 +77,11 @@ Because models are only approximations of reality - the most important part of t
 
 Some broad types of goals
 
--   *Understanding* (how does something work, what are key drivers of responses, how do different drivers interact)
+- *Understanding* (how does something work, what are key drivers of responses, how do different drivers interact)
 
--   *Estimation/Scenario* (what might be the consequences of decisions we make about the environment, what might the environment look like if something changes)
+- *Estimation/Scenario* (what might be the consequences of decisions we make about the environment, what might the environment look like if something changes)
 
--   *Communication* - contribute to education and broader understanding
+- *Communication* - contribute to education and broader understanding
 
 Actual goal(s) needs to be more precisely defined
 
