@@ -4,7 +4,7 @@ subtitle: "ESM 232 / EDS 230"
 toc: true
 ---
 
-<!-- TO UPDATE EACH YEAR: quarter, teaching team, rooms/times, schedule dates. -->
+
 
 ![A hillside in bloom, a place where I run my ecohydrologic model RHESSys](img/flower-hill.jpg){fig-alt="Hillside covered in wildflowers"}
 
@@ -24,16 +24,16 @@ The full [syllabus (PDF)](syllabus.pdf) has grading, AI-tool policy and attendan
 -   **Office hours:** email to set a time
 -   **Email:** tague\@ucsb.edu
 
-**Teaching assistant:** TBA
+**Teaching assistant:** Ojas Sarup
 
--   **Office:** TBA
+-   **Office:** Bren Hall 1006
 -   **Office hours:** TBA
--   **Email:** TBA
+-   **Email:** ojassarup@\ucsb.edu 
 
 ## Where we will be
 
--   **Lectures:** TBA
--   **Discussion section:** TBA
+-   **Lectures:** T, Thu 9:30-10:45, BH 1424
+-   **Discussion section:** F 9-10:20 BH 1424
 
 ## Learning objectives
 
