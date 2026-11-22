@@ -19,8 +19,8 @@ library(here)
 
 Dynamic model use differential equations to describe how a system is changing
 
--   state-variables - the variables that the model is tracking/estimating over time (e.g population size)
--   parameters/inputs - the values that determine how the system changes (e.g growth rate)
+- state-variables - the variables that the model is tracking/estimating over time (e.g population size)
+- parameters/inputs - the values that determine how the system changes (e.g growth rate)
 
 how the state variables evolve described by differential equations
 
@@ -28,21 +28,21 @@ how the state variables evolve described by differential equations
 
 For all state variables you would have a derivative
 
--   wolf population growth
-    -   state variables (wolf, deer, vegetation)
-    -   parameters (growth rates, carrying capacity, climate)
--   snowpack
-    -   state variable - (amount of snow)
-    -   parameters/inputs (sunlight, temperature, precipitation, wind)
--   dams emissions of CO2
-    -   state variable (sediment, bioaccumulation, dissolved CO2) (maybe water temperature, water level)
-    -   parameters inputs (sediment inputs, temperature, precipitation, dam operations)
--   wildfire smoke impacts on drinking water
-    -   state variable (contaminant concentration in air, water)
-    -   parameters/inputs (wildfire size, wind, precipitation, water flow, biomass lost in fire) (really complicated as a dynamic model, versus simple statistical model of smoke impacts on water quality)
--   groundwater
-    -   state variable (groundwater level, contaminant concentration)
-    -   parameters/inputs (precipitation, pumping, recharge, geology)
+- wolf population growth
+  - state variables (wolf, deer, vegetation)
+  - parameters (growth rates, carrying capacity, climate)
+- snowpack
+  - state variable - (amount of snow)
+  - parameters/inputs (sunlight, temperature, precipitation, wind)
+- dams emissions of CO2
+  - state variable (sediment, bioaccumulation, dissolved CO2) (maybe water temperature, water level)
+  - parameters inputs (sediment inputs, temperature, precipitation, dam operations)
+- wildfire smoke impacts on drinking water
+  - state variable (contaminant concentration in air, water)
+  - parameters/inputs (wildfire size, wind, precipitation, water flow, biomass lost in fire) (really complicated as a dynamic model, versus simple statistical model of smoke impacts on water quality)
+- groundwater
+  - state variable (groundwater level, contaminant concentration)
+  - parameters/inputs (precipitation, pumping, recharge, geology)
 
 ## Integration of state variables to evolve the system through time (or space) {.scrollable}
 
@@ -50,16 +50,16 @@ Two options
 
 [1) explicit solution to differential equation is known;]{style="color: blue;"}
 
--   this means you can integrate by 'math' - analytical solution
--   we did this - $P = PO * exp(rt)$ coded in *exppop.R*
--   you can get the answer exactly and quickly this way
+- this means you can integrate by 'math' - analytical solution
+- we did this - $P = PO * exp(rt)$ coded in *exppop.R*
+- you can get the answer exactly and quickly this way
 
 [2) not integrable]{style="color: blue;"}
 
--   must be solved by iteration;
--   add the derivative value to current state (time t), to create state at time t + 1
--   re-calculate rate of change (e.g value of differential equation for state at time t+1)
--   keep doing this
+- must be solved by iteration;
+- add the derivative value to current state (time t), to create state at time t + 1
+- re-calculate rate of change (e.g value of differential equation for state at time t+1)
+- keep doing this
 
 Key questions is how much of a "jump" in t do we do
 
@@ -135,11 +135,11 @@ ggplot(tmp, aes(time, P, col = Ptype)) +
 
 ## Summary of what we've done
 
--   *exppop* - analytical solutions to population differential equation
+- *exppop* - analytical solutions to population differential equation
 
--   *discrete_logistic_pop* - integrating by stepping through time
+- *discrete_logistic_pop* - integrating by stepping through time
 
--   *dexppop* - the derivative (would need to be integrated to get populations over time),
+- *dexppop* - the derivative (would need to be integrated to get populations over time),
 
 ## Solving using numeric integration {.scrollable}
 
@@ -155,9 +155,9 @@ There are different types of *solvers*, some work better than others depending o
 
 Implement the differential equation as a function that
 
--   returns: the derivative (as a list)
+- returns: the derivative (as a list)
 
--   inputs: time, the variable(s) and a parameter list
+- inputs: time, the variable(s) and a parameter list
 
 (it needs time even though you don’t use it)
 
@@ -173,10 +173,10 @@ R has a solver called *ODE* for solving ordinary differential equations from pac
 
 ## *ODE* requires {.scrollable}
 
--   initial conditions
--   values of independent where we want values of dependent variable (e.g times where we want population)
--   the derivative as a function
--   a list that contains all parameter values (or if you have only one parameter then you can use a single value)
+- initial conditions
+- values of independent where we want values of dependent variable (e.g times where we want population)
+- the derivative as a function
+- a list that contains all parameter values (or if you have only one parameter then you can use a single value)
 
 ## ODE example {.scrollable}
 
@@ -218,9 +218,9 @@ ggplot(as.data.frame(Ptime), aes(year, P)) +
 
 ## Comparing approaches {.scrollable}
 
--   analytical solution - based on integration (exppop.R) BEST
--   numerical integration by hand
--   using an ODE solver to do the numerical integration
+- analytical solution - based on integration (exppop.R) BEST
+- numerical integration by hand
+- using an ODE solver to do the numerical integration
 
 ```{r, all, echo=TRUE }
 # create a dataframe to store results with time as first column
@@ -248,8 +248,8 @@ p
 
 # Try it
 
--   try running them for longer time periods to see what happens
--   change the value of r, P0 - see how it effects the results
+- try running them for longer time periods to see what happens
+- change the value of r, P0 - see how it effects the results
 
 In discussion section we will go through an example of using an ODE solver to solve a population model with a carrying capacity (logistic growth) and compare to the analytical solution and the difference equation solution
 
@@ -257,16 +257,16 @@ In discussion section we will go through an example of using an ODE solver to so
 
 Remember we have 3 ways now to calculate population
 
--   analytical - based on integration (exppop.R) BEST
+- analytical - based on integration (exppop.R) BEST
 
--   using an ode solver for numerical approximation (exppop_play.R)
+- using an ode solver for numerical approximation (exppop_play.R)
 
--   numerical integration using in discrete steps (discrete_logistic_pop.R)
+- numerical integration using in discrete steps (discrete_logistic_pop.R)
 
 ## Lets look at something a bit more complicated {.scrollable}
 
--   diffusion (how a contaminent moves through space and time)
--   start with 1 dimension in space
+- diffusion (how a contaminent moves through space and time)
+- start with 1 dimension in space
 
 ## Diffusion Conceptual model {.scrollable}
 
@@ -367,11 +367,11 @@ filled.contour(resunstable$conc, xlab = "time", ylab = "Distance Along Path")
 
 ## Dynamics Models {.scrollable}
 
--   Diffusion example illustrates the challenge of numerical integration
+- Diffusion example illustrates the challenge of numerical integration
 
--   We see evidence of "overshoot"
+- We see evidence of "overshoot"
 
--   Correct by reducing the time step (but then we have to increase the number of time steps to cover the same period)
+- Correct by reducing the time step (but then we have to increase the number of time steps to cover the same period)
 
 ## Diffusion Example {.scrollable}
 

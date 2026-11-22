@@ -298,7 +298,7 @@ Ptime <- ode(initialrabbits, years, dexppop, 0.01)
 colnames(Ptime) <- c("year", "P")
 ggplot(as.data.frame(Ptime), aes(year, P)) +
   geom_point() +
-  labs(y = "Population", "years")
+  labs(y = "Population", x = "years")
 
 
 

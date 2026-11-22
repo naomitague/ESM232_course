@@ -316,15 +316,15 @@ nrow(accept_par2)
 msagel$accept2 = ifelse(msagel$run %in% accept_par2$id, TRUE, FALSE)
 ggplot(subset(msagel, accept2), aes(as.Date(date), str))+geom_line()
 # or with observed but focus on August flow
-msagel_mth2 = msagel %>% select(-date,-day) %
-%  group_by(month, wy, run, accept2) %>% summarise(str=mean(str, na.rm=T), obs=mean(obs, na.rm=T))
+msagel_mth2 = msagel %>% select(-date,-day) %>%
+  group_by(month, wy, run, accept2) %>% summarise(str=mean(str, na.rm=T), obs=mean(obs, na.rm=T))
 # just august flow
 ggplot(subset(msagel_mth2,  month==8 & accept2),
-       aes(wy, str, group=wy))+geom_boxplot(position="dodge")
+       aes(wy, str, group=wy))+geom_boxplot(position="dodge")+
   geom_point(aes(wy, obs), col="red")+labs(y="Streamflow", x="Date")
 mean_august_obs = mean(subset(msagel_mth2, month==8)$obs)
 ggplot(subset(msagel_mth2, month==8), aes(accept2, str))+geom_boxplot()+
   geom_hline(yintercept=mean_august_obs, col="red")+labs(y="Streamflow", x="Date")
 ```
 
-[Assignment](assignments/Assignment8_Calibration.qmd)
+[Assignment](../assignments/Assignment8_Calibration.qmd)

@@ -9,23 +9,23 @@ editor: visual
 
 # Conceptual Model Brainstorming
 
--   Some Results
+- Some Results
 
 ## How to start - what is my model {.scrollable}
 
--   Clearly define your goal
+- Clearly define your goal
 
--   Draw your conceptual model
+- Draw your conceptual model
 
--   What are your:
+- What are your:
 
--   [Inputs]{style="color: lightblue;"}
+- [Inputs]{style="color: lightblue;"}
 
--   [Outputs]{style="color: lightblue;"}
+- [Outputs]{style="color: lightblue;"}
 
--   What’s in the box (the model itself) that gives you a relationship between outputs and inputs, type of model: [Transfer function]{style="color: blue;"}
+- What’s in the box (the model itself) that gives you a relationship between outputs and inputs, type of model: [Transfer function]{style="color: blue;"}
 
--   [Parameters]{style="color: lightblue;"} Values that influences how the model relationships work
+- [Parameters]{style="color: lightblue;"} Values that influences how the model relationships work
 
 # Types of Models (what kind do you need?)
 
@@ -49,22 +49,22 @@ Estimate the power generated from a reservoir ...
 
 # Example: Input/Output/Parameters
 
--   **Input**: Reservoir height and flow rate
+- **Input**: Reservoir height and flow rate
 
--   **Output**: Instantaneous power generation (W/s)
+- **Output**: Instantaneous power generation (W/s)
 
--   **Parameters**: K Efficiency , ρ (density of water), g (acceleration due to gravity)
+- **Parameters**: K Efficiency , ρ (density of water), g (acceleration due to gravity)
 
 ## Mathematical model (Transfer Function) {.scrollable}
 
 P = ρ \* h \* r \* g \* K Efficiency;
 
--   P is Power in watts,
--   ρ is the density of water (\~1000 kg/m3)
--   h is height in meters,
--   r is flow rate in cubic meters per second,
--   g is acceleration due to gravity of 9.8 m/s2,
--   K Efficiency is a coefficient of efficiency ranging from 0 to 1.
+- P is Power in watts,
+- ρ is the density of water (\~1000 kg/m3)
+- h is height in meters,
+- r is flow rate in cubic meters per second,
+- g is acceleration due to gravity of 9.8 m/s2,
+- K Efficiency is a coefficient of efficiency ranging from 0 to 1.
 
 Type of model?
 
@@ -74,16 +74,16 @@ Type of model?
 
 This is a
 
--   **static** (one point in time),
--   **deterministic**
--   **spatially lumped** (one place)
--   its more or less **physically based**
+- **static** (one point in time),
+- **deterministic**
+- **spatially lumped** (one place)
+- its more or less **physically based**
 
 How would we expand it to make it
 
--   dynamic?
--   spatially distributed?
--   stochastic?
+- dynamic?
+- spatially distributed?
+- stochastic?
 
 # Related Types of models: Example
 
@@ -97,30 +97,30 @@ If we modified the model to estimate the probability distribution of power produ
 
 Clearly define your goal (a question you want to answer, hypothesis you want to test, prediction you want to make) - as precisely as possible
 
--   Sketch conceptual model
+- Sketch conceptual model
 
--   **Design or Select your model**
+- **Design or Select your model**
 
--   Implement the model
+- Implement the model
 
--   Evaluate the model and quantify uncertainty
+- Evaluate the model and quantify uncertainty
 
--   Apply the model to the goal
+- Apply the model to the goal
 
--   Communicate model results
+- Communicate model results
 
 ## Off-the-Shelf Models
 
--   Developed and tested by experts
--   Reduces need to build from scratch
+- Developed and tested by experts
+- Reduces need to build from scratch
 
 ![Reinventing the wheel](img/two_prehistoric_women_reinventing_wheel.jpg)
 
 ## Model Selection
 
--   Is model structure **appropriate**?
--   Is model performance **good enough**?
--   Choose the **simplest** model that captures your processes of interest
+- Is model structure **appropriate**?
+- Is model performance **good enough**?
+- Choose the **simplest** model that captures your processes of interest
 
 ------------------------------------------------------------------------
 
@@ -128,12 +128,12 @@ Clearly define your goal (a question you want to answer, hypothesis you want to 
 
 Does it fit your conceptual model
 
--   Can it use the inputs you have or can get?
--   Are outputs of interest captured?
--   Is resolution appropriate?
-    -   space
-    -   time
--   Does it include key mechanisms?
+- Can it use the inputs you have or can get?
+- Are outputs of interest captured?
+- Is resolution appropriate?
+  - space
+  - time
+- Does it include key mechanisms?
 
 Can you use it to answer your question - can you change inputs/parameters that reflect scenarios you care about
 
@@ -155,12 +155,12 @@ With a partner, spend 5 minutes brainstorming on conceptual model - and what you
 
 Two components of the conceptual model -
 
--   why does fire impact streamflow (Tree-ET)
+- why does fire impact streamflow (Tree-ET)
 
--   why does location of fire matter
+- why does location of fire matter
 
-    -   difference in water use?
-    -   lateral downslope transport of released water to stream
+  - difference in water use?
+  - lateral downslope transport of released water to stream
 
 ## RHESSys
 
@@ -188,63 +188,63 @@ Add an example of how you might evaluate a model to decide if the performance is
 
 Pick an example
 
--   from your experience with working with models OR
--   from something you read OR
--   make something up that makes sense to you
+- from your experience with working with models OR
+- from something you read OR
+- make something up that makes sense to you
 
 ## Is it Good Enough?
 
--   Error small relative to:
+- Error small relative to:
 
-    -   Model application (why do you need the estimate)
-    -   Simulated effect size
+  - Model application (why do you need the estimate)
+  - Simulated effect size
 
--   Demonstrated improvement (its the best 'we've got') for the question that we are asking
+- Demonstrated improvement (its the best 'we've got') for the question that we are asking
 
--   Based on well established theory
+- Based on well established theory
 
-    -   Literature/state of the art
+  - Literature/state of the art
 
 ## Model Selection
 
--   is model structure appropriate (fits your conceptual model)
--   is performance good enough to answer your question
+- is model structure appropriate (fits your conceptual model)
+- is performance good enough to answer your question
 
 ## Building your own model
 
 Why?
 
--   can't find an off the shelf model that fits your conceptual model
+- can't find an off the shelf model that fits your conceptual model
 
--   can't find an off the shelf model that works with the data you have
+- can't find an off the shelf model that works with the data you have
 
--   can't find an off the shelf model that performs well enough
+- can't find an off the shelf model that performs well enough
 
--   you want to learn how models work
+- you want to learn how models work
 
--   you want to be able to experiment with model structure
+- you want to be able to experiment with model structure
 
 ## Steps: Design and Implement your model {.scrollable}
 
--   Conceptual Diagram your model
+- Conceptual Diagram your model
 
--   **Design** or Select your model
+- **Design** or Select your model
 
--   Translate diagram into a mathematical representation
+- Translate diagram into a mathematical representation
 
--   Choose programming language
+- Choose programming language
 
--   Define inputs (data type, units)
+- Define inputs (data type, units)
 
--   Define output (data type, units)
+- Define output (data type, units)
 
--   Define model structure
+- Define model structure
 
--   Write model
+- Write model
 
--   Document the model (meta data)
+- Document the model (meta data)
 
--   Test model
+- Test model
 
 ## Building Models {.scrollable}
 
@@ -254,23 +254,23 @@ The basic building blocks of models
 
 Functions are the “boxes” of the model
 
--   the transfer function that takes inputs and returns outputs
--   most languages have a function library (e.g. R, Python, C++)
+- the transfer function that takes inputs and returns outputs
+- most languages have a function library (e.g. R, Python, C++)
 
 More complex models
 
--   made up of multiple functions;
--   boxes with arrows
--   *main* function that calls other functions, flow control
--   nested functions (functions that other functions and control the flow
+- made up of multiple functions;
+- boxes with arrows
+- *main* function that calls other functions, flow control
+- nested functions (functions that other functions and control the flow
 
 # For each box/function
 
 Decide on
 
--   Inputs and parameters
+- Inputs and parameters
 
--   Outputs
+- Outputs
 
 Data types, units (time and space aggregation), names should be (use descriptive names)
 
@@ -302,11 +302,11 @@ $$
 
 where:
 
--   $E$ is the energy produced (kJ/yr),
--   $A$ is the solar panel area (m$^2$),
--   $eff_{adjusted}$ submodel - depends on energy
--   $PR$ is the performance ratio (dimensionless, 0–1), accounting for site-specific losses (typically $\sim 0.75$),
--   $solar$ is daily solar radiation (kJm$^{-2}/day$).
+- $E$ is the energy produced (kJ/yr),
+- $A$ is the solar panel area (m$^2$),
+- $eff_{adjusted}$ submodel - depends on energy
+- $PR$ is the performance ratio (dimensionless, 0–1), accounting for site-specific losses (typically $\sim 0.75$),
+- $solar$ is daily solar radiation (kJm$^{-2}/day$).
 
 $$
 \mathrm{eff}_{\text{adjusted}} =
@@ -317,38 +317,38 @@ $$
 \end{cases}
 $$
 
--   $ethresh$ Threshold solar radiation below which energy produced declines
+- $ethresh$ Threshold solar radiation below which energy produced declines
 
 Other parameters that impact model transfer function
 
--   $etype$ what type of radiation can be used, *direct*, or *both*
+- $etype$ what type of radiation can be used, *direct*, or *both*
 
 Models can also have formating options
 
--   type of output desired
--   units
--   graphs/data structures/data types
+- type of output desired
+- units
+- graphs/data structures/data types
 
 ## I/O {.scrollable}
 
 *Inputs*
 
--   $solar$ - data frame with columns $Kdown_{direct}$, and optionally $Kdown_{diffuse}$ ((kJ m$^{-2}/day$))
--   $A$ is the solar panel area (m$^2$),
--   $eff$ efficiency when radiation is above threshold (default 0.8)
--   $ethresh$ threshold radiation below which efficiency declines linearly (10000 (kJ m$^{-2}$))
--   $eunits$ desired units for output default "kJ" Joules, option "kWhr" for Watts
--   $PR$ is the performance ratio (dimensionless, 0–1), accounting for site-specific losses (typically $\sim 0.75$)
+- $solar$ - data frame with columns $Kdown_{direct}$, and optionally $Kdown_{diffuse}$ ((kJ m$^{-2}/day$))
+- $A$ is the solar panel area (m$^2$),
+- $eff$ efficiency when radiation is above threshold (default 0.8)
+- $ethresh$ threshold radiation below which efficiency declines linearly (10000 (kJ m$^{-2}$))
+- $eunits$ desired units for output default "kJ" Joules, option "kWhr" for Watts
+- $PR$ is the performance ratio (dimensionless, 0–1), accounting for site-specific losses (typically $\sim 0.75$)
 
 *Formatting inputs*
 
--   $g$ TRUE/FALSE - True if you want to graph
--   $clr$ color of line on graph
+- $g$ TRUE/FALSE - True if you want to graph
+- $clr$ color of line on graph
 
 *Outputs*
 
--   annual energy produced (kJ/yr or kWhr/year),
--   optional graphs of energy produced by year
+- annual energy produced (kJ/yr or kWhr/year),
+- optional graphs of energy produced by year
 
 ## Solar function example as code {.scrollable}
 
@@ -373,8 +373,8 @@ load(here("Data/sierraczosolar.rda"))
 
 We will plot to check that the input data makes sense
 
--   look at data
--   plot radiation by month
+- look at data
+- plot radiation by month
 
 ```{r datacheck}
 
@@ -416,15 +416,15 @@ site1$annual
 
 # On your own
 
--   read through function code
--   run the model with the data
--   change parameters and re-run
--   turn graphing on
+- read through function code
+- run the model with the data
+- change parameters and re-run
+- turn graphing on
 
 # Visual Checking
 
--   what issue jumps out - what might be the cause?
--   how would you fix this?
+- what issue jumps out - what might be the cause?
+- how would you fix this?
 
 Explore for next class
 
@@ -432,15 +432,15 @@ Explore for next class
 
 How to find the "right" tool for the job
 
--   The importance of establishing a goal and a conceptual model - because all models are simplifications of reality
+- The importance of establishing a goal and a conceptual model - because all models are simplifications of reality
 
--   Identify model types - helps you to find the "right" tool for your question (we will expand on this)
+- Identify model types - helps you to find the "right" tool for your question (we will expand on this)
 
--   Two parts - does it answer your question (conceptual model fit) and does it perform well enough
+- Two parts - does it answer your question (conceptual model fit) and does it perform well enough
 
--   Basics of building your own model - modular, functions, inputs/outputs/parameters
+- Basics of building your own model - modular, functions, inputs/outputs/parameters
 
-    -   some parameters impact model transfer function, other I/O formatting
+  - some parameters impact model transfer function, other I/O formatting
 
 # Answer to visual check {.scrollable}
 

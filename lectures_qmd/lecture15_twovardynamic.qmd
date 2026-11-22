@@ -576,4 +576,4 @@ ggarrange(p1, p2b)
 
 ## Assignment 7 {.scrollable}
 
-[Assignment 7](%22../assignments/Assignment7_twovar_ODE.qmd%22)
+[Assignment 7](../assignments/Assignment7_twovar_ODE.qmd)

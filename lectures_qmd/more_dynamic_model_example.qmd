@@ -70,7 +70,7 @@ source(here("R/dharvestvary.R"))
 dharvestvary
 
 # read precipitation data
-readRDS(here("Data/CaatPcp.RDS"))  # loads object CaatPcp
+CaatPcp <- readRDS(here("Data/CaatPcp.RDS"))
 
 nyear = length(CaatPcp$annual_ppt_mm)
 nyear
@@ -144,11 +144,11 @@ High level perspective
 
 -   includes some thoughts on job market preparation
 
--   [Communications of the ACM](%22../papers/AIinComputingEducation.pdf%22)
+-   [Communications of the ACM](<../papers/The Impact of AI on Computer Science Education – Communications of the ACM.pdf>)
 
--   [Practical overview/perspective](%22../papers/perspectives_ai_coding.pdf%22)
+-   [Practical overview/perspective](../papers/perspective_ai_coding.pdf)
 
--   [Recent review on potential harmful consequenses](%22../papers/review-of-harms-fromAIcodingedu.pdf%22)
+-   [Recent review on potential harmful consequenses](../papers/review-of-harms-fromAIcodingedu.pdf)
 
 ## Example of using Co-pilot
 
@@ -392,6 +392,7 @@ Notice where derivatives are
 Recall these are all for a proportional harvest rate of 4% per year and a growth rate of 0.05, etc
 
 ```{r simpleapp}
+source(here("R/dharvest.R"))
 tm <- seq(from = 1, to = 100)
 gps <- list(harv = 0.04, K = 1000, r = 0.05)
 

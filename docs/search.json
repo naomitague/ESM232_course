@@ -1,0 +1,114 @@
+[
+  {
+    "objectID": "assignments/Assignment1_prep.html",
+    "href": "assignments/Assignment1_prep.html",
+    "title": "Assignment1 - Getting to know you",
+    "section": "",
+    "text": "Intro\n\nFill out Help us get to know you survey on Canvas\nListen to only timestap 26:27 to 31:22 (basically 5 minutes) of the following blog by Lisa Felman Barrett - a highly cited psychologist\n\nblog 26:27 to 31:22\nif you are interested you can learn More about Lisa Felman Barrett\nThink about what an inverse inference problem might be in the context of the environment\n\nIn this course, we will work a lot with writing and applying functions; You’ve all been exposed to writing functions in previous courses - but just to make sure that everyone remembers the basic syntax in R, complete the following:\n\nWrite a function that computes energy produced from a photovoltaic system if you know the average annual solar radiation. You can use the following formula:\nThe energy produced by a solar panel system is given by\n\\[\nE = A \\cdot r \\cdot H \\cdot PR\n\\]\nwhere:\n\n\\(E\\) is the energy produced (kWh),\n\\(A\\) is the solar panel area (m\\(^2\\)),\n\\(r\\) is the panel yield (dimensionless, 0–1), representing manufacturer efficiency (typically \\(\\sim 0.2\\)),\n\\(PR\\) is the performance ratio (dimensionless, 0–1), accounting for site-specific losses (typically \\(\\sim 0.75\\)),\n\\(H\\) is the annual average solar radiation (kWh m\\(^{-2}\\)).\n\nWrite your function in R; make sure that you add documentation; include default values for r and PR in the function definition; save the function in a single file to upload to Canvas.\n\nTo summarize, submit the following by 8am Jan 8:\n\nFill out ‘get to know you’ survey on Canvas\n\nA single R file that implements the solar energy yield function (on Canvas)\n\nYou don’t need to submit anything for the Lisa Felman Barrett blog - just think about the inverse inference problem in the context of the environment. We will discuss next class\n\n\nGrading Rubric\n\nCompleted Survey (10 pts total)\nFunction implementation (20 pts total)\n\nfunction written in R (5pts)\ncorrect function syntax in R (5pts)\nincludes default values (5pts)\nclear documentation (5pts)"
+  },
+  {
+    "objectID": "lectures_qmd/intro_lecture.html#key-challenge-what-simplification-is-useful",
+    "href": "lectures_qmd/intro_lecture.html#key-challenge-what-simplification-is-useful",
+    "title": "What is a model?",
+    "section": "Key challenge: what simplification is useful?",
+    "text": "Key challenge: what simplification is useful?\n\n\n\n\n\n\n\n\nBeyond a simple model:\nWhat controls how much water is in this stream?"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Environmental Modelling",
+    "section": "",
+    "text": "A hillside in bloom, a place where I run my ecohydrologic model RHESSys"
+  },
+  {
+    "objectID": "index.html#course-description",
+    "href": "index.html#course-description",
+    "title": "Environmental Modelling",
+    "section": "Course description",
+    "text": "Course description\nComputer-based modeling and simulation are widely used tools in both practical environmental problem solving and in environmental research. Models give us a way to look at the world through a mixture of data and theory. A good model can help us to understand how the world works and how decisions that we make might change the world in ways that are important to us. There are many different types of models, from simple to complex, and models are often tailored to answer specific questions. This course will give you skills that help you to choose which model, or modeling technique, is right for you given the task at hand. The course will cover designing a new model and evaluating existing models. We will emphasize best practices, such as sensitivity and uncertainty analysis, that help to design and use models to reliably support environmental problem solving. This is a skills-based course and we will use R as our basic platform.\nClass will include a mix of lectures and in-class hands-on examples, using students’ own computers. Discussion sections will elaborate on lecture topics and provide time to work on assignments with instructor and TA support.\nThe full syllabus (PDF) has grading, AI-tool policy and attendance details."
+  },
+  {
+    "objectID": "index.html#teaching-team",
+    "href": "index.html#teaching-team",
+    "title": "Environmental Modelling",
+    "section": "Teaching team",
+    "text": "Teaching team\nInstructor: Naomi Tague\n\nOffice: Bren Hall 4516\nOffice hours: email to set a time\nEmail: tague@ucsb.edu\n\nTeaching assistant: TBA\n\nOffice: TBA\nOffice hours: TBA\nEmail: TBA"
+  },
+  {
+    "objectID": "index.html#where-we-will-be",
+    "href": "index.html#where-we-will-be",
+    "title": "Environmental Modelling",
+    "section": "Where we will be",
+    "text": "Where we will be\n\nLectures: TBA\nDiscussion section: TBA"
+  },
+  {
+    "objectID": "index.html#learning-objectives",
+    "href": "index.html#learning-objectives",
+    "title": "Environmental Modelling",
+    "section": "Learning objectives",
+    "text": "Learning objectives\n\nGain familiarity with different types of models and the situations where you might use them\nUnderstand how to choose the “right model” for the job\nKnow how to build simple models, including\n\ninput-output models\nbasic dynamic models\n\nGain some basic skills that are useful in applying models, including\n\nparameter sensitivity analysis\nuncertainty analysis\nmodel calibration and evaluation"
+  },
+  {
+    "objectID": "index.html#computing",
+    "href": "index.html#computing",
+    "title": "Environmental Modelling",
+    "section": "Computing",
+    "text": "Computing\n\nI will assume that everyone has some basic R skills, including how to use git, ggplot and Quarto, and how to build simple functions.\nMany classes will be working classes, so bring your laptop to class.\nLecture slides are linked from the Lectures menu above. Example functions, data and Quarto files are in the course GitHub repository; pull before each class so you have the latest materials."
+  },
+  {
+    "objectID": "index.html#tentative-schedule",
+    "href": "index.html#tentative-schedule",
+    "title": "Environmental Modelling",
+    "section": "Tentative schedule",
+    "text": "Tentative schedule\n\n\n\n\n\n\n\n\n\nWeek\nTuesday\nThursday\nDiscussion\n\n\n\n\n1\nIntro: What is a model\nConceptual models\nFree\n\n\n2\nBuilding models\nInformal sensitivity analysis\nInformal sensitivity\n\n\n3\nMultiple parameter variation\nMulti-component models: RHESSys\nBuilding blocks\n\n\n4\nFormal sensitivity analysis\nSobol sensitivity analysis\nFree\n\n\n5\nGuest lecture\nDynamic models: analytical solutions\nSobol sensitivity\n\n\n6\nDynamic models: ODE solver\nMore on dynamic models\nOutput summary\n\n\n7\nSensitivity with dynamic models\nDisturbance and AI coding tools\nFree\n\n\n8\nTwo variables and stability\nGuest lecture\nTwo-variable stability\n\n\n9\nWhat makes a good model\nCalibration\nCalibration\n\n\n10\nCalibration part 2\nReturn to the big picture"
+  },
+  {
+    "objectID": "index.html#assignments",
+    "href": "index.html#assignments",
+    "title": "Environmental Modelling",
+    "section": "Assignments",
+    "text": "Assignments\nThere are 9 assignments plus weekly in-class quizzes. Some assignments will be done in groups. Most are short coding assignments with a one-paragraph write-up. Assignment instructions are linked from the Assignments menu above.\nAssignments are submitted on Canvas, which also has grading rubrics you may find helpful. We also use Canvas for announcements."
+  },
+  {
+    "objectID": "index.html#protocols-and-guidance",
+    "href": "index.html#protocols-and-guidance",
+    "title": "Environmental Modelling",
+    "section": "Protocols and guidance",
+    "text": "Protocols and guidance\n\nLearning to program is hard and I may not always explain in a way that is accessible to you. If you don’t understand something, ask.\n\nIdeally ask in class: you will help me learn how to explain (or find an answer if I don’t know it), and you will help others.\nIf you don’t feel comfortable asking in class, reach out to me or the TA.\n\nEnvironmental modeling and the coding involved get better with practice and play. Don’t just read the Quarto documents: try the code, try variations on the ideas presented, make up stuff to try.\nProgramming means making mistakes. Expect it, stay calm and try again. If you get frustrated, step away and come back; be creative.\nRespect and support each other.\n\nWhen working in groups, pay attention to your partner. If they are not at your skill level, help them learn; we all have different backgrounds.\nListen. Different perspectives contribute to modeling. Ask questions and figure out how different people see the world (what is their conceptual model?).\nYou learn by helping others, so do that!\n\nIf you are really struggling, reach out to the TA or me. We can help (or if you just want to chat about something)."
+  },
+  {
+    "objectID": "lectures_qmd/lecture2.conceptual.simple.html#relationships-and-processes",
+    "href": "lectures_qmd/lecture2.conceptual.simple.html#relationships-and-processes",
+    "title": "Types of Models",
+    "section": "Relationships and Processes",
+    "text": "Relationships and Processes\n\nCan be even more complex - what is connected with what and when\nWhat are some time-space relationships we might have to think about?"
+  },
+  {
+    "objectID": "lectures_qmd/lecture2.conceptual.simple.html#some-possible-extensions-to-conceptual-model",
+    "href": "lectures_qmd/lecture2.conceptual.simple.html#some-possible-extensions-to-conceptual-model",
+    "title": "Types of Models",
+    "section": "Some possible extensions to conceptual model",
+    "text": "Some possible extensions to conceptual model\nRelationship between the timing of precipitation and newt lifecycle.\nIf there is a particular pollution source - prevailing wind patterns and how long particles stay in the air\n\n\n\\[\\begin{aligned}\nPop_{\\text{newt}} =\\;& \\beta_0 \\\\\n&+ \\beta_1\\,\\text{Precipitation} \\\\\n&+ \\beta_2\\,\\text{Temperature} \\\\\n&+ \\beta_3\\,\\text{PredatorPresence} \\\\\n&+ \\beta_4\\,\\text{RoadDensity} \\\\\n&+ \\beta_5\\,\\text{Pollution}\n\\end{aligned}\\]\n\n\n\npollution at time lag t-1 weighted by wind direction and speed (model of pollution transport)\n\\(\\beta_5\\) vulnerability to pollution varies with newt life stage (eggs more vulnerable than adults)\npopulation age structure (Pop_newt_eggs, Pop_newt_juvenile, Pop_newt_adult) - all varying through time"
+  },
+  {
+    "objectID": "lectures_qmd/lecture2.conceptual.simple.html#conceptual-models-things-to-think-about",
+    "href": "lectures_qmd/lecture2.conceptual.simple.html#conceptual-models-things-to-think-about",
+    "title": "Types of Models",
+    "section": "Conceptual Models: Things to think about",
+    "text": "Conceptual Models: Things to think about\n\nWhat inputs/parameters will influence how a process/mechanism leads to the outputs you are interested in\nCan you measure those inputs/parameters? If not is there a proxy? Or another model?\nAre there features of the environment that influence the relationship between input/parameter and output?\nAre there inputs/parameters that you want to vary across cenarios (things you’d want to ‘change’)\nTime and Space (are you looking at a short or long terms behavior? do you care about spatial patterns? at what scale?)\nWhat are some key assumptions?"
+  },
+  {
+    "objectID": "lectures_qmd/lecture2.conceptual.simple.html#stochastic---deterministic",
+    "href": "lectures_qmd/lecture2.conceptual.simple.html#stochastic---deterministic",
+    "title": "Types of Models",
+    "section": "Stochastic - Deterministic",
+    "text": "Stochastic - Deterministic\nStochastic: Model output is the probability of flood events of a magnitude greater than 500 m3/sec given rainfall probability distribution (artificial or generated from data) for a 100km2 watershed\nDeterministic: Model output is the depth of flood given a rainfall event of 10cm over a 100km2 watershed"
+  },
+  {
+    "objectID": "lectures_qmd/lecture2.conceptual.simple.html#stochastic---deterministic-1",
+    "href": "lectures_qmd/lecture2.conceptual.simple.html#stochastic---deterministic-1",
+    "title": "Types of Models",
+    "section": "Stochastic - Deterministic",
+    "text": "Stochastic - Deterministic\n\nstochastic-deterministic"
+  }
+]

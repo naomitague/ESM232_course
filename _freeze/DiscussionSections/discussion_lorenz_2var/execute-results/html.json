@@ -1,0 +1,21 @@
+{
+  "hash": "bf635d06358979c769123beb64b91e9c",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"discussion_lorenz\"\nformat: revealjs\neditor: visual\n---\n\n## And just for fun (I'll explain why)\n\n-   Lorenz Equations (for fluid dynamics),\n\n-   x,y,z variables that change with time that describe how convection in the atmosphere works - a cell that is warmed from below and cooled from above\n\n-   x rate of convective overturning\n\n-   y departure from linear horizontal (upwelling/downwelling) temperature gradient\n\n-   z departure from linear vertical temperature difference\n\n-   3 equations (dx/dt, dy/dt, dz/dt) that describe how these variables change with time\n\n-   3 parameters (a,b,c) related to atmospheric properties\n\n-   Developed by Meteorologist Edward Lorenz - early climate model development in 1960s\n\n-   Lorenz equations are example of dynamic systems that can exhibit stable and chaotic states depending on parameters and initial conditions\n\n## Code for Lorenz system\n\nLets look at a Lorenz System Code\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\nfunction (t, pt, parms) \n{\n    with(as.list(c(pt, parms)), {\n        dx <- a * (y - x)\n        dy <- x * (b - z) - y\n        dz <- x * y - c * z\n        return(list(c(dx, dy, dz)))\n    })\n}\n```\n\n\n:::\n:::\n\n\n## Application of Lorenz {.scrollable}\n\n\n::: {.cell}\n\n:::\n\n\nnow plot\n\n-   as a phase space diagram (x vs y, x vs z, y vs z) - using time for color\n-   as a time series (e.g time on the x axis) add each variable with a different color\n\nthen try with different initial conditions\n\n## Plots {.scrollable}\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](discussion_lorenz_2var_files/figure-revealjs/lr1-1.png){width=960}\n:::\n\n::: {.cell-output-display}\n![](discussion_lorenz_2var_files/figure-revealjs/lr1-2.png){width=960}\n:::\n\n::: {.cell-output-display}\n![](discussion_lorenz_2var_files/figure-revealjs/lr1-3.png){width=960}\n:::\n\n::: {.cell-output-display}\n![](discussion_lorenz_2var_files/figure-revealjs/lr1-4.png){width=960}\n:::\n:::\n\n\n## Plot with different initial conditions\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](discussion_lorenz_2var_files/figure-revealjs/lr2-1.png){width=960}\n:::\n\n::: {.cell-output-display}\n![](discussion_lorenz_2var_files/figure-revealjs/lr2-2.png){width=960}\n:::\n\n::: {.cell-output-display}\n![](discussion_lorenz_2var_files/figure-revealjs/lr2-3.png){width=960}\n:::\n\n::: {.cell-output-display}\n![](discussion_lorenz_2var_files/figure-revealjs/lr2-4.png){width=960}\n:::\n:::\n\n\n## \n",
+    "supporting": [
+      "discussion_lorenz_2var_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-after-body": [
+        "\n<script>\n  // htmlwidgets need to know to resize themselves when slides are shown/hidden.\n  // Fire the \"slideenter\" event (handled by htmlwidgets.js) when the current\n  // slide changes (different for each slide format).\n  (function () {\n    // dispatch for htmlwidgets\n    function fireSlideEnter() {\n      const event = window.document.createEvent(\"Event\");\n      event.initEvent(\"slideenter\", true, true);\n      window.document.dispatchEvent(event);\n    }\n\n    function fireSlideChanged(previousSlide, currentSlide) {\n      fireSlideEnter();\n\n      // dispatch for shiny\n      if (window.jQuery) {\n        if (previousSlide) {\n          window.jQuery(previousSlide).trigger(\"hidden\");\n        }\n        if (currentSlide) {\n          window.jQuery(currentSlide).trigger(\"shown\");\n        }\n      }\n    }\n\n    // hookup for slidy\n    if (window.w3c_slidy) {\n      window.w3c_slidy.add_observer(function (slide_num) {\n        // slide_num starts at position 1\n        fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);\n      });\n    }\n\n  })();\n</script>\n\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

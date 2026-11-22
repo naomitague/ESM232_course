@@ -9,6 +9,9 @@ editor: visual
 ## Fixed Harvest Example {.scrollable}
 
 ```{r fixed, echo=TRUE}
+library(here)
+library(deSolve)
+library(tidyverse)
 source(here("R/dharvestfixed.R"))
 
 dharvestfixed
@@ -49,7 +52,7 @@ ggplot(as.data.frame(res), aes(time, carbon)) +
 
 ## Fixed Harvest Example {.scrollable}
 
-```{r fixed}
+```{r fixed_euler}
 source(here("R/dharvestfixed.R"))
 
 dharvestfixed

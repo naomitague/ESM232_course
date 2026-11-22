@@ -9,11 +9,11 @@ editor: visual
 
 # Model Goals
 
--   understanding
+- understanding
 
--   prediction
+- prediction
 
--   communication
+- communication
 
 You are doing this all the time - there are many reasons to make this process explicit (computer aided modeling)
 
@@ -23,21 +23,21 @@ Pair-Share
 
 # Conceptual Models
 
--   models are **always** simplifications of reality - they help us to make sense of reality by focusing on specific aspects that are most relevant to your goal
+- models are **always** simplifications of reality - they help us to make sense of reality by focusing on specific aspects that are most relevant to your goal
 
--   always start a modeling project by diagramming your conceptual model - how do you see the system;
+- always start a modeling project by diagramming your conceptual model - how do you see the system;
 
--   from here you design or choose your 'actual' model
+- from here you design or choose your 'actual' model
 
--   in a project, it is critical to dialogue to agree on the conceptual model
+- in a project, it is critical to dialogue to agree on the conceptual model
 
 # Getting to a good conceptual model
 
--   Know what the goal is of your modeling project - precisely
+- Know what the goal is of your modeling project - precisely
 
--   Use that to decide what to include/exclude
+- Use that to decide what to include/exclude
 
--   Define inputs and outputs
+- Define inputs and outputs
 
 # Some definitions
 
@@ -67,8 +67,8 @@ Often helpful to start at the end: **Outputs**
 
 *Problem*: how will forest carbon sequestration change if fire frequency increases with warming
 
--   What might be the outputs of a model?
--   What might be the assumptions
+- What might be the outputs of a model?
+- What might be the assumptions
 
 # Example1
 
@@ -90,21 +90,21 @@ Assumptions: non-market benefits are reflected by ..
 
 This is the **MOST** important step
 
--   Models are simplifications of reality
+- Models are simplifications of reality
 
--   What processes in complex reality are your going to consider? why?
+- What processes in complex reality are your going to consider? why?
 
--   What is in the "box" that translates inputs to outputs?
+- What is in the "box" that translates inputs to outputs?
 
 **Good questions for statistical and machine learning models - why?**
 
 # Things to think about
 
--   Inverse Inference - what mechanisms, parameters, inputs leads to the response you are observing (understanding)
+- Inverse Inference - what mechanisms, parameters, inputs leads to the response you are observing (understanding)
 
--   What processes do you expect to be significantly influence outcome you are interested in (prediction)
+- What processes do you expect to be significantly influence outcome you are interested in (prediction)
 
--   How do you "show" what influences an observation/prediction (communication)
+- How do you "show" what influences an observation/prediction (communication)
 
 # Inverse Inference Example {.scrollable}
 
@@ -138,9 +138,9 @@ Pop_{\text{newt}} =\;& \beta_0 \\
 
 ## Relationships and Processes
 
--   Can be even more complex - what is connected with what and when
+- Can be even more complex - what is connected with what and when
 
--   What are some time-space relationships we might have to think about?
+- What are some time-space relationships we might have to think about?
 
 ## Some possible extensions to conceptual model {.scrollable}
 
@@ -161,11 +161,11 @@ Pop_{\text{newt}} =\;& \beta_0 \\
 
 \
 
--   pollution at time lag t-1 weighted by wind direction and speed (model of pollution transport)
+- pollution at time lag t-1 weighted by wind direction and speed (model of pollution transport)
 
--   $\beta_5$ vulnerability to pollution varies with newt life stage (eggs more vulnerable than adults)
+- $\beta_5$ vulnerability to pollution varies with newt life stage (eggs more vulnerable than adults)
 
--   population age structure (Pop_newt_eggs, Pop_newt_juvenile, Pop_newt_adult) - all varying through time
+- population age structure (Pop_newt_eggs, Pop_newt_juvenile, Pop_newt_adult) - all varying through time
 
 # Composing Diagrams
 
@@ -187,9 +187,9 @@ There are many software tools available for generating conceptual models, I like
 
 # Example more complex model - Fire Regime Model
 
--   More complex model couple sub-models ( may be a loose coupling where users connects submodels)
+- More complex model couple sub-models ( may be a loose coupling where users connects submodels)
 
--   How do ecological and human factors interact to influence fire regimes
+- How do ecological and human factors interact to influence fire regimes
 
 ![](img/cmseri.png)
 
@@ -199,17 +199,17 @@ There are many software tools available for generating conceptual models, I like
 
 ## Conceptual Models: Things to think about {.scrollable}
 
--   What inputs/parameters will influence how a process/mechanism leads to the outputs you are interested in
+- What inputs/parameters will influence how a process/mechanism leads to the outputs you are interested in
 
--   Can you measure those inputs/parameters? If not is there a proxy? Or another model?
+- Can you measure those inputs/parameters? If not is there a proxy? Or another model?
 
--   Are there features of the environment that influence the relationship between input/parameter and output?
+- Are there features of the environment that influence the relationship between input/parameter and output?
 
--   Are there inputs/parameters that you want to vary across cenarios (things you'd want to 'change')
+- Are there inputs/parameters that you want to vary across cenarios (things you'd want to 'change')
 
--   Time and Space (are you looking at a short or long terms behavior? do you care about spatial patterns? at what scale?)
+- Time and Space (are you looking at a short or long terms behavior? do you care about spatial patterns? at what scale?)
 
--   What are some key assumptions?
+- What are some key assumptions?
 
 # Types of Model
 
@@ -235,8 +235,8 @@ Useful because the *type* of model will have implications for how you *build* an
 
 **Spatially distributed** - model is applied to different “patches” in space
 
--   spatial units are independent
--   spatial units interact with each other
+- spatial units are independent
+- spatial units interact with each other
 
 ![](img/spatial.001.png)
 
@@ -278,12 +278,12 @@ Think...simple bucket model
 
 # Why the type of models matters
 
--   assumptions
--   implementation
--   output
-    -   format
-    -   analysis
-    -   visualization
+- assumptions
+- implementation
+- output
+  - format
+  - analysis
+  - visualization
 
 # Assignment 2 - Due Jan 13th 8am
 
@@ -291,10 +291,10 @@ Think...simple bucket model
 
 # Develop a Conceptual Model
 
--   Form groups of 3
--   With your group, come up with a modeling goal
--   Decide if the goal is understanding,prediction or communication
--   Brainstorm on important
-    -   inputs, parameters and outputs
-    -   relationships/processes
-    -   assumptions
+- Form groups of 3
+- With your group, come up with a modeling goal
+- Decide if the goal is understanding,prediction or communication
+- Brainstorm on important
+  - inputs, parameters and outputs
+  - relationships/processes
+  - assumptions

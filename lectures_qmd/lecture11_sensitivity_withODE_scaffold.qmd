@@ -22,8 +22,8 @@ A key issue where is sensitivity of what?
 
 Dynamic models often give you many many outputs
 
--   time series (streamflow every day for a year, population for 30 years)
--   or output over space (spatially averaged concentration after 10 days?)
+- time series (streamflow every day for a year, population for 30 years)
+- or output over space (spatially averaged concentration after 10 days?)
 
 So if we are asking 'sensitivity of what' we need to summarize results in some way (reduce their dimensionality )
 
@@ -31,12 +31,12 @@ So if we are asking 'sensitivity of what' we need to summarize results in some w
 
 Depends on what is important for your model application
 
--   max
--   mean
--   min
--   total
--   variation
--   time it takes for something to happen
+- max
+- mean
+- min
+- total
+- variation
+- time it takes for something to happen
 
 So a key step in sensitivity analysis with a dynamics model is summarizing results into a few key measures
 
@@ -56,10 +56,10 @@ Its useful to turn that summarizing workflow into a function
 
 6)  run ODE for each parameter sets to fill in this metrics data structure
 
-    -   its usually helpful to create a wrapper function
-        -   runs ODE
-        -   extracts metrics
-    -   run wrapper function for each parameter sets
+    - its usually helpful to create a wrapper function
+      - runs ODE
+      - extracts metrics
+    - run wrapper function for each parameter sets
 
 7)  send the metrics back to the sensitivity analysis object (from sobel or LHS)
 
@@ -115,33 +115,33 @@ Step 3-6 in workflow
 
 Run our differential equation for all parameters and keep
 
--   the output - volume of output quickly becomes a problem
+- the output - volume of output quickly becomes a problem
 
 Just save metrics
 
 A couple of options
 
--   how about maximum population if we run the model for 200 years,
--   how many years to get to the carrying capacity
--   how many year to get to some pre-determined threshold
+- how about maximum population if we run the model for 200 years,
+- how many years to get to the carrying capacity
+- how many year to get to some pre-determined threshold
 
 ## Streamlining workflow with functions
 
 Create two additional functions that will help us
 
--   a function that computes the metrics we want
+- a function that computes the metrics we want
 
--   a function that runs our ode solver and computes the metrics (I call it a **wrapper** function as it is really just a workflow/wrapper to call ode solver and then compute metrics)
+- a function that runs our ode solver and computes the metrics (I call it a **wrapper** function as it is really just a workflow/wrapper to call ode solver and then compute metrics)
 
--   wrapper takes as input
+- wrapper takes as input
 
-    -   parameters
-    -   initial conditions
-    -   simulation time
-    -   ode (function name)
-    -   how to compute metrics (function name)
+  - parameters
+  - initial conditions
+  - simulation time
+  - ode (function name)
+  - how to compute metrics (function name)
 
--   always test to make sure it works (good coding practice)
+- always test to make sure it works (good coding practice)
 
 ```{r sen2}
 # turn computing our metrics into a function, have thresh be an input
@@ -219,11 +219,11 @@ Run the wrapper for all parameters and look at results
 
 ## Compute the sobol indicies for each metric {.scrollable}
 
--   save the *tell* to different objects so you can keep re-using the original sobol object
+- save the *tell* to different objects so you can keep re-using the original sobol object
 
--   look at total effect and first order sensitivity
+- look at total effect and first order sensitivity
 
--   Step 7 in workflow
+- Step 7 in workflow
 
 ```{r sen3}
 # sobol can only handle one output at a time  - so we will need to do them separately
@@ -284,26 +284,25 @@ relationship looks like its completely prescribed - which is true in the case of
 
 Suggest that the solver (numerical integration) had issues
 
--   increasing maxsteps can help
+- increasing maxsteps can help
 
-    ```         
-    *result = ode(y=Pinitial, times=simtimes, func=func, parms=parms, maxsteps=100000) *
-    ```
+  ```         
+  *result = ode(y=Pinitial, times=simtimes, func=func, parms=parms, maxsteps=100000) *
+  ```
 
--   trying different methods
+- trying different methods
 
-    ```         
-    *result = ode(y=Pinitial, times=simtimes, func=func, parms=parms, method="daspk")*
-    ```
+  ```         
+  *result = ode(y=Pinitial, times=simtimes, func=func, parms=parms, method="daspk")*
+  ```
 
--   "stiff" problems are harder for numerical integration to solve - (small changes have big impacts); a threshold carrying capacity does that \## Ways to use dynamic models {.scrollable}
+- "stiff" problems are harder for numerical integration to solve - (small changes have big impacts); a threshold carrying capacity does that \## Ways to use dynamic models {.scrollable}
 
 Goal: To provide insight into environmental systems, and how they respond to intervention/disturbance/change
 
--   predict how something we care above will change over space and/or time (*system evolution*)
+- predict how something we care above will change over space and/or time (*system evolution*)
 
--   sensitivity analysis of output
+- sensitivity analysis of output
 
-    -   output response to variation in inputs/parameters
-    -   quantifying how summary measures respond to variation in inputs/parameters
-
+  - output response to variation in inputs/parameters
+  - quantifying how summary measures respond to variation in inputs/parameters

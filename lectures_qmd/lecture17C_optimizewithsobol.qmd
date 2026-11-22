@@ -31,11 +31,11 @@ High level perspective
 
 -   includes some thoughts on job market preparation
 
--   [Communications of the ACM]("papers/AIinComputingEducation.pdf")
+-   [Communications of the ACM](<../papers/The Impact of AI on Computer Science Education – Communications of the ACM.pdf>)
 
--   [Practical overview/perspective]("papers/perspectives_ai_coding.pdf")
+-   [Practical overview/perspective](../papers/perspective_ai_coding.pdf)
 
--   [Recent review on potential harmful consequenses]("papers/review-of-harms-fromAIcodingedu.pdf")
+-   [Recent review on potential harmful consequenses](../papers/review-of-harms-fromAIcodingedu.pdf)
 
 ## Using Co-pilot
 

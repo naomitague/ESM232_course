@@ -1,0 +1,189 @@
+# =====================================================================
+# ESM 232 / EDS 230 course website
+#
+# HOW TO CONTROL WHAT SHOWS UP ON THE SITE
+#   1. Menus: edit the `navbar:` section below. Each `- text:` / `href:`
+#      pair is one menu item. To hide an item until you teach it,
+#      put a # in front of its two lines.
+#   2. Home page: edit index.qmd (course description, team, schedule).
+#   3. Build: in RStudio's Build tab click "Render Website", or in a
+#      terminal run `quarto render`. Output goes to docs/.
+#   4. Publish: commit and push, INCLUDING the docs/ folder.
+#      GitHub Pages serves docs/ on the main branch.
+#
+# Pages are only re-run when their .qmd changes (freeze: auto), so a
+# full render is quick after the first time. The _freeze/ folder that
+# this creates should be committed too.
+# =====================================================================
+
+project:
+  type: website
+  output-dir: docs
+  # Only files listed here are built. Notes, drafts, scaffolds and
+  # "notused" files stay out of the site.
+  render:
+    # Items marked "# -" are hidden until taught: remove the "# " to publish.
+    - index.qmd
+    - lectures_qmd/intro_lecture.qmd
+    - lectures_qmd/lecture2.conceptual.simple.qmd
+    # - lectures_qmd/lecture3.building_models.qmd
+    # - lectures_qmd/lecture4_informal_sensitivity.qmd
+    # - lectures_qmd/lecture5_multiplepars.qmd
+    # - lectures_qmd/Lecture6_buildingblocks.qmd
+    # - lectures_qmd/lecture7_sensitivity.qmd
+    # - lectures_qmd/lecture8_sensitivity_sobol.qmd
+    # - lectures_qmd/lecture9_simpledynamic.qmd
+    # - lectures_qmd/lecture10_moredynamic.qmd
+    # - lectures_qmd/lecture10.5_abitmoredynamic.qmd
+    # - lectures_qmd/lecture11_sensitivity_withODE.qmd
+    # - lectures_qmd/lecture12_disturbance.qmd
+    # - lectures_qmd/more_dynamic_model_example.qmd
+    # - lectures_qmd/lecture15_twovardynamic.qmd
+    # - lectures_qmd/Lecture16_calibration1.qmd
+    # - lectures_qmd/Lecture16_Calibration.qmd
+    # - lectures_qmd/Lecture17B_Calibration2.qmd
+    # - lectures_qmd/lecture17_optimize.qmd
+    # - lectures_qmd/lecture17C_optimizewithsobol.qmd
+    # - lectures_qmd/wrap_up.qmd
+    # - DiscussionSections/discussion2_informal Sensitivity.qmd
+    # - DiscussionSections/discussion3_buildingblocks.qmd
+    # - DiscussionSections/discussion4_sensitivity_sobol.qmd
+    # - DiscussionSections/discussion5_summarizingdynamic.qmd
+    # - DiscussionSections/discussion6_twovar_stability.qmd
+    # - DiscussionSections/discussion7_calibration.qmd
+    # - DiscussionSections/discussion_harvest.qmd
+    # - DiscussionSections/discussion_lorenz_2var.qmd
+    - assignments/Assignment1_prep.qmd
+    # - assignments/Assignment2_ConceptualModel.qmd
+    # - assignments/Assignment3_Almond-yield.qmd
+    # - assignments/assignment4_almondprofit.qmd
+    # - assignments/Assignment5_sobol.qmd
+    # - assignments/assignment6_dynamic_sensitivity.qmd
+    # - assignments/Assignment7_twovar_ODE.qmd
+    # - assignments/Assignment8_Calibration.qmd
+    # - assignments/wrapupassignment.qmd
+  # Copied to the site as-is (linked from pages).
+  resources:
+    - syllabus.pdf
+    - img/
+    - papers/
+    - assignments/lobell.2006.pdf
+    - Data/msage.RDS
+
+execute:
+  freeze: auto
+
+website:
+  title: "ESM 232 / EDS 230: Environmental Modelling"
+  site-url: https://naomitague.github.io/ESM232_course/
+  repo-url: https://github.com/naomitague/ESM232_course
+  page-navigation: false
+  navbar:
+    background: "#003660"
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Syllabus"
+        href: syllabus.pdf
+
+      - text: "Lectures"
+        menu:
+          - text: "1. What is a model?"
+            href: lectures_qmd/intro_lecture.qmd
+          - text: "2. Types of models"
+            href: lectures_qmd/lecture2.conceptual.simple.qmd
+          # - text: "3. Building models"
+          #   href: lectures_qmd/lecture3.building_models.qmd
+          # - text: "4. Informal sensitivity analysis"
+          #   href: lectures_qmd/lecture4_informal_sensitivity.qmd
+          # - text: "5. Multiple parameter variation"
+          #   href: lectures_qmd/lecture5_multiplepars.qmd
+          # - text: "6. Multi-component models"
+          #   href: lectures_qmd/Lecture6_buildingblocks.qmd
+          # - text: "7. Formal sensitivity analysis"
+          #   href: lectures_qmd/lecture7_sensitivity.qmd
+          # - text: "8. Sobol sensitivity analysis"
+          #   href: lectures_qmd/lecture8_sensitivity_sobol.qmd
+          # - text: "10. Dynamic models: analytical solutions"
+          #   href: lectures_qmd/lecture9_simpledynamic.qmd
+          # - text: "11. Dynamic models: ODE solver"
+          #   href: lectures_qmd/lecture10_moredynamic.qmd
+          # - text: "12. More on dynamic models"
+          #   href: lectures_qmd/lecture10.5_abitmoredynamic.qmd
+          # - text: "13. Sensitivity with dynamic models"
+          #   href: lectures_qmd/lecture11_sensitivity_withODE.qmd
+          # - text: "14. Growth and disturbance"
+          #   href: lectures_qmd/lecture12_disturbance.qmd
+          # - text: "15. Two variables and stability"
+          #   href: lectures_qmd/lecture15_twovardynamic.qmd
+          # - text: "17. What makes a good model"
+          #   href: lectures_qmd/Lecture16_calibration1.qmd
+          # - text: "18. Calibration"
+          #   href: lectures_qmd/Lecture16_Calibration.qmd
+          # - text: "19. Calibration part 2"
+          #   href: lectures_qmd/Lecture17B_Calibration2.qmd
+          # - text: "20. Wrap up"
+          #   href: lectures_qmd/wrap_up.qmd
+          # - text: "---"   # separator above the extras
+          # - text: "Extra: Optimization"
+          #   href: lectures_qmd/lecture17_optimize.qmd
+          # - text: "Extra: Optimization with Sobol"
+          #   href: lectures_qmd/lecture17C_optimizewithsobol.qmd
+          # - text: "Extra: Dynamic systems with AI assistance"
+          #   href: lectures_qmd/more_dynamic_model_example.qmd
+
+      # Discussion menu is hidden until the first discussion: uncomment
+      # these two lines along with at least one item below.
+      # - text: "Discussion"
+      #   menu:
+          # - text: "Informal sensitivity"
+          #   href: "DiscussionSections/discussion2_informal Sensitivity.qmd"
+          # - text: "Building blocks"
+          #   href: DiscussionSections/discussion3_buildingblocks.qmd
+          # - text: "Sobol sensitivity"
+          #   href: DiscussionSections/discussion4_sensitivity_sobol.qmd
+          # - text: "Summarizing dynamic model output"
+          #   href: DiscussionSections/discussion5_summarizingdynamic.qmd
+          # - text: "Two-variable stability"
+          #   href: DiscussionSections/discussion6_twovar_stability.qmd
+          # - text: "Calibration"
+          #   href: DiscussionSections/discussion7_calibration.qmd
+          # - text: "---"   # separator above the extras
+          # - text: "Extra: Harvest"
+          #   href: DiscussionSections/discussion_harvest.qmd
+          # - text: "Extra: Lorenz (two variables)"
+          #   href: DiscussionSections/discussion_lorenz_2var.qmd
+
+      - text: "Assignments"
+        menu:
+          - text: "1. Getting to know you"
+            href: assignments/Assignment1_prep.qmd
+          # - text: "2. Conceptual model"
+          #   href: assignments/Assignment2_ConceptualModel.qmd
+          # - text: "3. Almond yield"
+          #   href: assignments/Assignment3_Almond-yield.qmd
+          # - text: "4. Almond profit sensitivity"
+          #   href: assignments/assignment4_almondprofit.qmd
+          # - text: "5. Sobol sensitivity"
+          #   href: assignments/Assignment5_sobol.qmd
+          # - text: "6. Dynamic model sensitivity"
+          #   href: assignments/assignment6_dynamic_sensitivity.qmd
+          # - text: "7. Two-variable ODE"
+          #   href: assignments/Assignment7_twovar_ODE.qmd
+          # - text: "8. Calibration"
+          #   href: assignments/Assignment8_Calibration.qmd
+          # - text: "Final: Model plan"
+          #   href: assignments/wrapupassignment.qmd
+    right:
+      - icon: github
+        href: https://github.com/naomitague/ESM232_course
+  page-footer:
+    left: "ESM 232 / EDS 230 · Bren School, UC Santa Barbara"
+    right: "Built with [Quarto](https://quarto.org)"
+
+# Defaults for ordinary pages (home, html assignments). Slide decks
+# keep their own revealjs settings from their front matter.
+format:
+  html:
+    theme: cosmo
+    toc: true

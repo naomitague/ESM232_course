@@ -149,6 +149,6 @@ Examples?
 
 # For Next Class
 
-[Assignment 1](%22../assignments/Assignment1_prep.html%22)
+[Assignment 1](../assignments/Assignment1_prep.qmd)
 
 You can find this on Canvas or on Course Github

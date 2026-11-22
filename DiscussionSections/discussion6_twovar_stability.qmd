@@ -19,6 +19,10 @@ Think about how you would explore stability here
 ## here's what I did {.scrollable}
 
 ```{r stability}
+library(here)
+library(deSolve)
+library(tidyverse)
+library(ggpubr)
 source(here("R/dharvestfixed.R"))
 
 # first lets look at how the derivative varies with the size of forest

@@ -20,10 +20,10 @@ library(here)
 
 ## This week
 
--   before we get to formal sensitivity anbalysis
+- before we get to formal sensitivity anbalysis
 
-    -   a bit more practice on data manipulation as part of sensitivity analysis
-    -   building models - making slightly more complex models by adding 'boxes' or submodels
+  - a bit more practice on data manipulation as part of sensitivity analysis
+  - building models - making slightly more complex models by adding 'boxes' or submodels
 
 ## Combined sensitivity analysis
 
@@ -37,9 +37,9 @@ Global is preferred where possible because it accounts for parameter interaction
 
 ## Combined sensitivity analysis - example
 
--   *eff*
+- *eff*
 
--   *ethresh*
+- *ethresh*
 
 Sample from both of them - each time we run the model we vary both of the parameters at the same time
 
@@ -49,32 +49,32 @@ Then create plots to show the impact of parameter uncertainty
 
 Two possible approaches
 
--   *for*
--   *pmap* from purrr (when you want to vary more than one input to the model)
+- *for*
+- *pmap* from purrr (when you want to vary more than one input to the model)
 
 ## Ways of expressing variation/uncertainty {.scrollable}
 
--   sometimes we think of uncertainty as a range of possible values (min, max), where possibility is defined by physics or expert knowledge
+- sometimes we think of uncertainty as a range of possible values (min, max), where possibility is defined by physics or expert knowledge
 
--   snow albedo can't be greater than 1;
+- snow albedo can't be greater than 1;
 
--   can't have negative efficiency;
+- can't have negative efficiency;
 
--   tree height limited by hydraulics
+- tree height limited by hydraulics
 
--   solar arrays with efficiency less than some value are not marketable
+- solar arrays with efficiency less than some value are not marketable
 
--   sometimes we know something about the distribution because we have measurements e.g., efficiency of solar panels measured in lab or field tests; we can use mean and standard deviation to define a normal distribution
+- sometimes we know something about the distribution because we have measurements e.g., efficiency of solar panels measured in lab or field tests; we can use mean and standard deviation to define a normal distribution
 
--   sometimes we think of uncertainty as percent deviation from our best guess e.g., we think efficiency is 0.2 but could be ±15%
+- sometimes we think of uncertainty as percent deviation from our best guess e.g., we think efficiency is 0.2 but could be ±15%
 
 ## Example using *pmap* {.scrollable}
 
 Lets look at
 
--   15% deviation in **ethresh**
+- 15% deviation in **ethresh**
 
--   normal distribution for **eff**
+- normal distribution for **eff**
 
 Lets look at a larger array 20 m2
 
@@ -213,9 +213,9 @@ being able to create data structures to do what you want with model output
 
 ## Sensitivity to two different parameters
 
--   note how one parameter *eff* overshadows the response to *ethresh*
+- note how one parameter *eff* overshadows the response to *ethresh*
 
--   note the linear response to *eff*
+- note the linear response to *eff*
 
 ## Additional notes {.scrollable}
 
@@ -265,10 +265,10 @@ ggarrange(p1, p2)
 
 ## Expanding on Sensitivity Analysis {.scrollable}
 
--   why this is useful
--   two contexts
-    -   variation in parameters is a scenario
-    -   variation in parameter is uncertainty
+- why this is useful
+- two contexts
+  - variation in parameters is a scenario
+  - variation in parameter is uncertainty
 
 Real world examples Quiz:
 
@@ -278,8 +278,8 @@ Think of a research question, and imagine you are using a model to answer it - y
 
 Functions can always embed other functions - and in models the output of one model may be the input to another
 
--   loosely coupled models - output from one becomes input the other, but this step is necessarily automatic
--   fully coupled - models exchange input and outputs (feedback systems) inside a larger wrapper model (think of it as the *meta* model)
+- loosely coupled models - output from one becomes input the other, but this step is necessarily automatic
+- fully coupled - models exchange input and outputs (feedback systems) inside a larger wrapper model (think of it as the *meta* model)
 
 ## Example of a loosely coupled model
 
@@ -300,24 +300,24 @@ To start - lets create what we need to compute net present value of profit from 
 
 We can re-use this to compute profit for power from either source
 
--   compute_profit_frompower.R
+- compute_profit_frompower.R
 
 The profit function also 'calls' another function to compute net present value
 
--   compute_NPV
+- compute_NPV
 
-    -   inputs: value, time, discount rate
+  - inputs: value, time, discount rate
 
-    -   output net present value of input value provide as some time in the future
+  - output net present value of input value provide as some time in the future
 
--   compute_profit_frompower
+- compute_profit_frompower
 
-    -   inputs: energy, year (energy was produced in) price, discount rate
-    -   outputs: single dataframe with columns for
-        -   energy
-        -   year
-        -   net (profit from energy in that year)
-        -   netpre (net present value of that profit)
+  - inputs: energy, year (energy was produced in) price, discount rate
+  - outputs: single dataframe with columns for
+    - energy
+    - year
+    - net (profit from energy in that year)
+    - netpre (net present value of that profit)
 
 Lets assume current price per er unit of energy is \$0.3 /kWh, discount rate is 4% - keep these are variables so we can carry them through
 
@@ -357,8 +357,8 @@ save(profit_solar, file = here("Data/profit_solar.rda"))
 
 # Look at some of the building blocks
 
--   read through compute_NPV.R
--   read through compute_profit_frompower.R
+- read through compute_NPV.R
+- read through compute_profit_frompower.R
 
 Notice that compute_profit_frompower uses compute_NPV (so you need to carry over parameters)
 

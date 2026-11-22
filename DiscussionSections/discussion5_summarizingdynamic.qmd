@@ -12,6 +12,7 @@ editor: visual
 ## R code with carrying capacity {.scrollable}
 
 ```{r exampleode}
+library(here)
 library(deSolve)
 library(tidyverse)
 
@@ -79,7 +80,7 @@ both_p <- both %>% gather(key = "model", value = "P", -year)
 # plot
 ggplot(both_p, aes(year, P, col = model)) +
   geom_point() +
-  labs(y = "Population", "years")
+  labs(y = "Population", x = "years")
 ```
 
 

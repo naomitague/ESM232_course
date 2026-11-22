@@ -1,0 +1,15 @@
+{
+  "hash": "9b62f750be0b036096592013004d0e42",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Assignment 8 Calibration\"\noutput:\n  pdf_document: default\n  html_document: default\n---\n\n\n\n------------------------------------------------------------------------\n\n## Assignment {.scrollable}\n\nFor the Sagehen model output and observated streamflow data\n  [Data/msage.RDS](../Data/msage.RDS)\n* create a performance metric that focuses on a feature of streamflow other than low flow metrics we looked at in class\n* code that metric as a function\n* apply the metric to the model output\n* pick the 'best' performing parameter set\n* graph the feature of streamflow that you are interested in for:\n  * observed data\n  * best performing parameter set\n  * all parameter sets (as a light grey lines in the background)\n  * all parameter sets whose performance is within 10% of the best performing parameter set (as darker lines in the background)\n\nSubmit as pdf (rendered Quarto), R file with your metric function - AND add your parameter set selection this shared spreadsheet \n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

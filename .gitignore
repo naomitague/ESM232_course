@@ -42,3 +42,14 @@ libs/
 .DS_Store
 .html
 .log
+
+# ---------------------------------------------------------------
+# Website: the rendered site in docs/ and Quarto's _freeze/ cache
+# MUST be committed (GitHub Pages serves docs/). These lines must
+# stay at the end so they override the *.html / *_files/ rules above.
+!docs/
+!docs/**
+!_freeze/
+!_freeze/**
+
+**/*.quarto_ipynb

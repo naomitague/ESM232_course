@@ -29,6 +29,9 @@ editor: visual
 Lets look at a Lorenz System Code
 
 ```{r lorenze}
+library(here)
+library(deSolve)
+library(tidyverse)
 # lorenz
 source(here("R/lorenz.R"))
 

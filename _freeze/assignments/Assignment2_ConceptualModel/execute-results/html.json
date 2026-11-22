@@ -1,0 +1,15 @@
+{
+  "hash": "4323ea8cce782d1f597f4e360ea75363",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Assignment 2 - Conceptual Model\"\nformat: html\neditor: visual\n---\n\n\n\nForm groups of 3\n\nWith your group, come up with a modeling goal\n\nDecide if the goal is understanding,prediction or communication\n\n# To turn in\n\n1.  State your modeling goal clearly and precisely and the type of goal (understanding, prediction or communication)\n2.  List the key inputs, parameters and outputs (as precisely as possible, think about space and time)\n3.  Sketch the underlying conceptual model that would relate inputs/parameters to the outputs\n\nPlease submit as a **pdf** document\n\n**Important** - have the diagram on its own page!\n\nYou can use diagrams.net or any other tool to create the diagram - just make sure its clear and easy to read\n\nYou can create the *pdf* by rendering a quarto document - good practice as we will do this for other assignments in the course\n\nSubmit as a Group Assignment for Assignment 2 on Canvas by Jan 13th 8am\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

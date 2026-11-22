@@ -1,0 +1,19 @@
+{
+  "hash": "250048a4165bd6e8a0a91bae04edfafc",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Discussion3: Building Blocks\"\nformat: revealjs\neditor: visual\n---\n\n# Almond Yield Assignment\n\n-   Here's an example of Almond Yield function\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\n$maxyield\n[1] 1920.308\n\n$minyield\n[1] -0.02682371\n\n$meanyield\n[1] 181.759\n```\n\n\n:::\n:::\n\n\n\n\n\n## Profit Mode {.scrollable}\n\nAny questions from class\n\n## Todays goal\n\nDevelop a profit model for your almond yield\n\nLets brainstorm on what a profit model might look like\n\nSimpliest?\n\nMore complex?\n\n## Profit Model Ideas {.scrollable}\n\n-   profit = revenue - costs\n\n-   revenue = price per unit \\* yield\n\n-   costs = fixed costs + variable costs\n\nWhat might be fixed costs?\n\nWhat might be variable costs?\n\nDo you want price to be constant?\n\n## Build a profit function\n\n-   Almond yield anomaly will be one input\n\nBut profit would depend on actual yield right?\n\nAssume a baseline yield for your orchard (another input to your profit model)\n\n-   Profit will be the output\n\nThere may be other inputs depending on your profit model\n\n# Construct your profit model\n\nWork with your partner\n\n# Now put them together\n\n-   There are many ways to combine the almond yield and profit functions\n-   You can have the profit function \"call\"/use the almond yield function; or\n-   Create a wrapper function that calls them in sequence (first the almond yield and then the profit function)\n\n# Now run your combined model and do some informal sensitivity analysis\n\n-   Which parameters might you vary?\n\n-   Graph how profit varies with your parameters\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-after-body": [
+        "\n<script>\n  // htmlwidgets need to know to resize themselves when slides are shown/hidden.\n  // Fire the \"slideenter\" event (handled by htmlwidgets.js) when the current\n  // slide changes (different for each slide format).\n  (function () {\n    // dispatch for htmlwidgets\n    function fireSlideEnter() {\n      const event = window.document.createEvent(\"Event\");\n      event.initEvent(\"slideenter\", true, true);\n      window.document.dispatchEvent(event);\n    }\n\n    function fireSlideChanged(previousSlide, currentSlide) {\n      fireSlideEnter();\n\n      // dispatch for shiny\n      if (window.jQuery) {\n        if (previousSlide) {\n          window.jQuery(previousSlide).trigger(\"hidden\");\n        }\n        if (currentSlide) {\n          window.jQuery(currentSlide).trigger(\"shown\");\n        }\n      }\n    }\n\n    // hookup for slidy\n    if (window.w3c_slidy) {\n      window.w3c_slidy.add_observer(function (slide_num) {\n        // slide_num starts at position 1\n        fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);\n      });\n    }\n\n  })();\n</script>\n\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

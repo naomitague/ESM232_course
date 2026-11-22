@@ -10,40 +10,40 @@ Consider pred-prey BUT what will be the output - if we want to 'quantify sensiti
 
 For example
 
--   Max Prey/Predator Population
--   Min Prey/Predator Population
--   Populations at the end of the time period
--   Number of time periods where a population is below a threshold
+- Max Prey/Predator Population
+- Min Prey/Predator Population
+- Populations at the end of the time period
+- Number of time periods where a population is below a threshold
 
 ## Sensitivity Analysis steps
 
--   Generate parameters (LHS, Sobol)
--   Metrics function
--   Wrapper Function
--   Run wrapper function to get metrics for all parameter sets
--   Graph and compute sensitivity statistics
+- Generate parameters (LHS, Sobol)
+- Metrics function
+- Wrapper Function
+- Run wrapper function to get metrics for all parameter sets
+- Graph and compute sensitivity statistics
 
 ## Example Sensitivity Analysis {.scrollable}
 
 Given a Predator Prey model with the possible values for parameters
 
--   $K$ - mean of 150, standard deviation 20
--   $r_{prey}$ - some where between 0.01 and 0.3
--   $\alpha$ - somewhere between 0.1 and 0.4
--   $eff$ - mean 0.3 standard deviation 0.01
--   $pmort$ - somewhere between 0.01 and 0.45
--   Initial Conditions: start with 1 predator and 1 prey
--   Look at output for 500 time steps
+- $K$ - mean of 150, standard deviation 20
+- $r_{prey}$ - some where between 0.01 and 0.3
+- $\alpha$ - somewhere between 0.1 and 0.4
+- $eff$ - mean 0.3 standard deviation 0.01
+- $pmort$ - somewhere between 0.01 and 0.45
+- Initial Conditions: start with 1 predator and 1 prey
+- Look at output for 500 time steps
 
 Questions sensitivity analysis might answer
 
--   Does uncertainty in parameter impact our estimates?
--   Which are the more/most important parameters in controlling population dynamics?
+- Does uncertainty in parameter impact our estimates?
+- Which are the more/most important parameters in controlling population dynamics?
 
 # Set up Sobol Sensitivity {.scrollable}
 
--   parameter samples
--   metric and wrapper function
+- parameter samples
+- metric and wrapper function
 
 ```{r odesen}
 source(here("R/lotvmodK.R"))
@@ -106,8 +106,8 @@ p_wrapper <- function(rprey, alpha, eff, pmort, K, currpop, days, func) {
 
 ## Now run wrapper for all parameters {.scrollable}
 
--   graph
--   sobol indices
+- graph
+- sobol indices
 
 ```{r odesen2}
 # run our model for all parameters and extract the results
@@ -150,12 +150,12 @@ sens_PP_maxprey$T
 
 ## Interpretation of Sobol Indices
 
--   what are the most important parameters
-    -   maximum prey
--   What about other metrics
-    -   minimum prey
-    -   maximum predator
-    -   minimum predator
+- what are the most important parameters
+  - maximum prey
+- What about other metrics
+  - minimum prey
+  - maximum predator
+  - minimum predator
 
 What is the most important parameter, Which parameters don't matter
 
@@ -200,39 +200,39 @@ sobol_sumS
 
 ## Adding More Complex Inputs {.scrollable}
 
--   What if carrying capacity varied with air temperature
+- What if carrying capacity varied with air temperature
 
 Conceptual Model
 
--   There is a known optimal carrying capacity (*Kopt*)
+- There is a known optimal carrying capacity (*Kopt*)
 
-    -   *Kopt* when ecosystem is at optimal temperature (*Topt*)
-    -   As temperature increases or decreases from *Topt*, carrying capacity decreases
-    -   *Ksen* is a sensitivity coefficient that describes how much carrying capacity changes with temperature \`
+  - *Kopt* when ecosystem is at optimal temperature (*Topt*)
+  - As temperature increases or decreases from *Topt*, carrying capacity decreases
+  - *Ksen* is a sensitivity coefficient that describes how much carrying capacity changes with temperature \`
 
--   Carrying capacity is a function of temperature $K = K_{opt} * (1 - K{sen} * (airT(t) - T_{opt}))$
+- Carrying capacity is a function of temperature $K = K_{opt} * (1 - K{sen} * (airT(t) - T_{opt}))$
 
-    -   airT(t) is the air temperature at time t
+  - airT(t) is the air temperature at time t
 
 # Implementation Details
 
--   We would also need a model of carrying capacity (K)
-    -   determistic (not-dynamic) submodel
-    -   needs a time series of air temperature as input
+- We would also need a model of carrying capacity (K)
+  - determistic (not-dynamic) submodel
+  - needs a time series of air temperature as input
 
 How do you combine these different types of inputs/parameters and different types of models together
 
 ## Dynamic Carrying Capacity Example
 
--   Carrying Capacity
+- Carrying Capacity
 
 $K = K_{opt} * (1 - K{sen} * (airT(t) - T_{opt}))$
 
--   Prey
+- Prey
 
 $\frac{\partial prey}{\partial t} = r_{prey} * (1-\frac{prey}{K})*prey - \alpha * prey * pred$
 
--   Predator
+- Predator
 
 $\frac{\partial pred}{\partial t} = eff * \alpha * pred * prey - mort * pred$
 
@@ -298,15 +298,15 @@ How would you define it?
 
 ## A broader measure of stability {.scrollable}
 
--   persistence
+- persistence
 
--   cycling doesn't necessarily mean unstable in an ecological sense
+- cycling doesn't necessarily mean unstable in an ecological sense
 
--   define stability based on whether or not structure or function stays within expected ranges after a "press" or "pulse" disturbance
+- define stability based on whether or not structure or function stays within expected ranges after a "press" or "pulse" disturbance
 
--   can define metrics, similar to what we did for estimating performance or sensitivity
+- can define metrics, similar to what we did for estimating performance or sensitivity
 
--   multiple metrics can be useful
+- multiple metrics can be useful
 
 ## Examples? {.scrollable}
 
@@ -318,17 +318,17 @@ EJ?
 
 # Stablity {.scrollable}
 
--   simple mathematical definition - when derivatives are zero
+- simple mathematical definition - when derivatives are zero
 
-    -   algerbra
-    -   plotting
+  - algerbra
+  - plotting
 
--   more complex definitions - think of metrics that looks at ranges, cycling, return to a population above some threshold after disturbance
+- more complex definitions - think of metrics that looks at ranges, cycling, return to a population above some threshold after disturbance
 
--   for more complex definitions of stability you'd need to do the integration (e.g run the ode solver) and then compute a metric of stability
+- for more complex definitions of stability you'd need to do the integration (e.g run the ode solver) and then compute a metric of stability
 
-    -   min or max always above or below a threshold
-    -   long term values (e.g after X years)
+  - min or max always above or below a threshold
+  - long term values (e.g after X years)
 
 ##  {.scrollable}
 
@@ -370,15 +370,15 @@ ggplot(as.data.frame(res), aes(time, carbon)) +
 
 *Goal: To provide insight into environmental systems, and how they respond to intervention/disturbance/change..*
 
--   sensitivity analysis of output
-    -   output generated by solving differential equation to see system evolution in time or space
-    -   output response to variation in inputs/parameters
-    -   quantifying how summary measures respond to variation in inputs/parameters
+- sensitivity analysis of output
+  - output generated by solving differential equation to see system evolution in time or space
+  - output response to variation in inputs/parameters
+  - quantifying how summary measures respond to variation in inputs/parameters
 
 Stability focus..
 
--   how does systems state evolution vary with inputs/parameters
--   OR where does the system end up over time
+- how does systems state evolution vary with inputs/parameters
+- OR where does the system end up over time
 
 ## Model versus the real world {.scrollable}
 
@@ -396,11 +396,11 @@ We can look at how the derivative (rate of change) \* under different system sta
 
 One way we can do this WITHOUT solving the differential equation is to look at the derivatives at different values (system states)
 
--   When the derivative is 0 the system is stable
+- When the derivative is 0 the system is stable
 
--   Positive derivatives are growth
+- Positive derivatives are growth
 
--   Negative are decline
+- Negative are decline
 
 We can use derivatives to see whether and when stability will happen
 
@@ -410,11 +410,11 @@ graph the derivative (how the forest carbon is changing) for different forest ca
 
 Notice where derivatives are
 
--   0
+- 0
 
--   positive (growing)
+- positive (growing)
 
--   negative (declining)
+- negative (declining)
 
 Recall these are all for a proportional harvest rate of 4% per year and a growth rate of 0.05, etc
 
@@ -440,11 +440,11 @@ ggplot(Ccurr, aes(Ccurr, derv)) +
 
 ## what do you learn from this? {.scrollable}
 
--   Is there a way to get a stable forest, given our harvest rate and growth rate?
+- Is there a way to get a stable forest, given our harvest rate and growth rate?
 
--   what size of forest would you need to *start* from
+- what size of forest would you need to *start* from
 
--   try it
+- try it
 
 ```{r try3}
 # rerun our model with new initial condition that we take from the plot
@@ -558,19 +558,19 @@ ggplot(as.data.frame(res), aes(time, carbon)) +
 
 ## For next class
 
--   Burke et al., 2021
+- Burke et al., 2021
 
--   Graup et al., 2022
+- Graup et al., 2022
 
--   Pick on of the papers to focus on in more detail, for this paper do the following:
+- Pick on of the papers to focus on in more detail, for this paper do the following:
 
--   In 2-3 sentences, describe how parameter uncertainty was used in the paper
+- In 2-3 sentences, describe how parameter uncertainty was used in the paper
 
--   Ask one question - something you'd like to know that wasn't covered or wasn't clear in the paper
+- Ask one question - something you'd like to know that wasn't covered or wasn't clear in the paper
 
--   If you had the same model set up available to you, what additional scenario could you run? why?
+- If you had the same model set up available to you, what additional scenario could you run? why?
 
--   Upload to Canvas before class - and we will finalize in class
+- Upload to Canvas before class - and we will finalize in class
 
 ## Extra Credit Assignment {.scrollable}
 

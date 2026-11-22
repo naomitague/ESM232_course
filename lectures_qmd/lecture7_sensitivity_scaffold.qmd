@@ -24,9 +24,9 @@ Many approaches (entire text books)
 
 Two main classes
 
--   global simultaneous: vary all parameters over possible ranges
+- global simultaneous: vary all parameters over possible ranges
 
--   local parameter specific: hold all other parameters content and then vary
+- local parameter specific: hold all other parameters content and then vary
 
 Challenge is sampling parameter uncertainty space and balancing this against computational limits
 
@@ -46,13 +46,13 @@ Optimization - special type of sensitivity analysis
 
 # What ranges should I vary my parameters over {.scrollable}
 
--   range (min, max, middle values)
+- range (min, max, middle values)
 
--   pdf (probability density function)
+- pdf (probability density function)
 
--   If parameters are physically based this can come from literature or measurement (e.g range of snow albedo’s, range of hydraulic conductivity in a soil )
+- If parameters are physically based this can come from literature or measurement (e.g range of snow albedo’s, range of hydraulic conductivity in a soil )
 
--   If parameter’s are estimated (e.g a regression slope, coefficients from another model) then statistics such as confidence bounds can help you to define the ranges
+- If parameter’s are estimated (e.g a regression slope, coefficients from another model) then statistics such as confidence bounds can help you to define the ranges
 
 BUT will I get enough samples to "see" the sensitivity of my output to rarer parameters?
 
@@ -110,13 +110,13 @@ simple_erosion(I = 2, f = 1.9)
 
 ## More Formal Approaches to more effectively sample parameter space
 
--   Random - Monte Carlo
+- Random - Monte Carlo
 
--   Morris Method
+- Morris Method
 
--   Latin Hypercube
+- Latin Hypercube
 
--   Sobol
+- Sobol
 
 Difference is in how you sample parameter space
 
@@ -136,11 +136,11 @@ generating random samples from equally probability intervals ![](img/LHC.png)
 
 # What we need to use the LHS function
 
--   number of parameters that you want to perform sensitivity analysis on
+- number of parameters that you want to perform sensitivity analysis on
 
--   number of samples
+- number of samples
 
--   distributions of the parameters
+- distributions of the parameters
 
 “qnorm”,”qunif”, “qlnorm”,”qgamma” many others\]
 
@@ -148,12 +148,12 @@ generating random samples from equally probability intervals ![](img/LHC.png)
 
 # Steps for Latin HyperCube Sampling
 
--   create a *lhs* matrix (essentially our hyper cube) which defines quantiles for each parameter
-    -   these are essentially quantiles that will let us fully sample the parameter space
--   use these quantiles to sample from actual parameter distributions
-    -   we do this by adding in the characteristics of the distributions
-        -   type (e.g normal, uniform)
-        -   parameters (e.g mean, variance)
+- create a *lhs* matrix (essentially our hyper cube) which defines quantiles for each parameter
+  - these are essentially quantiles that will let us fully sample the parameter space
+- use these quantiles to sample from actual parameter distributions
+  - we do this by adding in the characteristics of the distributions
+    - type (e.g normal, uniform)
+    - parameters (e.g mean, variance)
 
 ## Example of using Latin Hypercube sampling for sensitivity analysis {.scrollable}
 
@@ -211,9 +211,9 @@ head(parm)
 
 ## Run model for parameter sets
 
--   We will do this in R
+- We will do this in R
 
--   We can use **pmap** to efficiently run our model for all of our parameter sets
+- We can use **pmap** to efficiently run our model for all of our parameter sets
 
 but first
 
@@ -223,35 +223,35 @@ Sensitivity of What?
 
 If your model is estimating a single value, you are done
 
--   long term mean almond yield anomoly
--   mean profit from solar
+- long term mean almond yield anomoly
+- mean profit from solar
 
 But models are often estimating multiple values
 
--   streamflow
--   almond yield anomoly for multiple years
+- streamflow
+- almond yield anomoly for multiple years
 
 In that case to quantify sensitivity you need summary metrics
 
--   mean
--   max
--   min
--   variance
+- mean
+- max
+- min
+- variance
 
 Which one depends on what you care about
 
 ## Example: Almond Yield {.scrollable}
 
--   I'm going to return some summary information from my model
--   You could do this in a separate function!
+- I'm going to return some summary information from my model
+- You could do this in a separate function!
 
 I'll return
 
--   max yield
+- max yield
 
--   min yield
+- min yield
 
--   average yield
+- average yield
 
 ```{r almondsens}
 #
@@ -282,15 +282,15 @@ yieldsd = yields %>% map_dfr("[", c("maxyield","minyield","meanyield"))
 
 Plot relationship between parameter and output to understand how uncertainty in parameter impacts the output to determine over what ranges of the parameter uncertainty is most important (biggest effect)
 
--   Use a box plot (of output) to graphically show the impact of uncertainty on output of interest
+- Use a box plot (of output) to graphically show the impact of uncertainty on output of interest
 
--   To see more of the distribution - graph the cumulative distribution
+- To see more of the distribution - graph the cumulative distribution
 
-    -   high slope, many values in that range
-    -   low slope, few values in that range
-    -   constant slope, even distribution
+  - high slope, many values in that range
+  - low slope, few values in that range
+  - constant slope, even distribution
 
--   Scatterplots against parameter values
+- Scatterplots against parameter values
 
 ```{r senplot}
 # add uncertainty bounds on our estimates
@@ -345,34 +345,34 @@ If we have multiple parameters and inputs
 
 If relationships between output and input are close to linear,
 
--   Correlation coefficient between output and each input (separately)
+- Correlation coefficient between output and each input (separately)
 
--   Partial correlation coefficient (PCC) for multiple parameters;
+- Partial correlation coefficient (PCC) for multiple parameters;
 
-    \`\`\`
+  \`\`\`
 
-    -   Correlation after effects of other parameters accounted for
+  - Correlation after effects of other parameters accounted for
 
-    -   Correlation of X and Y accounting for Z (all other parameters)
+  - Correlation of X and Y accounting for Z (all other parameters)
 
-    -   Computed as the correlation of the *residuals* from linear regression of
+  - Computed as the correlation of the *residuals* from linear regression of
 
-        -   X with Z
+    - X with Z
 
-        -   Y with Z \`
+    - Y with Z \`
 
--   for *rank* correlation use ranks instead of values
+- for *rank* correlation use ranks instead of values
 
 ## Quantifying Sensitivity {.scrollable}
 
--   Linear and monotonic relationship between x and y
+- Linear and monotonic relationship between x and y
 
--   Correlation Coefficient - linear monotonic
+- Correlation Coefficient - linear monotonic
 
--   Non-linear relationship, but monotonic between x and y
+- Non-linear relationship, but monotonic between x and y
 
-    -   you transform x and y (e.g log transform)
-    -   Partial Rank Correlation Coefficient - non-linear but monotonic
+  - you transform x and y (e.g log transform)
+  - Partial Rank Correlation Coefficient - non-linear but monotonic
 
 R function *pcc* in *sensitivity* package can compute these for you AND makes it easy to graph the results
 
@@ -421,9 +421,9 @@ plot(senresult_rank)
 
 ## Try on your own {.scrollable}
 
--   Partial Rank Correlation Coefficients for Minimum Yield
+- Partial Rank Correlation Coefficients for Minimum Yield
 
--   how are they different from results for maximum yield
+- how are they different from results for maximum yield
 
 ## Code {.scrollable}
 

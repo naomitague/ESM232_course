@@ -1,0 +1,15 @@
+{
+  "hash": "664d9d255bc6671f74a2b8e0a6a3aa0d",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Assignment1 - Getting to know you\"\nformat: html\neditor: visual\n---\n\n\n\n------------------------------------------------------------------------\n\n# Intro\n\n1.  Fill out *Help us get to know you* survey on Canvas\n\n2.  Listen to *only* timestap 26:27 to 31:22 (basically 5 minutes) of the following blog by Lisa Felman Barrett - a highly cited psychologist\n\n    -   [blog 26:27 to 31:22](https://youtu.be/NbdRIVCBqNI?t=1587)\n\n    -   if you are interested you can learn [More about Lisa Felman Barrett](https://www.affective-science.org/lisa-feldman-barrett.shtml)\n\n    -   Think about what an inverse inference problem might be in the context of the environment\n\n3.  In this course, we will work a lot with writing and applying functions; You've all been exposed to writing functions in previous courses - but just to make sure that everyone remembers the basic syntax in R, complete the following:\n\nWrite a function that computes energy produced from a photovoltaic system if you know the average annual solar radiation. You can use the following formula:\n\nThe energy produced by a solar panel system is given by\n\n$$\nE = A \\cdot r \\cdot H \\cdot PR\n$$\n\nwhere:\n\n-   $E$ is the energy produced (kWh),\n-   $A$ is the solar panel area (m$^2$),\n-   $r$ is the panel yield (dimensionless, 0–1), representing manufacturer efficiency (typically $\\sim 0.2$),\n-   $PR$ is the performance ratio (dimensionless, 0–1), accounting for site-specific losses (typically $\\sim 0.75$),\n-   $H$ is the annual average solar radiation (kWh m$^{-2}$).\n\nWrite your function in R; make sure that you add documentation; include default values for *r* and *PR* in the function definition; save the function in a single file to upload to Canvas.\n\n### To summarize, submit the following by 8am Jan 8:\n\n1.  Fill out 'get to know you' survey on Canvas\\\n2.  A single R file that implements the solar energy yield function (on Canvas)\n\nYou don't need to submit anything for the Lisa Felman Barrett blog - just think about the inverse inference problem in the context of the environment. We will discuss next class\n\n### *Grading Rubric*\n\n-   Completed Survey (10 pts total)\n-   Function implementation (20 pts total)\n    -   function written in R (5pts)\n    -   correct function syntax in R (5pts)\n    -   includes default values (5pts)\n    -   clear documentation (5pts)\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

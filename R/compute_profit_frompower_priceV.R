@@ -4,7 +4,13 @@
 #' @param  year (when was energy obtained)
 #' @param discount rate (default 0.12)
 #' @return data frame with estimate of profit
-compute_profit_frompower_priceV <- function(energy, year, price, discount = 0.12, price_inflation = 0) {
+compute_profit_frompower_priceV <- function(
+  energy,
+  year,
+  price,
+  discount = 0.12,
+  price_inflation = 0
+) {
   # make sure values are reasonable
   if (length(energy) < 1) {
     return(NA)
@@ -18,20 +24,31 @@ compute_profit_frompower_priceV <- function(energy, year, price, discount = 0.12
 
   if (length(price == 1)) {
     if (price_inflation > 0) {
-      price <- price * (1 + price_inflation) ^ (year - year[1])
+      price <- price * (1 + price_inflation)^(year - year[1])
     }
-    price = rep(price, times = length(energy))
+    price <- rep(price, times = length(energy))
   }
 
   # generate a unique identifier or scenario number
   scen <- seq(from = 1, to = length(energy))
-  yearprofit <- data.frame(scen = scen, energy = energy, year = year, price = price)
+  yearprofit <- data.frame(
+    scen = scen,
+    energy = energy,
+    year = year,
+    price = price
+  )
   yearprofit$net <- yearprofit$energy * yearprofit$price
 
   # note how discount is passed through to this function
   # remember to normalize the year to start year e.g the first year
   yearprofit <- yearprofit %>%
-    mutate(netpre = compute_NPV(value = net, time = year - year[1], discount = discount))
+    mutate(
+      netpre = compute_NPV(
+        value = net,
+        time = year - year[1],
+        discount = discount
+      )
+    )
 
   return(yearprofit)
 }
