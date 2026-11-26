@@ -13,6 +13,14 @@ Choose one of the 3 papers below that provide an example of sensitivity analysis
 
 After going through the paper, write a paragraph describing how results of the sensitivity analysis reported on in the paper might contribute to understanding (or prediction) within an environmental problem solving or management context.
 
+In your paragraph, say which of these purposes the sensitivity analysis served (it may be more than one):
+
+* **Where to measure**: deciding which parameters or inputs are worth measuring better
+* **Which lever matters**: comparing management or policy choices
+* **Can I simplify?**: identifying parameters that hardly matter and could be fixed or dropped
+* **Which uncertainty dominates**: e.g. parameter uncertainty vs. climate or scenario uncertainty
+* **Is the model behaving as expected?**: catching errors or surprising behavior
+
 Snow modeling
 
 Building Cooling Energy Mdoel
@@ -57,6 +65,8 @@ For vegetation height assume that height is somewhere between 3.5 and 5.5 m (but
 
 For the $k_d$ and $k_0$ parameters you can assume that they are normally distributed with standard deviation of 1% of their default values
 
+**Before you run anything:** predict which of the 4 parameters/inputs will have the largest total effect on conductance at this new site, and write down one sentence explaining why.
+
 Use the Sobel approach to generate parameter values for the 4 parameters
 
 Run the atmospheric conductance model for these parameters
@@ -69,6 +79,12 @@ Estimate the Sobel Indices for your output
 
 Comment on what this tells you about how atmospheric conductance and its sensitivity to variation in windspeed differs in this setting as compared to the setting that we examined in class where windspeed was lower and less variable and vegetation was taller.
 
+**Decision memo.** Atmospheric conductance controls how fast water evaporates from vegetation, so it matters for estimating water use at a site. Suppose you are setting up a water-use study at this new site and your budget lets you measure **one** thing well: windspeed or vegetation height. In 3-5 sentences:
+
+* Which would you measure, and how do your Sobol indices support that choice?
+* Would your answer be the same at the site we examined in class? Why or why not?
+* Was your prediction correct? If not, what did you miss?
+
 Submit a pdf or html document with your code, graphs, and answers to the questions on Canvas
 Due 
 
@@ -76,17 +92,19 @@ Due
 
 **PART I (Paper Examples)**
 
-* Discussion of the implication of parameter uncertainty from example paper 
+* Discussion of the implication of parameter uncertainty from example paper
 
   * explanation directly relates to a specific parameter (10pts)
 
-  * explanation explores how parameter uncertainty might meaningfully impact results (10pts)
+  * explanation explores how parameter uncertainty might meaningfully impact results, and identifies the purpose(s) of the sensitivity analysis (10pts)
 
 **PART II (Atmospheric Conductance and Sobol)**
 
-* Generation of parameter values using Sobol (10pts)
+* Prediction made before running the analysis (5pts)
 
-* Running model for the parameters (10pts)
+* Generation of parameter values using Sobol (5pts)
+
+* Running model for the parameters (5pts)
 
 * Graph of uncertainty of the response variable
 
@@ -94,15 +112,14 @@ Due
 
   * graphing style (axis labels, legibility) (5 pts)
 
-* Graph of relationship between output and windspeed
-
-  * choice of color (see instructions) (5pts)
-
-  * graphing style (axis labels, legibility) (5 pts)
+* Graph of relationship between output and windspeed, colored by the correct parameter and clearly labeled (5pts)
 
 * Computing Sobol Indicators (10 pts)
 
-* Discussion 
+* Discussion
 
   * correctly identifying how sensitivity to windspeed changed with setting (10pts)
 
+* Decision memo
+
+  * measurement choice justified with the Sobol indices and compared with the class site (10pts)

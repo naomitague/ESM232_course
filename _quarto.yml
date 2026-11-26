@@ -30,6 +30,7 @@ project:
     # - lectures_qmd/lecture4_informal_sensitivity.qmd
     # - lectures_qmd/lecture5_multiplepars.qmd
     # - lectures_qmd/Lecture6_buildingblocks.qmd
+    # - lectures_qmd/lecture6b_RHESSys_conceptual.qmd
     # - lectures_qmd/lecture7_sensitivity.qmd
     # - lectures_qmd/lecture8_sensitivity_sobol.qmd
     # - lectures_qmd/lecture9_simpledynamic.qmd
@@ -45,6 +46,7 @@ project:
     # - lectures_qmd/lecture17_optimize.qmd
     # - lectures_qmd/lecture17C_optimizewithsobol.qmd
     # - lectures_qmd/wrap_up.qmd
+    # - DiscussionSections/discussion1_Conceptual_Models.qmd
     # - DiscussionSections/discussion2_informal Sensitivity.qmd
     # - DiscussionSections/discussion3_buildingblocks.qmd
     # - DiscussionSections/discussion4_sensitivity_sobol.qmd
@@ -100,6 +102,8 @@ website:
           #   href: lectures_qmd/lecture5_multiplepars.qmd
           # - text: "6. Multi-component models"
           #   href: lectures_qmd/Lecture6_buildingblocks.qmd
+          # - text: "6b. Multi-component models at scale: RHESSys"
+          #   href: lectures_qmd/lecture6b_RHESSys_conceptual.qmd
           # - text: "7. Formal sensitivity analysis"
           #   href: lectures_qmd/lecture7_sensitivity.qmd
           # - text: "8. Sobol sensitivity analysis"
@@ -136,6 +140,8 @@ website:
       # these two lines along with at least one item below.
       # - text: "Discussion"
       #   menu:
+          # - text: "Conceptual models"
+          #   href: DiscussionSections/discussion1_Conceptual_Models.qmd
           # - text: "Informal sensitivity"
           #   href: "DiscussionSections/discussion2_informal Sensitivity.qmd"
           # - text: "Building blocks"

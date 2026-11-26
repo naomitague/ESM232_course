@@ -13,41 +13,69 @@ knitr::opts_chunk$set(echo = TRUE)
 
 In your same groups -
 
+## Before you code: predict
+
+Before you run anything, write down (in your pdf, 1-2 sentences): which do you expect will matter more for almond profit, uncertainty in the **economic** parameters (e.g. price, costs) or uncertainty in the **climate-yield** part of the model? Why?
+
+## The model
+
 -   Develop a profit model for your almond yield (you can make this up - think about what the parameters would be)
 
     -   you might assume a baseline profit and then adjust according to the anomaly
 
     -   there are many ways to combine the almond yield and profit functions; you can have the profit function "call"/use the almond yield function; or create a wrapper function that calls them in sequence (first the almond yield and then the profit function)
 
--   Do a simple informal sensitivity analysis of almond yield profit using at least 2 parameters
+-   In Assignment 3 you found that the yield model can give implausible answers in some years. Decide how your coupled model will deal with this (for example, limit yield anomalies to a plausible range, or flag years outside the range of Lobell's data) and **state your choice in one sentence**. There is no single right answer; we want to see that you made a choice on purpose.
+
+## Sensitivity analysis
+
+-   Do a simple informal sensitivity analysis of almond profit using at least 2 parameters
+    -   at least **one economic parameter** (e.g. price, cost)
+    -   at least **one parameter (or input) from the yield model** (e.g. one of the Lobell coefficients, or January precipitation)
 
 -   Create a single graph of the results - you can decide what is the most meaningful graph
 
-Submit as a group: pdf of rendered quarto including graph, your R files for almond yield and profit model,
+## So what? (the memo)
+
+Write a short memo (3-5 sentences) to an almond grower who is deciding whether to invest in better seasonal climate forecasts or in better price forecasting/contracts. Based on your sensitivity analysis:
+
+-   Which uncertainty matters more for their profit?
+-   Was your prediction from the start correct? If not, what surprised you?
+-   What is one assumption in your model that could change this advice?
+
+## Optional challenge
+
+Lobell et al. (2006, Table 5) report that almond production and price are strongly *negatively* correlated (a 50% yield decline from 1994 to 1995 came with roughly a doubling of price). If your sensitivity analysis sampled price and yield independently, what does that imply about your conceptual model? How would you change it?
+
+Submit as a group: pdf of rendered quarto including graph and memo, your R files for almond yield and profit model
 
 
 # Grading Rubric
 
-Profit model 
+Profit model
 
-  * computes profit based on almond yield anomoly (1 pts)
+  * computes profit based on almond yield anomaly (1 pts)
   * implementation in R as a function with parameters (2 pts)
   * code runs without errors and is well documented (1 pt)
-  
+  * choice about implausible yield values stated (1 pt)
+
 
 Workflow
 
   * models coupled - either a wrapper or workflow showing how yield/profit linked (1pt)
-  * sensitivity analysis of at least 2 parameters 
+  * sensitivity analysis of at least 2 parameters (one economic, one from the yield model)
       * sensitivity analysis includes sampling from distributions (or other source) for 2 parameters (2 pts)
       * clear well documented code (1 pt)
-      
+
 Graph
 
   * single graph showing sensitivity analysis results (1 pt)
   * graph is clearly labeled and easy to interpret (1 pt)
-  
-  Extra point for really interesting or novel graph
-  
-  
-      
+
+Prediction and memo
+
+  * prediction made before running the analysis (1 pt)
+  * memo answers the grower's question using the sensitivity results (2 pts)
+  * prediction revisited and one key assumption identified (1 pt)
+
+  Extra point for really interesting or novel graph, or for a thoughtful answer to the optional challenge

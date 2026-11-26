@@ -57,7 +57,7 @@ The full [syllabus (PDF)](syllabus.pdf) has grading, AI-tool policy and attendan
 
 | Week | Tuesday                                | Thursday                               | Discussion            |
 |------|----------------------------------------|----------------------------------------|-----------------------|
-| 1    | Intro: What is a model                 | Conceptual models                      | Free                  |
+| 1    | Intro: What is a model                 | Conceptual models                      | Conceptual models     |
 | 2    | Building models                        | Informal sensitivity analysis          | Informal sensitivity  |
 | 3    | Multiple parameter variation           | Multi-component models: RHESSys        | Building blocks       |
 | 4    | Formal sensitivity analysis            | Sobol sensitivity analysis             | Free                  |

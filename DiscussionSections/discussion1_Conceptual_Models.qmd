@@ -1,0 +1,68 @@
+---
+title: "Discussion 1: Same Question, Different Models"
+format: revealjs
+editor: visual
+---
+
+# Why start with a conceptual model?
+
+-   Writing code is getting easier: tools (and AI) can write a working model in seconds
+-   Deciding **what the model should include**, **what to leave out**, and **whether to trust the output** is not getting easier
+-   That decision *is* the conceptual model
+-   Today: no code. Just thinking, drawing and comparing.
+
+# Task 1: Draw on your own (10 min)
+
+**Question:** *Over the next 30 years, will forest thinning in a Sierra Nevada watershed increase summer streamflow?*
+
+Working **alone** (not in groups yet), sketch a conceptual model that could answer this question
+
+-   What is the output? (be precise: which flow? what time step? where?)
+-   What are the inputs? Parameters?
+-   What processes connect inputs to outputs?
+-   Draw a box around what is *inside* your model. What did you leave *outside*?
+
+Paper is fine.
+
+# Task 2: Compare (10 min)
+
+In groups of 3, put your three diagrams side by side
+
+-   Where do they **agree**?
+-   Where do they **differ**? (different outputs? different time scales? different processes?)
+-   For each difference: would it change the **answer** to the question?
+
+Be ready to share one difference that mattered and one that didn't
+
+# Task 3: What would matter most? (5 min)
+
+As a group, **predict** the 2 inputs or parameters that you think would most influence the answer
+
+-   Write them down (we will come back to this idea when we get to sensitivity analysis)
+-   Why did you pick these?
+
+# Debrief
+
+-   Everyone started with the same question, but you built different models
+-   None of them is "the" model: each reflects choices about what matters
+-   Those choices were made **before** any data or code
+-   A model, a statistical fit or an ML model all carry a conceptual model, whether it's written down or not
+
+# Instructor demo (optional): what conceptual model did the code choose?
+
+*Instructor runs this; students do not need to use an AI tool*
+
+-   Instructor asks an AI tool to "write an R function that predicts how forest thinning changes summer streamflow"
+-   As a class, read the code it returns:
+    -   What are the inputs, parameters and outputs?
+    -   What processes did it include? What did it leave out?
+    -   What assumptions are built in but never stated?
+    -   Compare with your group diagrams: which is more defensible for *this* question?
+-   Takeaway: the code runs, but the conceptual model is hidden. Your job as a modeler is to make it visible and defend it.
+
+# Now: Assignment 2
+
+Start your group conceptual model for Assignment 2 (instructions on the Assignments page)
+
+-   Pick your own modeling goal
+-   Use today's checklist: output, inputs, parameters, processes, boundary, what you left out, and your prediction of what matters most

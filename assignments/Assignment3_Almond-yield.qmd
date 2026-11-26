@@ -19,7 +19,7 @@ climate variation (place and time) might influence yield
 
 * Climate variables
 
-Assumptions...as you work think about what these are...
+Assumptions...as you work think about what these are... (this time you will write them down - see Step 4)
 
 
 # Assignment
@@ -88,6 +88,22 @@ I will tell you that
 * the mean almond yield anomaly should be approximately 182 ton/acre
 
 
+# Does your answer make sense?
+
+4.  Matching the check values above means your code is *correct*. It does not mean the model's answer is *plausible*. In your pdf, answer the following (a short paragraph each is fine):
+
+    a.  Lobell et al. report that average California almond yields in 2000-2003 were about 0.9 ton/acre (Table 1). Compare that with the maximum and mean yield anomalies your model produced. Are they plausible?
+
+    b.  Find the year that produces the maximum yield anomaly. What is unusual about the climate input in that year? Which term in the equation is responsible for the result? (Hint: print the contribution of each term for that year.)
+
+    c.  Lobell et al. built this model from 1980-2003 *state-wide* yield and climate records. What kind of model is this (use the classification from class)? Why does that matter for what happens when an input falls outside the range of the data used to build it?
+
+    d.  Lobell et al. (Section 2.3) discuss how they handled this problem. What did they do? What would you change in your model (or in how you use it) as a result?
+
+    e.  List **2-3 assumptions** built into this model (for example about space, time, management, or which climate variables matter).
+
+We will build on this in the next assignment and in sensitivity analysis: a model that runs without errors can still give you a meaningless answer, and checking for that is part of the modeler's job.
+
 #  Notes
 
 
@@ -105,8 +121,8 @@ I will tell you that
 Two separate files (or a link to a repository with these files)
 
 1. a R file that has your function definition
-2. a pdf that includes your conceptual model (embed as picture), your workflow for running the model and
-shows how you applied the function to the test climate data (*clim.txt*)
+2. a pdf that includes your conceptual model (embed as picture), your workflow for running the model,
+shows how you applied the function to the test climate data (*clim.txt*), and your answers to Step 4
 
 Due January 22 8am50
 # Grading Rubric
@@ -121,5 +137,13 @@ R Implementation (30 pts)
   * correct function implementation (*.R file)  (10 pts)
   * application of the function to **clim.txt** (in Rmarkdown file) (10 pts)
   * coding practices (clear documentation, informative variables names)  (10 pts)
+
+Does your answer make sense? (25 pts)
+
+  * plausibility of model output assessed against observed yields (5 pts)
+  * year and term responsible for the maximum identified (5 pts)
+  * model type identified and the link to extrapolation explained (5 pts)
+  * Lobell et al.'s approach described, with a consequence for your own model use (5 pts)
+  * 2-3 relevant assumptions listed (5 pts)
   
 

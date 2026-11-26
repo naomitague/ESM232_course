@@ -12,20 +12,34 @@ Form groups of 3
 
 With your group, come up with a modeling goal
 
-Decide if the goal is understanding,prediction or communication
+Decide if the goal is understanding, prediction or communication
+
+# Why this matters
+
+Code is becoming cheap to write. The part of modeling that still depends on you is deciding what the model should represent and why. In this assignment you make those decisions explicit. You will come back to this conceptual model later in the course and see whether your expectations held up.
 
 # To turn in
 
 1.  State your modeling goal clearly and precisely and the type of goal (understanding, prediction or communication)
 2.  List the key inputs, parameters and outputs (as precisely as possible, think about space and time)
 3.  Sketch the underlying conceptual model that would relate inputs/parameters to the outputs
+4.  **What did you leave out?** List 2-3 processes or variables that are plausibly related to your system but that you deliberately left *outside* your model. For each, give one sentence on why it is reasonable to leave it out *for your goal*.
+5.  **Predict what matters.** Name the 2 inputs or parameters that you expect will have the biggest influence on your output, and give one sentence explaining why. (We will test predictions like this when we get to sensitivity analysis.)
 
 Please submit as a **pdf** document
 
 **Important** - have the diagram on its own page!
 
-You can use diagrams.net or any other tool to create the diagram - just make sure its clear and easy to read
+You can use diagrams.net or any other tool to create the diagram - just make sure it's clear and easy to read
 
 You can create the *pdf* by rendering a quarto document - good practice as we will do this for other assignments in the course
 
 Submit as a Group Assignment for Assignment 2 on Canvas by Jan 13th 8am
+
+# Grading Rubric (40 pts)
+
+-   Modeling goal is clear, specific and its type is identified (5 pts)
+-   Inputs, parameters and outputs listed, with space/time scale where relevant (10 pts)
+-   Diagram is clear and consistent with the listed inputs, parameters and outputs (10 pts)
+-   What was left out: 2-3 items with a justification tied to the modeling goal (10 pts)
+-   Prediction of the 2 most influential inputs/parameters, with reasoning (5 pts)
