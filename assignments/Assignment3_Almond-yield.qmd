@@ -84,8 +84,8 @@ the next 3 columns are the climate observations
 I will tell you that
 
 * the maximum almond yield anomaly should be approximately 1920 ton/acre
-* the lowest almond yield anomaly should be approximately -0.027 ton/acre
-* the mean almond yield anomaly should be approximately 182 ton/acre
+* the lowest almond yield anomaly should be approximately -0.355 ton/acre
+* the mean almond yield anomaly should be approximately 181 ton/acre
 
 
 # Does your answer make sense?

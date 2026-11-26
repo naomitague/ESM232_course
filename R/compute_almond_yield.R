@@ -1,12 +1,17 @@
 #' Compute Almond Yield
 #'
 #' computes almond yield anomolies
+#' Following Lobell et al. (2006, Table 2), yield anomaly depends on
+#' February minimum temperature (the monthly average of daily minimum
+#' temperatures, C) and total January precipitation (mm)
+#'
 #' @param  clim climate data frame
-#' as daily (day, month, year, tmin_C, tmax_C, precip )
-#' @param  Tmincoeff1 default=-0.015
-#' @param  Tmaxcoeff2 default=-0.0046
-#' @param  Pcoeff1 default=-0.07
-#' @param  Pcoeff2 default=0.0043
+#' as daily (day, month, year, tmin_c, tmax_c, precip )
+#' @param  Tmincoeff1 default=-0.015 (linear Feb min temperature term)
+#' @param  Tmincoeff2 default=-0.0046 (quadratic Feb min temperature term)
+#' @param  Pcoeff1 default=-0.07 (linear Jan precipitation term)
+#' @param  Pcoeff2 default=0.0043 (quadratic Jan precipitation term)
+#' @param  intercep default=0.28
 #' @author Naomi Tague
 #' @references D.B. Lobell et al. Agricultural and Forest Meteorology 141 (2006) 208–218.
 #' @return
@@ -18,7 +23,8 @@ compute_almond_yield <- function(clim, Tmincoeff1 = -0.015, Tmincoeff2 = -0.0046
 
   tmp <- clim %>%
     group_by(month, year) %>%
-    dplyr::summarize(tmin_c = min(tmin_c), .groups = "drop")
+    # monthly average of daily minimum temperature (Lobell et al. 2006)
+    dplyr::summarize(tmin_c = mean(tmin_c), .groups = "drop")
   Feb_minT <- (tmp %>% subset(month == 2))$tmin_c
 
   tmp <- clim %>%
